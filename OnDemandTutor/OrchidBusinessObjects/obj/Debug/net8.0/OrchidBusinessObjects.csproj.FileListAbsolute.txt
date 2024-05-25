@@ -1,0 +1,14 @@
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\bin\Debug\net8.0\OrchidBusinessObjects.deps.json
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\bin\Debug\net8.0\OrchidBusinessObjects.runtimeconfig.json
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\bin\Debug\net8.0\OrchidBusinessObjects.dll
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\bin\Debug\net8.0\OrchidBusinessObjects.pdb
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\obj\Debug\net8.0\OrchidBusinessObjects.csproj.AssemblyReference.cache
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\obj\Debug\net8.0\OrchidBusinessObjects.GeneratedMSBuildEditorConfig.editorconfig
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\obj\Debug\net8.0\OrchidBusinessObjects.AssemblyInfoInputs.cache
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\obj\Debug\net8.0\OrchidBusinessObjects.AssemblyInfo.cs
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\obj\Debug\net8.0\OrchidBusinessObjects.csproj.CoreCompileInputs.cache
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\obj\Debug\net8.0\OrchidBusinessObjects.dll
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\obj\Debug\net8.0\refint\OrchidBusinessObjects.dll
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\obj\Debug\net8.0\OrchidBusinessObjects.pdb
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\obj\Debug\net8.0\OrchidBusinessObjects.genruntimeconfig.cache
+D:\Courseware\Semester-5\SWP391\ProjectSWP391\OnDemandTutor\OrchidBusinessObjects\obj\Debug\net8.0\ref\OrchidBusinessObjects.dll
