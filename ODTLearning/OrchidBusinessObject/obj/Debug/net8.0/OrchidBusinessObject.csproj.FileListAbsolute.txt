@@ -1,0 +1,15 @@
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\bin\Debug\net8.0\OrchidBusinessObject.deps.json
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\bin\Debug\net8.0\OrchidBusinessObject.runtimeconfig.json
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\bin\Debug\net8.0\OrchidBusinessObject.dll
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\bin\Debug\net8.0\OrchidBusinessObject.pdb
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\obj\Debug\net8.0\OrchidBusinessObject.csproj.AssemblyReference.cache
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\obj\Debug\net8.0\OrchidBusinessObject.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\obj\Debug\net8.0\OrchidBusinessObject.AssemblyInfoInputs.cache
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\obj\Debug\net8.0\OrchidBusinessObject.AssemblyInfo.cs
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\obj\Debug\net8.0\OrchidBusinessObject.csproj.CoreCompileInputs.cache
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\obj\Debug\net8.0\OrchidBusinessObject.sourcelink.json
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\obj\Debug\net8.0\OrchidBusinessObject.dll
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\obj\Debug\net8.0\refint\OrchidBusinessObject.dll
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\obj\Debug\net8.0\OrchidBusinessObject.pdb
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\obj\Debug\net8.0\OrchidBusinessObject.genruntimeconfig.cache
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidBusinessObject\obj\Debug\net8.0\ref\OrchidBusinessObject.dll
