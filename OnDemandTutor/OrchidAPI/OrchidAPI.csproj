@@ -19,4 +19,8 @@
     <ProjectReference Include="..\OrchidServices\OrchidServices.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>
