@@ -22,10 +22,13 @@ namespace OrchidDAO
             return dbminiCapstoneContext.Accounts.ToList();
         }
 
+        // Trong phương thức AddAccount của AccountDAO
         public Account AddAccount(Account account)
         {
             try
             {
+                // Mã hóa mật khẩu trước khi thêm vào cơ sở dữ liệu
+                account.Password = BCrypt.Net.BCrypt.HashPassword(account.Password);
                 dbminiCapstoneContext.Accounts.Add(account);
                 dbminiCapstoneContext.SaveChanges();
                 return account;
@@ -36,6 +39,24 @@ namespace OrchidDAO
                 throw new Exception("Error adding account", ex);
             }
         }
+
+        // Trong phương thức VerifyPassword của AccountDAO
+        public bool VerifyPassword(Account account, string password)
+        {
+            try
+            {
+                // Sử dụng BCrypt để xác thực mật khẩu
+                return BCrypt.Net.BCrypt.Verify(password, account.Password);
+            }
+            catch (Exception ex)
+            {
+                // Log exception or handle it as needed
+                throw new Exception("Error verifying password", ex);
+            }
+        }
+
+
+
 
         public bool DeleteAccount(string idAccount)
         {
@@ -94,6 +115,19 @@ namespace OrchidDAO
             {
                 // Handle the exception (e.g., log it)
                 throw new Exception("Error retrieving account by ID", ex);
+            }
+        }
+      
+        public Account GetAccountByUsername(string username)
+        {
+            try
+            {
+                return dbminiCapstoneContext.Accounts.FirstOrDefault(acc => acc.Username == username);
+            }
+            catch (Exception ex)
+            {
+                // Handle the exception (e.g., log it)
+                throw new Exception("Error retrieving account by username", ex);
             }
         }
     }

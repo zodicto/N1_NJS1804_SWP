@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OrchidAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+058e430a6e02e502a23c17e2843a4bd996b92764")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+10374bca3824b8ea6bc865f442ba2860875bca8a")]
 [assembly: System.Reflection.AssemblyProductAttribute("OrchidAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OrchidAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

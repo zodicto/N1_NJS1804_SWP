@@ -43,5 +43,13 @@ namespace OrchidRepositories
         {
             return accountDAO.UpdateAccount(updatedAccount) ;
         }
+        public bool VerifyPassword(Account account, string password)
+        {
+            return accountDAO.VerifyPassword(account, password);
+        }
+        public Account GetAccountByUsername(string username)
+        {
+            return accountDAO.GetAccountByUsername(username);
+        }
     }
 }

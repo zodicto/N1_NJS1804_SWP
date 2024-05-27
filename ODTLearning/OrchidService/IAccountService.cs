@@ -21,5 +21,7 @@ namespace OrchidService
         public Account UpdateAccount(Account updatedAccount);
 
         public Account GetAccountById(string accountId);
+        public bool VerifyPassword(Account account, string password);
+        Account GetAccountByUsername(string username);
     }
 }

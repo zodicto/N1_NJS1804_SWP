@@ -259,3 +259,4 @@ C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearni
 C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidAPI\bin\Debug\net8.0\OrchidBusinessObject.pdb
 C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidAPI\bin\Debug\net8.0\OrchidDAO.pdb
 C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidAPI\bin\Debug\net8.0\OrchidRepositories.pdb
+C:\Users\PC\OneDrive\Documents\GitHub\Summer2024SWP391_SAP1804_Group05\ODTLearning\OrchidAPI\bin\Debug\net8.0\BCrypt.Net-Next.dll

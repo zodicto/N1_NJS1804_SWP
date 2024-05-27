@@ -1,4 +1,5 @@
 ﻿using OrchidBusinessObject;
+using OrchidDAO;
 using OrchidRepositories;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,14 @@ namespace OrchidService
         public Account UpdateAccount(Account updatedAccount)
         {
             return accountRepositories.UpdateAccount(updatedAccount);
+        }
+        public bool VerifyPassword(Account account, string password)
+        {
+            return accountRepositories.VerifyPassword(account, password);
+        }
+        public Account GetAccountByUsername(string username)
+        {
+            return accountRepositories.GetAccountByUsername(username);
         }
     }
 }

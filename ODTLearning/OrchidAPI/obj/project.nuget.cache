@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "ha+W/+TahoDw7hXhnWOWJJf7wTahsQYJjx9nKP9MTEELn+lyTnvTcE5D3KGIeFfiLxHdcO6kt5Vw071W7hvDtQ==",
+  "dgSpecHash": "uhVUoxxCb6M=",
   "success": true,
   "projectFilePath": "C:\\Users\\PC\\OneDrive\\Documents\\GitHub\\Summer2024SWP391_SAP1804_Group05\\ODTLearning\\OrchidAPI\\OrchidAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
+    "C:\\Users\\PC\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\humanizer\\2.14.1\\humanizer.2.14.1.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\humanizer.core.af\\2.14.1\\humanizer.core.af.2.14.1.nupkg.sha512",

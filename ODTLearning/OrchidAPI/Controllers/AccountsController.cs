@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OrchidBusinessObject;
@@ -30,7 +31,7 @@ namespace OrchidAPI.Controllers
 
         // GET: api/Accounts/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Account>> GetAccount(string id)
+        public async Task<ActionResult<Account>> GetAccount(string id,string password)
         {
             var account =  iAccountService.GetAccountById(id);
 
@@ -88,6 +89,24 @@ namespace OrchidAPI.Controllers
             return NoContent();
         }
 
-       
+        // POST: api/Accounts/login
+        [HttpPost("login")]
+        public async Task<ActionResult<Account>> Login([FromBody] OrchidAPI.DTO.LoginRequest loginRequest)
+        {
+            var account = iAccountService.GetAccountByUsername(loginRequest.Username);
+
+            if (account == null)
+            {
+                return NotFound("Tài khoản không tồn tại.");
+            }
+
+            if (!iAccountService.VerifyPassword(account, loginRequest.Password))
+            {
+                return Unauthorized("Mật khẩu không đúng.");
+            }
+
+            return Ok(account);
+        }
+
     }
 }

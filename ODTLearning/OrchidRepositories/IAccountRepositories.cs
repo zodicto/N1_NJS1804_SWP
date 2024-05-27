@@ -21,5 +21,9 @@ namespace OrchidRepositories
         public Account UpdateAccount(Account updatedAccount);
 
         public Account GetAccountById(string accountId);
+        public bool VerifyPassword(Account account, string password);
+        public Account GetAccountByUsername(string username);
+
+
     }
 }

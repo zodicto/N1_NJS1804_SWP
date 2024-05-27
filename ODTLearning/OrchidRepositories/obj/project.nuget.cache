@@ -1,11 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "mBIDKcvxAiXb0PhphQq1Y84+qoKcoQvj24gkmRjUv+WqxCfDki09wGam63YwNw3Z7BCcIkua6zNQ8Z0DI0mi3Q==",
+  "dgSpecHash": "5UWFVOoj1yY=",
   "success": true,
   "projectFilePath": "C:\\Users\\PC\\OneDrive\\Documents\\GitHub\\Summer2024SWP391_SAP1804_Group05\\ODTLearning\\OrchidRepositories\\OrchidRepositories.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
+    "C:\\Users\\PC\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\microsoft.data.sqlclient\\5.1.5\\microsoft.data.sqlclient.5.1.5.nupkg.sha512",
