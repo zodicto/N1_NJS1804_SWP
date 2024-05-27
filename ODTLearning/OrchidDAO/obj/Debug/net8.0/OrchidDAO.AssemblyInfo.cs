@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OrchidDAO")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+10374bca3824b8ea6bc865f442ba2860875bca8a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+15046ac7704b87f58d9deb9f1b2c6b3066c2f90a")]
 [assembly: System.Reflection.AssemblyProductAttribute("OrchidDAO")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OrchidDAO")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
