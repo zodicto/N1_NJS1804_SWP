@@ -4382,19 +4382,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\minht\\.nuget\\packages\\": {}
+    "C:\\Users\\PC\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Ki_5\\ODTLearning\\ODTLearning\\ODTLearning.csproj",
+      "projectUniqueName": "C:\\Users\\PC\\OneDrive\\Documents\\GitHub\\Summer2024SWP391_SAP1804_Group05\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj",
       "projectName": "ODTLearning",
-      "projectPath": "D:\\Ki_5\\ODTLearning\\ODTLearning\\ODTLearning.csproj",
-      "packagesPath": "C:\\Users\\minht\\.nuget\\packages\\",
-      "outputPath": "D:\\Ki_5\\ODTLearning\\ODTLearning\\obj\\",
+      "projectPath": "C:\\Users\\PC\\OneDrive\\Documents\\GitHub\\Summer2024SWP391_SAP1804_Group05\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj",
+      "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\PC\\OneDrive\\Documents\\GitHub\\Summer2024SWP391_SAP1804_Group05\\OnDemandTuTor\\ODTLearning\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\minht\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4402,6 +4402,7 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -4481,7 +4482,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300/PortableRuntimeIdentifierGraph.json"
       }
     }
   }
