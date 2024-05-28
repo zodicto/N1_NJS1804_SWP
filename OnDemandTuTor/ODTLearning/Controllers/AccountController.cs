@@ -98,18 +98,6 @@ namespace ODTLearning.Controllers
             });
         }
 
-        [HttpGet]
-        public IActionResult GetAllUser()
-        {
-            var list = _repo.GetAllUser();
-
-            if (list != null)
-            {
-                return Ok(list);
-            }
-            return BadRequest();
-        }
-
         [HttpPost("RenewToken")]
         public IActionResult RenewToken(TokenModel model)
         {
@@ -165,9 +153,9 @@ namespace ODTLearning.Controllers
                 }
 
                 //check 4: Check refreshToken exist in DB
-                var storedToken = _context.Accounts.FirstOrDefault(x => x.FisrtName == model.RefreshToken); // NOT FINISH
+                var storedToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.RefreshToken); 
 
-                if (storedToken == null) // NOT FINISH
+                if (storedToken == null)
                 {
                     return Ok(new ApiResponse
                     {
@@ -177,7 +165,7 @@ namespace ODTLearning.Controllers
                 }
 
                 //check 5: Check refreshToken is used/revoked?
-                if (storedToken.FisrtName == "a") // NOT FINISH
+                if ((bool)storedToken.IsUsed) 
                 {
                     return Ok(new ApiResponse
                     {
@@ -186,7 +174,7 @@ namespace ODTLearning.Controllers
                     });
                 }
 
-                if (storedToken.FisrtName == "b") // NOT FINISH
+                if ((bool)storedToken.IsRevoked) 
                 {
                     return Ok(new ApiResponse
                     {
@@ -198,7 +186,7 @@ namespace ODTLearning.Controllers
                 //check 6: AccesToken id == JwtId in RefreshToken
                 var jti = tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
 
-                if (storedToken.FisrtName != jti) // NOT FINISH
+                if (storedToken.JwtId != jti) 
                 {
                     return Ok(new ApiResponse
                     {
@@ -208,13 +196,13 @@ namespace ODTLearning.Controllers
                 }
 
                 //Update token is used
-                storedToken.FisrtName = "true"; // NOT FINISH
-                storedToken.LastName = "true"; // NOT FINISH
+                storedToken.IsUsed = true; 
+                storedToken.IsRevoked = true; 
                 _context.Update(storedToken);
                 _context.SaveChanges();
 
                 //Create new token
-                var user = _context.Accounts.FirstOrDefault(x => x.IdAccount == storedToken.IdAccount); // NOT FINISH
+                var user = _context.Accounts.FirstOrDefault(x => x.IdAccount == storedToken.IdAccount); 
 
                 var token = _repo.GenerateToken(user);
 
@@ -240,6 +228,19 @@ namespace ODTLearning.Controllers
             var dateTimeInterval = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dateTimeInterval.AddSeconds(utcExpireDate).ToUniversalTime();
             return dateTimeInterval;
+        }
+
+        [HttpGet]
+        [Authorize(Roles = "Student")]
+        public IActionResult GetAllUser()
+        {
+            var list = _repo.GetAllUser();
+
+            if (list != null)
+            {
+                return Ok(list);
+            }
+            return BadRequest();
         }
     }
 }
