@@ -23,9 +23,9 @@ namespace ODTLearning.Repositories
 
         public SignUpValidationModel SignUpValidation(SignUpModel model)
         {
-            string username = "", password = "", passwordConfirm = "", firstname = "", lastname = "";
+            string username = "", password = "", passwordConfirm = "", firstname = "", lastname = "", gmail = "";
             int i = 0;
-            if (model.Username == null)
+            if (string.IsNullOrEmpty(model.Username))
             {
                 username = "Please do not Username empty!!";
                 i++;
@@ -55,6 +55,12 @@ namespace ODTLearning.Repositories
                 i++;
             }
 
+            if (string.IsNullOrEmpty(model.Gmail))
+            {
+                gmail = "Please do not Gmail empty!!";
+                i++;
+            }
+
             if (i != 0)
             {
                 return new SignUpValidationModel
@@ -64,6 +70,7 @@ namespace ODTLearning.Repositories
                     PasswordConfirm = passwordConfirm,
                     FirstName = firstname,
                     LastName = lastname,
+                    Gmail = gmail,
                 };
             }
 
@@ -79,11 +86,15 @@ namespace ODTLearning.Repositories
 
             var user = new Account
             {
-                IdAccount = model.Id,
+                IdAccount = Guid.NewGuid().ToString(),
                 FisrtName = model.FirstName,
                 LastName = model.LastName,
                 Username = model.Username,
-                Password = model.Password
+                Password = model.Password,
+                Gmail = model.Gmail,
+                Birthdate = model.Birthdate,
+                Gender = model.Gender,
+                Role = "Student"
             };
 
             _context.Add(user);
@@ -130,12 +141,14 @@ namespace ODTLearning.Repositories
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, user.FisrtName + "" + user.LastName),
+                new Claim(ClaimTypes.Name, user.LastName + "" + user.FisrtName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Gmail),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Birthdate, user.FisrtName),
-                new Claim(JwtRegisteredClaimNames.Gender, user.FisrtName),
+                new Claim(JwtRegisteredClaimNames.Birthdate, user.Birthdate),
+                new Claim(JwtRegisteredClaimNames.Gender, (bool)user.Gender?"Male":"Female"),
+                new Claim(ClaimTypes.Role, user.Role),
                 new Claim("Id", user.IdAccount )
+
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
