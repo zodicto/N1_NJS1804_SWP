@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "f748uUcMFZE=",
+  "dgSpecHash": "uDpTNKokLRc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\PC\\OneDrive\\Documents\\GitHub\\Summer2024SWP391_SAP1804_Group05\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj",
+  "projectFilePath": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\PC\\.nuget\\packages\\automapper\\12.0.0\\automapper.12.0.0.nupkg.sha512",
     "C:\\Users\\PC\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",

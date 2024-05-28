@@ -5,13 +5,11 @@ namespace ODTLearning.Entities;
 
 public partial class TypeOfService
 {
-    public string Id { get; set; } = null!;
+    public string IdTypeOfService { get; set; } = null!;
 
-    public int? Name { get; set; }
+    public string? NameService { get; set; }
 
-    public string PostId { get; set; } = null!;
-
-    public virtual Post Post { get; set; } = null!;
+    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 
     public virtual ICollection<Service> Services { get; set; } = new List<Service>();
 }

@@ -5,21 +5,23 @@ namespace ODTLearning.Entities;
 
 public partial class Tutor
 {
-    public string Id { get; set; } = null!;
+    public string IdTutor { get; set; } = null!;
 
     public string? SpecializedSkills { get; set; }
 
     public int? Experience { get; set; }
 
-    public string UserId { get; set; } = null!;
+    public string? IdAccount { get; set; }
 
-    public virtual ICollection<Certificate> Certificates { get; set; } = new List<Certificate>();
+    public bool? Status { get; set; }
 
-    public virtual ICollection<Degree> Degrees { get; set; } = new List<Degree>();
+    public virtual ICollection<EducationalQualification> EducationalQualifications { get; set; } = new List<EducationalQualification>();
 
-    public virtual ICollection<RequestTutor> RequestTutors { get; set; } = new List<RequestTutor>();
+    public virtual Account? IdAccountNavigation { get; set; }
 
-    public virtual ICollection<Service> Services { get; set; } = new List<Service>();
+    public virtual ICollection<ResquestTutor> ResquestTutors { get; set; } = new List<ResquestTutor>();
 
-    public virtual User User { get; set; } = null!;
+    public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
+
+    public virtual ICollection<TutorField> TutorFields { get; set; } = new List<TutorField>();
 }

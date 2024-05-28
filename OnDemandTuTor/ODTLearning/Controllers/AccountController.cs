@@ -17,15 +17,15 @@ namespace ODTLearning.Controllers
     {
         private readonly IAccountRepository _repo;
         private readonly IConfiguration _configuration;
-        private readonly DbMiniCapStoneContext _context;
+        private readonly DbminiCapstoneContext _context;
 
-        public AccountController(IAccountRepository repo, IConfiguration configuration, DbMiniCapStoneContext context) 
+        public AccountController(IAccountRepository repo, IConfiguration configuration, DbminiCapstoneContext context)
         {
             _repo = repo;
             _configuration = configuration;
             _context = context;
         }
-        [HttpPost("SignUp")]        
+        [HttpPost("SignUp")]
         public IActionResult SignUp(SignUpModel model)
         {
             var validation = _repo.SignUpValidation(model);
@@ -56,7 +56,7 @@ namespace ODTLearning.Controllers
             {
                 Success = false,
                 Message = "Password and PasswordConfirm are not same"
-            });                    
+            });
         }
 
         [HttpPost("SignIn")]
@@ -165,7 +165,7 @@ namespace ODTLearning.Controllers
                 }
 
                 //check 4: Check refreshToken exist in DB
-                var storedToken = _context.Users.FirstOrDefault(x => x.FirstName == model.RefreshToken); // NOT FINISH
+                var storedToken = _context.Accounts.FirstOrDefault(x => x.FisrtName == model.RefreshToken); // NOT FINISH
 
                 if (storedToken == null) // NOT FINISH
                 {
@@ -177,7 +177,7 @@ namespace ODTLearning.Controllers
                 }
 
                 //check 5: Check refreshToken is used/revoked?
-                if (storedToken.FirstName == "a") // NOT FINISH
+                if (storedToken.FisrtName == "a") // NOT FINISH
                 {
                     return Ok(new ApiResponse
                     {
@@ -186,7 +186,7 @@ namespace ODTLearning.Controllers
                     });
                 }
 
-                if (storedToken.FirstName == "b") // NOT FINISH
+                if (storedToken.FisrtName == "b") // NOT FINISH
                 {
                     return Ok(new ApiResponse
                     {
@@ -198,7 +198,7 @@ namespace ODTLearning.Controllers
                 //check 6: AccesToken id == JwtId in RefreshToken
                 var jti = tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
 
-                if (storedToken.FirstName != jti) // NOT FINISH
+                if (storedToken.FisrtName != jti) // NOT FINISH
                 {
                     return Ok(new ApiResponse
                     {
@@ -208,13 +208,13 @@ namespace ODTLearning.Controllers
                 }
 
                 //Update token is used
-                storedToken.FirstName = "true"; // NOT FINISH
+                storedToken.FisrtName = "true"; // NOT FINISH
                 storedToken.LastName = "true"; // NOT FINISH
                 _context.Update(storedToken);
                 _context.SaveChanges();
 
                 //Create new token
-                var user = _context.Users.FirstOrDefault(x => x.Id == storedToken.Id); // NOT FINISH
+                var user = _context.Accounts.FirstOrDefault(x => x.IdAccount == storedToken.IdAccount); // NOT FINISH
 
                 var token = _repo.GenerateToken(user);
 
@@ -237,7 +237,7 @@ namespace ODTLearning.Controllers
 
         private DateTime ConvertUnixTimeToDateTime(long utcExpireDate)
         {
-            var dateTimeInterval = new DateTime(1970,1,1,0,0,0,0, DateTimeKind.Utc);
+            var dateTimeInterval = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dateTimeInterval.AddSeconds(utcExpireDate).ToUniversalTime();
             return dateTimeInterval;
         }

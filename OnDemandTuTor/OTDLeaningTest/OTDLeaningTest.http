@@ -1,0 +1,6 @@
+@OTDLeaningTest_HostAddress = http://localhost:5003
+
+GET {{OTDLeaningTest_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\PC\\OneDrive\\Documents\\GitHub\\Summer2024SWP391_SAP1804_Group05\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj": {}
+    "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj": {}
   },
   "projects": {
-    "C:\\Users\\PC\\OneDrive\\Documents\\GitHub\\Summer2024SWP391_SAP1804_Group05\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj": {
+    "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\PC\\OneDrive\\Documents\\GitHub\\Summer2024SWP391_SAP1804_Group05\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj",
+        "projectUniqueName": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj",
         "projectName": "ODTLearning",
-        "projectPath": "C:\\Users\\PC\\OneDrive\\Documents\\GitHub\\Summer2024SWP391_SAP1804_Group05\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj",
+        "projectPath": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj",
         "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\PC\\OneDrive\\Documents\\GitHub\\Summer2024SWP391_SAP1804_Group05\\OnDemandTuTor\\ODTLearning\\obj\\",
+        "outputPath": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",

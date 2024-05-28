@@ -5,21 +5,23 @@ namespace ODTLearning.Entities;
 
 public partial class Post
 {
-    public string Id { get; set; } = null!;
+    public string IdPost { get; set; } = null!;
 
     public string? Price { get; set; }
 
-    public string? Title { get; set; }
+    public string? Titile { get; set; }
 
     public string? Description { get; set; }
 
-    public string? Status { get; set; }
+    public bool? Status { get; set; }
 
-    public string StudentId { get; set; } = null!;
+    public string? IdAccount { get; set; }
 
-    public virtual ICollection<RequestTutor> RequestTutors { get; set; } = new List<RequestTutor>();
+    public string? IdTypeOfService { get; set; }
 
-    public virtual Student Student { get; set; } = null!;
+    public virtual Account? IdAccountNavigation { get; set; }
 
-    public virtual ICollection<TypeOfService> TypeOfServices { get; set; } = new List<TypeOfService>();
+    public virtual TypeOfService? IdTypeOfServiceNavigation { get; set; }
+
+    public virtual ICollection<ResquestTutor> ResquestTutors { get; set; } = new List<ResquestTutor>();
 }

@@ -12,10 +12,10 @@ namespace ODTLearning.Repositories
 {
     public class AccountRepository : IAccountRepository
     {
-        private readonly DbMiniCapStoneContext _context;
+        private readonly DbminiCapstoneContext _context;
         private readonly IConfiguration _configuration;
 
-        public AccountRepository(DbMiniCapStoneContext context, IConfiguration configuration) 
+        public AccountRepository(DbminiCapstoneContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
@@ -58,13 +58,13 @@ namespace ODTLearning.Repositories
             if (i != 0)
             {
                 return new SignUpValidationModel
-                            {
-                                Username = username,
-                                Password = password,
-                                PasswordConfirm = passwordConfirm,
-                                FirstName = firstname,  
-                                LastName = lastname,    
-                            };
+                {
+                    Username = username,
+                    Password = password,
+                    PasswordConfirm = passwordConfirm,
+                    FirstName = firstname,
+                    LastName = lastname,
+                };
             }
 
             return null;
@@ -77,10 +77,10 @@ namespace ODTLearning.Repositories
                 return null;
             }
 
-            var user = new User
+            var user = new Account
             {
-                Id = model.Id,
-                FirstName = model.FirstName,
+                IdAccount = model.Id,
+                FisrtName = model.FirstName,
                 LastName = model.LastName,
                 Username = model.Username,
                 Password = model.Password
@@ -120,9 +120,9 @@ namespace ODTLearning.Repositories
             return null;
         }
 
-        public User Authentication(SignInModel model) => _context.Users.FirstOrDefault(u => u.Username == model.Username &&                                                   u.Password == model.Password);
+        public Account Authentication(SignInModel model) => _context.Accounts.FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
 
-        public TokenModel GenerateToken(User user)
+        public TokenModel GenerateToken(Account user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:SecretKey"]));
@@ -130,17 +130,17 @@ namespace ODTLearning.Repositories
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.Name, user.FirstName + "" + user.LastName),
+                new Claim(ClaimTypes.Name, user.FisrtName + "" + user.LastName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Gmail),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Birthdate, user.FirstName),
-                new Claim(JwtRegisteredClaimNames.Gender, user.FirstName),
-                new Claim("Id", user.Id)
+                new Claim(JwtRegisteredClaimNames.Birthdate, user.FisrtName),
+                new Claim(JwtRegisteredClaimNames.Gender, user.FisrtName),
+                new Claim("Id", user.IdAccount )
             };
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(claims),   
+                Subject = new ClaimsIdentity(claims),
                 Expires = DateTime.Now.AddMinutes(15),
                 SigningCredentials = credentials
             };
@@ -151,8 +151,8 @@ namespace ODTLearning.Repositories
 
             var refreshTokenEntity = new RefreshToken
             {
-                Id = Guid.NewGuid().ToString(),
-                UserId = user.Id,
+                Id = Guid.NewGuid(),
+                IdAccount = user.IdAccount,
                 JwtId = token.Id,
                 Token = refreshToken,
                 IsUsed = false,
@@ -168,13 +168,13 @@ namespace ODTLearning.Repositories
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
-            };                
+            };
         }
 
         private string GenerateRefreshToken()
         {
             var random = new byte[32];
-            using (var rng = RandomNumberGenerator.Create()) 
+            using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(random);
 
@@ -182,9 +182,9 @@ namespace ODTLearning.Repositories
             }
         }
 
-        public List<User> GetAllUser()
+        public List<Account> GetAllUser()
         {
-            var list = _context.Users.ToList();
+            var list = _context.Accounts.ToList();
             return list;
         }
     }

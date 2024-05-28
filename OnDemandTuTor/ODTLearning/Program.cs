@@ -1,9 +1,15 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using ODTLearning.Entities;
 using ODTLearning.Repositories;
+using System;
 using System.Text;
 
 namespace ODTLearning
@@ -15,39 +21,31 @@ namespace ODTLearning
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
-            builder.Services.AddDbContext<DbMiniCapStoneContext>(option => option.UseSqlServer(builder.Configuration.GetConnectionString("DB_MiniCapStone")));
-
-            builder.Services.AddAutoMapper(typeof(Program));
-
-            builder.Services.AddCors(options => options.AddDefaultPolicy(policy => 
-                                     policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
-
+            // Register services
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
+            // Add DbContext
+            builder.Services.AddDbContext<DbminiCapstoneContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DB_MiniCapStone")));
+            // Configure JWT authentication
             var secretKey = builder.Configuration["AppSettings:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
-
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt =>
-            {
-                opt.TokenValidationParameters = new TokenValidationParameters
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
                 {
-                    //tu cap token
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-
-                    //ky vao token
-                    ValidateIssuerSigningKey = false,
-                    IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
-
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
 
             var app = builder.Build();
 
@@ -60,12 +58,16 @@ namespace ODTLearning
 
             app.UseHttpsRedirection();
 
+            app.UseRouting();
+
             app.UseAuthentication();
 
             app.UseAuthorization();
 
-
-            app.MapControllers();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             app.Run();
         }
