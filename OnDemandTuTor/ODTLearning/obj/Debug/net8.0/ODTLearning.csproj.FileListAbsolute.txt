@@ -836,3 +836,9 @@ D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\D
 D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\ODTLearning.pdb
 D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\ODTLearning.genruntimeconfig.cache
 D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\ref\ODTLearning.dll
+D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Microsoft.AspNetCore.JsonPatch.dll
+D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Newtonsoft.Json.dll
+D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll
+D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\X.PagedList.dll
+D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\X.PagedList.Mvc.Core.dll
+D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\X.PagedList.Web.Common.dll

@@ -27,6 +27,7 @@ namespace ODTLearning
 
             // Register services
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<ITutorListRepository, TutorListRepository>();
 
             // Add DbContext
             builder.Services.AddDbContext<DbminiCapstoneContext>(options =>

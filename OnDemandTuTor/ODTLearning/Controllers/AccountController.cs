@@ -27,9 +27,6 @@ namespace ODTLearning.Controllers
             _context = context;
         }
 
-        
-
-
         [HttpPost("SignIn")]
         public IActionResult SignIn(SignInModel model)
         {
@@ -273,7 +270,7 @@ namespace ODTLearning.Controllers
             return dateTimeInterval;
         }
 
-        [HttpGet]
+        [HttpGet("GetAllUser")]
         [Authorize(Roles = "Student")]
         public IActionResult GetAllUser()
         {
