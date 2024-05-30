@@ -8,8 +8,12 @@ namespace ODTLearning.Repositories
 {
     public interface IAccountRepository
     {
-        public SignUpValidationModel SignUpValidation(SignUpModel model);
-        public object SignUp(SignUpModel model);
+        public SignUpValidationTutorModel SignUpValidationTutor(SignUpModelOfTutor model);
+        public SignUpValidationStudentModel SignUpValidationStudent(SignUpModelOfStudent model);
+
+        public object SignUpOfStudent(SignUpModelOfStudent model);
+        public object SignUpOfTutor(SignUpModelOfTutor model);
+
         public SignInValidationModel SignInValidation(SignInModel model);
         public Account Authentication(SignInModel model);
         public TokenModel GenerateToken(Account user);

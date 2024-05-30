@@ -8,6 +8,7 @@ using ODTLearning.Models;
 using ODTLearning.Repositories;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace ODTLearning.Controllers
 {
@@ -25,39 +26,9 @@ namespace ODTLearning.Controllers
             _configuration = configuration;
             _context = context;
         }
-        [HttpPost("SignUp")]
-        public IActionResult SignUp(SignUpModel model)
-        {
-            var validation = _repo.SignUpValidation(model);
 
-            if (validation != null)
-            {
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Sign up fail",
-                    Data = validation
-                });
-            }
+        
 
-            var user = _repo.SignUp(model);
-
-            if (user != null)
-            {
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Sign up successfully",
-                    Data = user
-                });
-            }
-
-            return Ok(new ApiResponse
-            {
-                Success = false,
-                Message = "Password and PasswordConfirm are not same"
-            });
-        }
 
         [HttpPost("SignIn")]
         public IActionResult SignIn(SignInModel model)
@@ -96,7 +67,79 @@ namespace ODTLearning.Controllers
                 Success = false,
                 Message = "Invalid username or password"
             });
+
         }
+
+        [HttpPost("SignUpOfTuTor")]
+        public IActionResult SignUpOfTutor(SignUpModelOfTutor model)
+        {
+            var validation = _repo.SignUpValidationTutor(model);
+
+            if (validation != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Sign up fail",
+                    Data = validation
+                });
+            }
+
+            var user = _repo.SignUpOfTutor(model);
+
+            if (user != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Sign up successfully",
+                    Data = user
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = false,
+                Message = "Password and PasswordConfirm are not same"
+            });
+        }
+        [HttpPost("SignUpOfStudent")]
+        public IActionResult SignUpOfStudent(SignUpModelOfStudent model)
+        {
+            var validation = _repo.SignUpValidationStudent(model);
+
+            if (validation != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Sign up fail",
+                    Data = validation
+                });
+            }
+
+            var user = _repo.SignUpOfStudent(model);
+
+            if (user != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Sign up successfully",
+                    Data = user
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = false,
+                Message = "Password and PasswordConfirm are not same"
+            });
+        }
+         
+
+       
+
 
         [HttpPost("RenewToken")]
         public IActionResult RenewToken(TokenModel model)

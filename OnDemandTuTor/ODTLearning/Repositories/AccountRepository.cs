@@ -21,7 +21,94 @@ namespace ODTLearning.Repositories
             _configuration = configuration;
         }
 
-        public SignUpValidationModel SignUpValidation(SignUpModel model)
+        public SignUpValidationTutorModel SignUpValidationTutor(SignUpModelOfTutor model)
+        {
+            string username = "", password = "", passwordConfirm = "", firstname = "", lastname = "", gmail = "", img = "", specializedSkills = "", organization = "", field = "", type = "", imageDegree = "";
+            int i = 0;
+            if (string.IsNullOrEmpty(model.Username))
+            {
+                username = "Please do not Username empty!!";
+                i++;
+            }
+
+            if (string.IsNullOrEmpty(model.Password))
+            {
+                password = "Please do not Password empty!!";
+                i++;
+            }
+
+            if (string.IsNullOrEmpty(model.PasswordConfirm))
+            {
+                passwordConfirm = "Please do not PasswordConfirm empty!!";
+                i++;
+            }
+
+            if (string.IsNullOrEmpty(model.FirstName))
+            {
+                firstname = "Please do not Firstname empty!!";
+                i++;
+            }
+
+            if (string.IsNullOrEmpty(model.LastName))
+            {
+                lastname = "Please do not Lastname empty!!";
+                i++;
+            }
+
+            if (string.IsNullOrEmpty(model.Gmail))
+            {
+                gmail = "Please do not Gmail empty!!";
+                i++;
+            }
+            if (string.IsNullOrEmpty(model.SpecializedSkills))
+            {
+                specializedSkills = "Please do not SpecializedSkills empty!!";
+                i++;
+            }
+            if (string.IsNullOrEmpty(model.Organization))
+            {
+                organization = "Please do not Organization empty!!";
+                i++;
+            }
+            if (string.IsNullOrEmpty(model.Field))
+            {
+                field = "Please do not Field empty!!";
+                i++;
+            }
+            if (string.IsNullOrEmpty(model.Type))
+            {
+                type = "Please do not Type empty!!";
+                i++;
+            }
+            if (string.IsNullOrEmpty(model.ImageDegree))
+            {
+                imageDegree = "Please do not Image Degree empty!!";
+                i++;
+            }
+
+
+            if (i != 0)
+            {
+                return new SignUpValidationTutorModel
+                {
+                    Username = username,
+                    Password = password,
+                    PasswordConfirm = passwordConfirm,
+                    FirstName = firstname,
+                    LastName = lastname,
+                    Gmail = gmail,
+                   SpecializedSkills = specializedSkills,   
+                   Organization = organization,
+                   Field = field,
+                   Type = type,
+                   ImageDegree = img,
+                };
+            }
+
+            return null;
+        }
+
+        public SignUpValidationStudentModel SignUpValidationStudent(SignUpModelOfStudent model)
         {
             string username = "", password = "", passwordConfirm = "", firstname = "", lastname = "", gmail = "";
             int i = 0;
@@ -63,7 +150,7 @@ namespace ODTLearning.Repositories
 
             if (i != 0)
             {
-                return new SignUpValidationModel
+                return new SignUpValidationStudentModel
                 {
                     Username = username,
                     Password = password,
@@ -77,7 +164,7 @@ namespace ODTLearning.Repositories
             return null;
         }
 
-        public object SignUp(SignUpModel model)
+        public object SignUpOfStudent(SignUpModelOfStudent model)
         {
             if (model.Password != model.PasswordConfirm)
             {
@@ -96,8 +183,70 @@ namespace ODTLearning.Repositories
                 Gender = model.Gender,
                 Role = "Student"
             };
+            
 
-            _context.Add(user);
+            _context.Accounts.Add(user);
+            _context.SaveChanges();
+
+            return user;
+        }
+        public object SignUpOfTutor(SignUpModelOfTutor model)
+        {
+            if (model.Password != model.PasswordConfirm)
+            {
+                return null;
+            }
+
+            var user = new Account
+            {
+                IdAccount = Guid.NewGuid().ToString(),
+                FisrtName = model.FirstName,
+                LastName = model.LastName,
+                Username = model.Username,
+                Password = model.Password,
+                Gmail = model.Gmail,
+                Birthdate = model.Birthdate,
+                Gender = model.Gender,                
+                Role = "Tutor"
+            };
+            var tutor = new Tutor
+            {
+                IdTutor = Guid.NewGuid().ToString(),
+                IdAccount = user.IdAccount,
+                SpecializedSkills = model.SpecializedSkills,
+                Experience = model.Experience,
+                Status = true
+            };
+            var educationalQualifications = new EducationalQualification
+            {
+                IdEducationalEualifications = Guid.NewGuid().ToString(),
+
+                IdTutor = tutor.IdTutor,
+
+                CertificateName = model.QualificationName,
+                Organization = model.Organization,
+                Img = model.ImageDegree,
+                Type = model.Type,
+
+            };
+            var tutorField = new TutorField
+            {
+                IdTutorFileld = Guid.NewGuid().ToString(),
+                IdField = Guid.NewGuid().ToString(),
+                IdTutor = tutor.IdTutor,
+            };
+            var field = new Field
+            {
+                IdField = Guid.NewGuid().ToString(),
+                FieldName = model.Field,
+            };
+
+
+            _context.Accounts.Add(user);
+            _context.Tutors.Add(tutor);
+            _context.EducationalQualifications.Add(educationalQualifications);
+            _context.TutorFields.Add(tutorField);
+            _context.Fields.Add(field);
             _context.SaveChanges();
 
             return user;
@@ -199,6 +348,11 @@ namespace ODTLearning.Repositories
         {
             var list = _context.Accounts.ToList();
             return list;
+        }
+
+        public SignUpValidationTutorModel SignUpValidationTutor(SignUpValidationTutorModel model)
+        {
+            throw new NotImplementedException();
         }
     }
 }
