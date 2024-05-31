@@ -17,9 +17,9 @@ public partial class Account
 
     public string? Gmail { get; set; }
 
-    public string? Birthdate { get; set; }
+    public DateTime? Birthdate { get; set; }
 
-    public bool? Gender { get; set; }
+    public string? Gender { get; set; }
 
     public string? Role { get; set; }
 

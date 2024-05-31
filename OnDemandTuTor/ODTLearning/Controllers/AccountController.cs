@@ -68,7 +68,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("SignUpOfTuTor")]
-        public IActionResult SignUpOfTutor(SignUpModelOfTutor model)
+        public IActionResult SignUpOfTutor(String IDAccount,SignUpModelOfTutor model)
         {
             var validation = _repo.SignUpValidationTutor(model);
 
@@ -82,7 +82,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            var user = _repo.SignUpOfTutor(model);
+            var user = _repo.SignUpOfTutor(IDAccount,model);
 
             if (user != null)
             {
@@ -100,10 +100,12 @@ namespace ODTLearning.Controllers
                 Message = "Password and PasswordConfirm are not same"
             });
         }
-        [HttpPost("SignUpOfStudent")]
-        public IActionResult SignUpOfStudent(SignUpModelOfStudent model)
+
+
+        [HttpPost("SignUpOfAccount")]
+        public IActionResult SignUpOfAccount(SignUpModelOfAccount model)
         {
-            var validation = _repo.SignUpValidationStudent(model);
+            var validation = _repo.SignUpValidationOfAccount(model);
 
             if (validation != null)
             {
@@ -115,7 +117,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            var user = _repo.SignUpOfStudent(model);
+            var user = _repo.SignUpOfAccount(model);
 
             if (user != null)
             {
@@ -133,10 +135,6 @@ namespace ODTLearning.Controllers
                 Message = "Password and PasswordConfirm are not same"
             });
         }
-         
-
-       
-
 
         [HttpPost("RenewToken")]
         public IActionResult RenewToken(TokenModel model)

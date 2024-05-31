@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ApiExplorer;
+﻿using Aqua.EnumerableExtensions;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ODTLearning.Entities;
@@ -21,45 +22,11 @@ namespace ODTLearning.Repositories
             _configuration = configuration;
         }
 
-        public SignUpValidationTutorModel SignUpValidationTutor(SignUpModelOfTutor model)
+        public SignUpValidationOfTutorModel SignUpValidationTutor(SignUpModelOfTutor model)
         {
-            string username = "", password = "", passwordConfirm = "", firstname = "", lastname = "", gmail = "", img = "", specializedSkills = "", organization = "", field = "", type = "", imageDegree = "";
+           String img = "", specializedSkills = "", organization = "", field = "", type = "", imageDegree = "";
             int i = 0;
-            if (string.IsNullOrEmpty(model.Username))
-            {
-                username = "Please do not Username empty!!";
-                i++;
-            }
-
-            if (string.IsNullOrEmpty(model.Password))
-            {
-                password = "Please do not Password empty!!";
-                i++;
-            }
-
-            if (string.IsNullOrEmpty(model.PasswordConfirm))
-            {
-                passwordConfirm = "Please do not PasswordConfirm empty!!";
-                i++;
-            }
-
-            if (string.IsNullOrEmpty(model.FirstName))
-            {
-                firstname = "Please do not Firstname empty!!";
-                i++;
-            }
-
-            if (string.IsNullOrEmpty(model.LastName))
-            {
-                lastname = "Please do not Lastname empty!!";
-                i++;
-            }
-
-            if (string.IsNullOrEmpty(model.Gmail))
-            {
-                gmail = "Please do not Gmail empty!!";
-                i++;
-            }
+            
             if (string.IsNullOrEmpty(model.SpecializedSkills))
             {
                 specializedSkills = "Please do not SpecializedSkills empty!!";
@@ -89,14 +56,9 @@ namespace ODTLearning.Repositories
 
             if (i != 0)
             {
-                return new SignUpValidationTutorModel
+                return new SignUpValidationOfTutorModel
                 {
-                    Username = username,
-                    Password = password,
-                    PasswordConfirm = passwordConfirm,
-                    FirstName = firstname,
-                    LastName = lastname,
-                    Gmail = gmail,
+                    
                    SpecializedSkills = specializedSkills,   
                    Organization = organization,
                    Field = field,
@@ -107,8 +69,8 @@ namespace ODTLearning.Repositories
 
             return null;
         }
-
-        public SignUpValidationStudentModel SignUpValidationStudent(SignUpModelOfStudent model)
+       
+        public SignUpValidationOfAccountModel SignUpValidationOfAccount(SignUpModelOfAccount model) //Tri(Sửa của Tânân) : Xử lý cho việc check validate
         {
             string username = "", password = "", passwordConfirm = "", firstname = "", lastname = "", gmail = "";
             int i = 0;
@@ -150,7 +112,7 @@ namespace ODTLearning.Repositories
 
             if (i != 0)
             {
-                return new SignUpValidationStudentModel
+                return new SignUpValidationOfAccountModel
                 {
                     Username = username,
                     Password = password,
@@ -164,7 +126,7 @@ namespace ODTLearning.Repositories
             return null;
         }
 
-        public object SignUpOfStudent(SignUpModelOfStudent model)
+        public object SignUpOfAccount(SignUpModelOfAccount model)// Trí(Sửa của Tân): Tạo mới một object và lưu vào Db theo tưng thuộc tính 
         {
             if (model.Password != model.PasswordConfirm)
             {
@@ -190,67 +152,65 @@ namespace ODTLearning.Repositories
 
             return user;
         }
-        public object SignUpOfTutor(SignUpModelOfTutor model)
+        public object SignUpOfTutor(String IDAccount,SignUpModelOfTutor model)
         {
-            if (model.Password != model.PasswordConfirm)
+            // Tìm kiếm tài khoản trong cơ sở dữ liệu bằng ID
+            var existingUser = _context.Accounts.FirstOrDefault(a => a.IdAccount == IDAccount);
+
+            if (existingUser != null)
             {
-                return null;
+                // Cập nhật vai trò của tài khoản thành "Tutor"
+                existingUser.Role = "Tutor";
+
+                // Tạo mới đối tượng Tutor
+                var tutor = new Tutor
+                {
+                    IdTutor = Guid.NewGuid().ToString(),
+                    IdAccount = existingUser.IdAccount, // Gán ID của tài khoản
+                    SpecializedSkills = model.SpecializedSkills,
+                    Experience = model.Experience,
+                    Status = true
+                };
+
+                // Tạo mới đối tượng EducationalQualification
+                var educationalQualifications = new EducationalQualification
+                {
+                    IdEducationalEualifications = Guid.NewGuid().ToString(),
+                    IdTutor = tutor.IdTutor,
+                    CertificateName = model.QualificationName,
+                    Organization = model.Organization,
+                    Img = model.ImageDegree,
+                    Type = model.Type,
+                };
+
+                // Tạo mới đối tượng TutorField và Field
+                var tutorField = new TutorField
+                {
+                    IdTutorFileld = Guid.NewGuid().ToString(),
+                    IdField = Guid.NewGuid().ToString(),
+                    IdTutor = tutor.IdTutor,
+                };
+                var field = new Field
+                {
+                    IdField = Guid.NewGuid().ToString(),
+                    FieldName = model.Field,
+                };
+
+                // Thêm các đối tượng vào cơ sở dữ liệu
+                _context.Tutors.Add(tutor);
+                _context.EducationalQualifications.Add(educationalQualifications);
+                _context.TutorFields.Add(tutorField);
+                _context.Fields.Add(field);
+                _context.SaveChanges();
+
+                // Trả về tài khoản đã được cập nhật vai trò thành "Tutor"
+                return existingUser;
             }
 
-            var user = new Account
-            {
-                IdAccount = Guid.NewGuid().ToString(),
-                FisrtName = model.FirstName,
-                LastName = model.LastName,
-                Username = model.Username,
-                Password = model.Password,
-                Gmail = model.Gmail,
-                Birthdate = model.Birthdate,
-                Gender = model.Gender,                
-                Role = "Tutor"
-            };
-            var tutor = new Tutor
-            {
-                IdTutor = Guid.NewGuid().ToString(),
-                IdAccount = user.IdAccount,
-                SpecializedSkills = model.SpecializedSkills,
-                Experience = model.Experience,
-                Status = true
-            };
-            var educationalQualifications = new EducationalQualification
-            {
-                IdEducationalEualifications = Guid.NewGuid().ToString(),
-
-                IdTutor = tutor.IdTutor,
-
-                CertificateName = model.QualificationName,
-                Organization = model.Organization,
-                Img = model.ImageDegree,
-                Type = model.Type,
-
-            };
-            var tutorField = new TutorField
-            {
-                IdTutorFileld = Guid.NewGuid().ToString(),
-                IdField = Guid.NewGuid().ToString(),
-                IdTutor = tutor.IdTutor,
-            };
-            var field = new Field
-            {
-                IdField = Guid.NewGuid().ToString(),
-                FieldName = model.Field,
-            };
-
-
-            _context.Accounts.Add(user);
-            _context.Tutors.Add(tutor);
-            _context.EducationalQualifications.Add(educationalQualifications);
-            _context.TutorFields.Add(tutorField);
-            _context.Fields.Add(field);
-            _context.SaveChanges();
-
-            return user;
+            // Trường hợp không tìm thấy tài khoản
+            return null;
         }
+
 
         public SignInValidationModel SignInValidation(SignInModel model)
         {
@@ -288,17 +248,27 @@ namespace ODTLearning.Repositories
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:SecretKey"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.LastName + "" + user.FisrtName),
                 new Claim(JwtRegisteredClaimNames.Email, user.Gmail),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Birthdate, user.Birthdate),
-                new Claim(JwtRegisteredClaimNames.Gender, (bool)user.Gender?"Male":"Female"),
                 new Claim(ClaimTypes.Role, user.Role),
                 new Claim("Id", user.IdAccount )
 
             };
+
+            // Chuyển đổi Birthdate từ DateTime? sang string nếu không null
+            if (user.Birthdate.HasValue)
+            {
+                claims.Add(new Claim(JwtRegisteredClaimNames.Birthdate, user.Birthdate.Value.ToString("yyyy-MM-dd")));
+            }
+
+            // Thêm Gender nếu không null
+            if (!string.IsNullOrEmpty(user.Gender))
+            {
+                claims.Add(new Claim(JwtRegisteredClaimNames.Gender, user.Gender));
+            }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -333,7 +303,7 @@ namespace ODTLearning.Repositories
             };
         }
 
-        private string GenerateRefreshToken()
+        public string GenerateRefreshToken()
         {
             var random = new byte[32];
             using (var rng = RandomNumberGenerator.Create())
@@ -350,9 +320,6 @@ namespace ODTLearning.Repositories
             return list;
         }
 
-        public SignUpValidationTutorModel SignUpValidationTutor(SignUpValidationTutorModel model)
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }
