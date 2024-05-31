@@ -21,7 +21,6 @@
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
-    <PackageReference Include="X.PagedList.Mvc.Core" Version="8.0.5" />
   </ItemGroup>
 
 </Project>

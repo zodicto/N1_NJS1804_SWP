@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ODTLearning")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1c8f6c1363f0f1f6186244a1097b0205c04074f6")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+36b049101ffb200ef0eeb777620098b6b90aa010")]
 [assembly: System.Reflection.AssemblyProductAttribute("ODTLearning")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ODTLearning")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

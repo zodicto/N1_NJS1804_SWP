@@ -29,13 +29,18 @@ namespace ODTLearning.Repositories
             if (!string.IsNullOrEmpty(field))
             {                
                 var fieldId = _context.Fields.Where(x => x.FieldName == field).Select(x => x.IdField).ToString();
-                    
+                
                 var kq = _context.TutorFields.Where(x => x.IdField == fieldId).Join(_context.Tutors, tf => tf.IdTutor, t => t.IdTutor, (tf, t) => t.IdAccount).ToList();
+
+                IQueryable<Account> a = null;
 
                 foreach (var id in kq)
                 {
-                    list = list.Where(x => x.IdAccount == id);
+                    var k = list.Where(x => x.IdAccount == id);
+                    a = a.Union(k);
                 }
+
+                list = a;
             }
 
             return list.ToList();

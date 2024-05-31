@@ -80,10 +80,6 @@
             "System.IdentityModel.Tokens.Jwt": {
               "target": "Package",
               "version": "[7.1.2, )"
-            },
-            "X.PagedList.Mvc.Core": {
-              "target": "Package",
-              "version": "[8.0.5, )"
             }
           },
           "imports": [
