@@ -32,10 +32,22 @@ namespace ODTLearning
             // Add DbContext
             builder.Services.AddDbContext<DbminiCapstoneContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DB_MiniCapStone")));
+
             // Configure JWT authentication
             var secretKey = builder.Configuration["AppSettings:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddGoogle(googleOptions =>
+                {
+                    // doc thong tin Authentication:Google tu appsettings.json
+                    IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+
+                    // Thiet lap ClientID và ClientSecret de truy cap API google
+                    googleOptions.ClientId = googleAuthNSection["ClientId"];
+                    googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+
+
+                })
                 .AddJwtBearer(options =>
                 {
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -47,6 +59,16 @@ namespace ODTLearning
                         ClockSkew = TimeSpan.Zero
                     };
                 });
+
+            // Add CORS policy
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowSpecificOrigin",
+                    builder => builder.WithOrigins("http://localhost:3000")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod()
+                                      .AllowCredentials());
+            });
 
             var app = builder.Build();
 
@@ -61,8 +83,10 @@ namespace ODTLearning
 
             app.UseRouting();
 
-            app.UseAuthentication();
+            // Use CORS
+            app.UseCors("AllowSpecificOrigin");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -987,3 +987,4 @@ D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\Summer2024SWP391_SAP1804_Group0
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\ODTLearn.16188F95.Up2Date
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\ODTLearning.genruntimeconfig.cache
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\ref\ODTLearning.dll
+D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.Google.dll
