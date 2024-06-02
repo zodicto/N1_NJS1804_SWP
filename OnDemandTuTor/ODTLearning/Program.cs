@@ -23,7 +23,10 @@ namespace ODTLearning
             // Add services to the container.
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ODTLearning API", Version = "v1" });
+            });
 
             // Register services
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
@@ -36,38 +39,41 @@ namespace ODTLearning
             // Configure JWT authentication
             var secretKey = builder.Configuration["AppSettings:SecretKey"];
             var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
-            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddGoogle(googleOptions =>
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddGoogle(googleOptions =>
+            {
+                // Read Google authentication settings from appsettings.json
+                IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+
+                // Set ClientID and ClientSecret to access Google API
+                googleOptions.ClientId = googleAuthNSection["ClientId"];
+                googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+                googleOptions.CallbackPath = "/signin-google"; // Ensure this matches the callback URI set in Google Console
+            })
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    // doc thong tin Authentication:Google tu appsettings.json
-                    IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
-
-                    // Thiet lap ClientID và ClientSecret de truy cap API google
-                    googleOptions.ClientId = googleAuthNSection["ClientId"];
-                    googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
-
-
-                })
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
-                        ClockSkew = TimeSpan.Zero
-                    };
-                });
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
 
             // Add CORS policy
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowSpecificOrigin",
-                    builder => builder.WithOrigins("http://localhost:3000")
-                                      .AllowAnyHeader()
-                                      .AllowAnyMethod()
-                                      .AllowCredentials());
+                    policy => policy.WithOrigins("http://localhost:3000") // Change this to your frontend URL
+                                    .AllowAnyHeader()
+                                    .AllowAnyMethod()
+                                    .AllowCredentials());
             });
 
             var app = builder.Build();
@@ -76,11 +82,13 @@ namespace ODTLearning
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ODTLearning API v1");
+                });
             }
 
             app.UseHttpsRedirection();
-
             app.UseRouting();
 
             // Use CORS

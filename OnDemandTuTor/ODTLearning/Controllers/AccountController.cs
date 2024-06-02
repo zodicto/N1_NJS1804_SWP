@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -68,7 +70,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("SignUpOfTuTor")]
-        public IActionResult SignUpOfTutor(String IDAccount,SignUpModelOfTutor model)
+        public IActionResult SignUpOfTutor(String IDAccount, SignUpModelOfTutor model)
         {
             var validation = _repo.SignUpValidationTutor(model);
 
@@ -82,7 +84,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            var user = _repo.SignUpOfTutor(IDAccount,model);
+            var user = _repo.SignUpOfTutor(IDAccount, model);
 
             if (user != null)
             {
@@ -191,7 +193,7 @@ namespace ODTLearning.Controllers
                 }
 
                 //check 4: Check refreshToken exist in DB
-                var storedToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.RefreshToken); 
+                var storedToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.RefreshToken);
 
                 if (storedToken == null)
                 {
@@ -203,7 +205,7 @@ namespace ODTLearning.Controllers
                 }
 
                 //check 5: Check refreshToken is used/revoked?
-                if ((bool)storedToken.IsUsed) 
+                if ((bool)storedToken.IsUsed)
                 {
                     return Ok(new ApiResponse
                     {
@@ -212,7 +214,7 @@ namespace ODTLearning.Controllers
                     });
                 }
 
-                if ((bool)storedToken.IsRevoked) 
+                if ((bool)storedToken.IsRevoked)
                 {
                     return Ok(new ApiResponse
                     {
@@ -224,7 +226,7 @@ namespace ODTLearning.Controllers
                 //check 6: AccesToken id == JwtId in RefreshToken
                 var jti = tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
 
-                if (storedToken.JwtId != jti) 
+                if (storedToken.JwtId != jti)
                 {
                     return Ok(new ApiResponse
                     {
@@ -234,13 +236,13 @@ namespace ODTLearning.Controllers
                 }
 
                 //Update token is used
-                storedToken.IsUsed = true; 
-                storedToken.IsRevoked = true; 
+                storedToken.IsUsed = true;
+                storedToken.IsRevoked = true;
                 _context.Update(storedToken);
                 _context.SaveChanges();
 
                 //Create new token
-                var user = _context.Accounts.FirstOrDefault(x => x.IdAccount == storedToken.IdAccount); 
+                var user = _context.Accounts.FirstOrDefault(x => x.IdAccount == storedToken.IdAccount);
 
                 var token = _repo.GenerateToken(user);
 
@@ -281,7 +283,38 @@ namespace ODTLearning.Controllers
             return BadRequest();
         }
 
+        [HttpGet("signin-google")]
+        public IActionResult SignInWithGoogle()
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = Url.Action("GoogleCallback")
+            };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("google-callback")]
+        public async Task<IActionResult> GoogleCallback()
+        {
+            var authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+
+            if (!authenticateResult.Succeeded)
+                return BadRequest("Google authentication failed");
+
+            var claims = authenticateResult.Principal.Identities
+                .FirstOrDefault().Claims.Select(claim => new
+                {
+                    claim.Type,
+                    claim.Value
+                });
+
+            return Ok(new
+            {
+                Message = "Google authentication successful",
+                Claims = claims
+            });
 
 
+        }
     }
 }
