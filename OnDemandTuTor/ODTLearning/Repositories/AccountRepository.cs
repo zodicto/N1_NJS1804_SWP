@@ -314,7 +314,7 @@ namespace ODTLearning.Repositories
             }
         }
 
-        public List<Account> GetAllUser()
+        public List<Account> GetAllUsers()
         {
             var list = _context.Accounts.ToList();
             return list;

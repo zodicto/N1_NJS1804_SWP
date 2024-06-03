@@ -271,10 +271,10 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("GetAllUser")]
-        [Authorize(Roles = "Student")]
+        //[Authorize(Roles = "Student")]
         public IActionResult GetAllUser()
         {
-            var list = _repo.GetAllUser();
+            var list = _repo.GetAllUsers();
 
             if (list != null)
             {

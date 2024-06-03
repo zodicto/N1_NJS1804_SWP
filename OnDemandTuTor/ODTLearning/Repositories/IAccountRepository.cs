@@ -28,7 +28,7 @@ namespace ODTLearning.Repositories
 
         public  string GenerateRefreshToken();
 
-        public List<Account> GetAllUser();
+        public List<Account> GetAllUsers();
 
 
     }
