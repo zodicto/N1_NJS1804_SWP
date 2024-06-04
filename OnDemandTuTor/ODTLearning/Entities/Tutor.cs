@@ -13,7 +13,7 @@ public partial class Tutor
 
     public string? IdAccount { get; set; }
 
-    public bool? Status { get; set; }
+    public string? Status { get; set; }
 
     public virtual ICollection<EducationalQualification> EducationalQualifications { get; set; } = new List<EducationalQualification>();
 

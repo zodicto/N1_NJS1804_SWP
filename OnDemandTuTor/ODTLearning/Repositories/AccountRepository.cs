@@ -169,7 +169,7 @@ namespace ODTLearning.Repositories
                     IdAccount = existingUser.IdAccount, // Gán ID của tài khoản
                     SpecializedSkills = model.SpecializedSkills,
                     Experience = model.Experience,
-                    Status = true
+                    Status = "Operating"
                 };
 
                 // Tạo mới đối tượng EducationalQualification

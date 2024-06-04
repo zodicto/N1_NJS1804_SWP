@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword />
+    <History>True|2024-06-04T07:07:31.7931170Z||;True|2024-06-04T07:10:22.8816088+07:00||;True|2024-06-03T21:34:12.3905905+07:00||;True|2024-06-03T21:29:28.1814601+07:00||;True|2024-06-03T21:23:18.2660258+07:00||;True|2024-06-03T21:18:51.2080150+07:00||;True|2024-06-03T21:11:16.6154969+07:00||;True|2024-06-03T21:09:34.9056336+07:00||;False|2024-06-03T21:05:44.2571248+07:00||;False|2024-06-03T20:49:35.2922803+07:00||;False|2024-06-03T20:42:43.8088160+07:00||;False|2024-06-03T20:40:30.3370798+07:00||;False|2024-06-03T20:14:35.6258461+07:00||;False|2024-06-03T19:36:10.3365064+07:00||;False|2024-06-03T19:33:32.2345462+07:00||;False|2024-06-03T19:22:28.8886122+07:00||;False|2024-06-03T19:22:10.6827318+07:00||;False|2024-06-03T19:20:38.0905912+07:00||;False|2024-06-03T19:12:32.6975465+07:00||;False|2024-06-03T19:03:01.1961295+07:00||;False|2024-06-03T18:51:18.2790860+07:00||;False|2024-06-03T18:46:01.4395799+07:00||;False|2024-06-03T17:59:53.7966564+07:00||;False|2024-06-03T17:55:21.3342571+07:00||;False|2024-06-03T17:52:46.1872916+07:00||;True|2024-06-03T17:50:00.4737672+07:00||;False|2024-06-03T17:47:48.7423293+07:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DB_MiniCapStone">
+      <Value>Data Source=SQL8010.site4now.net%3bInitial Catalog=db_aa982f_leminhtri%3bUser Id=db_aa982f_leminhtri_admin%3bPassword=leminhtri1892003</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+</Project>
