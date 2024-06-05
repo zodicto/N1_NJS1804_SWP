@@ -17,7 +17,7 @@ public partial class Acount
 
     public string? Gmail { get; set; }
 
-    public string? Birthdate { get; set; }
+    public DateOnly? Birthdate { get; set; }
 
     public string? Gender { get; set; }
 

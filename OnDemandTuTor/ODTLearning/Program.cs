@@ -8,11 +8,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ODTLearning.Entities;
-
-//using ODTLearning.Entities;
 using ODTLearning.Repositories;
 using System;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace ODTLearning
 {
@@ -23,7 +22,11 @@ namespace ODTLearning
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddControllers();
+            builder.Services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+                });
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>
             {
@@ -34,7 +37,7 @@ namespace ODTLearning
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<ITutorListRepository, TutorListRepository>();
 
-            //Add DbContext;
+            // Add DbContext;
             builder.Services.AddDbContext<DbminiCapstoneContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DB_MiniCapStone")));
 

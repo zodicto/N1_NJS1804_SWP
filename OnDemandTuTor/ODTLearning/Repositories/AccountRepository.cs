@@ -22,49 +22,99 @@ namespace ODTLearning.Repositories
             _configuration = configuration;
         }
 
-        public SignUpValidationOfTutorModel signupvalidationtutor(SignUpModelOfTutor model)
+        public object SignUpOfAccount(SignUpModelOfAccount model)// trí(sửa của tân): tạo mới một object và lưu vào db theo tưng thuộc tính 
         {
-            string img = "", specializedskills = "", field = "", type = "", imagedegree = "";
+            if (model.Password != model.PasswordConfirm)
+            {
+                return null;
+            }
+
+            var account = new Acount
+            {
+                IdAccount = Guid.NewGuid().ToString(),
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Username = model.Username,
+                Password = model.Password,
+                Gmail = model.Gmail,
+                Birthdate = model.Birthdate,
+                Gender = model.Gender,
+                Role = "student"
+            };
+
+            _context.Acounts.Add(account);
+            _context.SaveChanges();
+
+            return account;
+        }
+        public SignInValidationModel SignInValidation(SignInModel model)
+        {
+            string username = "", password = "";
+            int i = 0;
+            if (model.Username == null)
+            {
+                username = "please do not username empty!!";
+                i++;
+            }
+
+            if (string.IsNullOrEmpty(model.Password))
+            {
+                password = "please do not password empty!!";
+                i++;
+            }
+
+            if (i != 0)
+            {
+                return new SignInValidationModel
+                {
+                    Username = username,
+                    Password = password
+                };
+            }
+
+            return null;
+        }
+        public SignUpValidationOfTutorModel SignUpValidationOfTutor(SignUpModelOfTutor model)
+        {
+            string Img = "", SpecializedSkills = "", Field = "", Type = "", ImageDegree = "";
             int i = 0;
 
             if (string.IsNullOrEmpty(model.SpecializedSkills))
             {
-                specializedskills = "please do not specializedskills empty!!";
+                SpecializedSkills = "please do not specializedskills empty!!";
                 i++;
             }
             if (string.IsNullOrEmpty(model.Field))
             {
-                field = "please do not field empty!!";
+                Field = "please do not field empty!!";
                 i++;
             }
             if (string.IsNullOrEmpty(model.Type))
             {
-                type = "please do not type empty!!";
+                Type = "please do not type empty!!";
                 i++;
             }
             if (string.IsNullOrEmpty(model.ImageDegree))
             {
-                imagedegree = "please do not image degree empty!!";
+                ImageDegree = "please do not image degree empty!!";
                 i++;
             }
-
 
             if (i != 0)
             {
                 return new SignUpValidationOfTutorModel
                 {
 
-                    SpecializedSkills = specializedskills,
-                    Field = field,
-                    Type = type,
-                    ImageDegree = img,
+                    SpecializedSkills = SpecializedSkills,
+                    Field = Field,
+                    Type = Type,
+                    ImageDegree = Img,
                 };
             }
 
             return null;
         }
-
-        public SignUpValidationOfAccountModel signupvalidationofaccount(SignUpModelOfAccount model) //tri(sửa của tânân) : xử lý cho việc check validate
+        public SignUpValidationOfAccountModel SignUpValidationOfAccount(SignUpModelOfAccount model) //tri(sửa của tân) : xử lý cho việc check validate
         {
             string username = "", password = "", passwordconfirm = "", firstname = "", lastname = "", gmail = "";
             int i = 0;
@@ -83,6 +133,11 @@ namespace ODTLearning.Repositories
             if (string.IsNullOrEmpty(model.PasswordConfirm))
             {
                 passwordconfirm = "please do not passwordconfirm empty!!";
+                i++;
+            }
+            if (password != passwordconfirm)
+            {
+                passwordconfirm = "password and passwordconfirm diference!!";
                 i++;
             }
 
@@ -119,36 +174,9 @@ namespace ODTLearning.Repositories
 
             return null;
         }
-
-        public object SignupOfaccount(SignUpModelOfAccount model)// trí(sửa của tân): tạo mới một object và lưu vào db theo tưng thuộc tính 
+        public object SignUpOftutor(string IdAccount, SignUpModelOfTutor model)
         {
-            if (model.Password != model.PasswordConfirm)
-            {
-                return null;
-            }
-            
-            var account = new Acount
-            {
-                IdAccount = Guid.NewGuid().ToString(),
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Username = model.Username,
-                Password = model.Password,
-                Gmail = model.Gmail,
-                Birthdate = model.Birthdate,
-                Gender = model.Gender,
-                Role = "student"
-            };
-
-
-            _context.Acounts.Add(account);
-            _context.SaveChanges();
-
-            return account;
-        }
-        public object SignupOftutor(string IdAccount, SignUpModelOfTutor model)
-        {
-            // tìm kiếm tài khoản trong cơ sở dữ liệu bằng id
+            // tìm kiếm account của học sinh trong DB bằng id
             var existinguser = _context.Acounts.FirstOrDefault(a => a.IdAccount == IdAccount);
 
             if (existinguser != null)
@@ -162,7 +190,8 @@ namespace ODTLearning.Repositories
                     IdTutor = Guid.NewGuid().ToString(),                 
                     SpecializedSkills = model.SpecializedSkills,
                     Experience = model.Experience,
-                    Status = "operating",
+                    Status = "Operating",
+                    IdAccount = existinguser.IdAccount
                 };
 
                 // tạo mới đối tượng educationalqualification
@@ -176,19 +205,19 @@ namespace ODTLearning.Repositories
                 };
 
                 // tạo mới đối tượng tutorfield và field
-                var tutorfield = new TutorField
-                {
-                    IdTutorFileld = Guid.NewGuid().ToString(),
-                    IdField = Guid.NewGuid().ToString(),
-                    IdTutor = tutor.IdTutor,
-                };
                 var field = new Field
                 {
                     IdField = Guid.NewGuid().ToString(),
                     FieldName = model.Field,
                 };
+                var tutorfield = new TutorField
+                {
+                    IdTutorFileld = Guid.NewGuid().ToString(),
+                    IdField = field.IdField,
+                    IdTutor = tutor.IdTutor,
+                };
 
-                // thêm các đối tượng vào cơ sở dữ liệu
+                // thêm các đối tượng vào DB
                 _context.Tutors.Add(tutor);
                 _context.EducationalQualifications.Add(educationalqualifications);
                 _context.TutorFields.Add(tutorfield);
@@ -200,35 +229,6 @@ namespace ODTLearning.Repositories
             }
 
             // trường hợp không tìm thấy tài khoản
-            return null;
-        }
-
-
-        public SignInValidationModel signinvalidation(SignInModel model)
-        {
-            string username = "", password = "";
-            int i = 0;
-            if (model.Username == null)
-            {
-                username = "please do not username empty!!";
-                i++;
-            }
-
-            if (string.IsNullOrEmpty(model.Password))
-            {
-                password = "please do not password empty!!";
-                i++;
-            }
-
-            if (i != 0)
-            {
-                return new SignInValidationModel
-                {
-                    Username = username,
-                    Password = password
-                };
-            }
-
             return null;
         }
 

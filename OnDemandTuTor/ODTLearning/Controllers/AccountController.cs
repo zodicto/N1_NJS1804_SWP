@@ -20,7 +20,7 @@ namespace ODTLearning.Controllers
     {
         private readonly IAccountRepository _repo;
         private readonly IConfiguration _configuration;
-         private readonly DbminiCapstoneContext _context;
+        private readonly DbminiCapstoneContext _context;
 
         public AccountController(IAccountRepository repo, IConfiguration configuration, DbminiCapstoneContext context)
         {
@@ -29,10 +29,77 @@ namespace ODTLearning.Controllers
             _context = context;
         }
 
+        [HttpPost("Register")]
+        public IActionResult RegisterOfAccount(SignUpModelOfAccount model)
+        {
+            var validation = _repo.SignUpValidationOfAccount(model);
+
+            if (validation != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Sign up fail",
+                    Data = validation
+                });
+            }
+
+            var user = _repo.SignUpOfAccount(model);
+
+            if (user != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Sign up successfully",
+                    Data = user
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = false,
+                Message = "Password and PasswordConfirm are not same"
+            });
+        }
+
+        [HttpPost("RegisterAsTuTor")]
+        public IActionResult SignUpOfTutor(String IDAccount, SignUpModelOfTutor model)
+        {
+            var validation = _repo.SignUpValidationOfTutor(model);
+
+            if (validation != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Sign up fail",
+                    Data = validation
+                });
+            }
+
+            var user = _repo.SignUpOftutor(IDAccount, model);
+
+            if (user != null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Sign up successfully",
+                    Data = user
+                });
+            }
+            return Ok(new ApiResponse
+            {
+                Success = false,
+                Message = "Sign up failed, user creation returned null"
+            });
+        }
+
         [HttpPost("SignIn")]
         public IActionResult SignIn(SignInModel model)
         {
-            var validation = _repo.signinvalidation(model);
+            var validation = _repo.SignInValidation(model);
 
             if (validation != null)
             {
@@ -43,7 +110,6 @@ namespace ODTLearning.Controllers
                     Data = validation
                 });
             }
-
             var user = _repo.authentication(model);
 
             if (user != null)
@@ -67,75 +133,6 @@ namespace ODTLearning.Controllers
                 Message = "Invalid username or password"
             });
 
-        }
-
-        [HttpPost("SignUpOfTuTor")]
-        public IActionResult SignUpOfTutor(String IDAccount, SignUpModelOfTutor model)
-        {
-            var validation = _repo.signupvalidationtutor(model);
-
-            if (validation != null)
-            {
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Sign up fail",
-                    Data = validation
-                });
-            }
-
-            var user = _repo.SignupOftutor(IDAccount, model);
-
-            if (user != null)
-            {
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Sign up successfully",
-                    Data = user
-                });
-            }
-
-            return Ok(new ApiResponse
-            {
-                Success = false,
-                Message = "Password and PasswordConfirm are not same"
-            });
-        }
-
-
-        [HttpPost("SignUpOfAccount")]
-        public IActionResult SignUpOfAccount(SignUpModelOfAccount model)
-        {
-            var validation = _repo.signupvalidationofaccount(model);
-
-            if (validation != null)
-            {
-                return Ok(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Sign up fail",
-                    Data = validation
-                });
-            }
-
-            var user = _repo.SignupOfaccount(model);
-
-            if (user != null)
-            {
-                return Ok(new ApiResponse
-                {
-                    Success = true,
-                    Message = "Sign up successfully",
-                    Data = user
-                });
-            }
-
-            return Ok(new ApiResponse
-            {
-                Success = false,
-                Message = "Password and PasswordConfirm are not same"
-            });
         }
 
         [HttpPost("RenewToken")]

@@ -13,33 +13,7 @@ namespace ODTLearning.Repositories
         {
             _context = context;
         }
-        public object GetTutorProfileToConFirm(string id)
-        {
-            var accountDetails = _context.Acounts
-                .Where(a => a.IdAccount == id)
-                .Select(a => new
-                {
-                    Username = a.Username,
-                    TutorDetails = a.Tutors.Select(t => new
-                    {
-                        SpecializedSkills = t.SpecializedSkills,
-                        Experience = t.Experience,
-                        Status = t.Status,
-                        Fields = t.TutorFields.Select(tf => new
-                        {
-                            FieldId = tf.IdField,
-                            FieldName = tf.IdFieldNavigation.FieldName
-                        }),
-                        EducationalQualifications = t.EducationalQualifications.Select(eq => new
-                        {
-                            CertificateName = eq.CertificateName,
-                            Type = eq.Type
-                        })
-                    })
-                }).ToList();
-
-            return accountDetails;
-        }
+       
 
         public bool ConFirmProfileTutor(string idTutor, string status)
         {
@@ -56,7 +30,7 @@ namespace ODTLearning.Repositories
             return true;
         }
 
-        public bool UpdateTutorProfile(string idTutor, TutorProfileMVModel model)
+        public bool UpdateTutorProfile(string idTutor, TutorProfileToConfirmModel model)
         {
             var tutor = _context.Tutors.Include(t => t.IdAccountNavigation)
                                        .Include(t => t.TutorFields)

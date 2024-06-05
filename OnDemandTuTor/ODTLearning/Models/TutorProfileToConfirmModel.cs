@@ -1,6 +1,6 @@
 ﻿namespace ODTLearning.Models
 {
-    public class TutorProfileMVModel
+    public class TutorProfileToConfirmModel
     { 
         public string? FisrtName { get; set; }
 
@@ -8,7 +8,7 @@
 
         public string? Gmail { get; set; }
 
-        public string? Birthdate { get; set; }
+        public DateOnly? Birthdate { get; set; }
 
         public string? Gender { get; set; }
         public string? SpecializedSkills { get; set; }
@@ -18,6 +18,4 @@
         public string? ImgQualifications { get; set; }
 
     }
-
-
 }

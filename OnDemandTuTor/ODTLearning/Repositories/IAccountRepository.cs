@@ -16,25 +16,17 @@ namespace ODTLearning.Repositories
 {
     public interface IAccountRepository
     {
-        public SignUpValidationOfTutorModel signupvalidationtutor(SignUpModelOfTutor model);
-
-        public SignUpValidationOfAccountModel signupvalidationofaccount(SignUpModelOfAccount model);
-
-        public object SignupOfaccount(SignUpModelOfAccount model);
-        public object SignupOftutor(string IdAccount, SignUpModelOfTutor model);
+        public object SignUpOfAccount(SignUpModelOfAccount model);
+        public SignUpValidationOfAccountModel SignUpValidationOfAccount(SignUpModelOfAccount model);
+        public object SignUpOftutor(string IdAccount, SignUpModelOfTutor model);
+        public SignUpValidationOfTutorModel SignUpValidationOfTutor(SignUpModelOfTutor model);
 
 
-        public SignInValidationModel signinvalidation(SignInModel model);
+        public SignInValidationModel SignInValidation(SignInModel model);
         public Acount authentication(SignInModel model);
 
         public TokenModel generatetoken(Acount user);
-
         public string generaterefreshtoken();
-
         public List<Acount> getallusers();
-
-
-
-
     }
 }
