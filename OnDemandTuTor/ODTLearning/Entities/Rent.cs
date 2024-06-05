@@ -9,11 +9,11 @@ public partial class Rent
 
     public string? Status { get; set; }
 
-    public string? IdAccount { get; set; }
+    public string IdStudent { get; set; } = null!;
 
-    public string? IdSchedule { get; set; }
+    public string IdSchedule { get; set; } = null!;
 
-    public virtual Account? IdAccountNavigation { get; set; }
+    public virtual Schedule IdScheduleNavigation { get; set; } = null!;
 
-    public virtual Schedule? IdScheduleNavigation { get; set; }
+    public virtual Student IdStudentNavigation { get; set; } = null!;
 }

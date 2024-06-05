@@ -7,7 +7,7 @@ public partial class Field
 {
     public string IdField { get; set; } = null!;
 
-    public string? FieldName { get; set; }
+    public string FieldName { get; set; } = null!;
 
     public virtual ICollection<TutorField> TutorFields { get; set; } = new List<TutorField>();
 }

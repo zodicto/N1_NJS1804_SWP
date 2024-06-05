@@ -4,6 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using ODTLearning.Entities;
 
 //using ODTLearning.Entities;
+
+//using ODTLearning.Entities;
 using ODTLearning.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -14,21 +16,24 @@ namespace ODTLearning.Repositories
 {
     public interface IAccountRepository
     {
-        public SignUpValidationOfTutorModel SignUpValidationTutor(SignUpModelOfTutor model);
+        public SignUpValidationOfTutorModel signupvalidationtutor(SignUpModelOfTutor model);
 
-        public SignUpValidationOfAccountModel SignUpValidationOfAccount(SignUpModelOfAccount model);
-        public object SignUpOfAccount(SignUpModelOfAccount model);
-        public object SignUpOfTutor(String IDAccount ,SignUpModelOfTutor model);
+        public SignUpValidationOfAccountModel signupvalidationofaccount(SignUpModelOfAccount model);
 
-        public SignInValidationModel SignInValidation(SignInModel model);
+        public object SignupOfaccount(SignUpModelOfAccount model);
+        public object SignupOftutor(string IdAccount, SignUpModelOfTutor model);
 
-        public Account Authentication(SignInModel model);
 
-        public TokenModel GenerateToken(Account user);
+        public SignInValidationModel signinvalidation(SignInModel model);
+        public Acount authentication(SignInModel model);
 
-        public  string GenerateRefreshToken();
+        public TokenModel generatetoken(Acount user);
 
-        public List<Account> GetAllUsers();
+        public string generaterefreshtoken();
+
+        public List<Acount> getallusers();
+
+
 
 
     }

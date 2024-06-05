@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using ODTLearning.Entities;
 using ODTLearning.Models;
 using ODTLearning.Repositories;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
+using ODTLearning.Entities;
 
 namespace ODTLearning.Controllers
 {
@@ -20,7 +20,7 @@ namespace ODTLearning.Controllers
     {
         private readonly IAccountRepository _repo;
         private readonly IConfiguration _configuration;
-        private readonly DbminiCapstoneContext _context;
+         private readonly DbminiCapstoneContext _context;
 
         public AccountController(IAccountRepository repo, IConfiguration configuration, DbminiCapstoneContext context)
         {
@@ -32,7 +32,7 @@ namespace ODTLearning.Controllers
         [HttpPost("SignIn")]
         public IActionResult SignIn(SignInModel model)
         {
-            var validation = _repo.SignInValidation(model);
+            var validation = _repo.signinvalidation(model);
 
             if (validation != null)
             {
@@ -44,11 +44,11 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            var user = _repo.Authentication(model);
+            var user = _repo.authentication(model);
 
             if (user != null)
             {
-                var token = _repo.GenerateToken(user);
+                var token = _repo.generatetoken(user);
 
                 if (token != null)
                 {
@@ -72,7 +72,7 @@ namespace ODTLearning.Controllers
         [HttpPost("SignUpOfTuTor")]
         public IActionResult SignUpOfTutor(String IDAccount, SignUpModelOfTutor model)
         {
-            var validation = _repo.SignUpValidationTutor(model);
+            var validation = _repo.signupvalidationtutor(model);
 
             if (validation != null)
             {
@@ -84,7 +84,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            var user = _repo.SignUpOfTutor(IDAccount, model);
+            var user = _repo.SignupOftutor(IDAccount, model);
 
             if (user != null)
             {
@@ -107,7 +107,7 @@ namespace ODTLearning.Controllers
         [HttpPost("SignUpOfAccount")]
         public IActionResult SignUpOfAccount(SignUpModelOfAccount model)
         {
-            var validation = _repo.SignUpValidationOfAccount(model);
+            var validation = _repo.signupvalidationofaccount(model);
 
             if (validation != null)
             {
@@ -119,7 +119,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            var user = _repo.SignUpOfAccount(model);
+            var user = _repo.SignupOfaccount(model);
 
             if (user != null)
             {
@@ -242,9 +242,9 @@ namespace ODTLearning.Controllers
                 _context.SaveChanges();
 
                 //Create new token
-                var user = _context.Accounts.FirstOrDefault(x => x.IdAccount == storedToken.IdAccount);
+                var user = _context.Acounts.FirstOrDefault(x => x.IdAccount == storedToken.IdAccount);
 
-                var token = _repo.GenerateToken(user);
+                var token = _repo.generatetoken(user);
 
                 return Ok(new ApiResponse
                 {
@@ -274,7 +274,7 @@ namespace ODTLearning.Controllers
         //[Authorize(Roles = "Student")]
         public IActionResult GetAllUser()
         {
-            var list = _repo.GetAllUsers();
+            var list = _repo.getallusers();
 
             if (list != null)
             {
@@ -316,5 +316,33 @@ namespace ODTLearning.Controllers
 
 
         }
+        [HttpPost("Logout")]
+        public IActionResult Logout([FromBody] LogoutModel model)
+        {
+            // Tìm Refresh Token trong cơ sở dữ liệu
+            var refreshToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.RefreshToken);
+
+            if (refreshToken == null)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Invalid refresh token"
+                });
+            }
+
+            // Đánh dấu token là đã sử dụng và thu hồi
+            refreshToken.IsUsed = true;
+            refreshToken.IsRevoked = true;
+            _context.RefreshTokens.Update(refreshToken);
+            _context.SaveChanges();
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Logout successful"
+            });
+        }
+
     }
 }

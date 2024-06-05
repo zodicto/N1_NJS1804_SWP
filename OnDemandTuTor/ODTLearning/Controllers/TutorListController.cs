@@ -23,7 +23,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("TutorList")]
-        public IActionResult GetTutorList(string name, string field) 
+        public IActionResult GetTutorList(string name, string field)
         {
             var list = _repo.SearchTutorList(name, field);
 

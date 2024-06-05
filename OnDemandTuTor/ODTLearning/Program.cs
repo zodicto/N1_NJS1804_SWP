@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ODTLearning.Entities;
+
+//using ODTLearning.Entities;
 using ODTLearning.Repositories;
 using System;
 using System.Text;
@@ -32,7 +34,7 @@ namespace ODTLearning
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<ITutorListRepository, TutorListRepository>();
 
-            // Add DbContext
+            //Add DbContext;
             builder.Services.AddDbContext<DbminiCapstoneContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DB_MiniCapStone")));
 

@@ -11,17 +11,17 @@ public partial class Tutor
 
     public int? Experience { get; set; }
 
-    public string? IdAccount { get; set; }
-
     public string? Status { get; set; }
+
+    public string IdAccount { get; set; } = null!;
 
     public virtual ICollection<EducationalQualification> EducationalQualifications { get; set; } = new List<EducationalQualification>();
 
-    public virtual Account? IdAccountNavigation { get; set; }
+    public virtual Acount IdAccountNavigation { get; set; } = null!;
 
-    public virtual ICollection<ResquestTutor> ResquestTutors { get; set; } = new List<ResquestTutor>();
+    public virtual ICollection<ResquestLearning> ResquestLearnings { get; set; } = new List<ResquestLearning>();
 
-    public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
+    public virtual ICollection<Service> Services { get; set; } = new List<Service>();
 
     public virtual ICollection<TutorField> TutorFields { get; set; } = new List<TutorField>();
 }

@@ -55,5 +55,26 @@ namespace ODTLearning.Controllers
                 Data = list
             });
         }
+        [HttpPost("UpdateTutorProfile")]
+        public IActionResult UpdateTutorProfile(string idTutor, [FromBody] TutorProfileMVModel model)
+        {
+            var result = _repo.UpdateTutorProfile(idTutor, model);
+
+            if (!result)
+            {
+                return Ok(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Update tutor profile failed"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Update tutor profile successfully"
+            });
+        }
+
     }
 }

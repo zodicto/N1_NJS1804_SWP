@@ -13,13 +13,13 @@ public partial class Schedule
 
     public TimeOnly? TimeEnd { get; set; }
 
-    public string? IdTutor { get; set; }
+    public string IdService { get; set; } = null!;
 
-    public string? IdService { get; set; }
+    public string IdPost { get; set; } = null!;
 
-    public virtual Service? IdServiceNavigation { get; set; }
+    public virtual Request IdPostNavigation { get; set; } = null!;
 
-    public virtual Tutor? IdTutorNavigation { get; set; }
+    public virtual Service IdServiceNavigation { get; set; } = null!;
 
     public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
 }

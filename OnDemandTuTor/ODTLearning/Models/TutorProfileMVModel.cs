@@ -12,10 +12,12 @@
 
         public string? Gender { get; set; }
         public string? SpecializedSkills { get; set; }
-        public string? Experience { get; set; }
+        public int? Experience { get; set; }
         public string? Status { get; set; }
         public string? FieldName { get; set; }
         public string? ImgQualifications { get; set; }
 
     }
+
+
 }

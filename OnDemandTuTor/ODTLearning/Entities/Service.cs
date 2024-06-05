@@ -11,17 +11,19 @@ public partial class Service
 
     public string? Status { get; set; }
 
-    public string? IdTypeOfService { get; set; }
-
     public string? Title { get; set; }
 
     public string? Description { get; set; }
 
-    public string? IdFeedback { get; set; }
+    public string? Video { get; set; }
 
-    public virtual Feedback? IdFeedbackNavigation { get; set; }
+    public string TutoridTutor { get; set; } = null!;
 
-    public virtual TypeOfService? IdTypeOfServiceNavigation { get; set; }
+    public string IdTypeOfService { get; set; } = null!;
+
+    public virtual TypeOfService IdTypeOfServiceNavigation { get; set; } = null!;
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
+
+    public virtual Tutor TutoridTutorNavigation { get; set; } = null!;
 }

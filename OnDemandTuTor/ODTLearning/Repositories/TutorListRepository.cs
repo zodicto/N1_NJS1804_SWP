@@ -14,25 +14,25 @@ namespace ODTLearning.Repositories
         {
             _context = context;
         }
-        public List<Account> SearchTutorList(string name, string field)
+        public List<Acount> SearchTutorList(string name, string field)
         {
             //list all
-            var list = _context.Accounts.Where(x => x.Role == "Tutor");
+            var list = _context.Acounts.Where(x => x.Role == "Tutor");
 
             //list search by name
             if (!string.IsNullOrEmpty(name))
             {
-                list = list.Where(x => x.FisrtName == name || x.LastName == name);
+                list = list.Where(x => x.FirstName == name || x.LastName == name);
             }
 
             //list search by field
             if (!string.IsNullOrEmpty(field))
-            {                
+            {
                 var fieldId = _context.Fields.Where(x => x.FieldName == field).Select(x => x.IdField).ToString();
-                
+
                 var kq = _context.TutorFields.Where(x => x.IdField == fieldId).Join(_context.Tutors, tf => tf.IdTutor, t => t.IdTutor, (tf, t) => t.IdAccount).ToList();
 
-                IQueryable<Account> a = null;
+                IQueryable<Acount> a = null;
 
                 foreach (var id in kq)
                 {
@@ -44,7 +44,7 @@ namespace ODTLearning.Repositories
             }
 
             return list.ToList();
-            
-        }        
+
+        }
     }
 }

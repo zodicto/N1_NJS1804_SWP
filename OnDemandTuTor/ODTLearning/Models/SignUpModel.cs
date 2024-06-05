@@ -16,7 +16,7 @@ namespace ODTLearning.Models
 
         public string? Gmail { get; set; }
 
-        public DateTime?  Birthdate { get; set; }
+        public string?  Birthdate { get; set; }
 
         public string ? Gender { get; set; }
     }
@@ -24,7 +24,6 @@ namespace ODTLearning.Models
     {
         public string? SpecializedSkills { get; set; }
         public int? Experience { get; set; }
-        public string? Organization { get; set; }
         public string? Field { get; set; }
         public string? QualificationName { get; set; }
         public string? Type { get; set; }

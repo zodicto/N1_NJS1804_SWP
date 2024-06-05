@@ -5,7 +5,7 @@ namespace ODTLearning.Entities;
 
 public partial class RefreshToken
 {
-    public Guid Id { get; set; }
+    public string Id { get; set; } = null!;
 
     public string? Token { get; set; }
 
@@ -15,11 +15,11 @@ public partial class RefreshToken
 
     public bool? IsRevoked { get; set; }
 
-    public DateTime? IssuedAt { get; set; }
-
     public DateTime? ExpiredAt { get; set; }
+
+    public DateTime? IssuedAt { get; set; }
 
     public string IdAccount { get; set; } = null!;
 
-    public virtual Account IdAccountNavigation { get; set; } = null!;
+    public virtual Acount IdAccountNavigation { get; set; } = null!;
 }

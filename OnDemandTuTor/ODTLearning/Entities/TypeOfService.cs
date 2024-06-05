@@ -7,9 +7,9 @@ public partial class TypeOfService
 {
     public string IdTypeOfService { get; set; } = null!;
 
-    public string? NameService { get; set; }
+    public int? NameService { get; set; }
 
-    public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+    public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
 
     public virtual ICollection<Service> Services { get; set; } = new List<Service>();
 }
