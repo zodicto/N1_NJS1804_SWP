@@ -21,26 +21,8 @@ namespace ODTLearning.Controllers
             _context = context;
         }
 
-
-        [HttpPut("idAndStatus")]
-        public IActionResult ChangeStatusTutor(string id, string status)
-        {
-            var list = _repo.ConFirmProfileTutor(id, status);
-
-            if (list == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(new ApiResponse
-            {
-                Success = true,
-                Message = "get list tutor successfully",
-                Data = list
-            });
-        }
         [HttpPost("UpdateTutorProfile")]
-        public IActionResult UpdateTutorProfile(string idTutor, [FromBody] TutorProfileToConfirmModel model)
+        public IActionResult UpdateTutorProfile(string idTutor, [FromBody] TutorProfileToUpdate model)
         {
             var result = _repo.UpdateTutorProfile(idTutor, model);
 

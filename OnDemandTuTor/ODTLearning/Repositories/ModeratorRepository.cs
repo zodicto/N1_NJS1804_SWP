@@ -65,5 +65,19 @@ namespace ODTLearning.Repositories
                 return "Invalid status provided";
             }
         }
+        public bool ConFirmProfileTutor(string idTutor, string status)
+        {
+            var tutor = _context.Tutors.FirstOrDefault(x => x.IdTutor == idTutor);
+            if (tutor == null)
+            {
+                return false;
+            }
+
+            tutor.Status = status;
+            _context.Tutors.Update(tutor);
+            _context.SaveChanges();
+
+            return true;
+        }
     }
 }

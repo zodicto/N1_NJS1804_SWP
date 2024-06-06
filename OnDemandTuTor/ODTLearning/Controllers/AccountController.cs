@@ -96,7 +96,7 @@ namespace ODTLearning.Controllers
             });
         }
 
-        [HttpPost("SignIn")]
+        [HttpPost("LogIn")]
         public IActionResult SignIn(SignInModel model)
         {
             var validation = _repo.SignInValidation(model);

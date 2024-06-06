@@ -9,34 +9,14 @@ namespace ODTLearning.Repositories
     {
         private readonly DbminiCapstoneContext _context;
 
-        public TutorRepository(DbminiCapstoneContext context)
+        public bool UpdateTutorProfile(string idTutor, TutorProfileToUpdate model)
         {
-            _context = context;
-        }
-       
-
-        public bool ConFirmProfileTutor(string idTutor, string status)
-        {
-            var tutor = _context.Tutors.FirstOrDefault(x => x.IdTutor == idTutor);
-            if (tutor == null)
-            {
-                return false;
-            }
-
-            tutor.Status = status;
-            _context.Tutors.Update(tutor);
-            _context.SaveChanges();
-
-            return true;
-        }
-
-        public bool UpdateTutorProfile(string idTutor, TutorProfileToConfirmModel model)
-        {
-            var tutor = _context.Tutors.Include(t => t.IdAccountNavigation)
-                                       .Include(t => t.TutorFields)
-                                       .ThenInclude(tf => tf.IdFieldNavigation)
-                                       .Include(t => t.EducationalQualifications)
-                                       .FirstOrDefault(x => x.IdTutor == idTutor);
+            var tutor = _context.Tutors
+                .Include(t => t.IdAccountNavigation)
+                .Include(t => t.TutorFields)
+                .ThenInclude(tf => tf.IdFieldNavigation)
+                .Include(t => t.EducationalQualifications)
+                .FirstOrDefault(x => x.IdTutor == idTutor);
 
             if (tutor == null)
             {
@@ -45,21 +25,18 @@ namespace ODTLearning.Repositories
 
             tutor.SpecializedSkills = model.SpecializedSkills;
             tutor.Experience = model.Experience;
-            tutor.Status = model.Status;
 
             if (tutor.IdAccountNavigation != null)
             {
                 tutor.IdAccountNavigation.FirstName = model.FisrtName;
                 tutor.IdAccountNavigation.LastName = model.LastName;
                 tutor.IdAccountNavigation.Gmail = model.Gmail;
-                tutor.IdAccountNavigation.Birthdate = model.Birthdate;
                 tutor.IdAccountNavigation.Gender = model.Gender;
             }
 
-            // Update TutorFields if needed
-            // Assuming FieldName is unique, update or add TutorField
+
             var existingField = tutor.TutorFields.FirstOrDefault(tf => tf.IdFieldNavigation.FieldName == model.FieldName);
-            if (existingField == null)
+            if (existingField == null && !string.IsNullOrEmpty(model.FieldName))
             {
                 var newField = new TutorField
                 {
@@ -69,16 +46,15 @@ namespace ODTLearning.Repositories
                 tutor.TutorFields.Add(newField);
             }
 
-            // Update EducationalQualifications if needed
-            // Assuming ImgQualifications represents the CertificateName
-            var existingQualification = tutor.EducationalQualifications.FirstOrDefault(eq => eq.CertificateName == model.ImgQualifications);
-            if (existingQualification == null)
+
+            var existingQualification = tutor.EducationalQualifications.FirstOrDefault(eq => eq.CertificateName == model.FieldName);
+            if (existingQualification == null && !string.IsNullOrEmpty(model.FieldName))
             {
                 var newQualification = new EducationalQualification
                 {
-                    IdTutor = idTutor,
-                    CertificateName = model.ImgQualifications,
-                    Type = "Some type", // Update with correct type if available
+                    IdEducationalEualifications = Guid.NewGuid().ToString(),
+                    CertificateName = model.FieldName,
+                    IdTutor = idTutor
                 };
                 tutor.EducationalQualifications.Add(newQualification);
             }
@@ -88,7 +64,5 @@ namespace ODTLearning.Repositories
 
             return true;
         }
-
-
     }
 }

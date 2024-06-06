@@ -1,11 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ODTLearning.Models;
+﻿using ODTLearning.Models;
 
 namespace ODTLearning.Repositories
 {
     public interface ITutorRepository 
     {
-        bool ConFirmProfileTutor(string idTutor, string status);
-        bool UpdateTutorProfile(string idTutor, TutorProfileToConfirmModel model);
+
+
+        public bool UpdateTutorProfile(string idTutor, TutorProfileToUpdate model);
     }
 }

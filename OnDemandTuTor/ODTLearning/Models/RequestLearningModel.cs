@@ -3,14 +3,14 @@ namespace ODTLearning.Models
 {
     public class RequestLearningModel
     {
-        public string? Titile;
-        public double? Price;
-        public string? Description;
-        public string? Status;
-        public string? NameService;
-        public DateOnly? Date;
-        public TimeOnly? TimeStart;
-        public TimeOnly? TimeEnd;
+        public string? Title { get; set; }
+        public double? Price { get; set; }
+        public string? Description { get; set; }
+        public string? Status { get; set; }
+        public string? NameService { get; set; }
+        public DateOnly? Date { get; set; }
+        public TimeOnly? TimeStart { get; set; }
+        public TimeOnly? TimeEnd { get; set; }
 
     }
 }

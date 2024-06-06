@@ -35,5 +35,39 @@ namespace ODTLearning.Controllers
                 Data = list
             });
         }
+        [HttpPut("ConfirmProfile")]
+        public IActionResult ChangeStatusTutor(string id, string status)
+        {
+            var list = _repo.ConFirmProfileTutor(id, status);
+
+            if (list == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "get list tutor successfully",
+                Data = list
+            });
+        }
+        [HttpPut("ConfirmRequest")]
+        public IActionResult ChangeStatusRequest(string id, string status)
+        {
+            var list = _repo.ChangeRequestLearningStatus(id, status);
+
+            if (list == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "get list tutor successfully",
+                Data = list
+            });
+        }
     }
 }
