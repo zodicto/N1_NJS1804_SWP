@@ -3,7 +3,6 @@ namespace ODTLearning.Models
 {
     public class RequestLearningModel
     {
-        public string? IdStudent;
         public string? Titile;
         public double? Price;
         public string? Description;

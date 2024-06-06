@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("OTDLeaningTest")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8919effef5d5eff4a78dee22f059a18bf2674453")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6ce914ddde62dcc8cd974472867598c1743fe339")]
 [assembly: System.Reflection.AssemblyProductAttribute("OTDLeaningTest")]
 [assembly: System.Reflection.AssemblyTitleAttribute("OTDLeaningTest")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -31,7 +31,9 @@ namespace ODTLearning
             builder.Services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ODTLearning API", Version = "v1" });
+
             });
+
 
             // Register services
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();

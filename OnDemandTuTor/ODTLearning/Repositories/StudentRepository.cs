@@ -4,7 +4,7 @@ using ODTLearning.Models;
 
 namespace ODTLearning.Repositories
 {
-    public class StudentRepository
+    public class StudentRepository :IStudentRepository
     {
         private readonly DbminiCapstoneContext _context;
 
@@ -13,12 +13,12 @@ namespace ODTLearning.Repositories
             _context = context;
         }
 
-        public object CreateRequestLearning(RequestLearningModel model)
+        public object CreateRequestLearning(String IdStudent,RequestLearningModel model)
         {
             // Tìm sinh viên theo IdStudent
             var student = _context.Students
                                   .Include(s => s.Requests)
-                                  .FirstOrDefault(s => s.IdStudent == model.IdStudent);
+                                  .FirstOrDefault(s => s.IdStudent == IdStudent);
 
             if (student == null)
             {
@@ -35,7 +35,7 @@ namespace ODTLearning.Repositories
                     Description = model.Description,
                     Status = model.Status,
                     IdTypeOfService = model.NameService,
-                    IdStudent = model.IdStudent,
+                    IdStudent = IdStudent,
                 };
 
                 // Thêm Request vào context
@@ -51,7 +51,7 @@ namespace ODTLearning.Repositories
                         Date = model.Date.Value,
                         TimeStart = model.TimeStart.Value,
                         TimeEnd = model.TimeEnd.Value,
-                        IdService = "IdServicePlaceholder", // Bạn cần lấy Id của service từ đâu đó
+                        IdService = null,
                         IdPost = requestOfStudent.IdPost,
                     };
 
