@@ -91,7 +91,7 @@ namespace ODTLearning.Repositories
                     scheduleToUpdate.Date = model.Date.Value;
                     scheduleToUpdate.TimeStart = model.TimeStart.Value;
                     scheduleToUpdate.TimeEnd = model.TimeEnd.Value;
-                    scheduleToUpdate.IdService = "IdServicePlaceholder"; // Bạn cần lấy Id của service từ đâu đó
+                    scheduleToUpdate.IdService = null; // Bạn cần lấy Id của service từ đâu đó
                 }
                 else
                 {
@@ -102,7 +102,7 @@ namespace ODTLearning.Repositories
                         Date = model.Date.Value,
                         TimeStart = model.TimeStart.Value,
                         TimeEnd = model.TimeEnd.Value,
-                        IdService = "IdServicePlaceholder", // Bạn cần lấy Id của service từ đâu đó
+                        IdService = null, // Bạn cần lấy Id của service từ đâu đó
                         IdPost = requestToUpdate.IdPost,
                     };
                     _context.Schedules.Add(newSchedule);
@@ -114,7 +114,7 @@ namespace ODTLearning.Repositories
 
             return requestToUpdate;
         }
-        public void DeleteRequestLearning(string requestId)
+        public bool DeleteRequestLearning(string requestId)
         {
             // Tìm request theo requestId
             var requestToDelete = _context.Requests
@@ -135,7 +135,10 @@ namespace ODTLearning.Repositories
             // Xóa request
             _context.Requests.Remove(requestToDelete);
             _context.SaveChanges();
+
+            return true; // Trả về true nếu việc xóa thành công
         }
+
         public List<Request> GetPendingApproveRequests()
         {
             return _context.Requests
