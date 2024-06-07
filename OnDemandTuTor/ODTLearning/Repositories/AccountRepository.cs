@@ -42,7 +42,16 @@ namespace ODTLearning.Repositories
                 Role = "student"
             };
 
+            var student = new Student
+            {
+                IdStudent = Guid.NewGuid().ToString(),
+                IdAccount = account.IdAccount,
+                IdAccountNavigation = account
+            };
+
+            // Thêm Account và Student vào context
             _context.Acounts.Add(account);
+            _context.Students.Add(student);
             _context.SaveChanges();
 
             return account;
@@ -114,48 +123,49 @@ namespace ODTLearning.Repositories
 
             return null;
         }
-        public SignUpValidationOfAccountModel SignUpValidationOfAccount(SignUpModelOfAccount model) //tri(sửa của tân) : xử lý cho việc check validate
+        public SignUpValidationOfAccountModel SignUpValidationOfAccount(SignUpModelOfAccount model)
         {
-            string username = "", password = "", passwordconfirm = "", firstname = "", lastname = "", gmail = "";
+            string username = "", password = "", confirm_password = "", firstname = "", lastname = "", gmail = "";
             int i = 0;
+
             if (string.IsNullOrEmpty(model.Username))
             {
-                username = "please do not username empty!!";
+                username = "Please do not leave username empty!!";
                 i++;
             }
 
             if (string.IsNullOrEmpty(model.Password))
             {
-                password = "please do not password empty!!";
+                password = "Please do not leave password empty!!";
                 i++;
             }
 
             if (string.IsNullOrEmpty(model.PasswordConfirm))
             {
-                passwordconfirm = "please do not passwordconfirm empty!!";
+                confirm_password = "Please do not leave password confirmation empty!!";
                 i++;
             }
-            if (password != passwordconfirm)
+            else if (model.Password != model.PasswordConfirm)
             {
-                passwordconfirm = "password and passwordconfirm diference!!";
+                confirm_password = "Password and password confirmation are not the same!!";
                 i++;
             }
 
             if (string.IsNullOrEmpty(model.FirstName))
             {
-                firstname = "please do not firstname empty!!";
+                firstname = "Please do not leave first name empty!!";
                 i++;
             }
 
             if (string.IsNullOrEmpty(model.LastName))
             {
-                lastname = "please do not lastname empty!!";
+                lastname = "Please do not leave last name empty!!";
                 i++;
             }
 
             if (string.IsNullOrEmpty(model.Gmail))
             {
-                gmail = "please do not gmail empty!!";
+                gmail = "Please do not leave email empty!!";
                 i++;
             }
 
@@ -165,7 +175,7 @@ namespace ODTLearning.Repositories
                 {
                     Username = username,
                     Password = password,
-                    PasswordConfirm = passwordconfirm,
+                    PasswordConfirm = confirm_password,
                     FirstName = firstname,
                     LastName = lastname,
                     Gmail = gmail,
@@ -176,26 +186,27 @@ namespace ODTLearning.Repositories
         }
         public object SignUpOftutor(string IdAccount, SignUpModelOfTutor model)
         {
-            // tìm kiếm account của học sinh trong DB bằng id
-            var existinguser = _context.Acounts.FirstOrDefault(a => a.IdAccount == IdAccount);
+            // Tìm kiếm account trong DB bằng id
+            var existingUser = _context.Acounts.FirstOrDefault(a => a.IdAccount == IdAccount);
 
-            if (existinguser != null)
+            if (existingUser != null)
             {
-                // cập nhật vai trò của tài khoản thành "tutor"
-                existinguser.Role = "tutor";
+                // Cập nhật vai trò của tài khoản thành "tutor"
+                existingUser.Role = "tutor";
+                _context.Acounts.Update(existingUser);
 
-                // tạo mới đối tượng tutor
+                // Tạo mới đối tượng tutor
                 var tutor = new Tutor
                 {
-                    IdTutor = Guid.NewGuid().ToString(),                 
+                    IdTutor = Guid.NewGuid().ToString(),
                     SpecializedSkills = model.SpecializedSkills,
                     Experience = model.Experience,
                     Status = "Operating",
-                    IdAccount = existinguser.IdAccount
+                    IdAccount = existingUser.IdAccount
                 };
 
-                // tạo mới đối tượng educationalqualification
-                var educationalqualifications = new EducationalQualification
+                // Tạo mới đối tượng educationalqualification
+                var educationalQualifications = new EducationalQualification
                 {
                     IdEducationalEualifications = Guid.NewGuid().ToString(),
                     IdTutor = tutor.IdTutor,
@@ -204,33 +215,49 @@ namespace ODTLearning.Repositories
                     Type = model.Type,
                 };
 
-                // tạo mới đối tượng tutorfield và field
-                var field = new Field
+                // Kiểm tra xem field có tồn tại không, nếu không thì tạo mới
+                var field = _context.Fields.FirstOrDefault(f => f.FieldName == model.Field);
+                if (field == null)
                 {
-                    IdField = Guid.NewGuid().ToString(),
-                    FieldName = model.Field,
-                };
-                var tutorfield = new TutorField
+                    field = new Field
+                    {
+                        IdField = Guid.NewGuid().ToString(),
+                        FieldName = model.Field,
+                    };
+                    _context.Fields.Add(field);
+                }
+
+                // Tạo mới đối tượng tutorfield
+                var tutorField = new TutorField
                 {
                     IdTutorFileld = Guid.NewGuid().ToString(),
                     IdField = field.IdField,
                     IdTutor = tutor.IdTutor,
                 };
 
-                // thêm các đối tượng vào DB
+                // Thêm các đối tượng vào DB
                 _context.Tutors.Add(tutor);
-                _context.EducationalQualifications.Add(educationalqualifications);
-                _context.TutorFields.Add(tutorfield);
-                _context.Fields.Add(field);
-                _context.SaveChanges();
+                _context.EducationalQualifications.Add(educationalQualifications);
+                _context.TutorFields.Add(tutorField);
 
-                // trả về tài khoản đã được cập nhật vai trò thành "tutor"
-                return existinguser;
+                try
+                {
+                    _context.SaveChanges();
+                    // Trả về tài khoản đã được cập nhật vai trò thành "tutor"
+                    return existingUser;
+                }
+                catch (Exception ex)
+                {
+                    // Ghi lại lỗi nếu có xảy ra
+                    Console.WriteLine($"Error while saving changes: {ex.Message}");
+                }
             }
 
-            // trường hợp không tìm thấy tài khoản
+            // Trường hợp không tìm thấy tài khoản
             return null;
         }
+
+
 
         public Acount authentication(SignInModel model) => _context.Acounts.FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
 

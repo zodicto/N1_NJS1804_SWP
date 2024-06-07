@@ -59,12 +59,12 @@ namespace ODTLearning.Controllers
             return Ok(new ApiResponse
             {
                 Success = false,
-                Message = "Password and PasswordConfirm are not same"
+                Message = "An error occurred during the sign up process"
             });
         }
 
         [HttpPost("RegisterAsTuTor")]
-        public IActionResult SignUpOfTutor(String IDAccount, SignUpModelOfTutor model)
+        public IActionResult SignUpOfTutor(string IDAccount, SignUpModelOfTutor model)
         {
             var validation = _repo.SignUpValidationOfTutor(model);
 
@@ -73,7 +73,7 @@ namespace ODTLearning.Controllers
                 return Ok(new ApiResponse
                 {
                     Success = false,
-                    Message = "Sign up fail",
+                    Message = "Sign up failed",
                     Data = validation
                 });
             }
@@ -89,12 +89,14 @@ namespace ODTLearning.Controllers
                     Data = user
                 });
             }
+
             return Ok(new ApiResponse
             {
                 Success = false,
                 Message = "Sign up failed, user creation returned null"
             });
         }
+
 
         [HttpPost("LogIn")]
         public IActionResult SignIn(SignInModel model)

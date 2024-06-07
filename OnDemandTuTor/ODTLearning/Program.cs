@@ -38,6 +38,8 @@ namespace ODTLearning
             // Register services
             builder.Services.AddScoped<IAccountRepository, AccountRepository>();
             builder.Services.AddScoped<ITutorListRepository, TutorListRepository>();
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<IModaretorRepository, ModeratorRepository>();
 
             // Add DbContext;
             builder.Services.AddDbContext<DbminiCapstoneContext>(options =>
@@ -79,7 +81,10 @@ namespace ODTLearning
                 options.AddPolicy(name: MyAllowSpecificOrigins,
                                   policy =>
                                   {
-                                      policy.WithOrigins("http://localhost:3000");
+                                      policy.WithOrigins("http://localhost:3000")
+                                             .WithOrigins("http://localhost:3001")
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod();
                                   });
             });
 
@@ -98,8 +103,9 @@ namespace ODTLearning
             app.UseHttpsRedirection();
             app.UseRouting();
 
+
             // Use CORS
-            app.UseCors("AllowSpecificOrigin");
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthentication();
             app.UseAuthorization();
