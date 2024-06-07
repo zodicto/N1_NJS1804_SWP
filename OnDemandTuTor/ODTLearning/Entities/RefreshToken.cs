@@ -21,5 +21,5 @@ public partial class RefreshToken
 
     public string IdAccount { get; set; } = null!;
 
-    public virtual Acount IdAccountNavigation { get; set; } = null!;
+    public virtual Account IdAccountNavigation { get; set; } = null!;
 }

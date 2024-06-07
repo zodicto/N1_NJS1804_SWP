@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ODTLearning.Entities;
 
+
 namespace ODTLearning.Repositories
 {
     public class ModeratorRepository : IModaretorRepository
@@ -14,8 +15,8 @@ namespace ODTLearning.Repositories
         }
         public object GetTutorProfileToConFirm(string id)
         {
-            var accountDetails = _context.Acounts
-                .Where(a => a.IdAccount == id)
+            var accountDetails = _context.Accounts
+                .Where(a => a.Id == id)
                 .Select(a => new
                 {
                     Username = a.Username,
@@ -31,7 +32,7 @@ namespace ODTLearning.Repositories
                         }),
                         EducationalQualifications = t.EducationalQualifications.Select(eq => new
                         {
-                            CertificateName = eq.CertificateName,
+                            CertificateName = eq.QualificationName,
                             Type = eq.Type
                         })
                     })
@@ -42,7 +43,7 @@ namespace ODTLearning.Repositories
         public string ChangeRequestLearningStatus(string requestId, string status)
         {
             // Tìm yêu cầu học tập theo IdRequest
-            var request = _context.Requests.FirstOrDefault(r => r.IdPost == requestId);
+            var request = _context.Requests.FirstOrDefault(r => r.Id == requestId);
 
             if (request == null)
             {
@@ -67,7 +68,7 @@ namespace ODTLearning.Repositories
         }
         public bool ConFirmProfileTutor(string idTutor, string status)
         {
-            var tutor = _context.Tutors.FirstOrDefault(x => x.IdTutor == idTutor);
+            var tutor = _context.Tutors.FirstOrDefault(x => x.Id == idTutor);
             if (tutor == null)
             {
                 return false;

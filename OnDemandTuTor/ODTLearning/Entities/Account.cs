@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace ODTLearning.Entities;
 
-public partial class Acount
+public partial class Account
 {
-    public string IdAccount { get; set; } = null!;
+    public string Id { get; set; } = null!;
 
     public string? Username { get; set; }
 
@@ -23,9 +23,13 @@ public partial class Acount
 
     public string Role { get; set; } = null!;
 
+    public string? Img { get; set; }
+
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
-    public virtual ICollection<Student> Students { get; set; } = new List<Student>();
+    public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
+
+    public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
 
     public virtual ICollection<Tutor> Tutors { get; set; } = new List<Tutor>();
 }

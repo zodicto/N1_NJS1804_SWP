@@ -5,10 +5,9 @@ using ODTLearning.Models;
 
 namespace ODTLearning.Repositories
 {
-    public class TutorRepository : ITutorRepository
+    public class TutorRepository
     {
         private readonly DbminiCapstoneContext _context;
-
         public bool UpdateTutorProfile(string idTutor, TutorProfileToUpdate model)
         {
             var tutor = _context.Tutors
@@ -16,7 +15,7 @@ namespace ODTLearning.Repositories
                 .Include(t => t.TutorFields)
                 .ThenInclude(tf => tf.IdFieldNavigation)
                 .Include(t => t.EducationalQualifications)
-                .FirstOrDefault(x => x.IdTutor == idTutor);
+                .FirstOrDefault(x => x.Id == idTutor);
 
             if (tutor == null)
             {
@@ -41,19 +40,19 @@ namespace ODTLearning.Repositories
                 var newField = new TutorField
                 {
                     IdTutor = idTutor,
-                    IdField = _context.Fields.FirstOrDefault(f => f.FieldName == model.FieldName)?.IdField ?? Guid.NewGuid().ToString(),
+                    IdField = _context.Fields.FirstOrDefault(f => f.FieldName == model.FieldName)?.Id ?? Guid.NewGuid().ToString(),
                 };
                 tutor.TutorFields.Add(newField);
             }
 
 
-            var existingQualification = tutor.EducationalQualifications.FirstOrDefault(eq => eq.CertificateName == model.FieldName);
+            var existingQualification = tutor.EducationalQualifications.FirstOrDefault(eq => eq.QualificationName == model.FieldName);
             if (existingQualification == null && !string.IsNullOrEmpty(model.FieldName))
             {
                 var newQualification = new EducationalQualification
                 {
-                    IdEducationalEualifications = Guid.NewGuid().ToString(),
-                    CertificateName = model.FieldName,
+                    Id = Guid.NewGuid().ToString(),
+                    QualificationName = model.FieldName,
                     IdTutor = idTutor
                 };
                 tutor.EducationalQualifications.Add(newQualification);

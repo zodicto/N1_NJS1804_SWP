@@ -5,7 +5,7 @@ namespace ODTLearning.Entities;
 
 public partial class Field
 {
-    public string IdField { get; set; } = null!;
+    public string Id { get; set; } = null!;
 
     public string FieldName { get; set; } = null!;
 

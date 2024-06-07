@@ -19,7 +19,7 @@ namespace ODTLearning.Controllers
             _context = context;
         }
         [HttpGet("ViewProfileTT")]
-        public IActionResult GetProfileToConFirm( string IdTutor)
+        public IActionResult GetProfileToConFirm(string IdTutor)
         {
             var list = _repo.GetTutorProfileToConFirm(IdTutor);
 

@@ -12,6 +12,7 @@ using System.Text;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 using ODTLearning.Entities;
 
+
 namespace ODTLearning.Controllers
 {
     [Route("api/[controller]")]
@@ -132,7 +133,7 @@ namespace ODTLearning.Controllers
             return Ok(new ApiResponse
             {
                 Success = false,
-                Message = "Invalid username or password"
+                Message = "Invalid email or password"
             });
 
         }
@@ -241,7 +242,7 @@ namespace ODTLearning.Controllers
                 _context.SaveChanges();
 
                 //Create new token
-                var user = _context.Acounts.FirstOrDefault(x => x.IdAccount == storedToken.IdAccount);
+                var user = _context.Accounts.FirstOrDefault(x => x.Id == storedToken.IdAccount);
 
                 var token = _repo.generatetoken(user);
 

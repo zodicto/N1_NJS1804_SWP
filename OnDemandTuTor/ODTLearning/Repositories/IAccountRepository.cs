@@ -2,10 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ODTLearning.Entities;
-
-//using ODTLearning.Entities;
-
-//using ODTLearning.Entities;
 using ODTLearning.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -23,10 +19,10 @@ namespace ODTLearning.Repositories
 
 
         public SignInValidationModel SignInValidation(SignInModel model);
-        public Acount authentication(SignInModel model);
+        public Account authentication(SignInModel model);
 
-        public TokenModel generatetoken(Acount user);
+        public TokenModel generatetoken(Account user);
         public string generaterefreshtoken();
-        public List<Acount> getallusers();
+        public List<Account> getallusers();
     }
 }

@@ -5,11 +5,9 @@ namespace ODTLearning.Entities;
 
 public partial class Service
 {
-    public string IdService { get; set; } = null!;
+    public string Id { get; set; } = null!;
 
     public float? Price { get; set; }
-
-    public string? Status { get; set; }
 
     public string? Title { get; set; }
 
@@ -17,13 +15,13 @@ public partial class Service
 
     public string? Video { get; set; }
 
-    public string TutoridTutor { get; set; } = null!;
+    public string IdTutor { get; set; } = null!;
 
     public string IdTypeOfService { get; set; } = null!;
+
+    public virtual Tutor IdTutorNavigation { get; set; } = null!;
 
     public virtual TypeOfService IdTypeOfServiceNavigation { get; set; } = null!;
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
-
-    public virtual Tutor TutoridTutorNavigation { get; set; } = null!;
 }

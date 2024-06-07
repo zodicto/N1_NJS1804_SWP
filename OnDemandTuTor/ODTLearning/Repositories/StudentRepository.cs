@@ -7,18 +7,17 @@ namespace ODTLearning.Repositories
     public class StudentRepository :IStudentRepository
     {
         private readonly DbminiCapstoneContext _context;
-
         public StudentRepository(DbminiCapstoneContext context)
         {
             _context = context;
         }
 
-        public object CreateRequestLearning(String IdStudent,RequestLearningModel model)
+        public object CreateRequestLearning(String IdStudent, RequestLearningModel model)
         {
             // Tìm sinh viên theo IdStudent
-            var student = _context.Students
+            var student = _context.Accounts
                                   .Include(s => s.Requests)
-                                  .FirstOrDefault(s => s.IdStudent == IdStudent);
+                                  .FirstOrDefault(s => s.Id == IdStudent);
 
             if (student == null)
             {
@@ -29,13 +28,12 @@ namespace ODTLearning.Repositories
                 // Tạo một đối tượng Request mới từ model
                 var requestOfStudent = new Request
                 {
-                    IdPost = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid().ToString(),
                     Titile = model.Title,
                     Price = model.Price,
                     Description = model.Description,
                     Status = model.Status,
                     IdTypeOfService = model.NameService,
-                    IdStudent = IdStudent,
                 };
 
                 // Thêm Request vào context
@@ -47,12 +45,12 @@ namespace ODTLearning.Repositories
                 {
                     var schedule = new Schedule
                     {
-                        IdSchedule = Guid.NewGuid().ToString(),
+                        Id = Guid.NewGuid().ToString(),
                         Date = model.Date.Value,
                         TimeStart = model.TimeStart.Value,
                         TimeEnd = model.TimeEnd.Value,
                         IdService = null,
-                        IdPost = requestOfStudent.IdPost,
+                        IdRequest = requestOfStudent.Id,
                     };
 
                     // Thêm Schedule vào context
@@ -68,7 +66,7 @@ namespace ODTLearning.Repositories
             // Tìm request theo requestId
             var requestToUpdate = _context.Requests
                                           .Include(r => r.Schedules)
-                                          .FirstOrDefault(r => r.IdPost == requestId);
+                                          .FirstOrDefault(r => r.Id == requestId);
 
             if (requestToUpdate == null)
             {
@@ -98,12 +96,12 @@ namespace ODTLearning.Repositories
                     // Tạo mới schedule nếu chưa tồn tại
                     var newSchedule = new Schedule
                     {
-                        IdSchedule = Guid.NewGuid().ToString(),
+                        Id = Guid.NewGuid().ToString(),
                         Date = model.Date.Value,
                         TimeStart = model.TimeStart.Value,
                         TimeEnd = model.TimeEnd.Value,
                         IdService = null, // Bạn cần lấy Id của service từ đâu đó
-                        IdPost = requestToUpdate.IdPost,
+                        IdRequest = requestToUpdate.Id,
                     };
                     _context.Schedules.Add(newSchedule);
                 }
@@ -119,7 +117,7 @@ namespace ODTLearning.Repositories
             // Tìm request theo requestId
             var requestToDelete = _context.Requests
                                           .Include(r => r.Schedules)
-                                          .FirstOrDefault(r => r.IdPost == requestId);
+                                          .FirstOrDefault(r => r.Id == requestId);
 
             if (requestToDelete == null)
             {
@@ -143,7 +141,7 @@ namespace ODTLearning.Repositories
         {
             return _context.Requests
                            .Where(r => r.Status == "pending approve")
-                           .Include(r => r.IdStudentNavigation)
+                           .Include(r => r.IdAccountNavigation)
                            .Include(r => r.IdTypeOfServiceNavigation)
                            .ToList();
         }
@@ -153,7 +151,7 @@ namespace ODTLearning.Repositories
         {
             return _context.Requests
                            .Where(r => r.Status == "approved")
-                           .Include(r => r.IdStudentNavigation)
+                           .Include(r => r.IdAccountNavigation)
                            .Include(r => r.IdTypeOfServiceNavigation)
                            .ToList();
         }

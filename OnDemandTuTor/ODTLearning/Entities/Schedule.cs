@@ -5,7 +5,7 @@ namespace ODTLearning.Entities;
 
 public partial class Schedule
 {
-    public string IdSchedule { get; set; } = null!;
+    public string Id { get; set; } = null!;
 
     public DateOnly? Date { get; set; }
 
@@ -15,9 +15,9 @@ public partial class Schedule
 
     public string IdService { get; set; } = null!;
 
-    public string IdPost { get; set; } = null!;
+    public string IdRequest { get; set; } = null!;
 
-    public virtual Request IdPostNavigation { get; set; } = null!;
+    public virtual Request IdRequestNavigation { get; set; } = null!;
 
     public virtual Service IdServiceNavigation { get; set; } = null!;
 

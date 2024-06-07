@@ -5,15 +5,13 @@ namespace ODTLearning.Entities;
 
 public partial class Rent
 {
-    public string IdRent { get; set; } = null!;
-
-    public string? Status { get; set; }
-
-    public string IdStudent { get; set; } = null!;
+    public string Id { get; set; } = null!;
 
     public string IdSchedule { get; set; } = null!;
 
-    public virtual Schedule IdScheduleNavigation { get; set; } = null!;
+    public string IdAccount { get; set; } = null!;
 
-    public virtual Student IdStudentNavigation { get; set; } = null!;
+    public virtual Account IdAccountNavigation { get; set; } = null!;
+
+    public virtual Schedule IdScheduleNavigation { get; set; } = null!;
 }

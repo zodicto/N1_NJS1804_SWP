@@ -5,7 +5,7 @@ namespace ODTLearning.Entities;
 
 public partial class Request
 {
-    public string IdPost { get; set; } = null!;
+    public string Id { get; set; } = null!;
 
     public double? Price { get; set; }
 
@@ -15,11 +15,11 @@ public partial class Request
 
     public string? Status { get; set; }
 
-    public string IdStudent { get; set; } = null!;
+    public string IdAccount { get; set; } = null!;
 
     public string IdTypeOfService { get; set; } = null!;
 
-    public virtual Student IdStudentNavigation { get; set; } = null!;
+    public virtual Account IdAccountNavigation { get; set; } = null!;
 
     public virtual TypeOfService IdTypeOfServiceNavigation { get; set; } = null!;
 

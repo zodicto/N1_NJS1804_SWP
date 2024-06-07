@@ -14,10 +14,10 @@ namespace ODTLearning.Repositories
         {
             _context = context;
         }
-        public List<Acount> SearchTutorList(string name, string field)
+        public List<Account> SearchTutorList(string name, string field)
         {
             //list all
-            var list = _context.Acounts.Where(x => x.Role == "Tutor");
+            var list = _context.Accounts.Where(x => x.Role == "Tutor");
 
             //list search by name
             if (!string.IsNullOrEmpty(name))
@@ -28,15 +28,15 @@ namespace ODTLearning.Repositories
             //list search by field
             if (!string.IsNullOrEmpty(field))
             {
-                var fieldId = _context.Fields.Where(x => x.FieldName == field).Select(x => x.IdField).ToString();
+                var fieldId = _context.Fields.Where(x => x.FieldName == field).Select(x => x.Id).ToString();
 
-                var kq = _context.TutorFields.Where(x => x.IdField == fieldId).Join(_context.Tutors, tf => tf.IdTutor, t => t.IdTutor, (tf, t) => t.IdAccount).ToList();
+                var kq = _context.TutorFields.Where(x => x.IdField == fieldId).Join(_context.Tutors, tf => tf.IdTutor, t => t.Id, (tf, t) => t.IdAccount).ToList();
 
-                IQueryable<Acount> a = null;
+                IQueryable<Account> a = null;
 
                 foreach (var id in kq)
                 {
-                    var k = list.Where(x => x.IdAccount == id);
+                    var k = list.Where(x => x.Id == id);
                     a = a.Union(k);
                 }
 

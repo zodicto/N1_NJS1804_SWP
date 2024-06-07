@@ -29,9 +29,9 @@ namespace ODTLearning.Repositories
                 return null;
             }
 
-            var account = new Acount
+            var account = new Account
             {
-                IdAccount = Guid.NewGuid().ToString(),
+                Id = Guid.NewGuid().ToString(),
                 FirstName = model.FirstName,
                 LastName = model.LastName,
                 Username = model.Username,
@@ -42,27 +42,19 @@ namespace ODTLearning.Repositories
                 Role = "student"
             };
 
-            var student = new Student
-            {
-                IdStudent = Guid.NewGuid().ToString(),
-                IdAccount = account.IdAccount,
-                IdAccountNavigation = account
-            };
-
             // Thêm Account và Student vào context
-            _context.Acounts.Add(account);
-            _context.Students.Add(student);
+            _context.Accounts.Add(account);
             _context.SaveChanges();
 
             return account;
         }
         public SignInValidationModel SignInValidation(SignInModel model)
         {
-            string username = "", password = "";
+            string email = "", password = "";
             int i = 0;
-            if (model.Username == null)
+            if (model.Email == null)
             {
-                username = "please do not username empty!!";
+                email = "please do not username empty!!";
                 i++;
             }
 
@@ -76,7 +68,7 @@ namespace ODTLearning.Repositories
             {
                 return new SignInValidationModel
                 {
-                    Username = username,
+                    Username = email,
                     Password = password
                 };
             }
@@ -187,30 +179,30 @@ namespace ODTLearning.Repositories
         public object SignUpOftutor(string IdAccount, SignUpModelOfTutor model)
         {
             // Tìm kiếm account trong DB bằng id
-            var existingUser = _context.Acounts.FirstOrDefault(a => a.IdAccount == IdAccount);
+            var existingUser = _context.Accounts.FirstOrDefault(a => a.Id == IdAccount);
 
             if (existingUser != null)
             {
                 // Cập nhật vai trò của tài khoản thành "tutor"
                 existingUser.Role = "tutor";
-                _context.Acounts.Update(existingUser);
+                _context.Accounts.Update(existingUser);
 
                 // Tạo mới đối tượng tutor
                 var tutor = new Tutor
                 {
-                    IdTutor = Guid.NewGuid().ToString(),
+                    Id = Guid.NewGuid().ToString(),
                     SpecializedSkills = model.SpecializedSkills,
                     Experience = model.Experience,
                     Status = "Operating",
-                    IdAccount = existingUser.IdAccount
+                    IdAccount = existingUser.Id
                 };
 
                 // Tạo mới đối tượng educationalqualification
                 var educationalQualifications = new EducationalQualification
                 {
-                    IdEducationalEualifications = Guid.NewGuid().ToString(),
-                    IdTutor = tutor.IdTutor,
-                    CertificateName = model.QualificationName,
+                    Id = Guid.NewGuid().ToString(),
+                    IdTutor = tutor.Id,
+                    QualificationName = model.QualificationName,
                     Img = model.ImageDegree,
                     Type = model.Type,
                 };
@@ -221,7 +213,7 @@ namespace ODTLearning.Repositories
                 {
                     field = new Field
                     {
-                        IdField = Guid.NewGuid().ToString(),
+                        Id = Guid.NewGuid().ToString(),
                         FieldName = model.Field,
                     };
                     _context.Fields.Add(field);
@@ -230,9 +222,9 @@ namespace ODTLearning.Repositories
                 // Tạo mới đối tượng tutorfield
                 var tutorField = new TutorField
                 {
-                    IdTutorFileld = Guid.NewGuid().ToString(),
-                    IdField = field.IdField,
-                    IdTutor = tutor.IdTutor,
+                    Id = Guid.NewGuid().ToString(),
+                    IdField = field.Id,
+                    IdTutor = tutor.Id,
                 };
 
                 // Thêm các đối tượng vào DB
@@ -257,11 +249,9 @@ namespace ODTLearning.Repositories
             return null;
         }
 
+        public Account authentication(SignInModel model) => _context.Accounts.FirstOrDefault(u => u.Gmail == model.Email && u.Password == model.Password);
 
-
-        public Acount authentication(SignInModel model) => _context.Acounts.FirstOrDefault(u => u.Username == model.Username && u.Password == model.Password);
-
-        public TokenModel generatetoken(Acount user)
+        public TokenModel generatetoken(Account user)
         {
             var jwttokenhandler = new JwtSecurityTokenHandler();
             var securitykey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["appsettings:secretkey"]));
@@ -273,7 +263,7 @@ namespace ODTLearning.Repositories
                 new Claim(JwtRegisteredClaimNames.Email, user.Gmail),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Role, user.Role),
-                new Claim("id", user.IdAccount )
+                new Claim("id", user.Id )
 
             };
 
@@ -303,7 +293,7 @@ namespace ODTLearning.Repositories
             var refreshtokenentity = new RefreshToken
             {
                 Id = Guid.NewGuid().ToString(),
-                IdAccount = user.IdAccount,
+                IdAccount = user.Id,
                 JwtId = token.Id,
                 Token = refreshtoken,
                 IsUsed = false,
@@ -333,9 +323,9 @@ namespace ODTLearning.Repositories
             }
         }
 
-        public List<Acount> getallusers()
+        public List<Account> getallusers()
         {
-            var list = _context.Acounts.ToList();
+            var list = _context.Accounts.ToList();
             return list;
         }
 

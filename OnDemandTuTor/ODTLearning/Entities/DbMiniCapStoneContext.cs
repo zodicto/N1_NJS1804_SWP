@@ -15,7 +15,7 @@ public partial class DbminiCapstoneContext : DbContext
     {
     }
 
-    public virtual DbSet<Acount> Acounts { get; set; }
+    public virtual DbSet<Account> Accounts { get; set; }
 
     public virtual DbSet<EducationalQualification> EducationalQualifications { get; set; }
 
@@ -33,8 +33,6 @@ public partial class DbminiCapstoneContext : DbContext
 
     public virtual DbSet<Service> Services { get; set; }
 
-    public virtual DbSet<Student> Students { get; set; }
-
     public virtual DbSet<Tutor> Tutors { get; set; }
 
     public virtual DbSet<TutorField> TutorFields { get; set; }
@@ -47,79 +45,63 @@ public partial class DbminiCapstoneContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Acount>(entity =>
+        modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.IdAccount).HasName("PK__Acount__ADA956219F259ECE");
+            entity.HasKey(e => e.Id).HasName("PK__Account__3214EC27638F4951");
 
-            entity.ToTable("Acount");
+            entity.ToTable("Account");
 
-            entity.Property(e => e.IdAccount)
+            entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Account");
-            entity.Property(e => e.Birthdate)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.FirstName)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+                .HasColumnName("ID");
+            entity.Property(e => e.FirstName).HasMaxLength(50);
             entity.Property(e => e.Gender).HasMaxLength(50);
-            entity.Property(e => e.Gmail)
+            entity.Property(e => e.Gmail).HasMaxLength(50);
+            entity.Property(e => e.Img)
                 .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.LastName)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.Password)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.Role)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.Username)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+                .HasColumnName("img");
+            entity.Property(e => e.LastName).HasMaxLength(50);
+            entity.Property(e => e.Password).HasMaxLength(50);
+            entity.Property(e => e.Role).HasMaxLength(50);
+            entity.Property(e => e.Username).HasMaxLength(50);
         });
 
         modelBuilder.Entity<EducationalQualification>(entity =>
         {
-            entity.HasKey(e => e.IdEducationalEualifications).HasName("PK__Educatio__C1B293B0B7005E91");
+            entity.HasKey(e => e.Id).HasName("PK__Educatio__3214EC27D68BC1C7");
 
-            entity.Property(e => e.IdEducationalEualifications)
+            entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_EducationalEualifications");
-            entity.Property(e => e.CertificateName)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+                .HasColumnName("ID");
             entity.Property(e => e.IdTutor)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Tutor");
+                .HasColumnName("ID_Tutor");
             entity.Property(e => e.Img)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("img");
-            entity.Property(e => e.Type)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+            entity.Property(e => e.QualificationName).HasMaxLength(50);
+            entity.Property(e => e.Type).HasMaxLength(50);
 
             entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.EducationalQualifications)
                 .HasForeignKey(d => d.IdTutor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKEducationa811691");
+                .HasConstraintName("FK__Education__ID_Tu__45BE5BA9");
         });
 
         modelBuilder.Entity<Field>(entity =>
         {
-            entity.HasKey(e => e.IdField).HasName("PK__Field__0CC4080769EE2C69");
+            entity.HasKey(e => e.Id).HasName("PK__Field__3214EC27A00BD2E9");
 
             entity.ToTable("Field");
 
-            entity.Property(e => e.IdField)
+            entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Field");
+                .HasColumnName("ID");
             entity.Property(e => e.FieldName)
                 .HasMaxLength(50)
                 .IsUnicode(false);
@@ -127,18 +109,19 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<RefreshToken>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__RefreshT__3214EC07E68F9E08");
+            entity.HasKey(e => e.Id).HasName("PK__RefreshT__3214EC27A8773FF1");
 
             entity.ToTable("RefreshToken");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasColumnName("ID");
             entity.Property(e => e.ExpiredAt).HasColumnType("datetime");
             entity.Property(e => e.IdAccount)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Account");
+                .HasColumnName("ID_Account");
             entity.Property(e => e.IssuedAt).HasColumnType("datetime");
             entity.Property(e => e.JwtId)
                 .HasMaxLength(50)
@@ -150,278 +133,232 @@ public partial class DbminiCapstoneContext : DbContext
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.RefreshTokens)
                 .HasForeignKey(d => d.IdAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKRefreshTok940738");
+                .HasConstraintName("FK__RefreshTo__ID_Ac__40058253");
         });
 
         modelBuilder.Entity<Rent>(entity =>
         {
-            entity.HasKey(e => e.IdRent).HasName("PK__Rent__478EEDDF1112658C");
+            entity.HasKey(e => e.Id).HasName("PK__Rent__3214EC274E944030");
 
             entity.ToTable("Rent");
 
-            entity.Property(e => e.IdRent)
+            entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Rent");
+                .HasColumnName("ID");
+            entity.Property(e => e.IdAccount)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ID_Account");
             entity.Property(e => e.IdSchedule)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Schedule");
-            entity.Property(e => e.IdStudent)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("id_Student");
-            entity.Property(e => e.Status)
-                .HasMaxLength(10)
-                .IsUnicode(false);
+                .HasColumnName("ID_Schedule");
+
+            entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Rents)
+                .HasForeignKey(d => d.IdAccount)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Rent__ID_Account__607251E5");
 
             entity.HasOne(d => d.IdScheduleNavigation).WithMany(p => p.Rents)
                 .HasForeignKey(d => d.IdSchedule)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKRent911520");
-
-            entity.HasOne(d => d.IdStudentNavigation).WithMany(p => p.Rents)
-                .HasForeignKey(d => d.IdStudent)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKRent745294");
+                .HasConstraintName("FK__Rent__ID_Schedul__5F7E2DAC");
         });
 
         modelBuilder.Entity<Request>(entity =>
         {
-            entity.HasKey(e => e.IdPost).HasName("PK__Request__2BA425F7AD45E84E");
+            entity.HasKey(e => e.Id).HasName("PK__Request__3214EC277F9240A0");
 
             entity.ToTable("Request");
 
-            entity.Property(e => e.IdPost)
+            entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Post");
-            entity.Property(e => e.Description)
-                .HasMaxLength(200)
-                .IsUnicode(false);
-            entity.Property(e => e.IdStudent)
-                .HasMaxLength(10)
+                .HasColumnName("ID");
+            entity.Property(e => e.IdAccount)
+                .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Student");
+                .HasColumnName("ID_Account");
             entity.Property(e => e.IdTypeOfService)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_TypeOfService");
-            entity.Property(e => e.Price)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.Status)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.Titile)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+                .HasColumnName("ID_TypeOfService");
+            entity.Property(e => e.Price).HasMaxLength(50);
+            entity.Property(e => e.Status).HasMaxLength(50);
+            entity.Property(e => e.Titile).HasMaxLength(50);
 
-            entity.HasOne(d => d.IdStudentNavigation).WithMany(p => p.Requests)
-                .HasForeignKey(d => d.IdStudent)
+            entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Requests)
+                .HasForeignKey(d => d.IdAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKRequest420764");
+                .HasConstraintName("FK__Request__ID_Acco__503BEA1C");
 
             entity.HasOne(d => d.IdTypeOfServiceNavigation).WithMany(p => p.Requests)
                 .HasForeignKey(d => d.IdTypeOfService)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKRequest882743");
+                .HasConstraintName("FK__Request__ID_Type__51300E55");
         });
 
         modelBuilder.Entity<ResquestLearning>(entity =>
         {
-            entity.HasKey(e => e.IdRequestLearning).HasName("PK__Resquest__9ED0AE2FD2293FB4");
+            entity.HasKey(e => e.Id).HasName("PK__Resquest__3214EC2719A9E153");
 
             entity.ToTable("Resquest_Learning");
 
-            entity.Property(e => e.IdRequestLearning)
+            entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_RequestLearning");
+                .HasColumnName("ID");
+            entity.Property(e => e.IdRequest)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ID_Request");
             entity.Property(e => e.IdTutor)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Tutor");
-            entity.Property(e => e.Status)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.TidPost)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("tid_Post");
+                .HasColumnName("ID_Tutor");
+
+            entity.HasOne(d => d.IdRequestNavigation).WithMany(p => p.ResquestLearnings)
+                .HasForeignKey(d => d.IdRequest)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Resquest___ID_Re__55009F39");
 
             entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.ResquestLearnings)
                 .HasForeignKey(d => d.IdTutor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKResquest_L23721");
-
-            entity.HasOne(d => d.TidPostNavigation).WithMany(p => p.ResquestLearnings)
-                .HasForeignKey(d => d.TidPost)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKResquest_L231869");
+                .HasConstraintName("FK__Resquest___ID_Tu__540C7B00");
         });
 
         modelBuilder.Entity<Schedule>(entity =>
         {
-            entity.HasKey(e => e.IdSchedule).HasName("PK__Schedule__B70A1A11803E1230");
+            entity.HasKey(e => e.Id).HasName("PK__Schedule__3214EC27664BA4E3");
 
             entity.ToTable("Schedule");
 
-            entity.Property(e => e.IdSchedule)
+            entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Schedule");
-            entity.Property(e => e.IdPost)
+                .HasColumnName("ID");
+            entity.Property(e => e.Date).HasColumnName("DATE");
+            entity.Property(e => e.IdRequest)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Post");
+                .HasColumnName("ID_Request");
             entity.Property(e => e.IdService)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Service");
+                .HasColumnName("ID_Service");
 
-            entity.HasOne(d => d.IdPostNavigation).WithMany(p => p.Schedules)
-                .HasForeignKey(d => d.IdPost)
+            entity.HasOne(d => d.IdRequestNavigation).WithMany(p => p.Schedules)
+                .HasForeignKey(d => d.IdRequest)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKSchedule601757");
+                .HasConstraintName("FK__Schedule__ID_Req__5BAD9CC8");
 
             entity.HasOne(d => d.IdServiceNavigation).WithMany(p => p.Schedules)
                 .HasForeignKey(d => d.IdService)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKSchedule81136");
+                .HasConstraintName("FK__Schedule__ID_Ser__5CA1C101");
         });
 
         modelBuilder.Entity<Service>(entity =>
         {
-            entity.HasKey(e => e.IdService).HasName("PK__Service__F6F54EA7AA2410E3");
+            entity.HasKey(e => e.Id).HasName("PK__Service__3214EC27FD95DBF9");
 
             entity.ToTable("Service");
 
-            entity.Property(e => e.IdService)
+            entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Service");
-            entity.Property(e => e.Description)
+                .HasColumnName("ID");
+            entity.Property(e => e.Description).HasMaxLength(50);
+            entity.Property(e => e.IdTutor)
                 .HasMaxLength(50)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasColumnName("ID_Tutor");
             entity.Property(e => e.IdTypeOfService)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_TypeOfService");
-            entity.Property(e => e.Status)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.Title)
-                .HasMaxLength(50)
-                .IsUnicode(false);
-            entity.Property(e => e.TutoridTutor)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("Tutorid_Tutor");
+                .HasColumnName("Id_TypeOfService");
+            entity.Property(e => e.Title).HasMaxLength(50);
             entity.Property(e => e.Video)
                 .HasMaxLength(50)
                 .IsUnicode(false);
 
+            entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.Services)
+                .HasForeignKey(d => d.IdTutor)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Service__ID_Tuto__57DD0BE4");
+
             entity.HasOne(d => d.IdTypeOfServiceNavigation).WithMany(p => p.Services)
                 .HasForeignKey(d => d.IdTypeOfService)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKService343958");
-
-            entity.HasOne(d => d.TutoridTutorNavigation).WithMany(p => p.Services)
-                .HasForeignKey(d => d.TutoridTutor)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKService741934");
-        });
-
-        modelBuilder.Entity<Student>(entity =>
-        {
-            entity.HasKey(e => e.IdStudent).HasName("PK__Student__0098208F9F528844");
-
-            entity.ToTable("Student");
-
-            entity.Property(e => e.IdStudent)
-                .HasMaxLength(10)
-                .IsUnicode(false)
-                .HasColumnName("id_Student");
-            entity.Property(e => e.IdAccount)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("id_Account");
-            entity.Property(e => e.Img)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("img");
-
-            entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Students)
-                .HasForeignKey(d => d.IdAccount)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKStudent366114");
+                .HasConstraintName("FK__Service__Id_Type__58D1301D");
         });
 
         modelBuilder.Entity<Tutor>(entity =>
         {
-            entity.HasKey(e => e.IdTutor).HasName("PK__Tutor__93DA661D67525E70");
+            entity.HasKey(e => e.Id).HasName("PK__Tutor__3214EC27A28747AF");
 
             entity.ToTable("Tutor");
 
-            entity.Property(e => e.IdTutor)
+            entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Tutor");
+                .HasColumnName("ID");
             entity.Property(e => e.IdAccount)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Account");
-            entity.Property(e => e.SpecializedSkills)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+                .HasColumnName("ID_Account");
+            entity.Property(e => e.SpecializedSkills).HasMaxLength(50);
+            entity.Property(e => e.Status).HasMaxLength(50);
 
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Tutors)
                 .HasForeignKey(d => d.IdAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKTutor303168");
+                .HasConstraintName("FK__Tutor__ID_Accoun__42E1EEFE");
         });
 
         modelBuilder.Entity<TutorField>(entity =>
         {
-            entity.HasKey(e => e.IdTutorFileld).HasName("PK__Tutor_Fi__CBB4B60C7457DC2B");
+            entity.HasKey(e => e.Id).HasName("PK__Tutor_Fi__3214EC277D035C5A");
 
             entity.ToTable("Tutor_Field");
 
-            entity.Property(e => e.IdTutorFileld)
+            entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Tutor_Fileld");
+                .HasColumnName("ID");
             entity.Property(e => e.IdField)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Field");
+                .HasColumnName("ID_Field");
             entity.Property(e => e.IdTutor)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_Tutor");
+                .HasColumnName("ID_Tutor");
 
             entity.HasOne(d => d.IdFieldNavigation).WithMany(p => p.TutorFields)
                 .HasForeignKey(d => d.IdField)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKTutor_Fiel99285");
+                .HasConstraintName("FK__Tutor_Fie__ID_Fi__4B7734FF");
 
             entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.TutorFields)
                 .HasForeignKey(d => d.IdTutor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKTutor_Fiel195321");
+                .HasConstraintName("FK__Tutor_Fie__ID_Tu__4A8310C6");
         });
 
         modelBuilder.Entity<TypeOfService>(entity =>
         {
-            entity.HasKey(e => e.IdTypeOfService).HasName("PK__Type of __0DF9946F0D2A9F73");
+            entity.HasKey(e => e.Id).HasName("PK__TypeOfSe__3214EC273EAB3FEA");
 
-            entity.ToTable("Type of service");
+            entity.ToTable("TypeOfService");
 
-            entity.Property(e => e.IdTypeOfService)
+            entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("id_TypeOfService");
+                .HasColumnName("ID");
+            entity.Property(e => e.NameService).HasMaxLength(50);
         });
 
         OnModelCreatingPartial(modelBuilder);
