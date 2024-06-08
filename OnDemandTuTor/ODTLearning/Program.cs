@@ -40,6 +40,7 @@ namespace ODTLearning
             builder.Services.AddScoped<ITutorListRepository, TutorListRepository>();
             builder.Services.AddScoped<IStudentRepository, StudentRepository>();
             builder.Services.AddScoped<IModaretorRepository, ModeratorRepository>();
+            builder.Services.AddSingleton<IVnPayRepository, VnPayRepository>();
 
             // Add DbContext;
             builder.Services.AddDbContext<DbminiCapstoneContext>(options =>
