@@ -28,9 +28,18 @@ builder.Services.AddScoped<ITutorListRepository, TutorListRepository>();
 builder.Services.AddScoped<IStudentRepository, StudentRepository>();
 builder.Services.AddScoped<IModaretorRepository, ModeratorRepository>();
 
+<<<<<<< HEAD
 // Add DbContext
 builder.Services.AddDbContext<DbminiCapstoneContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DB_MiniCapStone")));
+=======
+            // Register services
+            builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+            builder.Services.AddScoped<ITutorListRepository, TutorListRepository>();
+            builder.Services.AddScoped<IStudentRepository, StudentRepository>();
+            builder.Services.AddScoped<IModaretorRepository, ModeratorRepository>();
+            builder.Services.AddSingleton<IVnPayRepository, VnPayRepository>();
+>>>>>>> 989f0dbf088565a6276ab11a02605212d31881c1
 
 // Configure JWT authentication
 var secretKey = builder.Configuration["AppSettings:SecretKey"];
