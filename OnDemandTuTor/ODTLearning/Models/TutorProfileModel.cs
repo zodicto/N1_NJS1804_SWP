@@ -1,7 +1,8 @@
 ﻿namespace ODTLearning.Models
 {
-    public class TutorListModel
+    public class TutorProfileModel
     {
+        public string Id { get; set; }
         public string? FirstName { get; set; }
 
         public string? LastName { get; set; }
@@ -11,7 +12,7 @@
         public DateOnly? Birthdate { get; set; }
 
         public string? Gender { get; set; }
-
-        public object Field { get; set; }
+        public object Fields { get; set; }
+        public object Qualifications { get; set; }
     }
 }

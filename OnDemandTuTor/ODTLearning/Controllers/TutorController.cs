@@ -21,6 +21,28 @@ namespace ODTLearning.Controllers
             _context = context;
         }
 
+        [HttpGet("ProfileTutor")]
+        public IActionResult GetTutorProfile(string id)
+        {
+            var result = _repo.GetTutorProfile(id);
+
+            if (result == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Get profile tutor fail"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "get tutor profile successfully",
+                Data = result
+            });
+        }
+
         [HttpPost("UpdateTutorProfile")]
         public IActionResult UpdateTutorProfile(string idTutor, [FromBody] TutorProfileToUpdate model)
         {
@@ -42,5 +64,26 @@ namespace ODTLearning.Controllers
             });
         }
 
+        [HttpPost("SearchTutor")]
+        public IActionResult GetTutorList(SearchTutorModel model)
+        {
+            var result = _repo.SearchTutorList(model);
+
+            if (result == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Not found"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Get list tutor successfully",
+                Data = result
+            });
+        }
     }
 }
