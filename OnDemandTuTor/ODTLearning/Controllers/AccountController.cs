@@ -22,46 +22,60 @@ namespace ODTLearning.Controllers
         private readonly IAccountRepository _repo;
         private readonly IConfiguration _configuration;
         private readonly DbminiCapstoneContext _context;
+        private readonly ILogger<AccountController> _logger;
 
-        public AccountController(IAccountRepository repo, IConfiguration configuration, DbminiCapstoneContext context)
+        public AccountController(IAccountRepository repo, IConfiguration configuration, DbminiCapstoneContext context, ILogger<AccountController> logger)
         {
             _repo = repo;
             _configuration = configuration;
             _context = context;
+            _logger = logger;
         }
 
         [HttpPost("Register")]
         public IActionResult RegisterOfAccount(SignUpModelOfAccount model)
         {
-            var validation = _repo.SignUpValidationOfAccount(model);
-
-            if (validation != null)
+            try
             {
+                var validation = _repo.SignUpValidationOfAccount(model);
+
+                if (validation != null)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Sign up fail",
+                        Data = validation
+                    });
+                }
+
+                var user = _repo.SignUpOfAccount(model);
+
+                if (user != null)
+                {
+                    return Ok(new ApiResponse
+                    {
+                        Success = true,
+                        Message = "Sign up successfully",
+                        Data = user
+                    });
+                }
+
                 return Ok(new ApiResponse
                 {
                     Success = false,
-                    Message = "Sign up fail",
-                    Data = validation
+                    Message = "An error occurred during the sign up process"
                 });
             }
-
-            var user = _repo.SignUpOfAccount(model);
-
-            if (user != null)
+            catch (Exception ex)
             {
-                return Ok(new ApiResponse
+                _logger.LogError(ex, "An error occurred while signing up");
+                return StatusCode(500, new ApiResponse
                 {
-                    Success = true,
-                    Message = "Sign up successfully",
-                    Data = user
+                    Success = false,
+                    Message = "An internal server error occurred"
                 });
             }
-
-            return Ok(new ApiResponse
-            {
-                Success = false,
-                Message = "An error occurred during the sign up process"
-            });
         }
 
         [HttpPost("RegisterAsTuTor")]

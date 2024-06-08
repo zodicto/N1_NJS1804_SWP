@@ -24,10 +24,6 @@ namespace ODTLearning.Repositories
 
         public object SignUpOfAccount(SignUpModelOfAccount model)// trí(sửa của tân): tạo mới một object và lưu vào db theo tưng thuộc tính 
         {
-            if (model.Password != model.PasswordConfirm)
-            {
-                return null;
-            }
 
             var account = new Account
             {
@@ -36,7 +32,7 @@ namespace ODTLearning.Repositories
                 LastName = model.LastName,
                 Username = model.Username,
                 Password = model.Password,
-                Gmail = model.Gmail,
+                Gmail = model.Email,
                 Birthdate = model.Birthdate,
                 Gender = model.Gender,
                 Role = "student"
@@ -117,7 +113,7 @@ namespace ODTLearning.Repositories
         }
         public SignUpValidationOfAccountModel SignUpValidationOfAccount(SignUpModelOfAccount model)
         {
-            string username = "", password = "", confirm_password = "", firstname = "", lastname = "", gmail = "";
+            string username = "", password = "", firstname = "", lastname = "", gmail = "";
             int i = 0;
 
             if (string.IsNullOrEmpty(model.Username))
@@ -132,16 +128,6 @@ namespace ODTLearning.Repositories
                 i++;
             }
 
-            if (string.IsNullOrEmpty(model.PasswordConfirm))
-            {
-                confirm_password = "Please do not leave password confirmation empty!!";
-                i++;
-            }
-            else if (model.Password != model.PasswordConfirm)
-            {
-                confirm_password = "Password and password confirmation are not the same!!";
-                i++;
-            }
 
             if (string.IsNullOrEmpty(model.FirstName))
             {
@@ -155,7 +141,7 @@ namespace ODTLearning.Repositories
                 i++;
             }
 
-            if (string.IsNullOrEmpty(model.Gmail))
+            if (string.IsNullOrEmpty(model.Email))
             {
                 gmail = "Please do not leave email empty!!";
                 i++;
@@ -167,7 +153,6 @@ namespace ODTLearning.Repositories
                 {
                     Username = username,
                     Password = password,
-                    PasswordConfirm = confirm_password,
                     FirstName = firstname,
                     LastName = lastname,
                     Gmail = gmail,
@@ -176,6 +161,7 @@ namespace ODTLearning.Repositories
 
             return null;
         }
+
         public object SignUpOftutor(string IdAccount, SignUpModelOfTutor model)
         {
             // Tìm kiếm account trong DB bằng id

@@ -8,13 +8,12 @@ namespace ODTLearning.Models
 
         public string? Password { get; set; }
 
-        public string? PasswordConfirm { get; set; }
 
         public string? FirstName { get; set; }
 
         public string? LastName { get; set; }
 
-        public string? Gmail { get; set; }
+        public string? Email { get; set; }
 
         public DateOnly?  Birthdate { get; set; }
 
