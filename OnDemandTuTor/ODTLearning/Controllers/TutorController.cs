@@ -50,7 +50,7 @@ namespace ODTLearning.Controllers
 
             if (!result)
             {
-                return Ok(new ApiResponse
+                return BadRequest(new ApiResponse
                 {
                     Success = false,
                     Message = "Update tutor profile failed"

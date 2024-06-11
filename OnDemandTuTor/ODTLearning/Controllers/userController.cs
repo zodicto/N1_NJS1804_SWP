@@ -43,7 +43,7 @@ namespace ODTLearning.Controllers
 
                 if (validation != null)
                 {
-                    return Ok(new ApiResponse
+                    return BadRequest(new ApiResponse
                     {
                         Success = false,
                         Message = "Sign up fail",
@@ -68,7 +68,12 @@ namespace ODTLearning.Controllers
                         }
                     });
                 }
+<<<<<<< HEAD:OnDemandTuTor/ODTLearning/Controllers/userController.cs
                 else
+=======
+
+                return BadRequest(new ApiResponse
+>>>>>>> a236951b88b78ffd103b105b7c28c003dec27fd0:OnDemandTuTor/ODTLearning/Controllers/AccountController.cs
                 {
                     return Ok(new ApiResponse
                     {
@@ -97,7 +102,7 @@ namespace ODTLearning.Controllers
 
             if (validation != null)
             {
-                return Ok(new ApiResponse
+                return BadRequest(new ApiResponse
                 {
                     Success = false,
                     Message = "Sign up failed",
@@ -117,7 +122,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return Ok(new ApiResponse
+            return BadRequest(new ApiResponse
             {
                 Success = false,
                 Message = "Sign up failed, user creation returned null"
@@ -132,7 +137,7 @@ namespace ODTLearning.Controllers
 
             if (validation != null)
             {
-                return Ok(new ApiResponse
+                return BadRequest(new ApiResponse
                 {
                     Success = false,
                     Message = "Sign in fail",
@@ -156,7 +161,7 @@ namespace ODTLearning.Controllers
                 }
             }
 
-            return Ok(new ApiResponse
+            return NotFound(new ApiResponse
             {
                 Success = false,
                 Message = "Invalid email or password"
@@ -211,7 +216,7 @@ namespace ODTLearning.Controllers
 
                 if (expireDate > DateTime.UtcNow)
                 {
-                    return Ok(new ApiResponse
+                    return BadRequest(new ApiResponse
                     {
                         Success = false,
                         Message = "Access token has not yet expired"
@@ -223,7 +228,7 @@ namespace ODTLearning.Controllers
 
                 if (storedToken == null)
                 {
-                    return Ok(new ApiResponse
+                    return BadRequest(new ApiResponse
                     {
                         Success = false,
                         Message = "Refresh token does not exist"
@@ -233,7 +238,7 @@ namespace ODTLearning.Controllers
                 //check 5: Check refreshToken is used/revoked?
                 if ((bool)storedToken.IsUsed)
                 {
-                    return Ok(new ApiResponse
+                    return BadRequest(new ApiResponse
                     {
                         Success = false,
                         Message = "Refresh token has been used"
@@ -242,7 +247,7 @@ namespace ODTLearning.Controllers
 
                 if ((bool)storedToken.IsRevoked)
                 {
-                    return Ok(new ApiResponse
+                    return BadRequest(new ApiResponse
                     {
                         Success = false,
                         Message = "Refresh token has been revoked"
@@ -254,7 +259,7 @@ namespace ODTLearning.Controllers
 
                 if (storedToken.JwtId != jti)
                 {
-                    return Ok(new ApiResponse
+                    return BadRequest(new ApiResponse
                     {
                         Success = false,
                         Message = "Token doesn't match"
@@ -360,7 +365,7 @@ namespace ODTLearning.Controllers
 
             if (refreshToken == null)
             {
-                return Ok(new ApiResponse
+                return NotFound(new ApiResponse
                 {
                     Success = false,
                     Message = "Invalid refresh token"
