@@ -35,7 +35,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return Ok(new ApiResponse
+            return BadRequest(new ApiResponse
             {
                 Success = false,
                 Message = "Create Request Learning not Create Request Learning"
@@ -57,7 +57,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return Ok(new ApiResponse
+            return BadRequest(new ApiResponse
             {
                 Success = false,
                 Message = "Create Request Learning not Create Request Learning"
@@ -79,7 +79,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return Ok(new ApiResponse
+            return BadRequest(new ApiResponse
             {
                 Success = false,
                 Message = "Delete Request Learning not successfully"
@@ -100,7 +100,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return Ok(new ApiResponse
+            return BadRequest(new ApiResponse
             {
                 Success = false,
                 Message = "Delete Request Learning not successfully"
@@ -123,7 +123,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return Ok(new ApiResponse
+            return BadRequest(new ApiResponse
             {
                 Success = false,
                 Message = "Delete Request Learning not successfully"
