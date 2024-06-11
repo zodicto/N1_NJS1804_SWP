@@ -68,19 +68,12 @@ namespace ODTLearning.Controllers
                         }
                     });
                 }
-<<<<<<< HEAD:OnDemandTuTor/ODTLearning/Controllers/userController.cs
-                else
-=======
 
                 return BadRequest(new ApiResponse
->>>>>>> a236951b88b78ffd103b105b7c28c003dec27fd0:OnDemandTuTor/ODTLearning/Controllers/AccountController.cs
                 {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Email already exists"
-                    });
-                }
+                    Success = false,
+                    Message = "Email already exists"
+                });
             }
             catch (Exception ex)
             {

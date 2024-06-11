@@ -39,7 +39,7 @@ namespace ODTLearning.Repositories
                 Username = model.Username,
                 Password = model.Password,
                 PhoneNumber = model.phone,
-                AccountBalance = null,
+                AccountBalance = 0,
                 Gmail = model.Email,
                 Birthdate = model.date_of_birth,
                 Gender = model.Gender,

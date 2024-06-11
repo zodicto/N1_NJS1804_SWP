@@ -27,6 +27,7 @@ namespace ODTLearning.Controllers
             {
                 OrderId = new Random().Next(1000, 100000),
                 FullName = model.LastName + " " + model.FirstName,
+                Description = "asdjef",
                 Amount = model.Amount,
                 CreatedDate = DateTime.Now
             };
@@ -38,8 +39,8 @@ namespace ODTLearning.Controllers
                 Data = _repo.CreatePaymentUrl(HttpContext, vnpayModel)
             });
         }
-        [HttpPost("paymentCallBack")]
-        public ActionResult PaymentCallBack()
+        [HttpGet("paymentCallBack")]
+        public ActionResult PaymentCallBack(string id)
         {
             var response = _repo.PaymentExecute(Request.Query);
 
@@ -48,9 +49,14 @@ namespace ODTLearning.Controllers
                 return BadRequest(new ApiResponse
                 {
                     Success = false,
-                    Message = $"Error payment VnPay: {response.VnPayResponseCode}"
+                    Message = $"Payment failed. Error payment VnPay: {response.VnPayResponseCode}"
                 });
             }
+
+            var user = _context.Accounts.FirstOrDefault(x => x.Id == id);
+            user.AccountBalance += response.Amount;
+            _context.Accounts.Update(user);
+            _context.SaveChanges();
 
             return Ok(new ApiResponse
             {

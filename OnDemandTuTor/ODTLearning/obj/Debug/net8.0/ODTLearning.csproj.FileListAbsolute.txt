@@ -1351,3 +1351,5 @@ D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\D
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Security.Cryptography.ProtectedData.dll
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Windows.Extensions.dll
+D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Firebase.Storage.dll
+D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Firebase.Auth.dll
