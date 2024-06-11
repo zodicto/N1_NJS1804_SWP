@@ -7,9 +7,9 @@ public partial class Request
 {
     public string Id { get; set; } = null!;
 
-    public double? Price { get; set; }
+    public decimal? Price { get; set; }
 
-    public string? Titile { get; set; }
+    public string? Title { get; set; }
 
     public string? Description { get; set; }
 
@@ -19,11 +19,15 @@ public partial class Request
 
     public string IdTypeOfService { get; set; } = null!;
 
+    public string IdSubject { get; set; } = null!;
+
     public virtual Account IdAccountNavigation { get; set; } = null!;
+
+    public virtual Subject IdSubjectNavigation { get; set; } = null!;
 
     public virtual TypeOfService IdTypeOfServiceNavigation { get; set; } = null!;
 
-    public virtual ICollection<ResquestLearning> ResquestLearnings { get; set; } = new List<ResquestLearning>();
+    public virtual ICollection<RequestLearning> RequestLearnings { get; set; } = new List<RequestLearning>();
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
 }

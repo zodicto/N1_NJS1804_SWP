@@ -22,9 +22,15 @@ namespace ODTLearning.Repositories
             _configuration = configuration;
         }
 
-        public object SignUpOfAccount(SignUpModelOfAccount model)// trí(sửa của tân): tạo mới một object và lưu vào db theo tưng thuộc tính 
+        public Account SignUpOfAccount(SignUpModelOfAccount model)
         {
+            var existingAccount = _context.Accounts.FirstOrDefault(a => a.Gmail == model.Email);
 
+            if (existingAccount != null)
+            {
+                // Trả về null nếu tài khoản đã tồn tại
+                return null;
+            }
             var account = new Account
             {
                 Id = Guid.NewGuid().ToString(),
@@ -32,18 +38,21 @@ namespace ODTLearning.Repositories
                 LastName = model.LastName,
                 Username = model.Username,
                 Password = model.Password,
+                PhoneNumber = model.phone,
+                AccountBalance = null,
                 Gmail = model.Email,
-                Birthdate = model.Birthdate,
+                Birthdate = model.date_of_birth,
                 Gender = model.Gender,
                 Role = "student"
             };
 
-            // Thêm Account và Student vào context
+            // Thêm Account vào context
             _context.Accounts.Add(account);
             _context.SaveChanges();
 
             return account;
         }
+
         public SignInValidationModel SignInValidation(SignInModel model)
         {
             string email = "", password = "";
@@ -194,29 +203,29 @@ namespace ODTLearning.Repositories
                 };
 
                 // Kiểm tra xem field có tồn tại không, nếu không thì tạo mới
-                var field = _context.Fields.FirstOrDefault(f => f.FieldName == model.Field);
+                var field = _context.Subjects.FirstOrDefault(f => f.SubjectName == model.Field);
                 if (field == null)
                 {
-                    field = new Field
+                    field = new Subject
                     {
                         Id = Guid.NewGuid().ToString(),
-                        FieldName = model.Field,
+                        SubjectName = model.Field,
                     };
-                    _context.Fields.Add(field);
+                    _context.Subjects.Add(field);
                 }
 
                 // Tạo mới đối tượng tutorfield
-                var tutorField = new TutorField
+                var tutorField = new TutorSubject
                 {
                     Id = Guid.NewGuid().ToString(),
-                    IdField = field.Id,
+                    IdSubject = field.Id,
                     IdTutor = tutor.Id,
                 };
 
                 // Thêm các đối tượng vào DB
                 _context.Tutors.Add(tutor);
                 _context.EducationalQualifications.Add(educationalQualifications);
-                _context.TutorFields.Add(tutorField);
+                _context.TutorSubjects.Add(tutorField);
 
                 try
                 {
@@ -293,8 +302,8 @@ namespace ODTLearning.Repositories
 
             return new TokenModel
             {
-                AccessToken = accesstoken,
-                RefreshToken = refreshtoken
+                Access_Token = accesstoken,
+                Refresh_Token = refreshtoken
             };
         }
 

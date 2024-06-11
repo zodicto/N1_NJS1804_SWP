@@ -8,14 +8,14 @@ namespace ODTLearning.Models
 
         public string? Password { get; set; }
 
-
+        public string? phone { get; set; }
         public string? FirstName { get; set; }
 
         public string? LastName { get; set; }
 
         public string? Email { get; set; }
 
-        public DateOnly? Birthdate  { get; set; }
+        public DateOnly? date_of_birth  { get; set; }
 
         public string ? Gender { get; set; }
     }

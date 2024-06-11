@@ -8,20 +8,20 @@ namespace ODTLearning.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TutorController : ControllerBase
+    public class tutorController : ControllerBase
     {
         private readonly ITutorRepository _repo;
         private readonly IConfiguration _configuration;
         private readonly DbminiCapstoneContext _context;
 
-        public TutorController(ITutorRepository repo, IConfiguration configuration, DbminiCapstoneContext context)
+        public tutorController(ITutorRepository repo, IConfiguration configuration, DbminiCapstoneContext context)
         {
             _repo = repo;
             _configuration = configuration;
             _context = context;
         }
 
-        [HttpGet("ProfileTutor")]
+        [HttpGet("profileTutor")]
         public IActionResult GetTutorProfile(string id)
         {
             var result = _repo.GetTutorProfile(id);
@@ -43,7 +43,7 @@ namespace ODTLearning.Controllers
             });
         }
 
-        [HttpPost("UpdateTutorProfile")]
+        [HttpPost("updateTutorProfile")]
         public IActionResult UpdateTutorProfile(string idTutor, [FromBody] TutorProfileToUpdate model)
         {
             var result = _repo.UpdateTutorProfile(idTutor, model);
@@ -64,7 +64,7 @@ namespace ODTLearning.Controllers
             });
         }
 
-        [HttpPost("SearchTutor")]
+        [HttpPost("searchTutor")]
         public IActionResult GetTutorList(SearchTutorModel model)
         {
             var result = _repo.SearchTutorList(model);

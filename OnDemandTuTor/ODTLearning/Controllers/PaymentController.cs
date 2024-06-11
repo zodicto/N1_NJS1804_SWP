@@ -9,24 +9,24 @@ namespace ODTLearning.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PaymentController : ControllerBase
+    public class paymentController : ControllerBase
     {
         private readonly IVnPayRepository _repo;
         private readonly DbminiCapstoneContext _context;
 
-        public PaymentController(IVnPayRepository repo, DbminiCapstoneContext context)
+        public paymentController(IVnPayRepository repo, DbminiCapstoneContext context)
         {
             _repo = repo;
             _context = context;
         }
 
-        [HttpPost("Payment")]
+        [HttpPost("payment")]
         public ActionResult Payment(DepositModel model)
         {
             var vnpayModel = new VnPaymentRequestModel
             {
                 OrderId = new Random().Next(1000, 100000),
-                FullName = model.LastName + " " + model.FirstName,                
+                FullName = model.LastName + " " + model.FirstName,
                 Amount = model.Amount,
                 CreatedDate = DateTime.Now
             };
@@ -38,8 +38,8 @@ namespace ODTLearning.Controllers
                 Data = _repo.CreatePaymentUrl(HttpContext, vnpayModel)
             });
         }
-        [HttpPost("PaymentCallBack")]
-        public ActionResult PaymentCallBack() 
+        [HttpPost("paymentCallBack")]
+        public ActionResult PaymentCallBack()
         {
             var response = _repo.PaymentExecute(Request.Query);
 

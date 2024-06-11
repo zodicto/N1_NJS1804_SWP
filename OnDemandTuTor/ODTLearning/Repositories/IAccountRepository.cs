@@ -12,7 +12,7 @@ namespace ODTLearning.Repositories
 {
     public interface IAccountRepository
     {
-        public object SignUpOfAccount(SignUpModelOfAccount model);
+        public Account SignUpOfAccount(SignUpModelOfAccount model);
         public SignUpValidationOfAccountModel SignUpValidationOfAccount(SignUpModelOfAccount model);
         public object SignUpOftutor(string IdAccount, SignUpModelOfTutor model);
         public SignUpValidationOfTutorModel SignUpValidationOfTutor(SignUpModelOfTutor model);

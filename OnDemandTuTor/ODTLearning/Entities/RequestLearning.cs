@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ODTLearning.Entities;
 
-public partial class ResquestLearning
+public partial class RequestLearning
 {
     public string Id { get; set; } = null!;
 

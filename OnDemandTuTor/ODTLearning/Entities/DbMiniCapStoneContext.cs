@@ -19,23 +19,23 @@ public partial class DbminiCapstoneContext : DbContext
 
     public virtual DbSet<EducationalQualification> EducationalQualifications { get; set; }
 
-    public virtual DbSet<Field> Fields { get; set; }
-
     public virtual DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public virtual DbSet<Rent> Rents { get; set; }
 
     public virtual DbSet<Request> Requests { get; set; }
 
-    public virtual DbSet<ResquestLearning> ResquestLearnings { get; set; }
+    public virtual DbSet<RequestLearning> RequestLearnings { get; set; }
 
     public virtual DbSet<Schedule> Schedules { get; set; }
 
     public virtual DbSet<Service> Services { get; set; }
 
+    public virtual DbSet<Subject> Subjects { get; set; }
+
     public virtual DbSet<Tutor> Tutors { get; set; }
 
-    public virtual DbSet<TutorField> TutorFields { get; set; }
+    public virtual DbSet<TutorSubject> TutorSubjects { get; set; }
 
     public virtual DbSet<TypeOfService> TypeOfServices { get; set; }
 
@@ -47,7 +47,7 @@ public partial class DbminiCapstoneContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Account__3214EC27638F4951");
+            entity.HasKey(e => e.Id).HasName("PK__Account__3214EC276C16DE37");
 
             entity.ToTable("Account");
 
@@ -55,21 +55,25 @@ public partial class DbminiCapstoneContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ID");
+            entity.Property(e => e.AccountBalance).HasColumnType("decimal(10, 2)");
+            entity.Property(e => e.Avatar)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.FirstName).HasMaxLength(50);
             entity.Property(e => e.Gender).HasMaxLength(50);
             entity.Property(e => e.Gmail).HasMaxLength(50);
-            entity.Property(e => e.Img)
-                .HasMaxLength(50)
-                .HasColumnName("img");
             entity.Property(e => e.LastName).HasMaxLength(50);
             entity.Property(e => e.Password).HasMaxLength(50);
+            entity.Property(e => e.PhoneNumber)
+                .HasMaxLength(10)
+                .IsUnicode(false);
             entity.Property(e => e.Role).HasMaxLength(50);
             entity.Property(e => e.Username).HasMaxLength(50);
         });
 
         modelBuilder.Entity<EducationalQualification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Educatio__3214EC27D68BC1C7");
+            entity.HasKey(e => e.Id).HasName("PK__Educatio__3214EC2766E54D91");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
@@ -81,35 +85,19 @@ public partial class DbminiCapstoneContext : DbContext
                 .HasColumnName("ID_Tutor");
             entity.Property(e => e.Img)
                 .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("img");
+                .IsUnicode(false);
             entity.Property(e => e.QualificationName).HasMaxLength(50);
             entity.Property(e => e.Type).HasMaxLength(50);
 
             entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.EducationalQualifications)
                 .HasForeignKey(d => d.IdTutor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Education__ID_Tu__45BE5BA9");
-        });
-
-        modelBuilder.Entity<Field>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PK__Field__3214EC27A00BD2E9");
-
-            entity.ToTable("Field");
-
-            entity.Property(e => e.Id)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("ID");
-            entity.Property(e => e.FieldName)
-                .HasMaxLength(50)
-                .IsUnicode(false);
+                .HasConstraintName("FK__Education__ID_Tu__7D0E9093");
         });
 
         modelBuilder.Entity<RefreshToken>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__RefreshT__3214EC27A8773FF1");
+            entity.HasKey(e => e.Id).HasName("PK__RefreshT__3214EC27F147864D");
 
             entity.ToTable("RefreshToken");
 
@@ -133,12 +121,12 @@ public partial class DbminiCapstoneContext : DbContext
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.RefreshTokens)
                 .HasForeignKey(d => d.IdAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__RefreshTo__ID_Ac__40058253");
+                .HasConstraintName("FK__RefreshTo__ID_Ac__7755B73D");
         });
 
         modelBuilder.Entity<Rent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Rent__3214EC274E944030");
+            entity.HasKey(e => e.Id).HasName("PK__Rent__3214EC273570E082");
 
             entity.ToTable("Rent");
 
@@ -158,17 +146,17 @@ public partial class DbminiCapstoneContext : DbContext
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Rents)
                 .HasForeignKey(d => d.IdAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Rent__ID_Account__607251E5");
+                .HasConstraintName("FK__Rent__ID_Account__18B6AB08");
 
             entity.HasOne(d => d.IdScheduleNavigation).WithMany(p => p.Rents)
                 .HasForeignKey(d => d.IdSchedule)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Rent__ID_Schedul__5F7E2DAC");
+                .HasConstraintName("FK__Rent__ID_Schedul__17C286CF");
         });
 
         modelBuilder.Entity<Request>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Request__3214EC277F9240A0");
+            entity.HasKey(e => e.Id).HasName("PK__Request__3214EC27F311FAF7");
 
             entity.ToTable("Request");
 
@@ -180,30 +168,39 @@ public partial class DbminiCapstoneContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ID_Account");
+            entity.Property(e => e.IdSubject)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ID_Subject");
             entity.Property(e => e.IdTypeOfService)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ID_TypeOfService");
-            entity.Property(e => e.Price).HasMaxLength(50);
+            entity.Property(e => e.Price).HasColumnType("decimal(10, 2)");
             entity.Property(e => e.Status).HasMaxLength(50);
-            entity.Property(e => e.Titile).HasMaxLength(50);
+            entity.Property(e => e.Title).HasMaxLength(50);
 
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Requests)
                 .HasForeignKey(d => d.IdAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Request__ID_Acco__503BEA1C");
+                .HasConstraintName("FK__Request__ID_Acco__078C1F06");
+
+            entity.HasOne(d => d.IdSubjectNavigation).WithMany(p => p.Requests)
+                .HasForeignKey(d => d.IdSubject)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__Request__ID_Subj__09746778");
 
             entity.HasOne(d => d.IdTypeOfServiceNavigation).WithMany(p => p.Requests)
                 .HasForeignKey(d => d.IdTypeOfService)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Request__ID_Type__51300E55");
+                .HasConstraintName("FK__Request__ID_Type__0880433F");
         });
 
-        modelBuilder.Entity<ResquestLearning>(entity =>
+        modelBuilder.Entity<RequestLearning>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Resquest__3214EC2719A9E153");
+            entity.HasKey(e => e.Id).HasName("PK__Request___3214EC2759B8629F");
 
-            entity.ToTable("Resquest_Learning");
+            entity.ToTable("Request_Learning");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
@@ -218,20 +215,20 @@ public partial class DbminiCapstoneContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ID_Tutor");
 
-            entity.HasOne(d => d.IdRequestNavigation).WithMany(p => p.ResquestLearnings)
+            entity.HasOne(d => d.IdRequestNavigation).WithMany(p => p.RequestLearnings)
                 .HasForeignKey(d => d.IdRequest)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Resquest___ID_Re__55009F39");
+                .HasConstraintName("FK__Request_L__ID_Re__0D44F85C");
 
-            entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.ResquestLearnings)
+            entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.RequestLearnings)
                 .HasForeignKey(d => d.IdTutor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Resquest___ID_Tu__540C7B00");
+                .HasConstraintName("FK__Request_L__ID_Tu__0C50D423");
         });
 
         modelBuilder.Entity<Schedule>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Schedule__3214EC27664BA4E3");
+            entity.HasKey(e => e.Id).HasName("PK__Schedule__3214EC2779164625");
 
             entity.ToTable("Schedule");
 
@@ -239,7 +236,6 @@ public partial class DbminiCapstoneContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ID");
-            entity.Property(e => e.Date).HasColumnName("DATE");
             entity.Property(e => e.IdRequest)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -252,17 +248,17 @@ public partial class DbminiCapstoneContext : DbContext
             entity.HasOne(d => d.IdRequestNavigation).WithMany(p => p.Schedules)
                 .HasForeignKey(d => d.IdRequest)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Schedule__ID_Req__5BAD9CC8");
+                .HasConstraintName("FK__Schedule__ID_Req__14E61A24");
 
             entity.HasOne(d => d.IdServiceNavigation).WithMany(p => p.Schedules)
                 .HasForeignKey(d => d.IdService)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Schedule__ID_Ser__5CA1C101");
+                .HasConstraintName("FK__Schedule__ID_Ser__13F1F5EB");
         });
 
         modelBuilder.Entity<Service>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Service__3214EC27FD95DBF9");
+            entity.HasKey(e => e.Id).HasName("PK__Service__3214EC275783E5E7");
 
             entity.ToTable("Service");
 
@@ -278,7 +274,7 @@ public partial class DbminiCapstoneContext : DbContext
             entity.Property(e => e.IdTypeOfService)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("Id_TypeOfService");
+                .HasColumnName("ID_TypeOfService");
             entity.Property(e => e.Title).HasMaxLength(50);
             entity.Property(e => e.Video)
                 .HasMaxLength(50)
@@ -287,17 +283,30 @@ public partial class DbminiCapstoneContext : DbContext
             entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.Services)
                 .HasForeignKey(d => d.IdTutor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Service__ID_Tuto__57DD0BE4");
+                .HasConstraintName("FK__Service__ID_Tuto__10216507");
 
             entity.HasOne(d => d.IdTypeOfServiceNavigation).WithMany(p => p.Services)
                 .HasForeignKey(d => d.IdTypeOfService)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Service__Id_Type__58D1301D");
+                .HasConstraintName("FK__Service__ID_Type__11158940");
+        });
+
+        modelBuilder.Entity<Subject>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Subject__3214EC27B9B88F1A");
+
+            entity.ToTable("Subject");
+
+            entity.Property(e => e.Id)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("ID");
+            entity.Property(e => e.SubjectName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Tutor>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tutor__3214EC27A28747AF");
+            entity.HasKey(e => e.Id).HasName("PK__Tutor__3214EC27077277A3");
 
             entity.ToTable("Tutor");
 
@@ -315,42 +324,42 @@ public partial class DbminiCapstoneContext : DbContext
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Tutors)
                 .HasForeignKey(d => d.IdAccount)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Tutor__ID_Accoun__42E1EEFE");
+                .HasConstraintName("FK__Tutor__ID_Accoun__7A3223E8");
         });
 
-        modelBuilder.Entity<TutorField>(entity =>
+        modelBuilder.Entity<TutorSubject>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tutor_Fi__3214EC277D035C5A");
+            entity.HasKey(e => e.Id).HasName("PK__Tutor_Su__3214EC27ABF7F65D");
 
-            entity.ToTable("Tutor_Field");
+            entity.ToTable("Tutor_Subject");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ID");
-            entity.Property(e => e.IdField)
+            entity.Property(e => e.IdSubject)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("ID_Field");
+                .HasColumnName("ID_Subject");
             entity.Property(e => e.IdTutor)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ID_Tutor");
 
-            entity.HasOne(d => d.IdFieldNavigation).WithMany(p => p.TutorFields)
-                .HasForeignKey(d => d.IdField)
+            entity.HasOne(d => d.IdSubjectNavigation).WithMany(p => p.TutorSubjects)
+                .HasForeignKey(d => d.IdSubject)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Tutor_Fie__ID_Fi__4B7734FF");
+                .HasConstraintName("FK__Tutor_Sub__ID_Su__02C769E9");
 
-            entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.TutorFields)
+            entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.TutorSubjects)
                 .HasForeignKey(d => d.IdTutor)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Tutor_Fie__ID_Tu__4A8310C6");
+                .HasConstraintName("FK__Tutor_Sub__ID_Tu__01D345B0");
         });
 
         modelBuilder.Entity<TypeOfService>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__TypeOfSe__3214EC273EAB3FEA");
+            entity.HasKey(e => e.Id).HasName("PK__TypeOfSe__3214EC27B7557DFD");
 
             entity.ToTable("TypeOfService");
 

@@ -10,6 +10,8 @@ using ODTLearning.Repositories;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using ODTLearning.Entities;
 
 
@@ -17,14 +19,14 @@ namespace ODTLearning.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class userController : ControllerBase
     {
         private readonly IAccountRepository _repo;
         private readonly IConfiguration _configuration;
-        private readonly DbminiCapstoneContext _context;
-        private readonly ILogger<AccountController> _logger;
+        private readonly DbminiCapstoneContext  _context;
+        private readonly ILogger<userController> _logger;
 
-        public AccountController(IAccountRepository repo, IConfiguration configuration, DbminiCapstoneContext context, ILogger<AccountController> logger)
+        public userController(IAccountRepository repo, IConfiguration configuration, DbminiCapstoneContext context, ILogger<userController> logger)
         {
             _repo = repo;
             _configuration = configuration;
@@ -32,7 +34,7 @@ namespace ODTLearning.Controllers
             _logger = logger;
         }
 
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public IActionResult RegisterOfAccount(SignUpModelOfAccount model)
         {
             try
@@ -53,19 +55,27 @@ namespace ODTLearning.Controllers
 
                 if (user != null)
                 {
+                    var token = _repo.generatetoken(user);
+
                     return Ok(new ApiResponse
                     {
                         Success = true,
                         Message = "Sign up successfully",
-                        Data = user
+                        Data = new
+                        {
+                            User = user,
+                            Token = token
+                        }
                     });
                 }
-
-                return Ok(new ApiResponse
+                else
                 {
-                    Success = false,
-                    Message = "An error occurred during the sign up process"
-                });
+                    return Ok(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Email already exists"
+                    });
+                }
             }
             catch (Exception ex)
             {
@@ -78,7 +88,9 @@ namespace ODTLearning.Controllers
             }
         }
 
-        [HttpPost("RegisterAsTuTor")]
+
+
+        [HttpPost("registerAsTuTor")]
         public IActionResult SignUpOfTutor(string IDAccount, SignUpModelOfTutor model)
         {
             var validation = _repo.SignUpValidationOfTutor(model);
@@ -113,7 +125,7 @@ namespace ODTLearning.Controllers
         }
 
 
-        [HttpPost("LogIn")]
+        [HttpPost("login")]
         public IActionResult SignIn(SignInModel model)
         {
             var validation = _repo.SignInValidation(model);
@@ -152,7 +164,7 @@ namespace ODTLearning.Controllers
 
         }
 
-        [HttpPost("RenewToken")]
+        [HttpPost("refreshToken")]
         public IActionResult RenewToken(TokenModel model)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -176,7 +188,7 @@ namespace ODTLearning.Controllers
             try
             {
                 //check 1: Access Token valid format
-                var tokenInVerification = jwtTokenHandler.ValidateToken(model.AccessToken, tokenValidateParam, out var validatedToken);
+                var tokenInVerification = jwtTokenHandler.ValidateToken(model.Access_Token, tokenValidateParam, out var validatedToken);
 
                 //check 2: Check alg
                 if (validatedToken is JwtSecurityToken jwtSecurityToken)
@@ -207,7 +219,7 @@ namespace ODTLearning.Controllers
                 }
 
                 //check 4: Check refreshToken exist in DB
-                var storedToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.RefreshToken);
+                var storedToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.Refresh_Token);
 
                 if (storedToken == null)
                 {
@@ -284,7 +296,7 @@ namespace ODTLearning.Controllers
             return dateTimeInterval;
         }
 
-        [HttpGet("GetAllUser")]
+        [HttpGet("getAllUser")]
         //[Authorize(Roles = "Student")]
         public IActionResult GetAllUser()
         {
@@ -331,10 +343,10 @@ namespace ODTLearning.Controllers
 
         }
 
-        [HttpPost("Logout")]
+        [HttpPost("logout")]
         public IActionResult Logout([FromBody] TokenModel model)
         {
-            if (model == null || string.IsNullOrEmpty(model.RefreshToken))
+            if (model == null || string.IsNullOrEmpty(model.Refresh_Token))
             {
                 return BadRequest(new ApiResponse
                 {
@@ -344,7 +356,7 @@ namespace ODTLearning.Controllers
             }
 
             // Tìm Refresh Token trong cơ sở dữ liệu
-            var refreshToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.RefreshToken);
+            var refreshToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.Refresh_Token);
 
             if (refreshToken == null)
             {

@@ -4,7 +4,7 @@ namespace ODTLearning.Models
     public class RequestLearningModel
     {
         public string? Title { get; set; }
-        public double? Price { get; set; }
+        public decimal? Price { get; set; }
         public string? Description { get; set; }
         public string? Status { get; set; }
         public string? NameService { get; set; }

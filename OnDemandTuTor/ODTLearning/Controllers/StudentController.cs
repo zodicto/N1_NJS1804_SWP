@@ -8,18 +8,18 @@ namespace ODTLearning.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StudentController : ControllerBase
+    public class studentController : ControllerBase
     {
         private readonly IStudentRepository _repo;
         private readonly DbminiCapstoneContext context;
 
-        public StudentController(IStudentRepository repo, DbminiCapstoneContext context)
+        public studentController(IStudentRepository repo, DbminiCapstoneContext context)
         {
             _repo = repo;
             this.context = context;
         }
 
-        [HttpPost("CreateRequest")]
+        [HttpPost("createRequest")]
         public IActionResult CreateRequestLearning(string IDStudent, RequestLearningModel model)
         {
 
@@ -42,7 +42,7 @@ namespace ODTLearning.Controllers
             });
         }
 
-        [HttpPut("UpdateRequest")]
+        [HttpPut("updateRequest")]
         public IActionResult UpdateRequestLearning(string IDRequest, RequestLearningModel model)
         {
             var request = _repo.UpdateRequestLearning(IDRequest, model);
@@ -64,7 +64,7 @@ namespace ODTLearning.Controllers
             });
         }
 
-        [HttpDelete("DeleteRequest")]
+        [HttpDelete("deleteRequest")]
         public IActionResult DeleteRequestLearning(string IDRquest)
         {
             var request = _repo.DeleteRequestLearning(IDRquest);
@@ -85,7 +85,7 @@ namespace ODTLearning.Controllers
                 Message = "Delete Request Learning not successfully"
             });
         }
-        [HttpGet("PedingRequest")]
+        [HttpGet("pedingRequest")]
         public IActionResult ViewPedingRequestLearning()
         {
             var request = _repo.GetPendingApproveRequests();
@@ -108,7 +108,7 @@ namespace ODTLearning.Controllers
 
 
         }
-        [HttpGet("AppovedRequest")]
+        [HttpGet("appovedRequest")]
         public IActionResult ViewApprovedRequestLearning()
         {
             var request = _repo.GetApprovedRequests();

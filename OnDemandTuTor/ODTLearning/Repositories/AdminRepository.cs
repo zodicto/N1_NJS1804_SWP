@@ -21,13 +21,14 @@ namespace ODTLearning.Repositories
                 var exsitAccount = _context.Accounts.FirstOrDefault(a => a.Id == IDAccount);
                 if (exsitAccount != null)
                 {
-                    
+
                     if (exsitAccount.Role == "Student")
                     {
                         _context.Accounts.Remove(exsitAccount);
                         _context.SaveChanges();
                         result = true;
-                    } else if(exsitAccount.Role == "Tutor")
+                    }
+                    else if (exsitAccount.Role == "Tutor")
                     {
                         var tutor = _context.Tutors.FirstOrDefault(x => x.IdAccount == IDAccount);
                         // Xóa các đối tượng educational qualifications liên quan đến tutor
@@ -38,10 +39,10 @@ namespace ODTLearning.Repositories
                         }
 
                         // Xóa các đối tượng tutor fields liên quan đến tutor
-                        var tutorFields = _context.TutorFields.Where(tf => tf.IdTutor == tutor.Id).ToList();
+                        var tutorFields = _context.TutorSubjects.Where(tf => tf.IdTutor == tutor.Id).ToList();
                         if (tutorFields.Any())
                         {
-                            _context.TutorFields.RemoveRange(tutorFields);
+                            _context.TutorSubjects.RemoveRange(tutorFields);
                         }
 
                         // Xóa đối tượng tutor

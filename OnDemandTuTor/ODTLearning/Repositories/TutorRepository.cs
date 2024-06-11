@@ -23,10 +23,10 @@ namespace ODTLearning.Repositories
                 return null;
             }
             //lay list field cua account
-            var fields = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.TutorFields.Join(_context.Fields, tf => tf.IdField, f => f.Id, (tf, f) => new
+            var fields = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.TutorSubjects.Join(_context.Subjects, tf => tf.IdSubject, f => f.Id, (tf, f) => new
             {
                 AccountId = tf.IdTutor,
-                Field = f.FieldName
+                Field = f.SubjectName
             }), t => t.Id, af => af.AccountId, (t, af) => af.Field).ToList();
 
             //lay list Qualification cua account
@@ -55,8 +55,8 @@ namespace ODTLearning.Repositories
         {
             var tutor = _context.Tutors
                 .Include(t => t.IdAccountNavigation)
-                .Include(t => t.TutorFields)
-                .ThenInclude(tf => tf.IdFieldNavigation)
+                .Include(t => t.TutorSubjects)
+                .ThenInclude(tf => tf.IdSubjectNavigation)
                 .Include(t => t.EducationalQualifications)
                 .FirstOrDefault(x => x.Id == idTutor);
 
@@ -77,15 +77,15 @@ namespace ODTLearning.Repositories
             }
 
 
-            var existingField = tutor.TutorFields.FirstOrDefault(tf => tf.IdFieldNavigation.FieldName == model.FieldName);
+            var existingField = tutor.TutorSubjects.FirstOrDefault(tf => tf.IdTutorNavigation.Id == model.FieldName);
             if (existingField == null && !string.IsNullOrEmpty(model.FieldName))
             {
-                var newField = new TutorField
+                var newField = new TutorSubject
                 {
                     IdTutor = idTutor,
-                    IdField = _context.Fields.FirstOrDefault(f => f.FieldName == model.FieldName)?.Id ?? Guid.NewGuid().ToString(),
+                    IdSubject = _context.Subjects.FirstOrDefault(f => f.SubjectName == model.FieldName)?.Id ?? Guid.NewGuid().ToString(),
                 };
-                tutor.TutorFields.Add(newField);
+                tutor.TutorSubjects.Add(newField);
             }
 
 
@@ -126,12 +126,12 @@ namespace ODTLearning.Repositories
             if (!string.IsNullOrEmpty(model.Field))
             {
                 //lay field can search
-                var field = _context.Fields.FirstOrDefault(x => x.FieldName == model.Field);
+                var field = _context.Subjects.FirstOrDefault(x => x.SubjectName == model.Field);
                 if (field == null)
                 {
                     return null;
                 }
-                accountQuerry = _context.TutorFields.Where(x => x.IdField == field.Id).Join(_context.Tutors, tf => tf.IdTutor, t => t.Id, (tf, t) => t).Join(accountQuerry, t => t.IdAccount, aq => aq.Id, (t, aq) => aq);
+                accountQuerry = _context.TutorSubjects.Where(x => x.IdSubject == field.Id).Join(_context.Tutors, tf => tf.IdTutor, t => t.Id, (tf, t) => t).Join(accountQuerry, t => t.IdAccount, aq => aq.Id, (t, aq) => aq);
             }
 
             if (!accountQuerry.Any())
@@ -146,10 +146,10 @@ namespace ODTLearning.Repositories
             foreach (var id in idAccountQuerry)
             {
                 //lay list cac ten field cua tung account
-                var fields = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.TutorFields.Join(_context.Fields, tf => tf.IdField, f => f.Id, (tf, f) => new
+                var fields = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.TutorSubjects.Join(_context.Subjects, tf => tf.IdSubject, f => f.Id, (tf, f) => new
                 {
                     AccountId = tf.IdTutor,
-                    Field = f.FieldName
+                    Field = f.SubjectName
                 }), t => t.Id, af => af.AccountId, (t, af) => af.Field).ToList();
 
                 //dua vao model

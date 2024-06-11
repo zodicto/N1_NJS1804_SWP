@@ -29,7 +29,7 @@ namespace ODTLearning.Repositories
                 var requestOfStudent = new Request
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Titile = model.Title,
+                    Title = model.Title,
                     Price = model.Price,
                     Description = model.Description,
                     Status = model.Status,
@@ -74,7 +74,7 @@ namespace ODTLearning.Repositories
             }
 
             // Cập nhật các thuộc tính của request từ model
-            requestToUpdate.Titile = model.Title ?? requestToUpdate.Titile;
+            requestToUpdate.Title = model.Title ?? requestToUpdate.Title;
             requestToUpdate.Price = model.Price ?? requestToUpdate.Price;
             requestToUpdate.Description = model.Description ?? requestToUpdate.Description;
             requestToUpdate.Status = model.Status ?? requestToUpdate.Status;

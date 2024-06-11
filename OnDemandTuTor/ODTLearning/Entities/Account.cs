@@ -21,9 +21,13 @@ public partial class Account
 
     public string? Gender { get; set; }
 
-    public string Role { get; set; } = null!;
+    public string? Role { get; set; }
 
-    public string? Img { get; set; }
+    public string? Avatar { get; set; }
+
+    public string? PhoneNumber { get; set; }
+
+    public decimal? AccountBalance { get; set; }
 
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 

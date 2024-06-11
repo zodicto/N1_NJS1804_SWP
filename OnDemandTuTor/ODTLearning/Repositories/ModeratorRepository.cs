@@ -2,6 +2,7 @@
 using ODTLearning.Entities;
 
 
+
 namespace ODTLearning.Repositories
 {
     public class ModeratorRepository : IModaretorRepository
@@ -25,10 +26,10 @@ namespace ODTLearning.Repositories
                         SpecializedSkills = t.SpecializedSkills,
                         Experience = t.Experience,
                         Status = t.Status,
-                        Fields = t.TutorFields.Select(tf => new
+                        Fields = t.TutorSubjects.Select(tf => new
                         {
-                            FieldId = tf.IdField,
-                            FieldName = tf.IdFieldNavigation.FieldName
+                            FieldId = tf.IdSubject,
+                            FieldName = tf.IdSubjectNavigation.SubjectName
                         }),
                         EducationalQualifications = t.EducationalQualifications.Select(eq => new
                         {

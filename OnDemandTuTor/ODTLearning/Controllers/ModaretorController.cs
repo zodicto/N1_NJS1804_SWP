@@ -8,17 +8,17 @@ namespace ODTLearning.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ModaretorController : ControllerBase
+    public class modaretorController : ControllerBase
     {
         private readonly IModaretorRepository _repo;
-        private readonly DbminiCapstoneContext _context;
+        private readonly DbminiCapstoneContext  _context;
 
-        public ModaretorController(IModaretorRepository repo, DbminiCapstoneContext context)
+        public modaretorController(IModaretorRepository repo, DbminiCapstoneContext context)
         {
             _repo = repo;
             _context = context;
         }
-        [HttpGet("ViewProfileTT")]
+        [HttpGet("viewProfile")]
         public IActionResult GetProfileToConFirm(string IdTutor)
         {
             var list = _repo.GetTutorProfileToConFirm(IdTutor);
@@ -35,7 +35,7 @@ namespace ODTLearning.Controllers
                 Data = list
             });
         }
-        [HttpPut("ConfirmProfile")]
+        [HttpPut("confirmProfile")]
         public IActionResult ChangeStatusTutor(string id, string status)
         {
             var list = _repo.ConFirmProfileTutor(id, status);
@@ -52,7 +52,7 @@ namespace ODTLearning.Controllers
                 Data = list
             });
         }
-        [HttpPut("ConfirmRequest")]
+        [HttpPut("confirmRequest")]
         public IActionResult ChangeStatusRequest(string id, string status)
         {
             var list = _repo.ChangeRequestLearningStatus(id, status);

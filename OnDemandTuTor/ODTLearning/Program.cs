@@ -36,7 +36,7 @@ internal class Program
 
         // Add DbContext
         builder.Services.AddDbContext<DbminiCapstoneContext>(options =>
-            options.UseSqlServer(builder.Configuration.GetConnectionString("DB_MiniCapStone")));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("DB_MiniCapStone")));
 
         // Configure JWT authentication
         var secretKey = builder.Configuration["AppSettings:SecretKey"];
