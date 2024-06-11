@@ -330,9 +330,19 @@ namespace ODTLearning.Controllers
 
 
         }
+
         [HttpPost("Logout")]
-        public IActionResult Logout([FromBody] LogoutModel model)
+        public IActionResult Logout([FromBody] TokenModel model)
         {
+            if (model == null || string.IsNullOrEmpty(model.RefreshToken))
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Refresh token is required"
+                });
+            }
+
             // Tìm Refresh Token trong cơ sở dữ liệu
             var refreshToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.RefreshToken);
 
@@ -357,6 +367,5 @@ namespace ODTLearning.Controllers
                 Message = "Logout successful"
             });
         }
-
     }
 }

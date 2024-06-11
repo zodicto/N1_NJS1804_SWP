@@ -15,7 +15,7 @@ namespace ODTLearning.Models
 
         public string? Email { get; set; }
 
-        public DateOnly?  Birthdate { get; set; }
+        public DateOnly? Birthdate  { get; set; }
 
         public string ? Gender { get; set; }
     }
