@@ -173,7 +173,7 @@ namespace ODTLearning.Repositories
 
             return new TokenModel
             {
-                Access_Token = "Bearer " + accesstoken,
+                Access_Token = accesstoken,
                 Refresh_Token = refreshtoken
             };
         }
