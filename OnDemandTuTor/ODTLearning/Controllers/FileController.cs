@@ -35,7 +35,10 @@ namespace ODTLearning.Controllers
                 fs = new FileStream(Path.Combine(path, file.FileName), FileMode.Open);
 
                 //firebase uploading stuffs
-                //var auth = new FirebaseAuthProvider(new FirebaseConfig(apiKey));
+                //var auth = new FirebaseAuthProvider(new FirebaseAuthConfig(apiKey));
+
+
+
             }
 
             return BadRequest();
