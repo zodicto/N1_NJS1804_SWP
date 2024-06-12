@@ -1,5 +1,4 @@
-﻿
-using ODTLearning.Entities;
+﻿using ODTLearning.Entities;
 using ODTLearning.Models;
 
 namespace ODTLearning.Repositories

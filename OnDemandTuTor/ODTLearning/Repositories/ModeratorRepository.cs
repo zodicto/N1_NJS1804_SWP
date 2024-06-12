@@ -3,6 +3,7 @@ using ODTLearning.Entities;
 
 
 
+
 namespace ODTLearning.Repositories
 {
     public class ModeratorRepository : IModaretorRepository
@@ -20,7 +21,7 @@ namespace ODTLearning.Repositories
                 .Where(a => a.Id == id)
                 .Select(a => new
                 {
-                    Username = a.Username,
+                    Username = a.FullName,
                     TutorDetails = a.Tutors.Select(t => new
                     {
                         SpecializedSkills = t.SpecializedSkills,

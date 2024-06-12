@@ -11,21 +11,23 @@ public partial class Request
 
     public string? Title { get; set; }
 
+    public string? LearningMethod { get; set; }
+
     public string? Description { get; set; }
 
     public string? Status { get; set; }
 
     public string IdAccount { get; set; } = null!;
 
-    public string IdTypeOfService { get; set; } = null!;
+    public string IdLearningModels { get; set; } = null!;
 
     public string IdSubject { get; set; } = null!;
 
     public virtual Account IdAccountNavigation { get; set; } = null!;
 
-    public virtual Subject IdSubjectNavigation { get; set; } = null!;
+    public virtual LearningModel IdLearningModelsNavigation { get; set; } = null!;
 
-    public virtual TypeOfService IdTypeOfServiceNavigation { get; set; } = null!;
+    public virtual Subject IdSubjectNavigation { get; set; } = null!;
 
     public virtual ICollection<RequestLearning> RequestLearnings { get; set; } = new List<RequestLearning>();
 

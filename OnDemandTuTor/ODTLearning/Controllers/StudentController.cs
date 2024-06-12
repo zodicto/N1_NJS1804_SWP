@@ -11,12 +11,12 @@ namespace ODTLearning.Controllers
     public class studentController : ControllerBase
     {
         private readonly IStudentRepository _repo;
-        private readonly DbminiCapstoneContext context;
+        private readonly DbminiCapstoneContext _context;
 
         public studentController(IStudentRepository repo, DbminiCapstoneContext context)
         {
             _repo = repo;
-            this.context = context;
+            _context = context;
         }
 
         [HttpPost("createRequest")]

@@ -21,24 +21,16 @@ namespace ODTLearning.Repositories
             _context = context;
             _configuration = configuration;
         }
-
+        public SignUpModelOfAccount? SignUpValidationOfAccount(SignUpModelOfAccount model) => _context.Accounts.Any(a => a.Gmail == model.Email) ? null : model;
         public Account SignUpOfAccount(SignUpModelOfAccount model)
         {
-            var existingAccount = _context.Accounts.FirstOrDefault(a => a.Gmail == model.Email);
 
-            if (existingAccount != null)
-            {
-                // Trả về null nếu tài khoản đã tồn tại
-                return null;
-            }
             var account = new Account
             {
                 Id = Guid.NewGuid().ToString(),
-                FirstName = model.FirstName,
-                LastName = model.LastName,
-                Username = model.Username,
+                FullName = model.Fullname,
                 Password = model.Password,
-                PhoneNumber = model.phone,
+                PhoneNumber = model.Phone,
                 AccountBalance = null,
                 Gmail = model.Email,
                 Birthdate = model.date_of_birth,
@@ -49,137 +41,26 @@ namespace ODTLearning.Repositories
             // Thêm Account vào context
             _context.Accounts.Add(account);
             _context.SaveChanges();
-
             return account;
         }
 
-        public SignInValidationModel SignInValidation(SignInModel model)
+        public SignInModel? SignInValidation(SignInModel model)
         {
-            string email = "", password = "";
-            int i = 0;
-            if (model.Email == null)
+            if (_context.Accounts.Any(a => a.Gmail != model.Email) || _context.Accounts.Any(a => a.Password != model.Password))
             {
-                email = "please do not username empty!!";
-                i++;
+                return null; // Email không trùng hoặt pass không trùng
             }
-
-            if (string.IsNullOrEmpty(model.Password))
-            {
-                password = "please do not password empty!!";
-                i++;
-            }
-
-            if (i != 0)
-            {
-                return new SignInValidationModel
-                {
-                    Username = email,
-                    Password = password
-                };
-            }
-
-            return null;
-        }
-        public SignUpValidationOfTutorModel SignUpValidationOfTutor(SignUpModelOfTutor model)
-        {
-            string Img = "", SpecializedSkills = "", Field = "", Type = "", ImageDegree = "";
-            int i = 0;
-
-            if (string.IsNullOrEmpty(model.SpecializedSkills))
-            {
-                SpecializedSkills = "please do not specializedskills empty!!";
-                i++;
-            }
-            if (string.IsNullOrEmpty(model.Field))
-            {
-                Field = "please do not field empty!!";
-                i++;
-            }
-            if (string.IsNullOrEmpty(model.Type))
-            {
-                Type = "please do not type empty!!";
-                i++;
-            }
-            if (string.IsNullOrEmpty(model.ImageDegree))
-            {
-                ImageDegree = "please do not image degree empty!!";
-                i++;
-            }
-
-            if (i != 0)
-            {
-                return new SignUpValidationOfTutorModel
-                {
-
-                    SpecializedSkills = SpecializedSkills,
-                    Field = Field,
-                    Type = Type,
-                    ImageDegree = Img,
-                };
-            }
-
-            return null;
-        }
-        public SignUpValidationOfAccountModel SignUpValidationOfAccount(SignUpModelOfAccount model)
-        {
-            string username = "", password = "", firstname = "", lastname = "", gmail = "";
-            int i = 0;
-
-            if (string.IsNullOrEmpty(model.Username))
-            {
-                username = "Please do not leave username empty!!";
-                i++;
-            }
-
-            if (string.IsNullOrEmpty(model.Password))
-            {
-                password = "Please do not leave password empty!!";
-                i++;
-            }
-
-
-            if (string.IsNullOrEmpty(model.FirstName))
-            {
-                firstname = "Please do not leave first name empty!!";
-                i++;
-            }
-
-            if (string.IsNullOrEmpty(model.LastName))
-            {
-                lastname = "Please do not leave last name empty!!";
-                i++;
-            }
-
-            if (string.IsNullOrEmpty(model.Email))
-            {
-                gmail = "Please do not leave email empty!!";
-                i++;
-            }
-
-            if (i != 0)
-            {
-                return new SignUpValidationOfAccountModel
-                {
-                    Username = username,
-                    Password = password,
-                    FirstName = firstname,
-                    LastName = lastname,
-                    Gmail = gmail,
-                };
-            }
-
-            return null;
+            return model; // Email không tồn tại
         }
 
         public object SignUpOftutor(string IdAccount, SignUpModelOfTutor model)
         {
             // Tìm kiếm account trong DB bằng id
             var existingUser = _context.Accounts.FirstOrDefault(a => a.Id == IdAccount);
-
             if (existingUser != null)
             {
                 // Cập nhật vai trò của tài khoản thành "tutor"
-                existingUser.Role = "tutor";
+                existingUser.Role = "Tutor";
                 _context.Accounts.Update(existingUser);
 
                 // Tạo mới đối tượng tutor
@@ -193,44 +74,44 @@ namespace ODTLearning.Repositories
                 };
 
                 // Tạo mới đối tượng educationalqualification
-                var educationalQualifications = new EducationalQualification
+                var educationalQualification = new EducationalQualification
                 {
                     Id = Guid.NewGuid().ToString(),
                     IdTutor = tutor.Id,
                     QualificationName = model.QualificationName,
-                    Img = model.ImageDegree,
+                    Img = model.ImageQualification,
                     Type = model.Type,
                 };
 
-                // Kiểm tra xem field có tồn tại không, nếu không thì tạo mới
-                var field = _context.Subjects.FirstOrDefault(f => f.SubjectName == model.Field);
-                if (field == null)
+                // Kiểm tra xem subject có tồn tại không, nếu không thì tạo mới
+                var subject = _context.Subjects.FirstOrDefault(s => s.SubjectName == model.Subject);
+                if (subject == null)
                 {
-                    field = new Subject
+                    subject = new Subject
                     {
                         Id = Guid.NewGuid().ToString(),
-                        SubjectName = model.Field,
+                        SubjectName = model.Subject,
                     };
-                    _context.Subjects.Add(field);
+                    _context.Subjects.Add(subject);
                 }
 
-                // Tạo mới đối tượng tutorfield
-                var tutorField = new TutorSubject
+                // Tạo mới đối tượng TutorSubject
+                var tutorSubject = new TutorSubject
                 {
                     Id = Guid.NewGuid().ToString(),
-                    IdSubject = field.Id,
+                    IdSubject = subject.Id,
                     IdTutor = tutor.Id,
                 };
 
                 // Thêm các đối tượng vào DB
                 _context.Tutors.Add(tutor);
-                _context.EducationalQualifications.Add(educationalQualifications);
-                _context.TutorSubjects.Add(tutorField);
+                _context.EducationalQualifications.Add(educationalQualification);
+                _context.TutorSubjects.Add(tutorSubject);
 
                 try
                 {
                     _context.SaveChanges();
-                    // Trả về tài khoản đã được cập nhật vai trò thành "tutor"
+                    // Trả về đối tượng tutor đã được tạo
                     return existingUser;
                 }
                 catch (Exception ex)
@@ -244,7 +125,8 @@ namespace ODTLearning.Repositories
             return null;
         }
 
-        public Account authentication(SignInModel model) => _context.Accounts.FirstOrDefault(u => u.Gmail == model.Email && u.Password == model.Password);
+
+        public Account? SignInValidationOfAccount(SignInModel model) => _context.Accounts.FirstOrDefault(u => u.Gmail == model.Email && u.Password == model.Password);
 
         public TokenModel generatetoken(Account user)
         {
@@ -254,25 +136,14 @@ namespace ODTLearning.Repositories
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.LastName + "" + user.Birthdate),
-                new Claim(JwtRegisteredClaimNames.Email, user.Gmail),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Role, user.Role),
-                new Claim("id", user.Id )
+                 new Claim(ClaimTypes.Name, user.FullName + " " + user.Birthdate?.ToString("yyyy-MM-dd")),
+                 new Claim(JwtRegisteredClaimNames.Email, user.Gmail),
+                  new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                 new Claim(ClaimTypes.Role, user.Role),
+                 new Claim("id", user.Id )
 
             };
 
-            // chuyển đổi birthdate từ datetime? sang string nếu không null
-            //if (user.Birthdate.hasvalue)
-            //{
-            //    claims.Add(new Claim(JwtRegisteredClaimNames.Birthdate, user.Birthdate.value.tostring("yyyy-mm-dd")));
-            //}
-
-            // thêm gender nếu không null
-            if (!string.IsNullOrEmpty(user.Gender))
-            {
-                claims.Add(new Claim(JwtRegisteredClaimNames.Gender, user.Gender));
-            }
 
             var tokendescriptor = new SecurityTokenDescriptor
             {
@@ -302,7 +173,7 @@ namespace ODTLearning.Repositories
 
             return new TokenModel
             {
-                Access_Token = accesstoken,
+                Access_Token = "Bearer " + accesstoken,
                 Refresh_Token = refreshtoken
             };
         }
@@ -323,7 +194,5 @@ namespace ODTLearning.Repositories
             var list = _context.Accounts.ToList();
             return list;
         }
-
-
     }
 }

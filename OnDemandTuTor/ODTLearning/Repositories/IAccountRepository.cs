@@ -13,13 +13,12 @@ namespace ODTLearning.Repositories
     public interface IAccountRepository
     {
         public Account SignUpOfAccount(SignUpModelOfAccount model);
-        public SignUpValidationOfAccountModel SignUpValidationOfAccount(SignUpModelOfAccount model);
+
         public object SignUpOftutor(string IdAccount, SignUpModelOfTutor model);
-        public SignUpValidationOfTutorModel SignUpValidationOfTutor(SignUpModelOfTutor model);
+        public SignUpModelOfAccount? SignUpValidationOfAccount(SignUpModelOfAccount model);
 
-
-        public SignInValidationModel SignInValidation(SignInModel model);
-        public Account authentication(SignInModel model);
+        public SignInModel? SignInValidation(SignInModel model);
+        public Account? SignInValidationOfAccount(SignInModel model);
 
         public TokenModel generatetoken(Account user);
         public string generaterefreshtoken();

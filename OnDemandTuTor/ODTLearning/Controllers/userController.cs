@@ -13,6 +13,8 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using ODTLearning.Entities;
+using NuGet.Common;
+
 
 
 namespace ODTLearning.Controllers
@@ -23,7 +25,7 @@ namespace ODTLearning.Controllers
     {
         private readonly IAccountRepository _repo;
         private readonly IConfiguration _configuration;
-        private readonly DbminiCapstoneContext  _context;
+        private readonly DbminiCapstoneContext _context;
         private readonly ILogger<userController> _logger;
 
         public userController(IAccountRepository repo, IConfiguration configuration, DbminiCapstoneContext context, ILogger<userController> logger)
@@ -40,134 +42,129 @@ namespace ODTLearning.Controllers
             try
             {
                 var validation = _repo.SignUpValidationOfAccount(model);
-
-                if (validation != null)
+                if (validation == null)
                 {
-                    return BadRequest(new ApiResponse
+                    return StatusCode(422, new ApiResponse
                     {
                         Success = false,
-                        Message = "Sign up fail",
-                        Data = validation
+                        Message = "Email của bạn trùng với một email khác. Vui lòng thử lại!"
                     });
                 }
-
-                var user = _repo.SignUpOfAccount(model);
-
-                if (user != null)
                 {
-                    var token = _repo.generatetoken(user);
-
-                    return Ok(new ApiResponse
+                    var user = _repo.SignUpOfAccount(model);
+                    var token = _repo.generatetoken(user); 
+                    return StatusCode(200, new ApiResponse
                     {
                         Success = true,
-                        Message = "Sign up successfully",
+                        Message = "Đăng ký thành công!",
                         Data = new
                         {
                             User = user,
-                            Token = token
+                            Token = token,
                         }
                     });
                 }
-<<<<<<< HEAD:OnDemandTuTor/ODTLearning/Controllers/userController.cs
-                else
-=======
-
-                return BadRequest(new ApiResponse
->>>>>>> a236951b88b78ffd103b105b7c28c003dec27fd0:OnDemandTuTor/ODTLearning/Controllers/AccountController.cs
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = false,
-                        Message = "Email already exists"
-                    });
-                }
             }
+
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while signing up");
+                _logger.LogError(ex, "An internal server error occurred");
                 return StatusCode(500, new ApiResponse
                 {
                     Success = false,
-                    Message = "An internal server error occurred"
+                    Message = "Xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau."
                 });
             }
         }
 
 
 
-        [HttpPost("registerAsTuTor")]
+        [HttpPost("registerAsTutor")]
         public IActionResult SignUpOfTutor(string IDAccount, SignUpModelOfTutor model)
         {
-            var validation = _repo.SignUpValidationOfTutor(model);
-
-            if (validation != null)
+            try
             {
+                var user = _repo.SignUpOftutor(IDAccount, model);
+
+                if (user != null)
+                {
+                    return StatusCode(200,new ApiResponse
+                    {
+                        Success = true,
+                        Message = "Đăng ký trở thành gia sư thành công",
+                        Data = user
+                    });
+                }
+
                 return BadRequest(new ApiResponse
                 {
                     Success = false,
-                    Message = "Sign up failed",
-                    Data = validation
+                    Message = "Sign up failed, user creation returned null"
                 });
             }
-
-            var user = _repo.SignUpOftutor(IDAccount, model);
-
-            if (user != null)
+            catch (Exception ex)
             {
-                return Ok(new ApiResponse
+                _logger.LogError(ex, "An error occurred while signing up as a tutor.");
+                return StatusCode(500, new ApiResponse
                 {
-                    Success = true,
-                    Message = "Sign up successfully",
-                    Data = user
+                    Success = false,
+                    Message = "An internal server error occurred. Please try again later."
                 });
             }
-
-            return BadRequest(new ApiResponse
-            {
-                Success = false,
-                Message = "Sign up failed, user creation returned null"
-            });
         }
 
 
         [HttpPost("login")]
         public IActionResult SignIn(SignInModel model)
         {
-            var validation = _repo.SignInValidation(model);
-
-            if (validation != null)
+            try
             {
-                return BadRequest(new ApiResponse
+                var user = _repo.SignInValidationOfAccount(model);
+                if (user == null)
                 {
-                    Success = false,
-                    Message = "Sign in fail",
-                    Data = validation
-                });
-            }
-            var user = _repo.authentication(model);
+                    return StatusCode(422, new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Email hoặc Password không đúng. Vui lòng thử lại!"
+                    });
+                }
 
-            if (user != null)
-            {
                 var token = _repo.generatetoken(user);
-
                 if (token != null)
                 {
                     return Ok(new ApiResponse
                     {
                         Success = true,
-                        Message = "Sign in successfully",
-                        Data = token
+                        Message = "Đăng nhập thành công!",
+                        Data = new
+                        {
+                            User = user,
+                            Token = token,
+                        }
                     });
                 }
+
+                // Thêm phần này để trả về một phản hồi nếu token là null
+                return StatusCode(500, new ApiResponse
+                {
+                    Success = false,
+                    Message = "Xảy ra lỗi trong quá trình tạo token. Vui lòng thử lại sau!"
+                });
             }
-
-            return NotFound(new ApiResponse
+            catch (Exception ex)
             {
-                Success = false,
-                Message = "Invalid email or password"
-            });
-
+                _logger.LogError(ex, "An internal server error occurred");
+                return StatusCode(500, new ApiResponse
+                {
+                    Success = false,
+                    Message = "Xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau!"
+                });
+            }
         }
+
+
+
+
 
         [HttpPost("refreshToken")]
         public IActionResult RenewToken(TokenModel model)

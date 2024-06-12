@@ -33,7 +33,7 @@ namespace ODTLearning.Repositories
                     Price = model.Price,
                     Description = model.Description,
                     Status = model.Status,
-                    IdTypeOfService = model.NameService,
+                    LearningMethod = model.MethodLearning
                 };
 
                 // Thêm Request vào context
@@ -78,7 +78,7 @@ namespace ODTLearning.Repositories
             requestToUpdate.Price = model.Price ?? requestToUpdate.Price;
             requestToUpdate.Description = model.Description ?? requestToUpdate.Description;
             requestToUpdate.Status = model.Status ?? requestToUpdate.Status;
-            requestToUpdate.IdTypeOfService = model.NameService ?? requestToUpdate.IdTypeOfService;
+            requestToUpdate.IdSubject = model.NameService ?? requestToUpdate.IdSubject;
 
             // Cập nhật schedule nếu có thông tin về lịch trình
             if (model.Date.HasValue && model.TimeStart.HasValue && model.TimeEnd.HasValue)
@@ -142,7 +142,7 @@ namespace ODTLearning.Repositories
             return _context.Requests
                            .Where(r => r.Status == "pending approve")
                            .Include(r => r.IdAccountNavigation)
-                           .Include(r => r.IdTypeOfServiceNavigation)
+                           .Include(r => r.IdLearningModelsNavigation)
                            .ToList();
         }
 
@@ -152,7 +152,7 @@ namespace ODTLearning.Repositories
             return _context.Requests
                            .Where(r => r.Status == "approved")
                            .Include(r => r.IdAccountNavigation)
-                           .Include(r => r.IdTypeOfServiceNavigation)
+                           .Include(r => r.IdLearningModelsNavigation)
                            .ToList();
         }
     }

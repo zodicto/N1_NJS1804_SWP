@@ -11,7 +11,7 @@ namespace ODTLearning.Controllers
     public class modaretorController : ControllerBase
     {
         private readonly IModaretorRepository _repo;
-        private readonly DbminiCapstoneContext  _context;
+        private readonly DbminiCapstoneContext _context;
 
         public modaretorController(IModaretorRepository repo, DbminiCapstoneContext context)
         {

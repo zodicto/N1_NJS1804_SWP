@@ -40,9 +40,7 @@ namespace ODTLearning.Repositories
             //dua vao model            
             return new TutorProfileModel
             {
-                Id = id,
-                FirstName = account.FirstName,
-                LastName = account.LastName,
+                Id = id,              
                 Gmail = account.Gmail,
                 Birthdate = account.Birthdate,
                 Gender = account.Gender,
@@ -70,8 +68,7 @@ namespace ODTLearning.Repositories
 
             if (tutor.IdAccountNavigation != null)
             {
-                tutor.IdAccountNavigation.FirstName = model.FisrtName;
-                tutor.IdAccountNavigation.LastName = model.LastName;
+                tutor.IdAccountNavigation.FullName = model.Fullname;
                 tutor.IdAccountNavigation.Gmail = model.Gmail;
                 tutor.IdAccountNavigation.Gender = model.Gender;
             }
@@ -115,7 +112,7 @@ namespace ODTLearning.Repositories
             //list search by name
             if (!string.IsNullOrEmpty(model.Name))
             {
-                accountQuerry = accountQuerry.Where(x => x.FirstName.Contains(model.Name) || x.LastName.Contains(model.Name));
+                accountQuerry = accountQuerry.Where(x => x.FullName.Contains(model.Name));
                 if (!accountQuerry.Any())
                 {
                     return null;
@@ -157,8 +154,7 @@ namespace ODTLearning.Repositories
 
                 var k = new TutorListModel
                 {
-                    FirstName = account.FirstName,
-                    LastName = account.LastName,
+                    FirstName = account.FullName,
                     Gmail = account.Gmail,
                     Birthdate = account.Birthdate,
                     Gender = account.Gender,

@@ -17,11 +17,11 @@ public partial class Service
 
     public string IdTutor { get; set; } = null!;
 
-    public string IdTypeOfService { get; set; } = null!;
+    public string IdLearningModels { get; set; } = null!;
+
+    public virtual LearningModel IdLearningModelsNavigation { get; set; } = null!;
 
     public virtual Tutor IdTutorNavigation { get; set; } = null!;
-
-    public virtual TypeOfService IdTypeOfServiceNavigation { get; set; } = null!;
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
 }
