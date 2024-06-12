@@ -30,8 +30,13 @@ namespace ODTLearning.Repositories
                 Id = Guid.NewGuid().ToString(),
                 FullName = model.Fullname,
                 Password = model.Password,
+<<<<<<< HEAD
                 PhoneNumber = model.Phone,
                 AccountBalance = null,
+=======
+                PhoneNumber = model.phone,
+                AccountBalance = 0,
+>>>>>>> 5bf4fe10fc7aa035a5a3914b65e7f2704ccce55a
                 Gmail = model.Email,
                 Birthdate = model.date_of_birth,
                 Gender = model.Gender,

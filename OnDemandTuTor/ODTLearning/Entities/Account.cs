@@ -23,7 +23,7 @@ public partial class Account
 
     public string? PhoneNumber { get; set; }
 
-    public decimal? AccountBalance { get; set; }
+    public double AccountBalance { get; set; }
 
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 

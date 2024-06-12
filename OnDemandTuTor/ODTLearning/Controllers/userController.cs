@@ -64,6 +64,15 @@ namespace ODTLearning.Controllers
                         }
                     });
                 }
+<<<<<<< HEAD
+=======
+
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Email already exists"
+                });
+>>>>>>> 5bf4fe10fc7aa035a5a3914b65e7f2704ccce55a
             }
 
             catch (Exception ex)
