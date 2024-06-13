@@ -13,7 +13,7 @@ namespace ODTLearning.Repositories
         {
             _config = config;
         }
-        public string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model)
+        public async Task<string> CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model)
         {
             var tick = DateTime.Now.Ticks.ToString();
 
@@ -40,7 +40,7 @@ namespace ODTLearning.Repositories
             return paymentUrl;
         }
 
-        public VnPaymentResponseModel PaymentExecute(IQueryCollection collections)
+        public async Task<VnPaymentResponseModel> PaymentExecute(IQueryCollection collections)
         {
             var vnpay = new VnPayLibrary();
 

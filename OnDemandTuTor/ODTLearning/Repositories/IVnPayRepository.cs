@@ -4,7 +4,7 @@ namespace ODTLearning.Repositories
 {
     public interface IVnPayRepository
     {
-        string CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model);
-        VnPaymentResponseModel PaymentExecute(IQueryCollection collections);
+        Task<string> CreatePaymentUrl(HttpContext context, VnPaymentRequestModel model);
+        Task<VnPaymentResponseModel> PaymentExecute(IQueryCollection collections);
     }
 }

@@ -14,6 +14,7 @@ using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pag
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using ODTLearning.Entities;
 using NuGet.Common;
+using Microsoft.EntityFrameworkCore;
 
 
 
@@ -37,11 +38,11 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult RegisterOfAccount(SignUpModelOfAccount model)
+        public async Task<IActionResult> RegisterOfAccount(SignUpModelOfAccount model)
         {
             try
             {
-                var validation = _repo.SignUpValidationOfAccount(model);
+                var validation = await _repo.SignUpValidationOfAccount(model);
                 if (validation == null)
                 {
                     return StatusCode(422, new ApiResponse
@@ -51,8 +52,8 @@ namespace ODTLearning.Controllers
                     });
                 }
 
-                var user = _repo.SignUpOfAccount(model);
-                var token = _repo.generatetoken(user);
+                var user = await _repo.SignUpOfAccount(model);
+                var token = await _repo.GenerateToken(user);
                 return StatusCode(200, new ApiResponse
                 {
                     Success = true,
@@ -78,11 +79,11 @@ namespace ODTLearning.Controllers
 
 
         [HttpPost("registerAsTutor")]
-        public IActionResult SignUpOfTutor(string IDAccount, SignUpModelOfTutor model)
+        public async Task<IActionResult> SignUpOfTutor(string IDAccount, SignUpModelOfTutor model)
         {
             try
             {
-                var user = _repo.SignUpOftutor(IDAccount, model);
+                var user = await _repo.SignUpOftutor(IDAccount, model);
 
                 if (user != null)
                 {
@@ -113,11 +114,11 @@ namespace ODTLearning.Controllers
 
 
         [HttpPost("login")]
-        public IActionResult SignIn(SignInModel model)
+        public async Task<IActionResult> SignIn(SignInModel model)
         {
             try
             {
-                var user = _repo.SignInValidationOfAccount(model);
+                var user = await _repo.SignInValidationOfAccount(model);
                 if (user == null)
                 {
                     return StatusCode(422, new ApiResponse
@@ -127,7 +128,7 @@ namespace ODTLearning.Controllers
                     });
                 }
 
-                var token = _repo.generatetoken(user);
+                var token = await _repo.GenerateToken(user);
                 if (token != null)
                 {
                     return Ok(new ApiResponse
@@ -160,12 +161,8 @@ namespace ODTLearning.Controllers
             }
         }
 
-
-
-
-
         [HttpPost("refreshToken")]
-        public IActionResult RenewToken(TokenModel model)
+        public async Task<IActionResult> RenewToken(TokenModel model)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["AppSettings:SecretKey"]));
@@ -207,7 +204,7 @@ namespace ODTLearning.Controllers
                 //check 3: Check AccessToken expired?
                 var utcExpireDate = long.Parse(tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
 
-                var expireDate = ConvertUnixTimeToDateTime(utcExpireDate);
+                var expireDate = await ConvertUnixTimeToDateTime(utcExpireDate);
 
                 if (expireDate > DateTime.UtcNow)
                 {
@@ -219,7 +216,7 @@ namespace ODTLearning.Controllers
                 }
 
                 //check 4: Check refreshToken exist in DB
-                var storedToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.Refresh_Token);
+                var storedToken = await _context.RefreshTokens.FirstOrDefaultAsync(x => x.Token == model.Refresh_Token);
 
                 if (storedToken == null)
                 {
@@ -265,12 +262,12 @@ namespace ODTLearning.Controllers
                 storedToken.IsUsed = true;
                 storedToken.IsRevoked = true;
                 _context.Update(storedToken);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
 
                 //Create new token
-                var user = _context.Accounts.FirstOrDefault(x => x.Id == storedToken.IdAccount);
+                var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == storedToken.IdAccount);
 
-                var token = _repo.generatetoken(user);
+                var token = await _repo.GenerateToken(user);
 
                 return Ok(new ApiResponse
                 {
@@ -289,7 +286,7 @@ namespace ODTLearning.Controllers
             }
         }
 
-        private DateTime ConvertUnixTimeToDateTime(long utcExpireDate)
+        private async Task<DateTime> ConvertUnixTimeToDateTime(long utcExpireDate)
         {
             var dateTimeInterval = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
             dateTimeInterval.AddSeconds(utcExpireDate).ToUniversalTime();
@@ -298,9 +295,9 @@ namespace ODTLearning.Controllers
 
         [HttpGet("getAllUser")]
         //[Authorize(Roles = "Student")]
-        public IActionResult GetAllUser()
+        public async Task<IActionResult> GetAllUser()
         {
-            var list = _repo.getallusers();
+            var list = await _repo.GetAllUsers();
 
             if (list != null)
             {
@@ -310,7 +307,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("signin-google")]
-        public IActionResult SignInWithGoogle()
+        public async Task<IActionResult> SignInWithGoogle()
         {
             var properties = new AuthenticationProperties
             {
@@ -344,7 +341,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("logout")]
-        public IActionResult Logout([FromBody] TokenModel model)
+        public async Task<IActionResult> Logout([FromBody] TokenModel model)
         {
             if (model == null || string.IsNullOrEmpty(model.Refresh_Token))
             {
@@ -356,7 +353,7 @@ namespace ODTLearning.Controllers
             }
 
             // Tìm Refresh Token trong cơ sở dữ liệu
-            var refreshToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.Refresh_Token);
+            var refreshToken = await _context.RefreshTokens.FirstOrDefaultAsync(x => x.Token == model.Refresh_Token);
 
             if (refreshToken == null)
             {
@@ -371,7 +368,7 @@ namespace ODTLearning.Controllers
             refreshToken.IsUsed = true;
             refreshToken.IsRevoked = true;
             _context.RefreshTokens.Update(refreshToken);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(new ApiResponse
             {

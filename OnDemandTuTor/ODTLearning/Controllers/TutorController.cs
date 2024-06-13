@@ -22,9 +22,9 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("profileTutor")]
-        public IActionResult GetTutorProfile(string id)
+        public async Task<IActionResult> GetTutorProfile(string id)
         {
-            var result = _repo.GetTutorProfile(id);
+            var result = await _repo.GetTutorProfile(id);
 
             if (result == null)
             {
@@ -44,9 +44,9 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("updateTutorProfile")]
-        public IActionResult UpdateTutorProfile(string idTutor, [FromBody] TutorProfileToUpdate model)
+        public async Task<IActionResult> UpdateTutorProfile(string idTutor, [FromBody] TutorProfileToUpdate model)
         {
-            var result = _repo.UpdateTutorProfile(idTutor, model);
+            var result = await _repo.UpdateTutorProfile(idTutor, model);
 
             if (!result)
             {
@@ -65,9 +65,9 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("searchTutor")]
-        public IActionResult GetTutorList(SearchTutorModel model)
+        public async Task<IActionResult> GetTutorList(SearchTutorModel model)
         {
-            var result = _repo.SearchTutorList(model);
+            var result = await _repo.SearchTutorList(model);
 
             if (result == null)
             {

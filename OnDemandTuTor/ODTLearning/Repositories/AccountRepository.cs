@@ -1,5 +1,6 @@
 ﻿using Aqua.EnumerableExtensions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ODTLearning.Entities;
@@ -21,8 +22,8 @@ namespace ODTLearning.Repositories
             _context = context;
             _configuration = configuration;
         }
-        public SignUpModelOfAccount? SignUpValidationOfAccount(SignUpModelOfAccount model) => _context.Accounts.Any(a => a.Gmail == model.Email) ? null : model;
-        public Account SignUpOfAccount(SignUpModelOfAccount model)
+        public async Task<SignUpModelOfAccount> SignUpValidationOfAccount(SignUpModelOfAccount model) => await _context.Accounts.AnyAsync(a => a.Gmail == model.Email) ? null : model;
+        public async Task<Account> SignUpOfAccount(SignUpModelOfAccount model)
         {
 
             var account = new Account
@@ -35,25 +36,16 @@ namespace ODTLearning.Repositories
                 Gmail = model.Email,
                 Birthdate = model.date_of_birth,
                 Gender = model.Gender,
-                Role = "student"
+                Role = "Student"
             };
 
             // Thêm Account vào context
-            _context.Accounts.Add(account);
-            _context.SaveChanges();
+            await _context.Accounts.AddAsync(account);
+            await _context.SaveChangesAsync();
             return account;
         }
 
-        public SignInModel? SignInValidation(SignInModel model)
-        {
-            if (_context.Accounts.Any(a => a.Gmail != model.Email) || _context.Accounts.Any(a => a.Password != model.Password))
-            {
-                return null; // Email không trùng hoặt pass không trùng
-            }
-            return model; // Email không tồn tại
-        }
-
-        public object SignUpOftutor(string IdAccount, SignUpModelOfTutor model)
+        public async Task<object> SignUpOftutor(string IdAccount, SignUpModelOfTutor model)
         {
             // Tìm kiếm account trong DB bằng id
             var existingUser = _context.Accounts.FirstOrDefault(a => a.Id == IdAccount);
@@ -92,7 +84,7 @@ namespace ODTLearning.Repositories
                         Id = Guid.NewGuid().ToString(),
                         SubjectName = model.Subject,
                     };
-                    _context.Subjects.Add(subject);
+                    await _context.Subjects.AddAsync(subject);
                 }
 
                 // Tạo mới đối tượng TutorSubject
@@ -104,13 +96,13 @@ namespace ODTLearning.Repositories
                 };
 
                 // Thêm các đối tượng vào DB
-                _context.Tutors.Add(tutor);
-                _context.EducationalQualifications.Add(educationalQualification);
-                _context.TutorSubjects.Add(tutorSubject);
+                await _context.Tutors.AddAsync(tutor);
+                await _context.EducationalQualifications.AddAsync(educationalQualification);
+                await _context.TutorSubjects.AddAsync(tutorSubject);
 
                 try
                 {
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     // Trả về đối tượng tutor đã được tạo
                     return existingUser;
                 }
@@ -126,9 +118,9 @@ namespace ODTLearning.Repositories
         }
 
 
-        public Account? SignInValidationOfAccount(SignInModel model) => _context.Accounts.FirstOrDefault(u => u.Gmail == model.Email && u.Password == model.Password);
+        public async Task<Account> SignInValidationOfAccount(SignInModel model) => await _context.Accounts.FirstOrDefaultAsync(u => u.Gmail == model.Email && u.Password == model.Password);
 
-        public TokenModel generatetoken(Account user)
+        public async Task<TokenModel> GenerateToken(Account user)
         {
             var jwttokenhandler = new JwtSecurityTokenHandler();
             var securitykey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["appsettings:secretkey"]));
@@ -154,7 +146,7 @@ namespace ODTLearning.Repositories
 
             var token = jwttokenhandler.CreateToken(tokendescriptor);
             var accesstoken = jwttokenhandler.WriteToken(token);
-            var refreshtoken = generaterefreshtoken();
+            var refreshtoken = await GenerateRefreshtoken();
 
             var refreshtokenentity = new RefreshToken
             {
@@ -168,8 +160,8 @@ namespace ODTLearning.Repositories
                 ExpiredAt = DateTime.UtcNow,
             };
 
-            _context.AddAsync(refreshtokenentity);
-            _context.SaveChangesAsync();
+            await _context.AddAsync(refreshtokenentity);
+            await _context.SaveChangesAsync();
 
             return new TokenModel
             {
@@ -178,7 +170,7 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public string generaterefreshtoken()
+        public async Task<string> GenerateRefreshtoken()
         {
             var random = new byte[32];
             using (var rng = RandomNumberGenerator.Create())
@@ -189,9 +181,9 @@ namespace ODTLearning.Repositories
             }
         }
 
-        public List<Account> getallusers()
+        public async Task<List<Account>> GetAllUsers()
         {
-            var list = _context.Accounts.ToList();
+            var list = await _context.Accounts.ToListAsync();
             return list;
         }
     }

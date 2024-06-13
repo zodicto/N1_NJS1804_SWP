@@ -4,7 +4,7 @@ using ODTLearning.Models;
 
 namespace ODTLearning.Repositories
 {
-    public class StudentRepository :IStudentRepository
+    public class StudentRepository : IStudentRepository
     {
         private readonly DbminiCapstoneContext _context;
         public StudentRepository(DbminiCapstoneContext context)
@@ -12,12 +12,12 @@ namespace ODTLearning.Repositories
             _context = context;
         }
 
-        public object CreateRequestLearning(String IdStudent, RequestLearningModel model)
+        public async Task<object> CreateRequestLearning(String IdStudent, RequestLearningModel model)
         {
             // Tìm sinh viên theo IdStudent
-            var student = _context.Accounts
+            var student = await _context.Accounts
                                   .Include(s => s.Requests)
-                                  .FirstOrDefault(s => s.Id == IdStudent);
+                                  .FirstOrDefaultAsync(s => s.Id == IdStudent);
 
             if (student == null)
             {
@@ -37,8 +37,8 @@ namespace ODTLearning.Repositories
                 };
 
                 // Thêm Request vào context
-                _context.Requests.Add(requestOfStudent);
-                _context.SaveChanges();
+                await _context.Requests.AddAsync(requestOfStudent);
+                await _context.SaveChangesAsync();
 
                 // Tạo một đối tượng Schedule mới nếu có thông tin về lịch trình
                 if (model.Date.HasValue && model.TimeStart.HasValue && model.TimeEnd.HasValue)
@@ -54,19 +54,19 @@ namespace ODTLearning.Repositories
                     };
 
                     // Thêm Schedule vào context
-                    _context.Schedules.Add(schedule);
-                    _context.SaveChanges();
+                    await _context.Schedules.AddAsync(schedule);
+                    await _context.SaveChangesAsync();
                 }
 
                 return requestOfStudent;
             }
         }
-        public Request UpdateRequestLearning(string requestId, RequestLearningModel model)
+        public async Task<Request> UpdateRequestLearning(string requestId, RequestLearningModel model)
         {
             // Tìm request theo requestId
-            var requestToUpdate = _context.Requests
+            var requestToUpdate = await _context.Requests
                                           .Include(r => r.Schedules)
-                                          .FirstOrDefault(r => r.Id == requestId);
+                                          .FirstOrDefaultAsync(r => r.Id == requestId);
 
             if (requestToUpdate == null)
             {
@@ -103,21 +103,21 @@ namespace ODTLearning.Repositories
                         IdService = null, // Bạn cần lấy Id của service từ đâu đó
                         IdRequest = requestToUpdate.Id,
                     };
-                    _context.Schedules.Add(newSchedule);
+                    await _context.Schedules.AddAsync(newSchedule);
                 }
             }
 
             // Lưu các thay đổi vào context
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return requestToUpdate;
         }
-        public bool DeleteRequestLearning(string requestId)
+        public async Task<bool> DeleteRequestLearning(string requestId)
         {
             // Tìm request theo requestId
-            var requestToDelete = _context.Requests
+            var requestToDelete = await _context.Requests
                                           .Include(r => r.Schedules)
-                                          .FirstOrDefault(r => r.Id == requestId);
+                                          .FirstOrDefaultAsync(r => r.Id == requestId);
 
             if (requestToDelete == null)
             {
@@ -132,12 +132,12 @@ namespace ODTLearning.Repositories
 
             // Xóa request
             _context.Requests.Remove(requestToDelete);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return true; // Trả về true nếu việc xóa thành công
         }
 
-        public List<Request> GetPendingApproveRequests()
+        public async Task<List<Request>> GetPendingApproveRequests()
         {
             return _context.Requests
                            .Where(r => r.Status == "pending approve")
@@ -147,7 +147,7 @@ namespace ODTLearning.Repositories
         }
 
         // Hàm lấy tất cả các Requests có trạng thái "approved"
-        public List<Request> GetApprovedRequests()
+        public async Task<List<Request>> GetApprovedRequests()
         {
             return _context.Requests
                            .Where(r => r.Status == "approved")

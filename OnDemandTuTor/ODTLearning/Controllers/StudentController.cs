@@ -20,10 +20,10 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("createRequest")]
-        public IActionResult CreateRequestLearning(string IDStudent, RequestLearningModel model)
+        public async Task<IActionResult> CreateRequestLearning(string IDStudent, RequestLearningModel model)
         {
 
-            var request = _repo.CreateRequestLearning(IDStudent, model);
+            var request = await _repo.CreateRequestLearning(IDStudent, model);
 
             if (request != null)
             {
@@ -43,9 +43,9 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("updateRequest")]
-        public IActionResult UpdateRequestLearning(string IDRequest, RequestLearningModel model)
+        public async Task<IActionResult> UpdateRequestLearning(string IDRequest, RequestLearningModel model)
         {
-            var request = _repo.UpdateRequestLearning(IDRequest, model);
+            var request = await _repo.UpdateRequestLearning(IDRequest, model);
 
             if (request != null)
             {
@@ -65,9 +65,9 @@ namespace ODTLearning.Controllers
         }
 
         [HttpDelete("deleteRequest")]
-        public IActionResult DeleteRequestLearning(string IDRquest)
+        public async Task<IActionResult> DeleteRequestLearning(string IDRquest)
         {
-            var request = _repo.DeleteRequestLearning(IDRquest);
+            var request = await _repo.DeleteRequestLearning(IDRquest);
 
             if (request != null)
             {
@@ -86,9 +86,9 @@ namespace ODTLearning.Controllers
             });
         }
         [HttpGet("pedingRequest")]
-        public IActionResult ViewPedingRequestLearning()
+        public async Task<IActionResult> ViewPedingRequestLearning()
         {
-            var request = _repo.GetPendingApproveRequests();
+            var request = await _repo.GetPendingApproveRequests();
 
             if (request != null)
             {
@@ -109,9 +109,9 @@ namespace ODTLearning.Controllers
 
         }
         [HttpGet("appovedRequest")]
-        public IActionResult ViewApprovedRequestLearning()
+        public async Task<IActionResult> ViewApprovedRequestLearning()
         {
-            var request = _repo.GetApprovedRequests();
+            var request = await _repo.GetApprovedRequests();
 
             if (request != null)
             {

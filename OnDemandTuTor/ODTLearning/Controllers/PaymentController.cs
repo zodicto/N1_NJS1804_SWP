@@ -1,6 +1,7 @@
 ﻿using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ODTLearning.Entities;
 using ODTLearning.Models;
 using ODTLearning.Repositories;
@@ -21,7 +22,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("payment")]
-        public ActionResult Payment(DepositModel model)
+        public async Task<ActionResult> Payment(DepositModel model)
         {
             var vnpayModel = new VnPaymentRequestModel
             {
@@ -36,13 +37,13 @@ namespace ODTLearning.Controllers
             {
                 Success = true,
                 Message = "Redirect url in data",
-                Data = _repo.CreatePaymentUrl(HttpContext, vnpayModel)
+                Data = await _repo.CreatePaymentUrl(HttpContext, vnpayModel)
             });
         }
         [HttpGet("paymentCallBack")]
-        public ActionResult PaymentCallBack(string id)
+        public async Task<ActionResult> PaymentCallBack(string id)
         {
-            var response = _repo.PaymentExecute(Request.Query);
+            var response = await _repo.PaymentExecute(Request.Query);
 
             if (response == null || response.VnPayResponseCode != "00")
             {
@@ -53,10 +54,9 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            var user = _context.Accounts.FirstOrDefault(x => x.Id == id);
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
             user.AccountBalance += response.Amount;
-            _context.Accounts.Update(user);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(new ApiResponse
             {

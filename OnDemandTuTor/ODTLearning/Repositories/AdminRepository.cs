@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using ODTLearning.Entities;
 
 
 namespace ODTLearning.Repositories
 {
-    public class AdminRepository
+    public class AdminRepository : IAdminRepository
     {
         private readonly DbminiCapstoneContext _context;
 
@@ -13,20 +14,20 @@ namespace ODTLearning.Repositories
             _context = context;
         }
 
-        public bool DeleteAccount(string IDAccount)
+        public async Task<bool> DeleteAccount(string IDAccount)
         {
             bool result = false;
 
             try
             {
-                var exsitAccount = _context.Accounts.FirstOrDefault(a => a.Id == IDAccount);
+                var exsitAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == IDAccount);
                 if (exsitAccount != null)
                 {
 
                     if (exsitAccount.Role == "Student")
                     {
                         _context.Accounts.Remove(exsitAccount);
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
                         result = true;
                     }
                     else if (exsitAccount.Role == "Tutor")
@@ -48,7 +49,7 @@ namespace ODTLearning.Repositories
 
                         // Xóa đối tượng tutor
                         _context.Tutors.Remove(tutor);
-                        _context.SaveChanges();
+                        await _context.SaveChangesAsync();
                         result = true;
                     }
                 }

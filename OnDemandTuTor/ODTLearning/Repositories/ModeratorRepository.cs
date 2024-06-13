@@ -6,7 +6,7 @@ using ODTLearning.Entities;
 
 namespace ODTLearning.Repositories
 {
-    public class ModeratorRepository : IModaretorRepository
+    public class ModeratorRepository : IModeratorRepository
     {
 
         private readonly DbminiCapstoneContext _context;
@@ -15,7 +15,7 @@ namespace ODTLearning.Repositories
         {
             _context = context;
         }
-        public object GetTutorProfileToConFirm(string id)
+        public async Task<object> GetTutorProfileToConFirm(string id)
         {
             var accountDetails = _context.Accounts
                 .Where(a => a.Id == id)
@@ -42,10 +42,10 @@ namespace ODTLearning.Repositories
 
             return accountDetails;
         }
-        public string ChangeRequestLearningStatus(string requestId, string status)
+        public async Task<string> ChangeRequestLearningStatus(string requestId, string status)
         {
             // Tìm yêu cầu học tập theo IdRequest
-            var request = _context.Requests.FirstOrDefault(r => r.Id == requestId);
+            var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
 
             if (request == null)
             {
@@ -56,7 +56,7 @@ namespace ODTLearning.Repositories
             {
                 request.Status = "approved";
                 _context.Requests.Update(request);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return "Request approved successfully";
             }
             else if (status.ToLower() == "reject")
@@ -68,9 +68,9 @@ namespace ODTLearning.Repositories
                 return "Invalid status provided";
             }
         }
-        public bool ConFirmProfileTutor(string idTutor, string status)
+        public async Task<bool> ConFirmProfileTutor(string idTutor, string status)
         {
-            var tutor = _context.Tutors.FirstOrDefault(x => x.Id == idTutor);
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.Id == idTutor);
             if (tutor == null)
             {
                 return false;
@@ -78,7 +78,7 @@ namespace ODTLearning.Repositories
 
             tutor.Status = status;
             _context.Tutors.Update(tutor);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return true;
         }

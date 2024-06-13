@@ -10,18 +10,18 @@ namespace ODTLearning.Controllers
     [ApiController]
     public class modaretorController : ControllerBase
     {
-        private readonly IModaretorRepository _repo;
+        private readonly IModeratorRepository _repo;
         private readonly DbminiCapstoneContext _context;
 
-        public modaretorController(IModaretorRepository repo, DbminiCapstoneContext context)
+        public modaretorController(IModeratorRepository repo, DbminiCapstoneContext context)
         {
             _repo = repo;
             _context = context;
         }
         [HttpGet("viewProfile")]
-        public IActionResult GetProfileToConFirm(string IdTutor)
+        public async Task<IActionResult> GetProfileToConFirm(string IdTutor)
         {
-            var list = _repo.GetTutorProfileToConFirm(IdTutor);
+            var list = await _repo.GetTutorProfileToConFirm(IdTutor);
 
             if (list == null)
             {
@@ -36,9 +36,9 @@ namespace ODTLearning.Controllers
             });
         }
         [HttpPut("confirmProfile")]
-        public IActionResult ChangeStatusTutor(string id, string status)
+        public async Task<IActionResult> ChangeStatusTutor(string id, string status)
         {
-            var list = _repo.ConFirmProfileTutor(id, status);
+            var list = await _repo.ConFirmProfileTutor(id, status);
 
             if (list == null)
             {
@@ -53,9 +53,9 @@ namespace ODTLearning.Controllers
             });
         }
         [HttpPut("confirmRequest")]
-        public IActionResult ChangeStatusRequest(string id, string status)
+        public async Task<IActionResult> ChangeStatusRequest(string id, string status)
         {
-            var list = _repo.ChangeRequestLearningStatus(id, status);
+            var list = await _repo.ChangeRequestLearningStatus(id, status);
 
             if (list == null)
             {

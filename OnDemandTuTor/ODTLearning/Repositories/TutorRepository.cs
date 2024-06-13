@@ -14,9 +14,9 @@ namespace ODTLearning.Repositories
             _context = context;
         }
 
-        public TutorProfileModel GetTutorProfile(string id)
+        public async Task<TutorProfileModel> GetTutorProfile(string id)
         {
-            var account = _context.Accounts.SingleOrDefault(x => x.Id == id);
+            var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
 
             if (account == null)
             {
@@ -49,14 +49,14 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public bool UpdateTutorProfile(string idTutor, TutorProfileToUpdate model)
+        public async Task<bool> UpdateTutorProfile(string idTutor, TutorProfileToUpdate model)
         {
-            var tutor = _context.Tutors
+            var tutor = await _context.Tutors
                 .Include(t => t.IdAccountNavigation)
                 .Include(t => t.TutorSubjects)
                 .ThenInclude(tf => tf.IdSubjectNavigation)
                 .Include(t => t.EducationalQualifications)
-                .FirstOrDefault(x => x.Id == idTutor);
+                .FirstOrDefaultAsync(x => x.Id == idTutor);
 
             if (tutor == null)
             {
@@ -80,7 +80,7 @@ namespace ODTLearning.Repositories
                 var newField = new TutorSubject
                 {
                     IdTutor = idTutor,
-                    IdSubject = _context.Subjects.FirstOrDefault(f => f.SubjectName == model.FieldName)?.Id ?? Guid.NewGuid().ToString(),
+                    IdSubject = _context.Subjects.FirstOrDefault(f => f.SubjectName == model.FieldName).Id ?? Guid.NewGuid().ToString(),
                 };
                 tutor.TutorSubjects.Add(newField);
             }
@@ -99,12 +99,12 @@ namespace ODTLearning.Repositories
             }
 
             _context.Tutors.Update(tutor);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return true;
         }
 
-        public List<TutorListModel> SearchTutorList(SearchTutorModel model)
+        public async Task<List<TutorListModel>> SearchTutorList(SearchTutorModel model)
         {
             //list all
             var accountQuerry = _context.Accounts.Where(x => x.Role == "Tutor");
@@ -123,7 +123,7 @@ namespace ODTLearning.Repositories
             if (!string.IsNullOrEmpty(model.Field))
             {
                 //lay field can search
-                var field = _context.Subjects.FirstOrDefault(x => x.SubjectName == model.Field);
+                var field = await _context.Subjects.FirstOrDefaultAsync(x => x.SubjectName == model.Field);
                 if (field == null)
                 {
                     return null;
@@ -150,7 +150,7 @@ namespace ODTLearning.Repositories
                 }), t => t.Id, af => af.AccountId, (t, af) => af.Field).ToList();
 
                 //dua vao model
-                var account = _context.Accounts.SingleOrDefault(x => x.Id == id);
+                var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
 
                 var k = new TutorListModel
                 {

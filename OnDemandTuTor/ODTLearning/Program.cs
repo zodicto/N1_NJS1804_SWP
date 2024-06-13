@@ -30,7 +30,7 @@ internal class Program
         builder.Services.AddScoped<IAccountRepository, AccountRepository>();
         builder.Services.AddScoped<ITutorRepository, TutorRepository>();
         builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-        builder.Services.AddScoped<IModaretorRepository, ModeratorRepository>();
+        builder.Services.AddScoped<IModeratorRepository, ModeratorRepository>();
         builder.Services.AddSingleton<IVnPayRepository, VnPayRepository>();
 
 

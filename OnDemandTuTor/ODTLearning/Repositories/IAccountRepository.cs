@@ -12,16 +12,15 @@ namespace ODTLearning.Repositories
 {
     public interface IAccountRepository
     {
-        public Account SignUpOfAccount(SignUpModelOfAccount model);
+        public Task<Account> SignUpOfAccount(SignUpModelOfAccount model);
 
-        public object SignUpOftutor(string IdAccount, SignUpModelOfTutor model);
-        public SignUpModelOfAccount? SignUpValidationOfAccount(SignUpModelOfAccount model);
+        public Task<object> SignUpOftutor(string IdAccount, SignUpModelOfTutor model);
+        public Task<SignUpModelOfAccount> SignUpValidationOfAccount(SignUpModelOfAccount model);
 
-        public SignInModel? SignInValidation(SignInModel model);
-        public Account? SignInValidationOfAccount(SignInModel model);
+        public Task<Account> SignInValidationOfAccount(SignInModel model);
 
-        public TokenModel generatetoken(Account user);
-        public string generaterefreshtoken();
-        public List<Account> getallusers();
+        public Task<TokenModel> GenerateToken(Account user);
+        public Task<string> GenerateRefreshtoken();
+        public Task<List<Account>> GetAllUsers();
     }
 }
