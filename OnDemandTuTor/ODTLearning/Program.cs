@@ -14,6 +14,11 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
         var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
+        builder.Services.AddControllers()
+        .AddNewtonsoftJson(options =>
+        {
+            options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+        });
         // Add services to the container.
         builder.Services.AddControllers()
             .AddJsonOptions(options =>

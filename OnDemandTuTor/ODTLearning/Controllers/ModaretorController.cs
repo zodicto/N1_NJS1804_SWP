@@ -18,40 +18,70 @@ namespace ODTLearning.Controllers
             _repo = repo;
             _context = context;
         }
-        [HttpGet("viewProfile")]
-        public async Task<IActionResult> GetProfileToConFirm(string IdTutor)
-        {
-            var list = await _repo.GetTutorProfileToConFirm(IdTutor);
 
-            if (list == null)
+        [HttpGet("listTutor")]
+        public async Task<IActionResult> ViewListTutorToConfirm()
+        {
+            var tutorList = await _repo.GetListTutorsToCofirm();
+
+            if (tutorList == null || !tutorList.Any())
             {
-                return NotFound();
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Không có gia sư nào đang chờ duyệt"
+                });
             }
 
             return Ok(new ApiResponse
             {
                 Success = true,
-                Message = "get list tutor successfully",
-                Data = list
+                Message = "Lấy danh sách gia sư đang chờ duyệt thành công",
+                Data = tutorList
+            });
+        }
+        [HttpGet("viewProfile")]
+        public async Task<IActionResult> GetProfileToConfirm(string IdTutor)
+        {
+            var profile = await _repo.GetTutorProfileToConfirm(IdTutor);
+
+            if (profile == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Không tìm thấy hồ sơ gia sư"
+                });
+            }
+
+            return Ok(new ApiResponse
+            {
+                Success = true,
+                Message = "Lấy hồ sơ gia sư thành công",
+                Data = profile
             });
         }
         [HttpPut("confirmProfile")]
         public async Task<IActionResult> ChangeStatusTutor(string id, string status)
         {
-            var list = await _repo.ConFirmProfileTutor(id, status);
+            var result = await _repo.ConfirmProfileTutor(id, status);
 
-            if (list == null)
+            if (!result)
             {
-                return NotFound();
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Không thể thay đổi trạng thái của gia sư"
+                });
             }
 
             return Ok(new ApiResponse
             {
                 Success = true,
-                Message = "get list tutor successfully",
-                Data = list
+                Message = status.ToLower() == "approved" ? "Trạng thái của gia sư đã được phê duyệt" : "Trạng thái của gia sư đã bị từ chối"
             });
         }
+
         [HttpPut("confirmRequest")]
         public async Task<IActionResult> ChangeStatusRequest(string id, string status)
         {
