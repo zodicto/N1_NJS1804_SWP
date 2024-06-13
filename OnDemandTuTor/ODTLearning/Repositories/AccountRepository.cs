@@ -22,21 +22,21 @@ namespace ODTLearning.Repositories
             _context = context;
             _configuration = configuration;
         }
-        public async Task<SignUpModelOfAccount> SignUpValidationOfAccount(SignUpModelOfAccount model) => await _context.Accounts.AnyAsync(a => a.Gmail == model.Email) ? null : model;
+        public async Task<SignUpModelOfAccount> SignUpValidationOfAccount(SignUpModelOfAccount model) => await _context.Accounts.AnyAsync(a => a.Email == model.Email) ? null : model;
         public async Task<Account> SignUpOfAccount(SignUpModelOfAccount model)
         {
 
             var account = new Account
             {
                 Id = Guid.NewGuid().ToString(),
-                FullName = model.Fullname,
+                FullName = model.FullName,
                 Password = model.Password,
-                PhoneNumber = model.Phone,
+                Phone = model.Phone,
                 AccountBalance = 0,
-                Gmail = model.Email,
-                Birthdate = model.date_of_birth,
+                Email = model.Email,
+                DateOfBirth = model.date_of_birth,
                 Gender = model.Gender,
-                Role = "Student"
+                Roles = "Student"
             };
 
             // Thêm Account vào context
@@ -52,7 +52,7 @@ namespace ODTLearning.Repositories
             if (existingUser != null)
             {
                 // Cập nhật vai trò của tài khoản thành "tutor"
-                existingUser.Role = "Tutor";
+                existingUser.Roles = "Tutor";
                 _context.Accounts.Update(existingUser);
 
                 // Tạo mới đối tượng tutor
@@ -118,7 +118,7 @@ namespace ODTLearning.Repositories
         }
 
 
-        public async Task<Account> SignInValidationOfAccount(SignInModel model) => await _context.Accounts.FirstOrDefaultAsync(u => u.Gmail == model.Email && u.Password == model.Password);
+        public async Task<Account> SignInValidationOfAccount(SignInModel model) => await _context.Accounts.FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
 
         public async Task<TokenModel> GenerateToken(Account user)
         {
@@ -128,10 +128,10 @@ namespace ODTLearning.Repositories
 
             var claims = new List<Claim>
             {
-                 new Claim(ClaimTypes.Name, user.FullName + " " + user.Birthdate?.ToString("yyyy-MM-dd")),
-                 new Claim(JwtRegisteredClaimNames.Email, user.Gmail),
+                 new Claim(ClaimTypes.Name, user.FullName + " " + user.DateOfBirth?.ToString("yyyy-MM-dd")),
+                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
                   new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                 new Claim(ClaimTypes.Role, user.Role),
+                 new Claim(ClaimTypes.Role, user.Roles),
                  new Claim("id", user.Id )
 
             };

@@ -11,19 +11,21 @@ public partial class Account
 
     public string? Password { get; set; }
 
-    public string? Gmail { get; set; }
+    public string? Email { get; set; }
 
-    public DateOnly? Birthdate { get; set; }
+    public DateOnly? DateOfBirth { get; set; }
 
     public string? Gender { get; set; }
 
-    public string? Role { get; set; }
+    public string? Roles { get; set; }
 
     public string? Avatar { get; set; }
 
-    public string? PhoneNumber { get; set; }
+    public string? Address { get; set; }
 
-    public decimal AccountBalance { get; set; }
+    public string? Phone { get; set; }
+
+    public decimal? AccountBalance { get; set; }
 
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 

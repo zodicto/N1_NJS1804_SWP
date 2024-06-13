@@ -24,13 +24,13 @@ namespace ODTLearning.Repositories
                 if (exsitAccount != null)
                 {
 
-                    if (exsitAccount.Role == "Student")
+                    if (exsitAccount.Roles == "Student")
                     {
                         _context.Accounts.Remove(exsitAccount);
                         await _context.SaveChangesAsync();
                         result = true;
                     }
-                    else if (exsitAccount.Role == "Tutor")
+                    else if (exsitAccount.Roles == "Tutor")
                     {
                         var tutor = _context.Tutors.FirstOrDefault(x => x.IdAccount == IDAccount);
                         // Xóa các đối tượng educational qualifications liên quan đến tutor

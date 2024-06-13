@@ -4,7 +4,7 @@ namespace ODTLearning.Models
 {
     public class SignUpModelOfAccount
     {
-        public string? Fullname { get; set; }
+        public string? FullName { get; set; }
 
         public string? Password { get; set; }
 

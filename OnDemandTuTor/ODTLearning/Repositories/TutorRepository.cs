@@ -41,8 +41,8 @@ namespace ODTLearning.Repositories
             return new TutorProfileModel
             {
                 Id = id,              
-                Gmail = account.Gmail,
-                Birthdate = account.Birthdate,
+                Gmail = account.Email,
+                Birthdate = account.DateOfBirth,
                 Gender = account.Gender,
                 Fields = fields,
                 Qualifications = qualifications,
@@ -69,7 +69,7 @@ namespace ODTLearning.Repositories
             if (tutor.IdAccountNavigation != null)
             {
                 tutor.IdAccountNavigation.FullName = model.Fullname;
-                tutor.IdAccountNavigation.Gmail = model.Gmail;
+                tutor.IdAccountNavigation.Email = model.Gmail;
                 tutor.IdAccountNavigation.Gender = model.Gender;
             }
 
@@ -107,7 +107,7 @@ namespace ODTLearning.Repositories
         public async Task<List<TutorListModel>> SearchTutorList(SearchTutorModel model)
         {
             //list all
-            var accountQuerry = _context.Accounts.Where(x => x.Role == "Tutor");
+            var accountQuerry = _context.Accounts.Where(x => x.Roles == "Tutor");
 
             //list search by name
             if (!string.IsNullOrEmpty(model.Name))
@@ -155,8 +155,8 @@ namespace ODTLearning.Repositories
                 var k = new TutorListModel
                 {
                     FirstName = account.FullName,
-                    Gmail = account.Gmail,
-                    Birthdate = account.Birthdate,
+                    Gmail = account.Email,
+                    Birthdate = account.DateOfBirth,
                     Gender = account.Gender,
                     Field = fields
                 };
