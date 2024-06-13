@@ -55,11 +55,8 @@ public partial class DbminiCapstoneContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ID");
-<<<<<<< HEAD
+
             entity.Property(e => e.AccountBalance).HasColumnType("decimal(10, 0)");
-=======
-            entity.Property(e => e.AccountBalance).HasColumnType("double");
->>>>>>> 5bf4fe10fc7aa035a5a3914b65e7f2704ccce55a
             entity.Property(e => e.Avatar)
                 .HasMaxLength(50)
                 .IsUnicode(false);

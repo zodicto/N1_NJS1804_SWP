@@ -50,31 +50,20 @@ namespace ODTLearning.Controllers
                         Message = "Email của bạn trùng với một email khác. Vui lòng thử lại!"
                     });
                 }
+
+                var user = _repo.SignUpOfAccount(model);
+                var token = _repo.generatetoken(user);
+                return StatusCode(200, new ApiResponse
                 {
-                    var user = _repo.SignUpOfAccount(model);
-                    var token = _repo.generatetoken(user); 
-                    return StatusCode(200, new ApiResponse
+                    Success = true,
+                    Message = "Đăng ký thành công!",
+                    Data = new
                     {
-                        Success = true,
-                        Message = "Đăng ký thành công!",
-                        Data = new
-                        {
-                            User = user,
-                            Token = token,
-                        }
-                    });
-                }
-<<<<<<< HEAD
-=======
-
-                return BadRequest(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Email already exists"
+                        User = user,
+                        Token = token
+                    }
                 });
->>>>>>> 5bf4fe10fc7aa035a5a3914b65e7f2704ccce55a
             }
-
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An internal server error occurred");

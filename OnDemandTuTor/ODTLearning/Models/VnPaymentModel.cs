@@ -10,7 +10,7 @@
         public string TransactionId { get; set; }
         public string Token { get; set; }
         public string VnPayResponseCode { get; set; }
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
     }
 
     public class VnPaymentRequestModel
