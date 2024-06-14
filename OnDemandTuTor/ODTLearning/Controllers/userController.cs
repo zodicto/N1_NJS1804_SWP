@@ -61,7 +61,8 @@ namespace ODTLearning.Controllers
                     Data = new
                     {
                         User = user,
-                        Token = token
+                        token.Refresh_Token,
+                        token.Access_Token,
                     }
                 });
             }
@@ -138,7 +139,8 @@ namespace ODTLearning.Controllers
                         Data = new
                         {
                             User = user,
-                            Token = token,
+                            token.Refresh_Token,
+                            token.Access_Token,
                         }
                     });
                 }
@@ -265,9 +267,30 @@ namespace ODTLearning.Controllers
                 await _context.SaveChangesAsync();
 
                 //Create new token
-                var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == storedToken.IdAccount);
+                var userAccount = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == storedToken.IdAccount);
 
-                var token = await _repo.GenerateToken(user);
+                if (userAccount == null)
+                {
+                    // Handle the case where the account is not found
+                    return NotFound(); // or any other appropriate response
+                }
+
+                var userResponse = new UserResponse
+                {
+                    Id = userAccount.Id,
+                    FullName = userAccount.FullName,
+                    Email = userAccount.Email,
+                    Date_of_birth = userAccount.DateOfBirth,
+                    Gender = userAccount.Gender,
+                    Roles = userAccount.Roles,
+                    Avatar = userAccount.Avatar,
+                    Address = userAccount.Address,
+                    Phone = userAccount.Phone,
+                    AccountBalance = userAccount.AccountBalance
+                };
+
+                var token = await _repo.GenerateToken(userResponse);
+
 
                 return Ok(new ApiResponse
                 {
