@@ -2,6 +2,6 @@
 {
     public class LogoutModel
     {
-        public string RefreshToken { get; set; }
+        public string Refresh_token { get; set; }
     }
 }

@@ -22,7 +22,11 @@ namespace ODTLearning.Repositories
             _context = context;
             _configuration = configuration;
         }
-        public async Task<SignUpModelOfAccount> SignUpValidationOfAccount(SignUpModelOfAccount model) => await _context.Accounts.AnyAsync(a => a.Email == model.Email) ? null : model;
+        public async Task<bool> IsEmailExist(string email)
+        {
+            return await _context.Accounts.AnyAsync(a => a.Email == email);
+        }
+
         public async Task<UserResponse> SignUpOfAccount(SignUpModelOfAccount model)
         {
 
@@ -130,30 +134,43 @@ namespace ODTLearning.Repositories
         }
 
 
-        public async Task<UserResponse> SignInValidationOfAccount(SignInModel model)
+        public async Task<ApiResponse<UserResponse>> SignInValidationOfAccount(SignInModel model)
         {
+            // Kiểm tra tài khoản theo email
             var account = await _context.Accounts
-                .FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+                .FirstOrDefaultAsync(u => u.Email == model.Email);
 
-            if (account == null)
+            // Nếu tài khoản không tồn tại hoặc password sai, trả về thông báo lỗi
+            if (account == null || account.Password != model.Password)
             {
-                return null!;
+                return new ApiResponse<UserResponse>
+                {
+                    Success = false,
+                    Message = "Email hoặc password không đúng",
+                };
             }
 
-            return new UserResponse
+            // Nếu tài khoản tồn tại và password đúng, trả về thông tin người dùng
+            return new ApiResponse<UserResponse>
             {
-                Id = account.Id,
-                FullName = account.FullName,
-                Email = account.Email,
-                Date_of_birth = account.DateOfBirth,
-                Gender = account.Gender,
-                Roles = account.Roles,
-                Avatar = account.Avatar,
-                Address = account.Address,
-                Phone = account.Phone,
-                AccountBalance = account.AccountBalance
+                Success = true,
+                Message = "Đăng nhập thành công",
+                Data = new UserResponse
+                {
+                    Id = account.Id,
+                    FullName = account.FullName,
+                    Email = account.Email,
+                    Date_of_birth = account.DateOfBirth,
+                    Gender = account.Gender,
+                    Roles = account.Roles,
+                    Avatar = account.Avatar,
+                    Address = account.Address,
+                    Phone = account.Phone,
+                    AccountBalance = account.AccountBalance
+                }
             };
         }
+
 
 
         public async Task<TokenModel> GenerateToken(UserResponse user)
@@ -201,8 +218,8 @@ namespace ODTLearning.Repositories
 
             return new TokenModel
             {
-                Access_Token = accesstoken,
-                Refresh_Token = refreshtoken
+                Access_token = accesstoken,
+                Refresh_token = refreshtoken
             };
         }
 

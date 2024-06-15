@@ -27,7 +27,7 @@ namespace ODTLearning.Controllers
 
             if (request != null)
             {
-                return Ok(new ApiResponse
+                return Ok(new 
                 {
                     Success = true,
                     Message = "Create Request Learning successfully",
@@ -35,7 +35,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return BadRequest(new ApiResponse
+            return BadRequest(new 
             {
                 Success = false,
                 Message = "Create Request Learning not Create Request Learning"
@@ -49,7 +49,7 @@ namespace ODTLearning.Controllers
 
             if (request != null)
             {
-                return Ok(new ApiResponse
+                return Ok(new 
                 {
                     Success = true,
                     Message = "Create Request Learning successfully",
@@ -57,7 +57,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return BadRequest(new ApiResponse
+            return BadRequest(new 
             {
                 Success = false,
                 Message = "Create Request Learning not Create Request Learning"
@@ -71,7 +71,7 @@ namespace ODTLearning.Controllers
 
             if (request != null)
             {
-                return Ok(new ApiResponse
+                return Ok(new 
                 {
                     Success = true,
                     Message = "Delete Request Learning successfully",
@@ -79,7 +79,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return BadRequest(new ApiResponse
+            return BadRequest(new 
             {
                 Success = false,
                 Message = "Delete Request Learning not successfully"
@@ -92,7 +92,7 @@ namespace ODTLearning.Controllers
 
             if (request != null)
             {
-                return Ok(new ApiResponse
+                return Ok(new 
                 {
                     Success = true,
                     Message = "Delete Request Learning successfully",
@@ -100,7 +100,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return BadRequest(new ApiResponse
+            return BadRequest(new 
             {
                 Success = false,
                 Message = "Delete Request Learning not successfully"
@@ -115,7 +115,7 @@ namespace ODTLearning.Controllers
 
             if (request != null)
             {
-                return Ok(new ApiResponse
+                return Ok(new 
                 {
                     Success = true,
                     Message = "Delete Request Learning successfully",
@@ -123,7 +123,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return BadRequest(new ApiResponse
+            return BadRequest(new 
             {
                 Success = false,
                 Message = "Delete Request Learning not successfully"

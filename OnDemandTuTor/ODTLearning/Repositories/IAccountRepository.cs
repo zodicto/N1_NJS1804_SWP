@@ -15,9 +15,8 @@ namespace ODTLearning.Repositories
         public Task<UserResponse> SignUpOfAccount(SignUpModelOfAccount model);
 
         public Task<object> SignUpOftutor(string IdAccount, SignUpModelOfTutor model);
-        public Task<SignUpModelOfAccount> SignUpValidationOfAccount(SignUpModelOfAccount model);
-
-        public  Task<UserResponse> SignInValidationOfAccount(SignInModel model);
+        public  Task<bool> IsEmailExist(string email);
+        public  Task<ApiResponse<UserResponse>> SignInValidationOfAccount(SignInModel model);
 
         public  Task<TokenModel> GenerateToken(UserResponse user);
         public Task<string> GenerateRefreshtoken();

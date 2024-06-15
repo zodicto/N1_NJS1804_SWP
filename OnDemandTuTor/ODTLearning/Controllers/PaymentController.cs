@@ -33,7 +33,7 @@ namespace ODTLearning.Controllers
                 CreatedDate = DateTime.Now
             };
 
-            return Ok(new ApiResponse
+            return Ok(new 
             {
                 Success = true,
                 Message = "Redirect url in data",
@@ -47,7 +47,7 @@ namespace ODTLearning.Controllers
 
             if (response == null || response.VnPayResponseCode != "00")
             {
-                return BadRequest(new ApiResponse
+                return BadRequest(new 
                 {
                     Success = false,
                     Message = $"Payment failed. Error payment VnPay: {response.VnPayResponseCode}"
@@ -58,7 +58,7 @@ namespace ODTLearning.Controllers
             user.AccountBalance += response.Amount;
             await _context.SaveChangesAsync();
 
-            return Ok(new ApiResponse
+            return Ok(new 
             {
                 Success = true,
                 Message = "Payment successfully"

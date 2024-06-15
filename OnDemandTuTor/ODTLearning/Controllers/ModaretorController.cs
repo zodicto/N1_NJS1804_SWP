@@ -26,14 +26,14 @@ namespace ODTLearning.Controllers
 
             if (tutorList == null || !tutorList.Any())
             {
-                return NotFound(new ApiResponse
+                return NotFound(new 
                 {
                     Success = false,
                     Message = "Không có gia sư nào đang chờ duyệt"
                 });
             }
 
-            return Ok(new ApiResponse
+            return Ok(new 
             {
                 Success = true,
                 Message = "Lấy danh sách gia sư đang chờ duyệt thành công",
@@ -47,14 +47,14 @@ namespace ODTLearning.Controllers
 
             if (profile == null)
             {
-                return NotFound(new ApiResponse
+                return NotFound(new 
                 {
                     Success = false,
                     Message = "Không tìm thấy hồ sơ gia sư"
                 });
             }
 
-            return Ok(new ApiResponse
+            return Ok(new 
             {
                 Success = true,
                 Message = "Lấy hồ sơ gia sư thành công",
@@ -68,14 +68,14 @@ namespace ODTLearning.Controllers
 
             if (!result)
             {
-                return NotFound(new ApiResponse
+                return NotFound(new 
                 {
                     Success = false,
                     Message = "Không thể thay đổi trạng thái của gia sư"
                 });
             }
 
-            return Ok(new ApiResponse
+            return Ok(new 
             {
                 Success = true,
                 Message = status.ToLower() == "approved" ? "Trạng thái của gia sư đã được phê duyệt" : "Trạng thái của gia sư đã bị từ chối"
@@ -92,7 +92,7 @@ namespace ODTLearning.Controllers
                 return NotFound();
             }
 
-            return Ok(new ApiResponse
+            return Ok(new 
             {
                 Success = true,
                 Message = "get list tutor successfully",

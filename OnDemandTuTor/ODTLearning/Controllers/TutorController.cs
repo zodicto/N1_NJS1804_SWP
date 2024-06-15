@@ -29,14 +29,14 @@ namespace ODTLearning.Controllers
 
             if (result == null)
             {
-                return NotFound(new ApiResponse
+                return NotFound(new 
                 {
                     Success = false,
                     Message = "Get profile tutor fail"
                 });
             }
 
-            return Ok(new ApiResponse
+            return Ok(new 
             {
                 Success = true,
                 Message = "get tutor profile successfully",
@@ -51,14 +51,14 @@ namespace ODTLearning.Controllers
 
             if (!result)
             {
-                return BadRequest(new ApiResponse
+                return BadRequest(new 
                 {
                     Success = false,
                     Message = "Update tutor profile failed"
                 });
             }
 
-            return Ok(new ApiResponse
+            return Ok(new 
             {
                 Success = true,
                 Message = "Update tutor profile successfully"
@@ -72,14 +72,14 @@ namespace ODTLearning.Controllers
 
             if (result == null)
             {
-                return NotFound(new ApiResponse
+                return NotFound(new 
                 {
                     Success = false,
                     Message = "Not found"
                 });
             }
 
-            return Ok(new ApiResponse
+            return Ok(new 
             {
                 Success = true,
                 Message = "Get list tutor successfully",

@@ -15,6 +15,7 @@ using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using ODTLearning.Entities;
 using NuGet.Common;
 using Microsoft.EntityFrameworkCore;
+using Azure;
 
 
 
@@ -38,41 +39,57 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> RegisterOfAccount(SignUpModelOfAccount model)
+        public async Task<IActionResult> SignUp(SignUpModelOfAccount model)
         {
             try
             {
-                var validation = await _repo.SignUpValidationOfAccount(model);
-                if (validation == null)
+                if (await _repo.IsEmailExist(model.Email))
                 {
-                    return StatusCode(422, new ApiResponse
+                    return StatusCode(422, new
                     {
-                        Success = false,
-                        Message = "Email của bạn trùng với một email khác. Vui lòng thử lại!"
+                        message = "Lỗi",
+                        data = new
+                        {
+                            email = "Email đã tồn tại"
+                        }
                     });
                 }
 
                 var user = await _repo.SignUpOfAccount(model);
-                var token = await _repo.GenerateToken(user);
-                return StatusCode(200, new ApiResponse
+                if (user == null)
                 {
-                    Success = true,
-                    Message = "Đăng ký thành công!",
-                    Data = new
+                    return StatusCode(500, new
                     {
-                        User = user,
-                        token.Refresh_Token,
-                        token.Access_Token,
+                        message = "Lỗi",
+                        data = new
+                        {
+                            error = "Xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau!"
+                        }
+                    });
+                }
+                var token = await _repo.GenerateToken(user);
+                return StatusCode(200,new
+                {
+                    message = "Đăng ký thành công!",
+                    data = new
+                    {
+                        user,
+                        token.Access_token,
+                        token.Refresh_token,
                     }
+                    
                 });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An internal server error occurred");
-                return StatusCode(500, new ApiResponse
+                return StatusCode(500, new
                 {
-                    Success = false,
-                    Message = "Xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau."
+                    message = "Lỗi",
+                    data = new
+                    {
+                        error = "Xảy ra lỗi trong quá trình đăng ký. Vui lòng thử lại sau!"
+                    }
                 });
             }
         }
@@ -88,7 +105,7 @@ namespace ODTLearning.Controllers
 
                 if (user != null)
                 {
-                    return StatusCode(200,new ApiResponse
+                    return StatusCode(200,new
                     {
                         Success = true,
                         Message = "Đăng ký trở thành gia sư thành công",
@@ -96,7 +113,7 @@ namespace ODTLearning.Controllers
                     });
                 }
 
-                return BadRequest(new ApiResponse
+                return BadRequest(new 
                 {
                     Success = false,
                     Message = "Sign up failed, user creation returned null"
@@ -105,7 +122,7 @@ namespace ODTLearning.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while signing up as a tutor.");
-                return StatusCode(500, new ApiResponse
+                return StatusCode(500, new 
                 {
                     Success = false,
                     Message = "An internal server error occurred. Please try again later."
@@ -119,49 +136,58 @@ namespace ODTLearning.Controllers
         {
             try
             {
-                var user = await _repo.SignInValidationOfAccount(model);
-                if (user == null)
+                var response = await _repo.SignInValidationOfAccount(model);
+                if (!response.Success)
                 {
-                    return StatusCode(422, new ApiResponse
+                    return StatusCode(422, new
                     {
-                        Success = false,
-                        Message = "Email hoặc Password không đúng. Vui lòng thử lại!"
-                    });
-                }
-
-                var token = await _repo.GenerateToken(user);
-                if (token != null)
-                {
-                    return Ok(new ApiResponse
-                    {
-                        Success = true,
-                        Message = "Đăng nhập thành công!",
-                        Data = new
+                        message = "Lỗi",
+                        data = new
                         {
-                            User = user,
-                            token.Refresh_Token,
-                            token.Access_Token,
+                            password = response.Message
                         }
                     });
                 }
 
-                // Thêm phần này để trả về một phản hồi nếu token là null
-                return StatusCode(500, new ApiResponse
+                var token = await _repo.GenerateToken(response.Data);
+                if (token != null)
                 {
-                    Success = false,
-                    Message = "Xảy ra lỗi trong quá trình tạo token. Vui lòng thử lại sau!"
+                    return StatusCode(200,new
+                    {
+                        message = "Đăng nhập thành công!",
+                        data = new
+                        {
+                            User = response.Data,
+                            token.Refresh_token,
+                             token.Access_token,
+                        }
+                    });
+                }
+
+                // Trả về phản hồi nếu token là null
+                return StatusCode(500, new
+                {
+                    message = "Lỗi",
+                    data = new
+                    {
+                        error = "Xảy ra lỗi trong quá trình tạo token. Vui lòng thử lại sau!"
+                    }
                 });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An internal server error occurred");
-                return StatusCode(500, new ApiResponse
+                return StatusCode(500, new
                 {
-                    Success = false,
-                    Message = "Xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau!"
+                    message = "Lỗi",
+                    data = new
+                    {
+                        error = "Xảy ra lỗi trong quá trình đăng nhập. Vui lòng thử lại sau!"
+                    }
                 });
             }
         }
+
 
         [HttpPost("refreshToken")]
         public async Task<IActionResult> RenewToken(TokenModel model)
@@ -187,7 +213,7 @@ namespace ODTLearning.Controllers
             try
             {
                 //check 1: Access Token valid format
-                var tokenInVerification = jwtTokenHandler.ValidateToken(model.Access_Token, tokenValidateParam, out var validatedToken);
+                var tokenInVerification = jwtTokenHandler.ValidateToken(model.Access_token, tokenValidateParam, out var validatedToken);
 
                 //check 2: Check alg
                 if (validatedToken is JwtSecurityToken jwtSecurityToken)
@@ -195,7 +221,7 @@ namespace ODTLearning.Controllers
                     var result = jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase);
                     if (!result)
                     {
-                        return Ok(new ApiResponse
+                        return Ok(new 
                         {
                             Success = false,
                             Message = "Invalid token"
@@ -210,7 +236,7 @@ namespace ODTLearning.Controllers
 
                 if (expireDate > DateTime.UtcNow)
                 {
-                    return BadRequest(new ApiResponse
+                    return BadRequest(new 
                     {
                         Success = false,
                         Message = "Access token has not yet expired"
@@ -218,11 +244,11 @@ namespace ODTLearning.Controllers
                 }
 
                 //check 4: Check refreshToken exist in DB
-                var storedToken = await _context.RefreshTokens.FirstOrDefaultAsync(x => x.Token == model.Refresh_Token);
+                var storedToken = await _context.RefreshTokens.FirstOrDefaultAsync(x => x.Token == model.Refresh_token);
 
                 if (storedToken == null)
                 {
-                    return BadRequest(new ApiResponse
+                    return BadRequest(new 
                     {
                         Success = false,
                         Message = "Refresh token does not exist"
@@ -232,7 +258,7 @@ namespace ODTLearning.Controllers
                 //check 5: Check refreshToken is used/revoked?
                 if ((bool)storedToken.IsUsed)
                 {
-                    return BadRequest(new ApiResponse
+                    return BadRequest(new 
                     {
                         Success = false,
                         Message = "Refresh token has been used"
@@ -241,7 +267,7 @@ namespace ODTLearning.Controllers
 
                 if ((bool)storedToken.IsRevoked)
                 {
-                    return BadRequest(new ApiResponse
+                    return BadRequest(new
                     {
                         Success = false,
                         Message = "Refresh token has been revoked"
@@ -253,7 +279,7 @@ namespace ODTLearning.Controllers
 
                 if (storedToken.JwtId != jti)
                 {
-                    return BadRequest(new ApiResponse
+                    return BadRequest(new 
                     {
                         Success = false,
                         Message = "Token doesn't match"
@@ -292,7 +318,7 @@ namespace ODTLearning.Controllers
                 var token = await _repo.GenerateToken(userResponse);
 
 
-                return Ok(new ApiResponse
+                return Ok(new 
                 {
                     Success = true,
                     Message = "Renew token",
@@ -301,7 +327,7 @@ namespace ODTLearning.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new ApiResponse
+                return BadRequest(new 
                 {
                     Success = false,
                     Message = "Something went wrong"
@@ -364,11 +390,11 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<IActionResult> Logout([FromBody] TokenModel model)
+        public async Task<IActionResult> Logout([FromBody] LogoutModel model)
         {
-            if (model == null || string.IsNullOrEmpty(model.Refresh_Token))
+            if (model == null || string.IsNullOrEmpty(model.Refresh_token))
             {
-                return BadRequest(new ApiResponse
+                return BadRequest(new 
                 {
                     Success = false,
                     Message = "Refresh token is required"
@@ -376,11 +402,11 @@ namespace ODTLearning.Controllers
             }
 
             // Tìm Refresh Token trong cơ sở dữ liệu
-            var refreshToken = await _context.RefreshTokens.FirstOrDefaultAsync(x => x.Token == model.Refresh_Token);
+            var refreshToken = await _context.RefreshTokens.FirstOrDefaultAsync(x => x.Token == model.Refresh_token);
 
             if (refreshToken == null)
             {
-                return NotFound(new ApiResponse
+                return NotFound(new 
                 {
                     Success = false,
                     Message = "Invalid refresh token"
@@ -393,7 +419,7 @@ namespace ODTLearning.Controllers
             _context.RefreshTokens.Update(refreshToken);
             await _context.SaveChangesAsync();
 
-            return Ok(new ApiResponse
+            return Ok(new 
             {
                 Success = true,
                 Message = "Logout successful"
