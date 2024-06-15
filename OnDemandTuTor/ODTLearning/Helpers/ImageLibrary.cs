@@ -22,6 +22,25 @@
             return false;
         }
 
+        public async Task<bool> DeleteImage(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return false;
+            }
+
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", fileName);
+
+            if (!File.Exists(path))
+            {
+                return false;
+            }
+           
+            File.Delete(path);
+            return true;                    
+        }
+
+
         public string GetImanges(string fileName) => $@"{Directory.GetCurrentDirectory()}/wwwroot/Images/{fileName}";
 
         //public string GetImanges(string fileName) => Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", fileName).ToString();

@@ -425,5 +425,26 @@ namespace ODTLearning.Controllers
                 Message = "Logout successful"
             });
         }
+
+        [HttpPut("UpdateAvatar")]
+        public async Task<IActionResult> UpdateAvatar(string id, IFormFile file)
+        {
+            var result = await _repo.UpdateAvatar(id, file);
+
+            if (result)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = "Update avatar successful"
+                });
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = "Update avatar fail"
+            });
+        }
     }
 }

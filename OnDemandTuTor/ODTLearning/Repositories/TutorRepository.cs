@@ -19,7 +19,7 @@ namespace ODTLearning.Repositories
 
         public async Task<object> GetTutorProfile(string id)
         {
-            var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+            var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id && x.Roles == "Tutor");
 
             if (account == null)
             {

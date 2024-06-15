@@ -10,5 +10,7 @@ namespace ODTLearning.Repositories
         public Task<bool> DeleteRequestLearning(string requestId);
         public Task<List<Request>> GetPendingApproveRequests();
         public Task<List<Request>> GetApprovedRequests();
+        public Task<object> GetStudentProfile(string id);
+        public Task<bool> UpdateStudentProfile(string id, StudentProfileToUpdateModel model);
     }
 }

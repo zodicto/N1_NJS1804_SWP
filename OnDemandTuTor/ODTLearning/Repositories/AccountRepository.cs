@@ -247,5 +247,37 @@ namespace ODTLearning.Repositories
             var list = await _context.Accounts.ToListAsync();
             return list;
         }
+
+        public async Task<bool> UpdateAvatar(string id, IFormFile file)
+        {
+            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (user.Avatar != null)
+            {
+                var delete = await imgLib.DeleteImage(user.Avatar);
+
+                if (!delete)
+                {
+                    return false;
+                }
+            }
+
+            var upload = await imgLib.UploadImage(file);
+
+            if (!upload)
+            {
+                return false;
+            }
+
+            user.Avatar = file.FileName;
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
