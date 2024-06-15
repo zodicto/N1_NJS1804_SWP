@@ -87,10 +87,18 @@ namespace ODTLearning.Repositories
                     Id = Guid.NewGuid().ToString(),
                     IdTutor = tutor.Id,
                     QualificationName = model.QualificationName,
-                    Img = model.ImageQualification,
                     Type = model.Type,
                 };
-
+                //upload anh
+                if (model.ImageQualification.Length > 0)
+                {
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", model.ImageQualification.FileName);
+                    using(var stream = System.IO.File.Create(path))
+                    {
+                        await model.ImageQualification.CopyToAsync(stream);
+                    }
+                    educationalQualification.Img = $"/Images/{model.ImageQualification.FileName}";
+                }
                 // Kiểm tra xem subject có tồn tại không, nếu không thì tạo mới
                 var subject = _context.Subjects.FirstOrDefault(s => s.SubjectName == model.Subject);
                 if (subject == null)
