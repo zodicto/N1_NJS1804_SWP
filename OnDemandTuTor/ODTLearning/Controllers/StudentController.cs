@@ -141,5 +141,48 @@ namespace ODTLearning.Controllers
                 Message = "Errol"
             });
         }
+
+        [HttpGet("getStudentProfile")]
+        public async Task<IActionResult> GetStudentProfile(string id)
+        {
+            var result = await _repo.GetStudentProfile(id);
+
+            if (result == null)
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    Message = "Get student profile fail"
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                Message = "get student profile successfully",
+                Data = result
+            });
+        }
+
+        [HttpPut("updateStudentProfile")]
+        public async Task<IActionResult> UpdateStudentProfile(string id, StudentProfileToUpdateModel model)
+        {
+            var result = await _repo.UpdateStudentProfile(id, model);
+
+            if (!result)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = "Update student profile failed"
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                Message = "Update student profile successfully"
+            });
+        }
     }
 }

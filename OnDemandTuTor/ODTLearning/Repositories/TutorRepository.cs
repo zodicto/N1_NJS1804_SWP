@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ODTLearning.Entities;
+using ODTLearning.Helpers;
 using ODTLearning.Models;
 
 
@@ -14,16 +15,19 @@ namespace ODTLearning.Repositories
             _context = context;
         }
 
-        
+        ImageLibrary imgLib = new ImageLibrary();
 
-        public async Task<TutorProfileModel> GetTutorProfile(string id)
+        public async Task<object> GetTutorProfile(string id)
         {
-            var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+            var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id && x.Roles == "Tutor");
 
             if (account == null)
             {
                 return null;
             }
+
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
+
             //lay list field cua account
             var fields = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.TutorSubjects.Join(_context.Subjects, tf => tf.IdSubject, f => f.Id, (tf, f) => new
             {
@@ -35,17 +39,20 @@ namespace ODTLearning.Repositories
             var qualifications = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.EducationalQualifications, t => t.Id, eq => eq.IdTutor, (t, eq) => new
             {
                 Name = eq.QualificationName,
-                Img = eq.Img,
+                Img = imgLib.GetImanges(eq.Img),
                 Type = eq.Type
             }).ToList();
 
             //dua vao model            
-            return new TutorProfileModel
+            return new 
             {
                 Id = id,              
                 Gmail = account.Email,
                 Birthdate = account.DateOfBirth,
                 Gender = account.Gender,
+                Avatar = account.Avatar == null ? "" : imgLib.GetImanges(account.Avatar),
+                SpeacializedSkill = tutor.SpecializedSkills,
+                Experience = tutor.Experience, 
                 Fields = fields,
                 Qualifications = qualifications,
             };

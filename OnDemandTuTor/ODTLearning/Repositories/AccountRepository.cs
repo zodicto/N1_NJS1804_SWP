@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ODTLearning.Entities;
+using ODTLearning.Helpers;
 using ODTLearning.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -22,6 +23,9 @@ namespace ODTLearning.Repositories
             _context = context;
             _configuration = configuration;
         }
+
+        ImageLibrary imgLib = new ImageLibrary();
+
         public async Task<bool> IsEmailExist(string email)
         {
             return await _context.Accounts.AnyAsync(a => a.Email == email);
@@ -90,14 +94,10 @@ namespace ODTLearning.Repositories
                     Type = model.Type,
                 };
                 //upload anh
-                if (model.ImageQualification.Length > 0)
+                var upload = await imgLib.UploadImage(model.ImageQualification);
+                if (upload)
                 {
-                    var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Images", model.ImageQualification.FileName);
-                    using(var stream = System.IO.File.Create(path))
-                    {
-                        await model.ImageQualification.CopyToAsync(stream);
-                    }
-                    educationalQualification.Img = $"/Images/{model.ImageQualification.FileName}";
+                    educationalQualification.Img = model.ImageQualification.FileName;
                 }
                 // Kiểm tra xem subject có tồn tại không, nếu không thì tạo mới
                 var subject = _context.Subjects.FirstOrDefault(s => s.SubjectName == model.Subject);
@@ -246,6 +246,38 @@ namespace ODTLearning.Repositories
         {
             var list = await _context.Accounts.ToListAsync();
             return list;
+        }
+
+        public async Task<bool> UpdateAvatar(string id, IFormFile file)
+        {
+            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (user.Avatar != null)
+            {
+                var delete = await imgLib.DeleteImage(user.Avatar);
+
+                if (!delete)
+                {
+                    return false;
+                }
+            }
+
+            var upload = await imgLib.UploadImage(file);
+
+            if (!upload)
+            {
+                return false;
+            }
+
+            user.Avatar = file.FileName;
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 }
