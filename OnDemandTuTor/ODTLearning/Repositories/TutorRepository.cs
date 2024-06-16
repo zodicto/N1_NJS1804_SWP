@@ -167,5 +167,103 @@ namespace ODTLearning.Repositories
             }
             return list;
         }
+
+        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests()
+        {
+            var appeovedRequests = await _context.Requests
+                                                 .Where(r => r.Status == "approved")
+                                                 .Select(r => new ViewRequestOfStudent
+                                                 {
+                                                     Title = r.Title,
+                                                     Price = r.Price,
+                                                     Description = r.Description,
+                                                     LearningMethod = r.LearningMethod,
+                                                     LearningModel = r.IdLearningModelsNavigation.NameModel,
+                                                     Date = r.Schedules.FirstOrDefault().Date,
+                                                     Time = r.Schedules.FirstOrDefault().Time.ToString() // Use ToString() without parameters
+                                                 }).ToListAsync();
+
+            // Format the Time string if needed
+            foreach (var request in appeovedRequests)
+            {
+                if (!string.IsNullOrEmpty(request.Time))
+                {
+                    var timeOnly = TimeOnly.Parse(request.Time);
+                    request.Time = timeOnly.ToString("HH:mm");
+                }
+            }
+
+            return new ApiResponse<List<ViewRequestOfStudent>>
+            {
+                Success = true,
+                Message = "Yêu cầu đã xử lý được truy xuất thành công",
+                Data = appeovedRequests
+            };
+        }
+
+        public async Task<ApiResponse<bool>> JoinRequest(string requestId, string tutorId, JoinRequestModel joinRequestModel)
+        {
+            // Tìm yêu cầu theo IdRequest
+            var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
+
+            if (request == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy yêu cầu nào",
+                    Data = false
+                };
+            }
+
+            // Tìm gia sư theo IdTutor
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.Id == tutorId);
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư nào",
+                    Data = false
+                };
+            }
+
+            if (joinRequestModel.status?.ToLower() == "joined")
+            {
+                request.Status = "Joined";
+                _context.Requests.Update(request);
+
+                // Tạo bản ghi mới trong bảng RequestLearning
+                var requestLearning = new RequestLearning
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    IdTutor = tutorId,
+                    IdRequest = requestId
+                };
+
+                _context.RequestLearnings.Add(requestLearning);
+                await _context.SaveChangesAsync();
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "Bạn đã tham gia vào yêu cầu của học sinh",
+                    Data = true
+                };
+            }
+            else
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Sai trạng thái duyệt",
+                    Data = false
+                };
+            }
+        }
+
+
+
     }
 }
+

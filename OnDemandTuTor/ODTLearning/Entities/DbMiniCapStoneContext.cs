@@ -47,14 +47,14 @@ public partial class DbminiCapstoneContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Account__DED997145207C813");
+            entity.HasKey(e => e.Id).HasName("PK__Account__3214EC2751370073");
 
             entity.ToTable("Account");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("_ID");
+                .HasColumnName("ID");
             entity.Property(e => e.AccountBalance).HasColumnType("decimal(10, 0)");
             entity.Property(e => e.Address).HasMaxLength(50);
             entity.Property(e => e.Avatar)
@@ -73,12 +73,12 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<EducationalQualification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Educatio__DED99714F0427F2D");
+            entity.HasKey(e => e.Id).HasName("PK__Educatio__3214EC27CE69ABEA");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("_ID");
+                .HasColumnName("ID");
             entity.Property(e => e.IdTutor)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -97,25 +97,25 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<LearningModel>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Learning__DED99714D1F764A1");
+            entity.HasKey(e => e.Id).HasName("PK__Learning__3214EC27EBD63169");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("_ID");
+                .HasColumnName("ID");
             entity.Property(e => e.NameModel).HasMaxLength(50);
         });
 
         modelBuilder.Entity<RefreshToken>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__RefreshT__DED997146A0F2C25");
+            entity.HasKey(e => e.Id).HasName("PK__RefreshT__3214EC27E093BAE1");
 
             entity.ToTable("RefreshToken");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("_ID");
+                .HasColumnName("ID");
             entity.Property(e => e.ExpiredAt).HasColumnType("datetime");
             entity.Property(e => e.IdAccount)
                 .HasMaxLength(50)
@@ -137,14 +137,14 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Rent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Rent__DED997142EC8505D");
+            entity.HasKey(e => e.Id).HasName("PK__Rent__3214EC277D3DDCD8");
 
             entity.ToTable("Rent");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("_ID");
+                .HasColumnName("ID");
             entity.Property(e => e.IdAccount)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -167,14 +167,14 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Request>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Request__DED99714D00A595A");
+            entity.HasKey(e => e.Id).HasName("PK__Request__3214EC275D2CAB46");
 
             entity.ToTable("Request");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("_ID");
+                .HasColumnName("ID");
             entity.Property(e => e.IdAccount)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -210,14 +210,14 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<RequestLearning>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Request___DED997149CEEA2D9");
+            entity.HasKey(e => e.Id).HasName("PK__Request___3214EC27C0A67F99");
 
             entity.ToTable("Request_Learning");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("_ID");
+                .HasColumnName("ID");
             entity.Property(e => e.IdRequest)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -240,14 +240,14 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Schedule>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Schedule__DED99714FB709EF6");
+            entity.HasKey(e => e.Id).HasName("PK__Schedule__3214EC2738C3C218");
 
             entity.ToTable("Schedule");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("_ID");
+                .HasColumnName("ID");
             entity.Property(e => e.IdRequest)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -270,15 +270,14 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Service>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Service__DED99714481BA813");
+            entity.HasKey(e => e.Id).HasName("PK__Service__3214EC273245615A");
 
             entity.ToTable("Service");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("_ID");
-            entity.Property(e => e.Description).HasMaxLength(50);
+                .HasColumnName("ID");
             entity.Property(e => e.IdLearningModels)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -305,27 +304,27 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Subject>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Subject__DED99714A4895470");
+            entity.HasKey(e => e.Id).HasName("PK__Subject__3214EC27EF8CBE80");
 
             entity.ToTable("Subject");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("_ID");
+                .HasColumnName("ID");
             entity.Property(e => e.SubjectName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Tutor>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tutor__DED997140B7B899E");
+            entity.HasKey(e => e.Id).HasName("PK__Tutor__3214EC27409AC2C5");
 
             entity.ToTable("Tutor");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("_ID");
+                .HasColumnName("ID");
             entity.Property(e => e.IdAccount)
                 .HasMaxLength(50)
                 .IsUnicode(false)
@@ -341,14 +340,14 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<TutorSubject>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tutor_Su__DED9971429B0E9BB");
+            entity.HasKey(e => e.Id).HasName("PK__Tutor_Su__3214EC2782415EB4");
 
             entity.ToTable("Tutor_Subject");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
                 .IsUnicode(false)
-                .HasColumnName("_ID");
+                .HasColumnName("ID");
             entity.Property(e => e.IdSubject)
                 .HasMaxLength(50)
                 .IsUnicode(false)

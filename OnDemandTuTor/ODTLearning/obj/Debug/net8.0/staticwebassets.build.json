@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "iPdsG8yazTxQS6aUDTRZxBHjWxllyRXyGZv4+ihbFiI=",
+  "Hash": "+dsdoh0EXqembAPVVMFiQSZNXjcWGn0yeh0aoR/1dN8=",
   "Source": "ODTLearning",
   "BasePath": "_content/ODTLearning",
   "Mode": "Default",
@@ -10,7 +10,7 @@
     {
       "Name": "ODTLearning\\wwwroot",
       "Source": "ODTLearning",
-      "ContentRoot": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\",
+      "ContentRoot": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\",
       "BasePath": "_content/ODTLearning",
       "Pattern": "**"
     }

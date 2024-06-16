@@ -3,7 +3,6 @@
     public class TutorProfileToUpdate
     {
         public string? Fullname { get; set; }
-
         public string? Gmail { get; set; }
         public string? Gender { get; set; }
         public string? SpecializedSkills { get; set; }

@@ -20,27 +20,39 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("createRequest")]
-        public async Task<IActionResult> CreateRequestLearning(string IDStudent, RequestLearningModel model)
+        public async Task<IActionResult> CreateRequestLearning(string IDAccount, RequestLearningModel model)
         {
-
-            var request = await _repo.CreateRequestLearning(IDStudent, model);
-
-            if (request != null)
+            try
             {
-                return Ok(new 
+                var response = await _repo.CreateRequestLearning(IDAccount, model);
+
+                if (response.Success)
                 {
-                    Success = true,
-                    Message = "Create Request Learning successfully",
-                    Data = request
+                    return StatusCode(200,new
+                    {
+                        Success = true,
+                        response.Message
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
                 });
             }
-
-            return BadRequest(new 
+            catch (Exception ex)
             {
-                Success = false,
-                Message = "Create Request Learning not Create Request Learning"
-            });
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An error occurred while creating the request learning.",
+                    Details = ex.Message // Optional: Include exception details in the response
+                });
+            }
         }
+
+
 
         [HttpPut("updateRequest")]
         public async Task<IActionResult> UpdateRequestLearning(string IDRequest, RequestLearningModel model)
@@ -95,7 +107,7 @@ namespace ODTLearning.Controllers
                 return Ok(new 
                 {
                     Success = true,
-                    Message = "Delete Request Learning successfully",
+                    Message = "Get Pending Request Learning successfully",
                     Data = request
                 });
             }
@@ -103,7 +115,7 @@ namespace ODTLearning.Controllers
             return BadRequest(new 
             {
                 Success = false,
-                Message = "Delete Request Learning not successfully"
+                Message = "Errol"
             });
 
 
@@ -118,7 +130,7 @@ namespace ODTLearning.Controllers
                 return Ok(new 
                 {
                     Success = true,
-                    Message = "Delete Request Learning successfully",
+                    Message = "Delete approve request Learning successfully",
                     Data = request
                 });
             }
@@ -126,7 +138,7 @@ namespace ODTLearning.Controllers
             return BadRequest(new 
             {
                 Success = false,
-                Message = "Delete Request Learning not successfully"
+                Message = "Errol"
             });
         }
     }

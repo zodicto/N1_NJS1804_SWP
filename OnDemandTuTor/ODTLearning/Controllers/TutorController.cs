@@ -21,7 +21,7 @@ namespace ODTLearning.Controllers
             _context = context;
         }
 
-       
+
         [HttpGet("profileTutor")]
         public async Task<IActionResult> GetTutorProfile(string id)
         {
@@ -29,14 +29,14 @@ namespace ODTLearning.Controllers
 
             if (result == null)
             {
-                return NotFound(new 
+                return NotFound(new
                 {
                     Success = false,
                     Message = "Get profile tutor fail"
                 });
             }
 
-            return Ok(new 
+            return Ok(new
             {
                 Success = true,
                 Message = "get tutor profile successfully",
@@ -51,14 +51,14 @@ namespace ODTLearning.Controllers
 
             if (!result)
             {
-                return BadRequest(new 
+                return BadRequest(new
                 {
                     Success = false,
                     Message = "Update tutor profile failed"
                 });
             }
 
-            return Ok(new 
+            return Ok(new
             {
                 Success = true,
                 Message = "Update tutor profile successfully"
@@ -72,19 +72,78 @@ namespace ODTLearning.Controllers
 
             if (result == null)
             {
-                return NotFound(new 
+                return NotFound(new
                 {
                     Success = false,
                     Message = "Not found"
                 });
             }
 
-            return Ok(new 
+            return Ok(new
             {
                 Success = true,
                 Message = "Get list tutor successfully",
                 Data = result
             });
+        }
+
+        [HttpGet("viewRequest")]
+        public async Task<IActionResult> ViewRequest()
+        {
+            try
+            {
+                var response = await _repo.GetApprovedRequests();
+
+                if (response.Success)
+                {
+                    return Ok(new
+                    {
+                        Success = true,
+                        response.Message,
+                        response.Data
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while retrieving the arrpoved requests.",
+                    Data = ex.Message
+                });
+            }
+        }
+
+        [HttpPost("join-request")]
+        public async Task<IActionResult> JoinRequest(string requestId, string tutorId, JoinRequestModel status)
+        {
+            try
+            {
+                var response = await _repo.JoinRequest(requestId, tutorId,status);
+
+                if (response.Success)
+                {
+                    return Ok(response);
+                }
+
+                return BadRequest(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while processing the request.",
+                    Data = ex.Message
+                });
+            }
         }
     }
 }

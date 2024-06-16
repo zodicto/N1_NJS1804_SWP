@@ -80,14 +80,18 @@ namespace ODTLearning.Repositories
 
             return tutorDetails;
         }
-        public async Task<string> ChangeRequestLearningStatus(string requestId, string status)
+        public async Task<ApiResponse<bool>> ConfirmRequest(string requestId, string status)
         {
-            // Tìm yêu cầu học tập theo IdRequest
             var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
 
             if (request == null)
             {
-                return "Request not found";
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tim thấy yêu cầu nào",
+                    Data = false
+                };
             }
 
             if (status.ToLower() == "approved")
@@ -95,15 +99,30 @@ namespace ODTLearning.Repositories
                 request.Status = "approved";
                 _context.Requests.Update(request);
                 await _context.SaveChangesAsync();
-                return "Request approved successfully";
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "Yêu cầu đã được duyệt",
+                    Data = true
+                };
             }
             else if (status.ToLower() == "reject")
             {
-                return "Request rejected, no changes saved";
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "Yêu cầu của bạn không được duyệt",
+                    Data = true
+                };
             }
             else
             {
-                return "Invalid status provided";
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Sai trạng thái duyệt",
+                    Data = false
+                };
             }
         }
         public async Task<bool> ConfirmProfileTutor(string idTutor, string status)
@@ -124,6 +143,43 @@ namespace ODTLearning.Repositories
 
             return false;
         }
+
+        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetPendingRequests()
+        {
+            var pendingRequests = await _context.Requests
+                                                 .Where(r => r.Status == "Pending")
+                                                 .Select(r => new ViewRequestOfStudent
+                                                 {
+                                                     Title = r.Title,
+                                                     Price = r.Price,
+                                                     Description = r.Description,
+                                                     LearningMethod = r.LearningMethod,
+                                                     LearningModel = r.IdLearningModelsNavigation.NameModel,
+                                                     Date = r.Schedules.FirstOrDefault().Date,
+                                                     Time = r.Schedules.FirstOrDefault().Time.ToString() // Use ToString() without parameters
+                                                 }).ToListAsync();
+
+            // Format the Time string if needed
+            foreach (var request in pendingRequests)
+            {
+                if (!string.IsNullOrEmpty(request.Time))
+                {
+                    var timeOnly = TimeOnly.Parse(request.Time);
+                    request.Time = timeOnly.ToString("HH:mm");
+                }
+            }
+
+            return new ApiResponse<List<ViewRequestOfStudent>>
+            {
+                Success = true,
+                Message = "Yêu cầu đang chờ xử lý được truy xuất thành công",
+                Data = pendingRequests
+            };
+        }
+
+
+
+
 
     }
 }

@@ -9,9 +9,7 @@ public partial class Schedule
 
     public DateOnly? Date { get; set; }
 
-    public TimeOnly? TimeStart { get; set; }
-
-    public TimeOnly? TimeEnd { get; set; }
+    public TimeOnly? Time { get; set; }
 
     public string IdService { get; set; } = null!;
 
