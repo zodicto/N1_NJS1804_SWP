@@ -96,7 +96,7 @@ namespace ODTLearning.Controllers
                     {
                         Success = true,
                         response.Message,
-                        Data = response.Data
+                         response.Data
                     });
                 }
 

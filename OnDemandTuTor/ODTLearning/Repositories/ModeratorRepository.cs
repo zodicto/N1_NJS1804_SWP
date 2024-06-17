@@ -157,7 +157,7 @@ namespace ODTLearning.Repositories
                                                      LearningMethod = r.LearningMethod,
                                                      Class = r.IdClassNavigation.ClassName,
                                                      Date = r.Schedules.FirstOrDefault().Date,
-                                                     TimeStart = r.Schedules.FirstOrDefault().TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
+                                                     TimeStart = r.Schedules.FirstOrDefault().TimeStart.ToString(), 
                                                      TimeEnd = r.Schedules.FirstOrDefault().TimeEnd.ToString(),
                                                      Id = r.Id, // Include Account ID
                                                      FullName = r.IdAccountNavigation.FullName // Include Account Full Name

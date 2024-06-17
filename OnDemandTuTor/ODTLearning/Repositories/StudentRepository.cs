@@ -55,12 +55,13 @@ namespace ODTLearning.Repositories
             }
 
             // Validate và phân tích chuỗi thời gian để đảm bảo nó có định dạng đúng
-            TimeOnly? parsedTime = null;
+            TimeOnly? parsedTimeStart = null;
+            TimeOnly? parsedTimeEnd = null;
             if (!string.IsNullOrEmpty(model.TimeStart))
             {
                 if (TimeOnly.TryParseExact(model.TimeStart, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
                 {
-                    parsedTime = time;
+                    parsedTimeStart = time;
                 }
                 else
                 {
@@ -75,7 +76,7 @@ namespace ODTLearning.Repositories
             {
                 if (TimeOnly.TryParseExact(model.TimeEnd, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
                 {
-                    parsedTime = time;
+                    parsedTimeEnd = time;
                 }
                 else
                 {
@@ -106,14 +107,14 @@ namespace ODTLearning.Repositories
             await _context.SaveChangesAsync();
 
             // Tạo một đối tượng Schedule mới nếu có thông tin về lịch trình
-            if (model.Date.HasValue && parsedTime.HasValue)
+            if (model.Date.HasValue && parsedTimeStart.HasValue && parsedTimeEnd.HasValue)
             {
                 var schedule = new Schedule
                 {
                     Id = Guid.NewGuid().ToString(),
                     Date = model.Date.Value,
-                    TimeStart = parsedTime.Value,
-                    TimeEnd = parsedTime.Value,
+                    TimeStart = parsedTimeStart.Value,
+                    TimeEnd = parsedTimeEnd.Value,
                     IdService = null, // Placeholder, thay bằng ID dịch vụ thực tế
                     IdRequest = requestOfStudent.Id,
                 };
