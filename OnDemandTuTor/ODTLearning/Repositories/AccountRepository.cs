@@ -279,5 +279,30 @@ namespace ODTLearning.Repositories
 
             return true;
         }
+
+        public async Task<string> ChangePassword(string id, ChangePasswordModel model)
+        {
+            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+
+            if (user == null)
+            {
+                return "Không tìm thấy người dùng";
+            }
+
+            if (model.Password != user.Password)
+            {
+                return "Không đúng mật khẩu";
+            }
+
+            if (model.NewPassword != model.ConfirmNewPassword)
+            {
+                return "Mật khẩu mới và xác nhận mật khẩu không trùng khớp";
+            }
+
+            user.Password = model.NewPassword;
+            await _context.SaveChangesAsync();
+
+            return "Thay đổi mật khẩu thành công";
+        }
     }
 }

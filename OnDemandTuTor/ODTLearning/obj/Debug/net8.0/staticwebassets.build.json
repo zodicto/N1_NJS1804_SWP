@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "DeZ3IRUV293AhLn/C//ahCTVcoOVfTcr4e1jTWsqM8c=",
+  "Hash": "MZy79MM+i4QEzxRkMyNpnpP0sl/rxj5LcQBIH1OpTyU=",
   "Source": "ODTLearning",
   "BasePath": "_content/ODTLearning",
   "Mode": "Default",
@@ -10,17 +10,17 @@
     {
       "Name": "ODTLearning\\wwwroot",
       "Source": "ODTLearning",
-      "ContentRoot": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\",
+      "ContentRoot": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\",
       "BasePath": "_content/ODTLearning",
       "Pattern": "**"
     }
   ],
   "Assets": [
     {
-      "Identity": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\kxIY23OFTXiSGNtzhV14XA_0d17dc17f6464ef4974e352b8360d3de_raci_matrix_starter.docx",
+      "Identity": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\kxIY23OFTXiSGNtzhV14XA_0d17dc17f6464ef4974e352b8360d3de_raci_matrix_starter.docx",
       "SourceId": "ODTLearning",
       "SourceType": "Discovered",
-      "ContentRoot": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\",
+      "ContentRoot": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\",
       "BasePath": "_content/ODTLearning",
       "RelativePath": "Images/kxIY23OFTXiSGNtzhV14XA_0d17dc17f6464ef4974e352b8360d3de_raci_matrix_starter.docx",
       "AssetKind": "All",

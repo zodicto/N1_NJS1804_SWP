@@ -446,5 +446,26 @@ namespace ODTLearning.Controllers
                 Message = "Update avatar fail"
             });
         }
+
+        [HttpPut("ChangePassword")]
+        public async Task<IActionResult> ChangePassword(string id, ChangePasswordModel model)
+        {
+            var result = await _repo.ChangePassword(id, model);
+
+            if (result == "Thay đổi mật khẩu thành công")
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = result
+                });
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = result
+            });
+        }
     }
 }
