@@ -23,5 +23,6 @@ namespace ODTLearning.Repositories
         public Task<List<Account>> GetAllUsers();
         public Task<bool> UpdateAvatar(string id, IFormFile file);
         public Task<string> ChangePassword(string id, ChangePasswordModel model);
+        public Task<string> ForgotPassword(string Email);
     }
 }

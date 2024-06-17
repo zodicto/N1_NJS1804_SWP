@@ -467,5 +467,26 @@ namespace ODTLearning.Controllers
                 Message = result
             });
         }
+
+        [HttpPut("ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword(string Email)
+        {
+            var result = await _repo.ForgotPassword(Email);
+
+            if (result == "Gửi mật khẩu mới thành công")
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = result
+                });
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = result
+            });
+        }
     }
 }
