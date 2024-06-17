@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace ODTLearning.Entities;
 
-public partial class LearningModel
+public partial class Class
 {
     public string Id { get; set; } = null!;
 
-    public string? NameModel { get; set; }
+    public string? ClassName { get; set; }
 
     public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
 

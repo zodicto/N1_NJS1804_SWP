@@ -19,7 +19,7 @@ public partial class RefreshToken
 
     public DateTime? IssuedAt { get; set; }
 
-    public string IdAccount { get; set; } = null!;
+    public string? IdAccount { get; set; }
 
-    public virtual Account IdAccountNavigation { get; set; } = null!;
+    public virtual Account? IdAccountNavigation { get; set; }
 }

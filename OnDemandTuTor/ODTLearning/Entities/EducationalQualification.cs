@@ -13,7 +13,7 @@ public partial class EducationalQualification
 
     public string? Type { get; set; }
 
-    public string IdTutor { get; set; } = null!;
+    public string? IdTutor { get; set; }
 
-    public virtual Tutor IdTutorNavigation { get; set; } = null!;
+    public virtual Tutor? IdTutorNavigation { get; set; }
 }

@@ -7,11 +7,11 @@ public partial class RequestLearning
 {
     public string Id { get; set; } = null!;
 
-    public string IdTutor { get; set; } = null!;
+    public string? IdTutor { get; set; }
 
-    public string IdRequest { get; set; } = null!;
+    public string? IdRequest { get; set; }
 
-    public virtual Request IdRequestNavigation { get; set; } = null!;
+    public virtual Request? IdRequestNavigation { get; set; }
 
-    public virtual Tutor IdTutorNavigation { get; set; } = null!;
+    public virtual Tutor? IdTutorNavigation { get; set; }
 }

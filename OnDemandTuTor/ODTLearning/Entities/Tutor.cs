@@ -13,11 +13,11 @@ public partial class Tutor
 
     public string? Status { get; set; }
 
-    public string IdAccount { get; set; } = null!;
+    public string? IdAccount { get; set; }
 
     public virtual ICollection<EducationalQualification> EducationalQualifications { get; set; } = new List<EducationalQualification>();
 
-    public virtual Account IdAccountNavigation { get; set; } = null!;
+    public virtual Account? IdAccountNavigation { get; set; }
 
     public virtual ICollection<RequestLearning> RequestLearnings { get; set; } = new List<RequestLearning>();
 

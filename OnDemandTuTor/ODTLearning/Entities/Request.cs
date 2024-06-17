@@ -17,17 +17,17 @@ public partial class Request
 
     public string? Status { get; set; }
 
-    public string IdAccount { get; set; } = null!;
+    public string? IdAccount { get; set; }
 
-    public string IdLearningModels { get; set; } = null!;
+    public string? IdClass { get; set; }
 
-    public string IdSubject { get; set; } = null!;
+    public string? IdSubject { get; set; }
 
-    public virtual Account IdAccountNavigation { get; set; } = null!;
+    public virtual Account? IdAccountNavigation { get; set; }
 
-    public virtual LearningModel IdLearningModelsNavigation { get; set; } = null!;
+    public virtual Class? IdClassNavigation { get; set; }
 
-    public virtual Subject IdSubjectNavigation { get; set; } = null!;
+    public virtual Subject? IdSubjectNavigation { get; set; }
 
     public virtual ICollection<RequestLearning> RequestLearnings { get; set; } = new List<RequestLearning>();
 

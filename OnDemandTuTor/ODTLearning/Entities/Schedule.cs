@@ -9,15 +9,17 @@ public partial class Schedule
 
     public DateOnly? Date { get; set; }
 
-    public TimeOnly? Time { get; set; }
+    public TimeOnly? TimeStart { get; set; }
 
-    public string IdService { get; set; } = null!;
+    public TimeOnly? TimeEnd { get; set; }
 
-    public string IdRequest { get; set; } = null!;
+    public string? IdService { get; set; }
 
-    public virtual Request IdRequestNavigation { get; set; } = null!;
+    public string? IdRequest { get; set; }
 
-    public virtual Service IdServiceNavigation { get; set; } = null!;
+    public virtual Request? IdRequestNavigation { get; set; }
+
+    public virtual Service? IdServiceNavigation { get; set; }
 
     public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
 }

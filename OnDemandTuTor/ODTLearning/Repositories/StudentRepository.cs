@@ -14,7 +14,6 @@ namespace ODTLearning.Repositories
             _context = context;
         }
 
-
         public async Task<ApiResponse<bool>> CreateRequestLearning(string IDAccount, RequestLearningModel model)
         {
             // Tìm sinh viên theo IdStudent
@@ -32,15 +31,15 @@ namespace ODTLearning.Repositories
             }
 
             // Tìm LearningModel theo tên
-            var learningModel = await _context.LearningModels
-                                              .FirstOrDefaultAsync(lm => lm.NameModel == model.LearningModel);
+            var Class = await _context.Classes
+                                              .FirstOrDefaultAsync(cl => cl.ClassName== model.Class);
 
-            if (learningModel == null)
+            if (Class == null)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không tìm thấy mô hình học tập nào với tên này"
+                    Message = "Không tìm thấy lớp nào với tên này. Vui lòng chọn lớp 10,11,12"
                 };
             }
             var subjectModel = await _context.Subjects
@@ -57,9 +56,9 @@ namespace ODTLearning.Repositories
 
             // Validate và phân tích chuỗi thời gian để đảm bảo nó có định dạng đúng
             TimeOnly? parsedTime = null;
-            if (!string.IsNullOrEmpty(model.Time))
+            if (!string.IsNullOrEmpty(model.TimeStart))
             {
-                if (TimeOnly.TryParseExact(model.Time, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+                if (TimeOnly.TryParseExact(model.TimeStart, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
                 {
                     parsedTime = time;
                 }
@@ -68,7 +67,22 @@ namespace ODTLearning.Repositories
                     return new ApiResponse<bool>
                     {
                         Success = false,
-                        Message = "Sai định dạng hh:mm"
+                        Message = "Ngày bắt đầu sai định dạng hh:mm"
+                    };
+                }
+            }
+            if (!string.IsNullOrEmpty(model.TimeEnd))
+            {
+                if (TimeOnly.TryParseExact(model.TimeEnd, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+                {
+                    parsedTime = time;
+                }
+                else
+                {
+                    return new ApiResponse<bool>
+                    {
+                        Success = false,
+                        Message = "Ngày kết thúc sai định dạng hh:mm"
                     };
                 }
             }
@@ -84,7 +98,7 @@ namespace ODTLearning.Repositories
                 LearningMethod = model.LearningMethod,
                 IdAccount = IDAccount, // Đảm bảo ID tài khoản được đặt
                 IdSubject = subjectModel.Id,
-                IdLearningModels = learningModel.Id // Đảm bảo thuộc tính này được đặt
+                IdClass = Class.Id // Đảm bảo thuộc tính này được đặt
             };
 
             // Thêm Request vào context
@@ -98,7 +112,8 @@ namespace ODTLearning.Repositories
                 {
                     Id = Guid.NewGuid().ToString(),
                     Date = model.Date.Value,
-                    Time = parsedTime.Value, // Giả sử Time là trường đúng
+                    TimeStart = parsedTime.Value,
+                    TimeEnd = parsedTime.Value,
                     IdService = null, // Placeholder, thay bằng ID dịch vụ thực tế
                     IdRequest = requestOfStudent.Id,
                 };
@@ -137,9 +152,9 @@ namespace ODTLearning.Repositories
 
             // Validate and parse the time string to ensure it is in the correct format
             TimeSpan? parsedTime = null;
-            if (!string.IsNullOrEmpty(model.Time))
+            if (!string.IsNullOrEmpty(model.TimeStart))
             {
-                if (TimeSpan.TryParseExact(model.Time, "hh\\:mm", CultureInfo.InvariantCulture, TimeSpanStyles.None, out var time))
+                if (TimeSpan.TryParseExact(model.TimeStart, "hh\\:mm", CultureInfo.InvariantCulture, TimeSpanStyles.None, out var time))
                 {
                     parsedTime = time;
                 }
@@ -149,6 +164,17 @@ namespace ODTLearning.Repositories
                 }
             }
 
+            if (!string.IsNullOrEmpty(model.TimeEnd))
+            {
+                if (TimeSpan.TryParseExact(model.TimeEnd, "hh\\:mm", CultureInfo.InvariantCulture, TimeSpanStyles.None, out var time))
+                {
+                    parsedTime = time;
+                }
+                else
+                {
+                    throw new ArgumentException("Invalid time format. Use HH:mm.");
+                }
+            }
             // Cập nhật schedule nếu có thông tin về lịch trình
             if (model.Date.HasValue && parsedTime.HasValue)
             {
@@ -209,7 +235,7 @@ namespace ODTLearning.Repositories
             return _context.Requests
                            .Where(r => r.Status == "pending approve")
                            .Include(r => r.IdAccountNavigation)
-                           .Include(r => r.IdLearningModelsNavigation)
+                           .Include(r => r.IdClassNavigation )
                            .ToList();
         }
 
@@ -219,7 +245,7 @@ namespace ODTLearning.Repositories
             return _context.Requests
                            .Where(r => r.Status == "approved")
                            .Include(r => r.IdAccountNavigation)
-                           .Include(r => r.IdLearningModelsNavigation)
+                           .Include(r => r.IdClassNavigation)
                            .ToList();
         }
 

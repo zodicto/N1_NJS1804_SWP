@@ -177,34 +177,46 @@ namespace ODTLearning.Repositories
 
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests()
         {
-            var appeovedRequests = await _context.Requests
-                                                 .Where(r => r.Status == "approved")
-                                                 .Select(r => new ViewRequestOfStudent
-                                                 {
-                                                     Title = r.Title,
-                                                     Price = r.Price,
-                                                     Description = r.Description,
-                                                     LearningMethod = r.LearningMethod,
-                                                     LearningModel = r.IdLearningModelsNavigation.NameModel,
-                                                     Date = r.Schedules.FirstOrDefault().Date,
-                                                     Time = r.Schedules.FirstOrDefault().Time.ToString() // Use ToString() without parameters
-                                                 }).ToListAsync();
+            var pendingRequests = await _context.Requests
+                                                   .Where(r => r.Status == "Approved")
+                                                   .Select(r => new ViewRequestOfStudent
+                                                   {
+                                                       Title = r.Title,
+                                                       Price = r.Price,
+                                                       Description = r.Description,
+                                                       Subject = r.IdSubjectNavigation.SubjectName, // Assuming you have a Subject property in your Request model
+                                                       LearningMethod = r.LearningMethod,
+                                                       Class = r.IdClassNavigation.ClassName,
+                                                       Date = r.Schedules.FirstOrDefault().Date,
+                                                       TimeStart = r.Schedules.FirstOrDefault().TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
+                                                       TimeEnd = r.Schedules.FirstOrDefault().TimeEnd.ToString(),
+                                                       Id = r.Id, // Include Account ID
+                                                       FullName = r.IdAccountNavigation.FullName // Include Account Full Name
+                                                   }).ToListAsync();
+
 
             // Format the Time string if needed
-            foreach (var request in appeovedRequests)
+            foreach (var request in pendingRequests)
             {
-                if (!string.IsNullOrEmpty(request.Time))
+                if (!string.IsNullOrEmpty(request.TimeStart))
                 {
-                    var timeOnly = TimeOnly.Parse(request.Time);
-                    request.Time = timeOnly.ToString("HH:mm");
+                    var timeOnly = TimeOnly.Parse(request.TimeStart);
+                    request.TimeStart = timeOnly.ToString("HH:mm");
                 }
             }
-
+            foreach (var request in pendingRequests)
+            {
+                if (!string.IsNullOrEmpty(request.TimeEnd))
+                {
+                    var timeOnly = TimeOnly.Parse(request.TimeEnd);
+                    request.TimeEnd = timeOnly.ToString("HH:mm");
+                }
+            }
             return new ApiResponse<List<ViewRequestOfStudent>>
             {
                 Success = true,
                 Message = "Yêu cầu đã xử lý được truy xuất thành công",
-                Data = appeovedRequests
+                Data = pendingRequests
             };
         }
 

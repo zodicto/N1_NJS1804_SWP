@@ -9,9 +9,11 @@ namespace ODTLearning.Models
         public string? Description { get; set; }
         public string? Subject { get; set; }
         public string? LearningMethod { get; set; }
-        public string? LearningModel { get; set; }
+        public string? Class { get; set; }
         public DateOnly? Date { get; set; }
-        public string? Time { get; set; }
+        public string? TimeStart { get; set; }
+        public string? TimeEnd { get; set; }
+        
 
     }
 }

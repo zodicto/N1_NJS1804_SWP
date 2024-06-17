@@ -96,7 +96,7 @@ namespace ODTLearning.Repositories
 
             if (status.ToLower() == "approved")
             {
-                request.Status = "approved";
+                request.Status = "Approved";
                 _context.Requests.Update(request);
                 await _context.SaveChangesAsync();
                 return new ApiResponse<bool>
@@ -153,22 +153,34 @@ namespace ODTLearning.Repositories
                                                      Title = r.Title,
                                                      Price = r.Price,
                                                      Description = r.Description,
+                                                     Subject = r.IdSubjectNavigation.SubjectName, // Assuming you have a Subject property in your Request model
                                                      LearningMethod = r.LearningMethod,
-                                                     LearningModel = r.IdLearningModelsNavigation.NameModel,
+                                                     Class = r.IdClassNavigation.ClassName,
                                                      Date = r.Schedules.FirstOrDefault().Date,
-                                                     Time = r.Schedules.FirstOrDefault().Time.ToString() // Use ToString() without parameters
+                                                     TimeStart = r.Schedules.FirstOrDefault().TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
+                                                     TimeEnd = r.Schedules.FirstOrDefault().TimeEnd.ToString(),
+                                                     Id = r.Id, // Include Account ID
+                                                     FullName = r.IdAccountNavigation.FullName // Include Account Full Name
                                                  }).ToListAsync();
+
 
             // Format the Time string if needed
             foreach (var request in pendingRequests)
             {
-                if (!string.IsNullOrEmpty(request.Time))
+                if (!string.IsNullOrEmpty(request.TimeStart))
                 {
-                    var timeOnly = TimeOnly.Parse(request.Time);
-                    request.Time = timeOnly.ToString("HH:mm");
+                    var timeOnly = TimeOnly.Parse(request.TimeStart);
+                    request.TimeStart = timeOnly.ToString("HH:mm");
                 }
             }
-
+            foreach (var request in pendingRequests)
+            {
+                if (!string.IsNullOrEmpty(request.TimeEnd))
+                {
+                    var timeOnly = TimeOnly.Parse(request.TimeEnd);
+                    request.TimeEnd = timeOnly.ToString("HH:mm");
+                }
+            }
             return new ApiResponse<List<ViewRequestOfStudent>>
             {
                 Success = true,

@@ -15,13 +15,13 @@ public partial class Service
 
     public string? Video { get; set; }
 
-    public string IdTutor { get; set; } = null!;
+    public string? IdTutor { get; set; }
 
-    public string IdLearningModels { get; set; } = null!;
+    public string? IdClass { get; set; }
 
-    public virtual LearningModel IdLearningModelsNavigation { get; set; } = null!;
+    public virtual Class? IdClassNavigation { get; set; }
 
-    public virtual Tutor IdTutorNavigation { get; set; } = null!;
+    public virtual Tutor? IdTutorNavigation { get; set; }
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
 }

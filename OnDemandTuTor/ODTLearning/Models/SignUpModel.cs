@@ -23,7 +23,7 @@ namespace ODTLearning.Models
         public string? Subject { get; set; }
         public string? QualificationName { get; set; }
         public string? Type { get; set; }
-        public IFormFile ImageQualification { get; set; }
+        public IFormFile? ImageQualification { get; set; }
     }
 
 }
