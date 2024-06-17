@@ -25,6 +25,8 @@ namespace ODTLearning.Repositories
         }
 
         ImageLibrary imgLib = new ImageLibrary();
+        EmailLibrary emailLib = new EmailLibrary();
+
 
         public async Task<bool> IsEmailExist(string email)
         {
@@ -303,6 +305,38 @@ namespace ODTLearning.Repositories
             await _context.SaveChangesAsync();
 
             return "Thay đổi mật khẩu thành công";
+        }
+
+        public async Task<string> ForgotPassword(string Email)
+        {
+            try
+            {
+                var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Email == Email);
+                
+                if (user == null)
+                {
+                    return "Email không tồn tại trong hệ thống";
+                }
+
+                var password = new Random().Next(100000, 999999);
+
+                var result = await emailLib.SendMail("ODTLearning", "Lấy lại mật khẩu", $"Mật khẩu mới là: {password}", Email);
+
+                if (!result)
+                {
+                    return "Gửi mail không thành công";
+                }
+
+                user.Password = password.ToString();
+                await _context.SaveChangesAsync();
+            }
+
+            catch (Exception ex)
+            {
+                return "Đã có một số lỗi xảy ra: " + ex.Message;
+            }
+
+            return "Gửi mật khẩu mới thành công";
         }
     }
 }
