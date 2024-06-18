@@ -340,5 +340,46 @@ namespace ODTLearning.Repositories
 
             return "Gửi mật khẩu mới thành công";
         }
+        public async Task<ApiResponse<bool>> UpdateProfile(string id, UpdateProfile model)
+        {
+            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id );
+
+            if (user == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng nào với ID này",
+                };
+            }
+            var existingUserWithEmail = await _context.Accounts.SingleOrDefaultAsync(x => x.Email == model.Email && x.Id != id);
+
+            if (existingUserWithEmail != null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Email đã được sử dụng bởi người dùng khác. Vui lòng thử lại!",
+                    Data = false
+                };
+            }
+
+
+            user.FullName = model.FullName;
+            user.Email = model.Email;
+            user.DateOfBirth = model.date_of_birth;
+            user.Gender = model.Gender;
+            user.Address = model.Address;
+            user.Phone = model.Phone;
+
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Cập nhật thông tin người dùng thành công",
+            };
+        }
+
     }
 }

@@ -408,49 +408,31 @@ namespace ODTLearning.Repositories
             };
         }
         //get profile student
-        public async Task<object> GetStudentProfile(string id)
-        {
-            var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id && x.Roles == "Student");
+        //public async Task<object> GetStudentProfile(string id)
+        //{
+        //    var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id && x.Roles == "Student");
 
-            if (account == null)
-            {
-                return null;
-            }            
+        //    if (account == null)
+        //    {
+        //        return null;
+        //    }            
 
-            //dua vao model            
-            return new
-            {
-                Id = id,
-                Gmail = account.Email,
-                FullName = account.FullName,
-                Birthdate = account.DateOfBirth,
-                Gender = account.Gender,                
-                Avatar = account.Avatar,
-                Address = account.Address,
-                Phone = account.Phone,
-                AccountBalance = account.AccountBalance
-            };
-        }
+        //    //dua vao model            
+        //    return new
+        //    {
+        //        Id = id,
+        //        Gmail = account.Email,
+        //        FullName = account.FullName,
+        //        Birthdate = account.DateOfBirth,
+        //        Gender = account.Gender,                
+        //        Avatar = account.Avatar,
+        //        Address = account.Address,
+        //        Phone = account.Phone,
+        //        AccountBalance = account.AccountBalance
+        //    };
+        //}
 
-        public async Task<bool> UpdateStudentProfile(string id, StudentProfileToUpdateModel model)
-        {
-            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id && x.Roles == "Student");
-
-            if (user == null)
-            {
-                return false;
-            }
-             
-            user.FullName = model.FullName;
-            user.Email = model.Email;
-            user.DateOfBirth = model.DateOfBirth;
-            user.Gender = model.Gender;
-            user.Address = model.Address;
-            user.Phone = model.Phone;
-
-            await _context.SaveChangesAsync();
-            return true;
-        }
+       
         public async Task<ApiResponse<List<TutorListModel>>> ViewAllTutorJoinRequest(string requestId)
         {
             // Tìm request theo requestId

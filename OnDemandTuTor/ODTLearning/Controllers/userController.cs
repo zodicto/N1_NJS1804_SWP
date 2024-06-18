@@ -488,5 +488,38 @@ namespace ODTLearning.Controllers
                 Message = result
             });
         }
+
+        [HttpPut("updateProfile")]
+        public async Task<IActionResult> UpdateStudentProfile(string id, [FromBody] UpdateProfile model)
+        {
+            try { 
+            var response = await _repo.UpdateProfile(id, model);
+
+            if (!response.Success)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                response.Message
+            });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An internal server error occurred");
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An internal server error occurred. Please try again later."
+                });
+            }
+        }
+
     }
 }
