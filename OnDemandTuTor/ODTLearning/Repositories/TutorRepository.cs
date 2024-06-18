@@ -44,15 +44,15 @@ namespace ODTLearning.Repositories
             }).ToList();
 
             //dua vao model            
-            return new 
+            return new
             {
-                Id = id,              
+                Id = id,
                 Gmail = account.Email,
                 Birthdate = account.DateOfBirth,
                 Gender = account.Gender,
                 Avatar = account.Avatar == null ? "" : imgLib.GetImanges(account.Avatar),
                 SpeacializedSkill = tutor.SpecializedSkills,
-                Experience = tutor.Experience, 
+                Experience = tutor.Experience,
                 Fields = fields,
                 Qualifications = qualifications,
             };
@@ -113,67 +113,67 @@ namespace ODTLearning.Repositories
             return true;
         }
 
-        public async Task<List<TutorListModel>> SearchTutorList(SearchTutorModel model)
-        {
-            //list all
-            var accountQuerry = _context.Accounts.Where(x => x.Roles == "Tutor");
+        //public async Task<List<TutorListModel>> SearchTutorList(SearchTutorModel model)
+        //{
+        //    //list all
+        //    var accountQuerry = _context.Accounts.Where(x => x.Roles == "Tutor");
 
-            //list search by name
-            if (!string.IsNullOrEmpty(model.Name))
-            {
-                accountQuerry = accountQuerry.Where(x => x.FullName.Contains(model.Name));
-                if (!accountQuerry.Any())
-                {
-                    return null;
-                }
-            }
+        //    //list search by name
+        //    if (!string.IsNullOrEmpty(model.Name))
+        //    {
+        //        accountQuerry = accountQuerry.Where(x => x.FullName.Contains(model.Name));
+        //        if (!accountQuerry.Any())
+        //        {
+        //            return null;
+        //        }
+        //    }
 
-            //list search by field
-            if (!string.IsNullOrEmpty(model.Field))
-            {
-                //lay field can search
-                var field = await _context.Subjects.FirstOrDefaultAsync(x => x.SubjectName == model.Field);
-                if (field == null)
-                {
-                    return null;
-                }
-                accountQuerry = _context.TutorSubjects.Where(x => x.IdSubject == field.Id).Join(_context.Tutors, tf => tf.IdTutor, t => t.Id, (tf, t) => t).Join(accountQuerry, t => t.IdAccount, aq => aq.Id, (t, aq) => aq);
-            }
+        //    //list search by field
+        //    if (!string.IsNullOrEmpty(model.Field))
+        //    {
+        //        //lay field can search
+        //        var field = await _context.Subjects.FirstOrDefaultAsync(x => x.SubjectName == model.Field);
+        //        if (field == null)
+        //        {
+        //            return null;
+        //        }
+        //        accountQuerry = _context.TutorSubjects.Where(x => x.IdSubject == field.Id).Join(_context.Tutors, tf => tf.IdTutor, t => t.Id, (tf, t) => t).Join(accountQuerry, t => t.IdAccount, aq => aq.Id, (t, aq) => aq);
+        //    }
 
-            if (!accountQuerry.Any())
-            {
-                return null;
-            }
-            //lay id cua cac account can search
-            var idAccountQuerry = accountQuerry.Select(x => x.Id).ToList();
+        //    if (!accountQuerry.Any())
+        //    {
+        //        return null;
+        //    }
+        //    //lay id cua cac account can search
+        //    var idAccountQuerry = accountQuerry.Select(x => x.Id).ToList();
 
-            var list = new List<TutorListModel>();
+        //    var list = new List<TutorListModel>();
 
-            foreach (var id in idAccountQuerry)
-            {
-                //lay list cac ten field cua tung account
-                var fields = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.TutorSubjects.Join(_context.Subjects, tf => tf.IdSubject, f => f.Id, (tf, f) => new
-                {
-                    AccountId = tf.IdTutor,
-                    Field = f.SubjectName
-                }), t => t.Id, af => af.AccountId, (t, af) => af.Field).ToList();
+        //    foreach (var id in idAccountQuerry)
+        //    {
+        //        //lay list cac ten field cua tung account
+        //        var fields = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.TutorSubjects.Join(_context.Subjects, tf => tf.IdSubject, f => f.Id, (tf, f) => new
+        //        {
+        //            AccountId = tf.IdTutor,
+        //            Field = f.SubjectName
+        //        }), t => t.Id, af => af.AccountId, (t, af) => af.Field).ToList();
 
-                //dua vao model
-                var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+        //        //dua vao model
+        //        var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
 
-                var k = new TutorListModel
-                {
-                    FirstName = account.FullName,
-                    Gmail = account.Email,
-                    Birthdate = account.DateOfBirth,
-                    Gender = account.Gender,
-                    Field = fields
-                };
+        //        var k = new TutorListModel
+        //        {
+        //            FirstName = account.FullName,
+        //            Gmail = account.Email,
+        //            Birthdate = account.DateOfBirth,
+        //            Gender = account.Gender,
+        //            Field = fields
+        //        };
 
-                list.Add(k);
-            }
-            return list;
-        }
+        //        list.Add(k);
+        //    }
+        //    return list;
+        //}
 
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests()
         {
@@ -220,7 +220,7 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<ApiResponse<bool>> JoinRequest(string requestId, string tutorId, JoinRequestModel joinRequestModel)
+        public async Task<ApiResponse<bool>> JoinRequest(string requestId, string tutorId)
         {
             // Tìm yêu cầu theo IdRequest
             var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
@@ -231,7 +231,7 @@ namespace ODTLearning.Repositories
                 {
                     Success = false,
                     Message = "Không tìm thấy yêu cầu nào",
-                    Data = false
+                  
                 };
             }
 
@@ -244,42 +244,44 @@ namespace ODTLearning.Repositories
                 {
                     Success = false,
                     Message = "Không tìm thấy gia sư nào",
-                    Data = false
+                   
                 };
             }
 
-            if (joinRequestModel.status?.ToLower() == "joined")
-            {
-                request.Status = "Joined";
-                _context.Requests.Update(request);
+            // Kiểm tra xem gia sư đã tham gia yêu cầu này chưa
+            var existingRequestLearning = await _context.RequestLearnings
+                .FirstOrDefaultAsync(rl => rl.IdRequest == requestId && rl.IdTutor == tutorId);
 
-                // Tạo bản ghi mới trong bảng RequestLearning
-                var requestLearning = new RequestLearning
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    IdTutor = tutorId,
-                    IdRequest = requestId
-                };
-
-                _context.RequestLearnings.Add(requestLearning);
-                await _context.SaveChangesAsync();
-                return new ApiResponse<bool>
-                {
-                    Success = true,
-                    Message = "Bạn đã tham gia vào yêu cầu của học sinh",
-                    Data = true
-                };
-            }
-            else
+            if (existingRequestLearning != null)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Sai trạng thái duyệt",
-                    Data = false
+                    Message = "Gia sư đã tham gia vào yêu cầu này rồi",
+                
                 };
             }
+
+            // Tạo bản ghi mới trong bảng RequestLearning
+            var requestLearning = new RequestLearning
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdTutor = tutorId,
+                IdRequest = requestId
+            };
+
+            _context.RequestLearnings.Add(requestLearning);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Bạn đã tham gia vào yêu cầu của học sinh",
+
+            };
         }
+
+
 
 
 

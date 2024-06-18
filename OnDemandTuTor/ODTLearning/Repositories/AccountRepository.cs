@@ -101,23 +101,25 @@ namespace ODTLearning.Repositories
                 {
                     educationalQualification.Img = model.ImageQualification.FileName;
                 }
-                // Kiểm tra xem subject có tồn tại không, nếu không thì tạo mới
-                var subject = _context.Subjects.FirstOrDefault(s => s.SubjectName == model.Subject);
-                if (subject == null)
-                {
-                    subject = new Subject
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        SubjectName = model.Subject,
-                    };
-                    await _context.Subjects.AddAsync(subject);
-                }
 
+
+
+                var subjectModel = await _context.Subjects
+                                              .FirstOrDefaultAsync(lm => lm.SubjectName == model.Subject);
+
+                if (subjectModel == null)
+                {
+                    return new ApiResponse<bool>
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy môn học nào với tên này"
+                    };
+                }
                 // Tạo mới đối tượng TutorSubject
                 var tutorSubject = new TutorSubject
                 {
                     Id = Guid.NewGuid().ToString(),
-                    IdSubject = subject.Id,
+                    IdSubject = subjectModel.Id,
                     IdTutor = tutor.Id,
                 };
 

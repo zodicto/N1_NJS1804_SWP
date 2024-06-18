@@ -65,27 +65,27 @@ namespace ODTLearning.Controllers
             });
         }
 
-        [HttpPost("searchTutor")]
-        public async Task<IActionResult> GetTutorList(SearchTutorModel model)
-        {
-            var result = await _repo.SearchTutorList(model);
+        //[HttpPost("searchTutor")]
+        //public async Task<IActionResult> GetTutorList(SearchTutorModel model)
+        //{
+        //    var result = await _repo.SearchTutorList(model);
 
-            if (result == null)
-            {
-                return NotFound(new
-                {
-                    Success = false,
-                    Message = "Not found"
-                });
-            }
+        //    if (result == null)
+        //    {
+        //        return NotFound(new
+        //        {
+        //            Success = false,
+        //            Message = "Not found"
+        //        });
+        //    }
 
-            return Ok(new
-            {
-                Success = true,
-                Message = "Get list tutor successfully",
-                Data = result
-            });
-        }
+        //    return Ok(new
+        //    {
+        //        Success = true,
+        //        Message = "Get list tutor successfully",
+        //        Data = result
+        //    });
+        //}
 
         [HttpGet("viewRequest")]
         public async Task<IActionResult> ViewRequest()
@@ -122,15 +122,15 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("join-request")]
-        public async Task<IActionResult> JoinRequest(string requestId, string tutorId, JoinRequestModel status)
+        public async Task<IActionResult> JoinRequest(string requestId, string tutorId)
         {
             try
             {
-                var response = await _repo.JoinRequest(requestId, tutorId,status);
+                var response = await _repo.JoinRequest(requestId, tutorId);
 
                 if (response.Success)
                 {
-                    return Ok(response);
+                    return StatusCode(200,response);
                 }
 
                 return BadRequest(response);

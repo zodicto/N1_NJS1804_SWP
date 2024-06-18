@@ -133,79 +133,138 @@ namespace ODTLearning.Repositories
 
 
 
-        public async Task<Request> UpdateRequestLearning(string requestId, RequestLearningModel model)
+       public async Task<ApiResponse<bool>> UpdateRequestLearning(string requestId, RequestLearningModel model)
+{
+    try
+    {
+        // Tìm request theo requestId
+        var requestToUpdate = await _context.Requests
+                                      .Include(r => r.Schedules)
+                                      .FirstOrDefaultAsync(r => r.Id == requestId);
+
+        if (requestToUpdate == null)
         {
-            // Tìm request theo requestId
-            var requestToUpdate = await _context.Requests
-                                          .Include(r => r.Schedules)
-                                          .FirstOrDefaultAsync(r => r.Id == requestId);
-
-            if (requestToUpdate == null)
+            return new ApiResponse<bool>
             {
-                throw new ArgumentException("Request not found");
-            }
-
-            // Cập nhật các thuộc tính của request từ model
-            requestToUpdate.Title = model.Title ?? requestToUpdate.Title;
-            requestToUpdate.Price = model.Price ?? requestToUpdate.Price;
-            requestToUpdate.Description = model.Description ?? requestToUpdate.Description;
-            requestToUpdate.IdSubject = model.Subject ?? requestToUpdate.IdSubject;
-
-            // Validate and parse the time string to ensure it is in the correct format
-            TimeSpan? parsedTime = null;
-            if (!string.IsNullOrEmpty(model.TimeStart))
-            {
-                if (TimeSpan.TryParseExact(model.TimeStart, "hh\\:mm", CultureInfo.InvariantCulture, TimeSpanStyles.None, out var time))
-                {
-                    parsedTime = time;
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid time format. Use HH:mm.");
-                }
-            }
-
-            if (!string.IsNullOrEmpty(model.TimeEnd))
-            {
-                if (TimeSpan.TryParseExact(model.TimeEnd, "hh\\:mm", CultureInfo.InvariantCulture, TimeSpanStyles.None, out var time))
-                {
-                    parsedTime = time;
-                }
-                else
-                {
-                    throw new ArgumentException("Invalid time format. Use HH:mm.");
-                }
-            }
-            // Cập nhật schedule nếu có thông tin về lịch trình
-            if (model.Date.HasValue && parsedTime.HasValue)
-            {
-                var scheduleToUpdate = requestToUpdate.Schedules.FirstOrDefault();
-                if (scheduleToUpdate != null)
-                {
-                    scheduleToUpdate.Date = model.Date.Value;
-                   // scheduleToUpdate.Time = parsedTime.Value;
-                   // scheduleToUpdate.ID_Service = "ServiceID1"; // Placeholder, replace with actual service ID
-                }
-                else
-                {
-                    // Tạo mới schedule nếu chưa tồn tại
-                    var newSchedule = new Schedule
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Date = model.Date.Value,
-                       // Time = parsedTime.Value,
-                       // ID_Service = "ServiceID1", // Placeholder, replace with actual service ID
-                        //ID_Request = requestToUpdate.Id,
-                    };
-                    await _context.Schedules.AddAsync(newSchedule);
-                }
-            }
-
-            // Lưu các thay đổi vào context
-            await _context.SaveChangesAsync();
-
-            return requestToUpdate;
+                Success = false,
+                Message = "Không tìm thấy yêu cầu nào"
+            };
         }
+
+        // Tìm Class theo tên nếu cần cập nhật
+        var classEntity = await _context.Classes
+                                        .FirstOrDefaultAsync(cl => cl.ClassName == model.Class);
+
+        if (classEntity == null)
+        {
+            return new ApiResponse<bool>
+            {
+                Success = false,
+                Message = "Không tìm thấy lớp nào với tên này. Vui lòng chọn lớp 10,11,12"
+            };
+        }
+
+        // Tìm Subject theo tên nếu cần cập nhật
+        var subjectEntity = await _context.Subjects
+                                          .FirstOrDefaultAsync(s => s.SubjectName == model.Subject);
+
+        if (subjectEntity == null)
+        {
+            return new ApiResponse<bool>
+            {
+                Success = false,
+                Message = "Không tìm thấy môn học nào với tên này"
+            };
+        }
+
+        // Validate và phân tích chuỗi thời gian để đảm bảo nó có định dạng đúng
+        TimeOnly? parsedTimeStart = null;
+        TimeOnly? parsedTimeEnd = null;
+        if (!string.IsNullOrEmpty(model.TimeStart))
+        {
+            if (TimeOnly.TryParseExact(model.TimeStart, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+            {
+                parsedTimeStart = time;
+            }
+            else
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Ngày bắt đầu sai định dạng hh:mm"
+                };
+            }
+        }
+        if (!string.IsNullOrEmpty(model.TimeEnd))
+        {
+            if (TimeOnly.TryParseExact(model.TimeEnd, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+            {
+                parsedTimeEnd = time;
+            }
+            else
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Ngày kết thúc sai định dạng hh:mm"
+                };
+            }
+        }
+
+        // Cập nhật các thuộc tính của request từ model
+        requestToUpdate.Title = model.Title ?? requestToUpdate.Title;
+        requestToUpdate.Price = model.Price ?? requestToUpdate.Price;
+        requestToUpdate.Description = model.Description ?? requestToUpdate.Description;
+        requestToUpdate.IdSubject = subjectEntity.Id;
+        requestToUpdate.IdClass = classEntity.Id;
+        requestToUpdate.LearningMethod = model.LearningMethod ?? requestToUpdate.LearningMethod;
+
+        // Cập nhật schedule nếu có thông tin về lịch trình
+        if (model.Date.HasValue && parsedTimeStart.HasValue && parsedTimeEnd.HasValue)
+        {
+            var scheduleToUpdate = requestToUpdate.Schedules.FirstOrDefault();
+            if (scheduleToUpdate != null)
+            {
+                scheduleToUpdate.Date = model.Date.Value;
+                scheduleToUpdate.TimeStart = parsedTimeStart.Value;
+                scheduleToUpdate.TimeEnd = parsedTimeEnd.Value;
+                scheduleToUpdate.IdService = scheduleToUpdate.IdService; // Placeholder, replace with actual service ID if needed
+            }
+            else
+            {
+                // Tạo mới schedule nếu chưa tồn tại
+                var newSchedule = new Schedule
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Date = model.Date.Value,
+                    TimeStart = parsedTimeStart.Value,
+                    TimeEnd = parsedTimeEnd.Value,
+                    IdRequest = requestToUpdate.Id,
+                    IdService = null // Placeholder, replace with actual service ID if needed
+                };
+                await _context.Schedules.AddAsync(newSchedule);
+            }
+        }
+
+        // Lưu các thay đổi vào context
+        await _context.SaveChangesAsync();
+
+        return new ApiResponse<bool>
+        {
+            Success = true,
+            Message = "Cập nhật yêu cầu thành công"
+        };
+    }
+    catch (Exception ex)
+    {
+        return new ApiResponse<bool>
+        {
+            Success = false,
+            Message = "An error occurred while updating the request learning: " + ex.Message
+        };
+    }
+}
+
         public async Task<bool> DeleteRequestLearning(string requestId)
         {
             // Tìm request theo requestId
@@ -231,25 +290,123 @@ namespace ODTLearning.Repositories
             return true; // Trả về true nếu việc xóa thành công
         }
 
-        public async Task<List<Request>> GetPendingApproveRequests()
+        public async Task<ApiResponse<List<RequestLearningModel>>> GetPendingRequestsByAccountId(string accountId)
         {
-            return _context.Requests
-                           .Where(r => r.Status == "pending approve")
-                           .Include(r => r.IdAccountNavigation)
-                           .Include(r => r.IdClassNavigation )
-                           .ToList();
-        }
+            var requests = await _context.Requests
+                .Include(r => r.Schedules)
+                .Include(r => r.IdSubjectNavigation)
+                .Include(r => r.IdClassNavigation)
+                .Where(r => r.IdAccount == accountId && r.Status == "Pending")
+                .ToListAsync();
 
-        // Hàm lấy tất cả các Requests có trạng thái "approved"
-        public async Task<List<Request>> GetApprovedRequests()
+            if (requests == null || !requests.Any())
+            {
+                return new ApiResponse<List<RequestLearningModel>>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy tài khoảng nào với ID này",
+                    Data = null
+                };
+            }
+
+            var requestLearningModels = requests.SelectMany(r => r.Schedules.Select(s => new RequestLearningModel
+            {
+                Title = r.Title,
+                Price = r.Price,
+                Description = r.Description,
+                Subject = r.IdSubjectNavigation.SubjectName,
+                LearningMethod = r.LearningMethod,
+                Class = r.IdClassNavigation.ClassName,
+                Date = s.Date,
+                TimeStart = s.TimeStart.HasValue ? s.TimeStart.Value.ToString("HH:mm") : null,
+                TimeEnd = s.TimeEnd.HasValue ? s.TimeEnd.Value.ToString("HH:mm") : null
+            })).ToList();
+
+            return new ApiResponse<List<RequestLearningModel>>
+            {
+                Success = true,
+                Message = "Danh sách yêu cầu đang chờ xử lý đã được truy xuất thành công",
+                Data = requestLearningModels
+            };
+        }
+        public async Task<ApiResponse<List<RequestLearningModel>>> GetApprovedRequestsByAccountId(string accountId)
         {
-            return _context.Requests
-                           .Where(r => r.Status == "approved")
-                           .Include(r => r.IdAccountNavigation)
-                           .Include(r => r.IdClassNavigation)
-                           .ToList();
-        }
+            var requests = await _context.Requests
+                .Include(r => r.Schedules)
+                .Include(r => r.IdSubjectNavigation)
+                .Include(r => r.IdClassNavigation)
+                .Where(r => r.IdAccount == accountId && r.Status == "Pending")
+                .ToListAsync();
 
+            if (requests == null || !requests.Any())
+            {
+                return new ApiResponse<List<RequestLearningModel>>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy tài khoảng nào với ID này",
+                    Data = null
+                };
+            }
+
+            var requestLearningModels = requests.SelectMany(r => r.Schedules.Select(s => new RequestLearningModel
+            {
+                Title = r.Title,
+                Price = r.Price,
+                Description = r.Description,
+                Subject = r.IdSubjectNavigation.SubjectName,
+                LearningMethod = r.LearningMethod,
+                Class = r.IdClassNavigation.ClassName,
+                Date = s.Date,
+                TimeStart = s.TimeStart.HasValue ? s.TimeStart.Value.ToString("HH:mm") : null,
+                TimeEnd = s.TimeEnd.HasValue ? s.TimeEnd.Value.ToString("HH:mm") : null
+            })).ToList();
+
+            return new ApiResponse<List<RequestLearningModel>>
+            {
+                Success = true,
+                Message = "Danh sách yêu cầu đã xử lý đã được truy xuất thành công",
+                Data = requestLearningModels
+            };
+        }
+        public async Task<ApiResponse<List<RequestLearningModel>>> GetRejectRequestsByAccountId(string accountId)
+        {
+            var requests = await _context.Requests
+                .Include(r => r.Schedules)
+                .Include(r => r.IdSubjectNavigation)
+                .Include(r => r.IdClassNavigation)
+                .Where(r => r.IdAccount == accountId && r.Status == "Reject")
+                .ToListAsync();
+
+            if (requests == null || !requests.Any())
+            {
+                return new ApiResponse<List<RequestLearningModel>>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy tài khoảng nào với ID này",
+                    Data = null
+                };
+            }
+
+            var requestLearningModels = requests.SelectMany(r => r.Schedules.Select(s => new RequestLearningModel
+            {
+                Title = r.Title,
+                Price = r.Price,
+                Description = r.Description,
+                Subject = r.IdSubjectNavigation.SubjectName,
+                LearningMethod = r.LearningMethod,
+                Class = r.IdClassNavigation.ClassName,
+                Date = s.Date,
+                TimeStart = s.TimeStart.HasValue ? s.TimeStart.Value.ToString("HH:mm") : null,
+                TimeEnd = s.TimeEnd.HasValue ? s.TimeEnd.Value.ToString("HH:mm") : null
+            })).ToList();
+
+            return new ApiResponse<List<RequestLearningModel>>
+            {
+                Success = true,
+                Message = "Danh sách yêu cầu từ chối xử lý đã được truy xuất thành công",
+                Data = requestLearningModels
+            };
+        }
         //get profile student
         public async Task<object> GetStudentProfile(string id)
         {
@@ -294,8 +451,52 @@ namespace ODTLearning.Repositories
             await _context.SaveChangesAsync();
             return true;
         }
+        public async Task<ApiResponse<List<TutorListModel>>> ViewAllTutorJoinRequest(string requestId)
+        {
+            // Tìm request theo requestId
+            var request = await _context.Requests
+                                        .Include(r => r.RequestLearnings)
+                                        .ThenInclude(rl => rl.IdTutorNavigation)
+                                            .ThenInclude(t => t.EducationalQualifications)
+                                        .Include(r => r.RequestLearnings)
+                                        .ThenInclude(rl => rl.IdTutorNavigation)
+                                            .ThenInclude(t => t.IdAccountNavigation)
+                                        .Include(r => r.RequestLearnings)
+                                        .ThenInclude(rl => rl.IdTutorNavigation)
+                                            .ThenInclude(t => t.TutorSubjects)
+                                                .ThenInclude(ts => ts.IdSubjectNavigation)
+                                        .FirstOrDefaultAsync(r => r.Id == requestId);
 
-        
+            if (request == null)
+            {
+                return new ApiResponse<List<TutorListModel>>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy yêu cầu nào với ID này",
+                    Data = null
+                };
+            }
+
+            // Lấy danh sách gia sư tham gia yêu cầu
+            var tutors = request.RequestLearnings.Select(rl => new TutorListModel
+            {
+                FullName = rl.IdTutorNavigation.IdAccountNavigation.FullName,
+                Gender = rl.IdTutorNavigation.IdAccountNavigation.Gender,
+                SpecializedSkills = rl.IdTutorNavigation.SpecializedSkills,
+                Experience = rl.IdTutorNavigation.Experience,
+                Subject = rl.IdTutorNavigation.TutorSubjects.FirstOrDefault()?.IdSubjectNavigation.SubjectName,
+                QualificationName = rl.IdTutorNavigation.EducationalQualifications.FirstOrDefault()?.QualificationName
+            }).ToList();
+
+            return new ApiResponse<List<TutorListModel>>
+            {
+                Success = true,
+                Message = "Danh sách gia sư đã tham gia vào yêu cầu",
+                Data = tutors
+            };
+        }
+
+
     }
 }
 

@@ -117,12 +117,46 @@ namespace ODTLearning.Controllers
             }
         }
 
-        [HttpPut("confirmRequest")]
-        public async Task<IActionResult> ChangeRequestStatus(string requestId, string status)
+        [HttpPut("approvedRequest")]
+        public async Task<IActionResult> ApprovedRequestStatus(string requestId)
         {
             try
             {
-                var response = await _repo.ConfirmRequest(requestId, status);
+                var response = await _repo.ApproveRequest(requestId);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while changing the request status.",
+                    Data = ex.Message
+                });
+            }
+        }
+
+        [HttpPut("rejectRequest")]
+        public async Task<IActionResult> RejectRequestStatus(string requestId)
+        {
+            try
+            {
+                var response = await _repo.RejectRequest(requestId);
 
                 if (response.Success)
                 {

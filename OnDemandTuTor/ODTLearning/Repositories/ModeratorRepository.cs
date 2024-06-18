@@ -80,7 +80,7 @@ namespace ODTLearning.Repositories
 
             return tutorDetails;
         }
-        public async Task<ApiResponse<bool>> ConfirmRequest(string requestId, string status)
+        public async Task<ApiResponse<bool>> ApproveRequest(string requestId)
         {
             var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
 
@@ -89,42 +89,49 @@ namespace ODTLearning.Repositories
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không tim thấy yêu cầu nào",
+                    Message = "Không tìm thấy yêu cầu nào",
                     Data = false
                 };
             }
 
-            if (status.ToLower() == "approved")
+            request.Status = "Approved";
+            _context.Requests.Update(request);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
             {
-                request.Status = "Approved";
-                _context.Requests.Update(request);
-                await _context.SaveChangesAsync();
-                return new ApiResponse<bool>
-                {
-                    Success = true,
-                    Message = "Yêu cầu đã được duyệt",
-                    Data = true
-                };
-            }
-            else if (status.ToLower() == "reject")
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = true,
-                    Message = "Yêu cầu của bạn không được duyệt",
-                    Data = true
-                };
-            }
-            else
+                Success = true,
+                Message = "Yêu cầu đã được duyệt",
+                Data = true
+            };
+        }
+
+        public async Task<ApiResponse<bool>> RejectRequest(string requestId)
+        {
+            var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
+
+            if (request == null)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Sai trạng thái duyệt",
+                    Message = "Không tìm thấy yêu cầu nào",
                     Data = false
                 };
             }
+
+            request.Status = "Rejected"; // Assuming "Rejected" is the correct status for rejection
+            _context.Requests.Update(request);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Yêu cầu của bạn không được duyệt",
+                Data = true
+            };
         }
+
         public async Task<bool> ConfirmProfileTutor(string idTutor, string status)
         {
             var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.Id == idTutor);

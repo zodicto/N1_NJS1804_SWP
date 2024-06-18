@@ -10,6 +10,8 @@ D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\R
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\PubTmp\Out\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\PubTmp\Out\Azure.Core.dll
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\PubTmp\Out\Azure.Identity.dll
+D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\PubTmp\Out\Firebase.Auth.dll
+D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\PubTmp\Out\Firebase.Storage.dll
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\PubTmp\Out\Humanizer.dll
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\PubTmp\Out\Microsoft.AspNetCore.Authentication.Google.dll
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\PubTmp\Out\Microsoft.AspNetCore.Authentication.JwtBearer.dll

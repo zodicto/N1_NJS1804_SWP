@@ -528,3 +528,6 @@ D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\R
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\ODTLearning.pdb
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\ODTLearning.genruntimeconfig.cache
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\ref\ODTLearning.dll
+D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Release\net8.0\ODTLearning.staticwebassets.runtime.json
+D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Release\net8.0\Firebase.Auth.dll
+D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Release\net8.0\Firebase.Storage.dll

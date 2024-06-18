@@ -2,16 +2,11 @@
 {
     public class TutorListModel
     {
-        public string? FirstName { get; set; }
-
-        public string? LastName { get; set; }
-
-        public string? Gmail { get; set; }
-
-        public DateOnly? Birthdate { get; set; }
-
         public string? Gender { get; set; }
-
-        public object Field { get; set; }
+        public string? Subject { get; set; }
+        public string? FullName { get; set; }
+        public string? SpecializedSkills { get; set; }
+        public int? Experience { get; set; }
+        public string? QualificationName { get; set; }
     }
 }

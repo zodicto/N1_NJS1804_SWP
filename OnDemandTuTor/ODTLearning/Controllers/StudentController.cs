@@ -57,23 +57,34 @@ namespace ODTLearning.Controllers
         [HttpPut("updateRequest")]
         public async Task<IActionResult> UpdateRequestLearning(string IDRequest, RequestLearningModel model)
         {
-            var request = await _repo.UpdateRequestLearning(IDRequest, model);
-
-            if (request != null)
+            try
             {
-                return Ok(new 
+                var response = await _repo.UpdateRequestLearning(IDRequest , model);
+
+                if (response.Success)
                 {
-                    Success = true,
-                    Message = "Create Request Learning successfully",
-                    Data = request
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
                 });
             }
-
-            return BadRequest(new 
+            catch (Exception ex)
             {
-                Success = false,
-                Message = "Create Request Learning not Create Request Learning"
-            });
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An error occurred while creating the request learning.",
+                    Details = ex.Message // Optional: Include exception details in the response
+                });
+            }
         }
 
         [HttpDelete("deleteRequest")]
@@ -98,48 +109,104 @@ namespace ODTLearning.Controllers
             });
         }
         [HttpGet("pedingRequest")]
-        public async Task<IActionResult> ViewPedingRequestLearning()
+        public async Task<IActionResult> ViewPedingRequestLearning(string IDAccount)
         {
-            var request = await _repo.GetPendingApproveRequests();
-
-            if (request != null)
+            try
             {
-                return Ok(new 
+                var response = await _repo.GetPendingRequestsByAccountId(IDAccount);
+
+                if (response.Success)
                 {
-                    Success = true,
-                    Message = "Get Pending Request Learning successfully",
-                    Data = request
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        response.Data
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
                 });
             }
-
-            return BadRequest(new 
+            catch (Exception ex)
             {
-                Success = false,
-                Message = "Errol"
-            });
-
-
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An error occurred while creating the request learning.",
+                    Details = ex.Message // Optional: Include exception details in the response
+                });
+            }
         }
         [HttpGet("appovedRequest")]
-        public async Task<IActionResult> ViewApprovedRequestLearning()
+        public async Task<IActionResult> ViewApprovedRequestLearning(string IDAccount)
         {
-            var request = await _repo.GetApprovedRequests();
-
-            if (request != null)
+            try
             {
-                return Ok(new 
+                var response = await _repo.GetApprovedRequestsByAccountId(IDAccount);
+
+                if (response.Success)
                 {
-                    Success = true,
-                    Message = "Delete approve request Learning successfully",
-                    Data = request
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        response.Data
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
                 });
             }
-
-            return BadRequest(new 
+            catch (Exception ex)
             {
-                Success = false,
-                Message = "Errol"
-            });
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An error occurred while creating the request learning.",
+                    Details = ex.Message // Optional: Include exception details in the response
+                });
+            }
+        }
+
+        [HttpGet("rejectRequest")]
+        public async Task<IActionResult> ViewRejectRequestLearning(string IDAccount)
+        {
+            try
+            {
+                var response = await _repo.GetRejectRequestsByAccountId(IDAccount);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        response.Data
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An error occurred while creating the request learning.",
+                    Details = ex.Message // Optional: Include exception details in the response
+                });
+            }
         }
 
         [HttpGet("getStudentProfile")]
@@ -184,5 +251,40 @@ namespace ODTLearning.Controllers
                 Message = "Update student profile successfully"
             });
         }
+
+        [HttpGet("viewAllTutorsJoinRequest")]
+        public async Task<IActionResult> ViewAllTutorJoinRequest(string requestId)
+        {
+            try
+            {
+                var response = await _repo.ViewAllTutorJoinRequest(requestId);
+
+                if (response.Success)
+                {
+                    return Ok(new
+                    {
+                        Success = true,
+                        Message = response.Message,
+                        Data = response.Data
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An error occurred while processing the request.",
+                    Details = ex.Message // Optional: Include exception details in the response
+                });
+            }
+        }
+
     }
 }
