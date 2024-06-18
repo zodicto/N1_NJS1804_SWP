@@ -520,6 +520,38 @@ namespace ODTLearning.Controllers
                 });
             }
         }
+        [HttpGet("getProfile")]
+        public async Task<IActionResult> GetProfile(string id)
+        {
+            try
+            {
+                var response = await _repo.GetProfile(id);
 
+                if (!response.Success)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    Success = true,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An internal server error occurred");
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An internal server error occurred. Please try again later."
+                });
+            }
+        }
     }
 }

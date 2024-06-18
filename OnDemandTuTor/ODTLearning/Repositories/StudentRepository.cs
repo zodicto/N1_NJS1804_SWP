@@ -407,31 +407,7 @@ namespace ODTLearning.Repositories
                 Data = requestLearningModels
             };
         }
-        //get profile student
-        //public async Task<object> GetStudentProfile(string id)
-        //{
-        //    var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id && x.Roles == "Student");
-
-        //    if (account == null)
-        //    {
-        //        return null;
-        //    }            
-
-        //    //dua vao model            
-        //    return new
-        //    {
-        //        Id = id,
-        //        Gmail = account.Email,
-        //        FullName = account.FullName,
-        //        Birthdate = account.DateOfBirth,
-        //        Gender = account.Gender,                
-        //        Avatar = account.Avatar,
-        //        Address = account.Address,
-        //        Phone = account.Phone,
-        //        AccountBalance = account.AccountBalance
-        //    };
-        //}
-
+        
        
         public async Task<ApiResponse<List<TutorListModel>>> ViewAllTutorJoinRequest(string requestId)
         {

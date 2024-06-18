@@ -381,5 +381,44 @@ namespace ODTLearning.Repositories
             };
         }
 
+
+        public async Task<ApiResponse<object>> GetProfile(string id)
+        {
+            var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+
+            if (account == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng nào với ID này",
+                };
+            }
+
+            var userProfile = new
+            {
+                Id = account.Id,
+                Gmail = account.Email,
+                FullName = account.FullName,
+                Birthdate = account.DateOfBirth,
+                Gender = account.Gender,
+                Avatar = account.Avatar,
+                Address = account.Address,
+                Phone = account.Phone,
+                AccountBalance = account.AccountBalance
+            };
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Lấy thông tin người dùng thành công",
+                Data = userProfile
+            };
+        }
+
+
+
+
+
     }
 }
