@@ -95,7 +95,7 @@ namespace ODTLearning.Repositories
                 Title = model.Title,
                 Price = model.Price,
                 Description = model.Description,
-                Status = "Pending",
+                Status = "Chưa duyệt",
                 LearningMethod = model.LearningMethod,
                 IdAccount = IDAccount, // Đảm bảo ID tài khoản được đặt
                 IdSubject = subjectModel.Id,

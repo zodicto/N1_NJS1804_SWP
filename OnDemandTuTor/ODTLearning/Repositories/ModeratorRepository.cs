@@ -94,7 +94,7 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            request.Status = "Approved";
+            request.Status = "Đã duyệt";
             _context.Requests.Update(request);
             await _context.SaveChangesAsync();
 
@@ -120,7 +120,7 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            request.Status = "Rejected"; // Assuming "Rejected" is the correct status for rejection
+            request.Status = "Từ chối"; // Assuming "Rejected" is the correct status for rejection
             _context.Requests.Update(request);
             await _context.SaveChangesAsync();
 
@@ -140,7 +140,7 @@ namespace ODTLearning.Repositories
                 return false;
             }
 
-            if (status.ToLower() == "approved" || status.ToLower() == "reject")
+            if (status.ToLower() == "đã duyệt" || status.ToLower() == "từ chối")
             {
                 tutor.Status = status.ToLower();
                 _context.Tutors.Update(tutor);
@@ -151,11 +151,23 @@ namespace ODTLearning.Repositories
             return false;
         }
 
-        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetPendingRequests()
+        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetPendingRequests(string status)
         {
-            var pendingRequests = await _context.Requests
-                                                 .Where(r => r.Status == "chưa duyệt")
-                                                 .Select(r => new ViewRequestOfStudent
+            var checkStatus = _context.Requests.AsQueryable();
+            if (status.ToLower() == "đã duyệt")
+            {
+                checkStatus = checkStatus.Where(r => r.Status.ToLower() == "đã duyệt");
+            }
+            else if (status.ToLower() == "chưa duyệt")
+            {
+                checkStatus = checkStatus.Where(r => r.Status.ToLower() == "chưa duyệt");
+            }
+            else if (status.ToLower() == "từ chối")
+            {
+                checkStatus = checkStatus.Where(r => r.Status.ToLower() == "từ chối");
+            }
+
+            var pendingRequests = await checkStatus.Select(r => new ViewRequestOfStudent
                                                  {
                                                      Title = r.Title,
                                                      Price = r.Price,
