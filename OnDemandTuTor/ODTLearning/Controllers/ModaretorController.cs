@@ -94,7 +94,7 @@ namespace ODTLearning.Controllers
                 {
                     return Ok(new
                     {
-                        Success = true,
+                        Success = "Thành công",
                         response.Message,
                          response.Data
                     });
@@ -102,7 +102,7 @@ namespace ODTLearning.Controllers
 
                 return BadRequest(new
                 {
-                    Success = false,
+                    Success = "Thất bại",
                     response.Message
                 });
             }

@@ -154,7 +154,7 @@ namespace ODTLearning.Repositories
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetPendingRequests()
         {
             var pendingRequests = await _context.Requests
-                                                 .Where(r => r.Status == "Pending")
+                                                 .Where(r => r.Status == "chưa duyệt")
                                                  .Select(r => new ViewRequestOfStudent
                                                  {
                                                      Title = r.Title,
@@ -166,6 +166,7 @@ namespace ODTLearning.Repositories
                                                      Date = r.Schedules.FirstOrDefault().Date,
                                                      TimeStart = r.Schedules.FirstOrDefault().TimeStart.ToString(), 
                                                      TimeEnd = r.Schedules.FirstOrDefault().TimeEnd.ToString(),
+                                                     Status = r.Status,
                                                      Id = r.Id, // Include Account ID
                                                      FullName = r.IdAccountNavigation.FullName // Include Account Full Name
                                                  }).ToListAsync();
