@@ -2,8 +2,9 @@
 {
     public class ViewRequestOfStudent
     {
-        public string? Id { get; set; } // New property for Account ID
+        public string? IdRequest { get; set; } // New property for Account ID
         public string? FullName { get; set; }
+        public string? Avatar { get; set; }
         public string? Title { get; set; }
         public string? Subject { get; set; }
         public decimal? Price { get; set; }

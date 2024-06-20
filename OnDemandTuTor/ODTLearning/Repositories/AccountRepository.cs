@@ -398,9 +398,9 @@ namespace ODTLearning.Repositories
             var userProfile = new
             {
                 Id = account.Id,
-                Gmail = account.Email,
+                account.Email,
                 FullName = account.FullName,
-                Birthdate = account.DateOfBirth,
+                Date_of_birth = account.DateOfBirth,
                 Gender = account.Gender,
                 Avatar = account.Avatar,
                 Address = account.Address,

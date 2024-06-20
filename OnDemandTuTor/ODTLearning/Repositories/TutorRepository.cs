@@ -182,6 +182,7 @@ namespace ODTLearning.Repositories
                                                    .Select(r => new ViewRequestOfStudent
                                                    {
                                                        Title = r.Title,
+                                                       Avatar = r.IdAccountNavigation.Avatar,
                                                        Price = r.Price,
                                                        Description = r.Description,
                                                        Subject = r.IdSubjectNavigation.SubjectName, // Assuming you have a Subject property in your Request model
@@ -190,7 +191,7 @@ namespace ODTLearning.Repositories
                                                        Date = r.Schedules.FirstOrDefault().Date,
                                                        TimeStart = r.Schedules.FirstOrDefault().TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
                                                        TimeEnd = r.Schedules.FirstOrDefault().TimeEnd.ToString(),
-                                                       Id = r.Id, // Include Account ID
+                                                       IdRequest = r.Id, // Include Account ID
                                                        FullName = r.IdAccountNavigation.FullName // Include Account Full Name
                                                    }).ToListAsync();
 

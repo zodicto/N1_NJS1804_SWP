@@ -166,7 +166,7 @@ namespace ODTLearning.Repositories
                                                      Date = r.Schedules.FirstOrDefault().Date,
                                                      TimeStart = r.Schedules.FirstOrDefault().TimeStart.ToString(), 
                                                      TimeEnd = r.Schedules.FirstOrDefault().TimeEnd.ToString(),
-                                                     Id = r.Id, // Include Account ID
+                                                     IdRequest = r.Id, // Include Account ID
                                                      FullName = r.IdAccountNavigation.FullName // Include Account Full Name
                                                  }).ToListAsync();
 
