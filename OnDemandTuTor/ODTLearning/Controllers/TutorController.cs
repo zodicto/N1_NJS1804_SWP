@@ -96,7 +96,7 @@ namespace ODTLearning.Controllers
 
                 if (response.Success)
                 {
-                    return Ok(new
+                    return StatusCode(200,new
                     {
                         Success = true,
                         response.Message,
@@ -130,7 +130,9 @@ namespace ODTLearning.Controllers
 
                 if (response.Success)
                 {
-                    return StatusCode(200,response);
+                    return StatusCode(200,
+                        response.Message
+                        );
                 }
 
                 return BadRequest(response);

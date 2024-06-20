@@ -14,7 +14,7 @@ namespace ODTLearning.Repositories
     {
         public Task<UserResponse> SignUpOfAccount(SignUpModelOfAccount model);
 
-        public Task<object> SignUpOftutor(string IdAccount, SignUpModelOfTutor model);
+        public Task<ApiResponse<TutorResponse>> SignUpOftutor(string IdAccount, SignUpModelOfTutor model);
         public  Task<bool> IsEmailExist(string email);
         public  Task<ApiResponse<UserResponse>> SignInValidationOfAccount(SignInModel model);
 

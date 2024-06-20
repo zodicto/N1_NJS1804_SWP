@@ -108,8 +108,8 @@ namespace ODTLearning.Controllers
                     return StatusCode(200,new
                     {
                         Success = true,
-                        Message = "Đăng ký trở thành gia sư thành công",
-                        Data = user
+                        user.Message,
+                        user.Data,
                     });
                 }
 

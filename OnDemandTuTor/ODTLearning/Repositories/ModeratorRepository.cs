@@ -151,41 +151,26 @@ namespace ODTLearning.Repositories
             return false;
         }
 
-        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetPendingRequests(string status)
+        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetPendingRequests()
         {
-            var checkStatus = _context.Requests.AsQueryable();
-            if (status.ToLower() == "đã duyệt")
-            {
-                checkStatus = checkStatus.Where(r => r.Status.ToLower() == "đã duyệt");
-            }
-            else if (status.ToLower() == "chưa duyệt")
-            {
-                checkStatus = checkStatus.Where(r => r.Status.ToLower() == "chưa duyệt");
-            }
-            else if (status.ToLower() == "từ chối")
-            {
-                checkStatus = checkStatus.Where(r => r.Status.ToLower() == "từ chối");
-            }
-
-            var pendingRequests = await checkStatus.Select(r => new ViewRequestOfStudent
-                                                 {
-                                                     Title = r.Title,
-                                                     Price = r.Price,
-                                                     Description = r.Description,
-                                                     Subject = r.IdSubjectNavigation.SubjectName, // Assuming you have a Subject property in your Request model
-                                                     LearningMethod = r.LearningMethod,
-                                                     Class = r.IdClassNavigation.ClassName,
-                                                     Date = r.Schedules.FirstOrDefault().Date,
-                                                     TimeStart = r.Schedules.FirstOrDefault().TimeStart.ToString(), 
-                                                     TimeEnd = r.Schedules.FirstOrDefault().TimeEnd.ToString(),
-
-                                                     IdRequest = r.Id,
-
-                                                     Status = r.Status,
-
-                                                     FullName = r.IdAccountNavigation.FullName // Include Account Full Name
-                                                 }).ToListAsync();
-
+            // Truy vấn danh sách các request có status là "chưa duyệt"
+            var pendingRequests = await _context.Requests
+                .Where(r => r.Status == "chưa duyệt")
+                .Select(r => new ViewRequestOfStudent
+                {
+                    Title = r.Title,
+                    Price = r.Price,
+                    Description = r.Description,
+                    Subject = r.IdSubjectNavigation.SubjectName, // Assuming you have a Subject property in your Request model
+                    LearningMethod = r.LearningMethod,
+                    Class = r.IdClassNavigation.ClassName,
+                    Date = r.Schedules.FirstOrDefault().Date,
+                    TimeStart = r.Schedules.FirstOrDefault().TimeStart.ToString(),
+                    TimeEnd = r.Schedules.FirstOrDefault().TimeEnd.ToString(),
+                    IdRequest = r.Id,
+                    Status = r.Status,
+                    FullName = r.IdAccountNavigation.FullName // Include Account Full Name
+                }).ToListAsync();
 
             // Format the Time string if needed
             foreach (var request in pendingRequests)
@@ -195,15 +180,13 @@ namespace ODTLearning.Repositories
                     var timeOnly = TimeOnly.Parse(request.TimeStart);
                     request.TimeStart = timeOnly.ToString("HH:mm");
                 }
-            }
-            foreach (var request in pendingRequests)
-            {
                 if (!string.IsNullOrEmpty(request.TimeEnd))
                 {
                     var timeOnly = TimeOnly.Parse(request.TimeEnd);
                     request.TimeEnd = timeOnly.ToString("HH:mm");
                 }
             }
+
             return new ApiResponse<List<ViewRequestOfStudent>>
             {
                 Success = true,
@@ -211,6 +194,7 @@ namespace ODTLearning.Repositories
                 Data = pendingRequests
             };
         }
+
 
 
 

@@ -115,7 +115,7 @@ namespace ODTLearning.Repositories
                     Date = model.Date.Value,
                     TimeStart = parsedTimeStart.Value,
                     TimeEnd = parsedTimeEnd.Value,
-                    IdService = null, // Placeholder, thay bằng ID dịch vụ thực tế
+                    IdService = null, 
                     IdRequest = requestOfStudent.Id,
                 };
 
@@ -296,7 +296,7 @@ namespace ODTLearning.Repositories
                 .Include(r => r.Schedules)
                 .Include(r => r.IdSubjectNavigation)
                 .Include(r => r.IdClassNavigation)
-                .Where(r => r.IdAccount == accountId && r.Status == "Pending")
+                .Where(r => r.IdAccount == accountId && r.Status == "Chưa duyệt")
                 .ToListAsync();
 
             if (requests == null || !requests.Any())
@@ -335,7 +335,7 @@ namespace ODTLearning.Repositories
                 .Include(r => r.Schedules)
                 .Include(r => r.IdSubjectNavigation)
                 .Include(r => r.IdClassNavigation)
-                .Where(r => r.IdAccount == accountId && r.Status == "Pending")
+                .Where(r => r.IdAccount == accountId && r.Status == "Đã duyệt")
                 .ToListAsync();
 
             if (requests == null || !requests.Any())

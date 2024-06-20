@@ -84,11 +84,11 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("viewRequest")]
-        public async Task<IActionResult> ViewRequest(string status)
+        public async Task<IActionResult> ViewRequest()
         {
             try
             {
-                var response = await _repo.GetPendingRequests(status);
+                var response = await _repo.GetPendingRequests();
 
                 if (response.Success)
                 {

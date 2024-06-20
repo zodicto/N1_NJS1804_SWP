@@ -47,7 +47,7 @@ namespace ODTLearning.Controllers
                 {
                     Success = false,
                     Message = "An error occurred while creating the request learning.",
-                    Details = ex.Message // Optional: Include exception details in the response
+                    Details = ex.Message 
                 });
             }
         }
