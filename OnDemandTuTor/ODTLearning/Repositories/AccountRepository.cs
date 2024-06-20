@@ -46,7 +46,7 @@ namespace ODTLearning.Repositories
                 Email = model.Email,
                 DateOfBirth = model.date_of_birth,
                 Gender = model.Gender,
-                Roles = "Student"
+                Roles = "học sinh"
             };
             // Thêm Account vào context
             await _context.Accounts.AddAsync(user);
@@ -178,7 +178,7 @@ namespace ODTLearning.Repositories
 
             string idTutor = null;
 
-            if (account.Roles == "Tutor" )
+            if (account.Roles == "gia sư" )
             {
                 idTutor = _context.Tutors.Where(x => account.Id == x.IdAccount).Select(x => x.Id).ToString();
             }
