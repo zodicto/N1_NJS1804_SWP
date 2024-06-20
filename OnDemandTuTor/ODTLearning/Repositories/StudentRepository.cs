@@ -3,6 +3,7 @@ using ODTLearning.Entities;
 using ODTLearning.Helpers;
 using ODTLearning.Models;
 using System.Globalization;
+using System.Net;
 
 namespace ODTLearning.Repositories
 {
@@ -13,6 +14,8 @@ namespace ODTLearning.Repositories
         {
             _context = context;
         }
+
+        ImageLibrary imgLib = new ImageLibrary();
 
         public async Task<ApiResponse<bool>> CreateRequestLearning(string IDAccount, RequestLearningModel model)
         {
@@ -454,8 +457,61 @@ namespace ODTLearning.Repositories
             };
         }
 
+        public async Task<object> SelectTutor(string idRequest, string idAccountTutor)
+        {
+            var request = await _context.Requests.SingleOrDefaultAsync(x => x.Id == idRequest);
 
+            if (request == null)
+            {
+                return null;
+            }
+
+            var tutor = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == idAccountTutor);
+
+            if (tutor == null || tutor.Roles != "gia sư")
+            {
+                return null;
+            }
+            
+            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == request.IdAccount);
+
+            var rent = new Rent
+            {
+                Id = Guid.NewGuid().ToString(),
+                Price = request.Price,
+                IdSubject = request.IdSubject,
+                IdRequest = idRequest,
+                IdAccount = request.IdAccount,
+                IdTutor = idAccountTutor
+            };
+
+            user.AccountBalance = user.AccountBalance - request.Price;
+            await _context.AddAsync(rent);
+            await _context.SaveChangesAsync();
+
+            return new
+            {
+                Tutor = new
+                {
+                    Name = tutor.FullName,
+                    Email = tutor.Email,
+                    DateOfBirth = tutor.DateOfBirth,
+                    Gender = tutor.Gender,
+                    Avatar = imgLib.GetImanges(tutor.Avatar),
+                    Address = tutor.Address,
+                    Phone = tutor.Phone
+                },
+                User = new
+                {
+                    Name = user.FullName,
+                    Email = user.Email,
+                    DateOfBirth = user.DateOfBirth,
+                    Gender = user.Gender,
+                    Avatar = imgLib.GetImanges(user.Avatar),
+                    Address = user.Address,
+                    Phone = user.Phone
+                }
+            };
+        }
     }
 }
-
-

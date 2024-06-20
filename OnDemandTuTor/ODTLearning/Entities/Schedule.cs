@@ -21,5 +21,5 @@ public partial class Schedule
 
     public virtual Service? IdServiceNavigation { get; set; }
 
-    public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
+    public virtual ICollection<Rent1> Rent1s { get; set; } = new List<Rent1>();
 }

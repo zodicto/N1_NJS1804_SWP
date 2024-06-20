@@ -13,5 +13,6 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<List<RequestLearningModel>>> GetRejectRequestsByAccountId(string accountId);
         //public Task<object> GetStudentProfile(string id);
         public Task<ApiResponse<List<TutorListModel>>> ViewAllTutorJoinRequest(string requestId);
+        public Task<object> SelectTutor(string idRequest, string idTutor);
     }
 }

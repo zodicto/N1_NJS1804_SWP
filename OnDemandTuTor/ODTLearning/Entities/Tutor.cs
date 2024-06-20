@@ -19,6 +19,8 @@ public partial class Tutor
 
     public virtual Account? IdAccountNavigation { get; set; }
 
+    public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
+
     public virtual ICollection<RequestLearning> RequestLearnings { get; set; } = new List<RequestLearning>();
 
     public virtual ICollection<Service> Services { get; set; } = new List<Service>();

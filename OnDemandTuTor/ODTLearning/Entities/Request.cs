@@ -29,6 +29,8 @@ public partial class Request
 
     public virtual Subject? IdSubjectNavigation { get; set; }
 
+    public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
+
     public virtual ICollection<RequestLearning> RequestLearnings { get; set; } = new List<RequestLearning>();
 
     public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();

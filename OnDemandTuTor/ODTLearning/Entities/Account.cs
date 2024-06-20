@@ -29,6 +29,8 @@ public partial class Account
 
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
+    public virtual ICollection<Rent1> Rent1s { get; set; } = new List<Rent1>();
+
     public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
 
     public virtual ICollection<Request> Requests { get; set; } = new List<Request>();

@@ -44,7 +44,7 @@ namespace ODTLearning.Repositories
                 .Include(t => t.TutorSubjects)
                     .ThenInclude(ts => ts.IdSubjectNavigation)
                 .Include(t => t.EducationalQualifications)
-                .Where(t => t.Id == id)
+                .Where(t => t.IdAccount == id)
                 .Select(t => new
                 {
                     TutorId = t.Id,
@@ -130,34 +130,44 @@ namespace ODTLearning.Repositories
                 Message = "Yêu cầu của bạn không được duyệt",
                 Data = true
             };
+        }      
+
+        public async Task<bool> ApproveProfileTutor(string id)
+        {
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
+
+            if (tutor == null)
+            {
+                return false;
+            }
+            
+            tutor.Status = "đã duyệt";
+            _context.Tutors.Update(tutor);
+               
+            var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == tutor.IdAccount);
+            account.Roles = "gia sư";
+            _context.Accounts.Update(account);          
+
+            await _context.SaveChangesAsync();
+            return true;            
         }
 
-        public async Task<bool> ConfirmProfileTutor(string idTutor, string status)
+        public async Task<bool> RejectProfileTutor(string id)
         {
-            var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.Id == idTutor);
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
+
             if (tutor == null)
             {
                 return false;
             }
 
-            if (status.ToLower() == "đã duyệt" || status.ToLower() == "từ chối")
-            {
-                tutor.Status = status.ToLower();
-                _context.Tutors.Update(tutor);
+            tutor.Status = "từ chối";
+            _context.Tutors.Update(tutor);
 
-                if (status.ToLower() == "đã duyệt")
-                {
-                    var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == tutor.IdAccount);
-                    account.Roles = "gia sư";
-                    _context.Accounts.Update(account);
-                }
-
-                await _context.SaveChangesAsync();
-                return true;
-            }
-
-            return false;
+            await _context.SaveChangesAsync();
+            return true;
         }
+
 
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetPendingRequests()
         {
