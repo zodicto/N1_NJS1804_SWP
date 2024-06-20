@@ -14,5 +14,6 @@
         public DateOnly? Date { get; set; }
         public string? TimeStart { get; set; }
         public string? TimeEnd { get; set; }
+        public string? Status { get; set; }
     }
 }

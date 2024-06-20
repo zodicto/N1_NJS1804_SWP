@@ -84,17 +84,17 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("viewRequest")]
-        public async Task<IActionResult> ViewRequest()
+        public async Task<IActionResult> ViewRequest(string status)
         {
             try
             {
-                var response = await _repo.GetPendingRequests();
+                var response = await _repo.GetPendingRequests(status);
 
                 if (response.Success)
                 {
                     return Ok(new
                     {
-                        Success = true,
+                        Success = "Thành công",
                         response.Message,
                          response.Data
                     });
@@ -102,7 +102,7 @@ namespace ODTLearning.Controllers
 
                 return BadRequest(new
                 {
-                    Success = false,
+                    Success = "Thất bại",
                     response.Message
                 });
             }
