@@ -144,6 +144,14 @@ namespace ODTLearning.Repositories
             {
                 tutor.Status = status.ToLower();
                 _context.Tutors.Update(tutor);
+
+                if (status.ToLower() == "đã duyệt")
+                {
+                    var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == tutor.IdAccount);
+                    account.Roles = "Tutor";
+                    _context.Accounts.Update(account);
+                }
+
                 await _context.SaveChangesAsync();
                 return true;
             }

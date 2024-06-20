@@ -73,10 +73,6 @@ namespace ODTLearning.Repositories
             var existingUser = _context.Accounts.FirstOrDefault(a => a.Id == IdAccount);
             if (existingUser != null)
             {
-                // Cập nhật vai trò của tài khoản thành "tutor"
-                existingUser.Roles = "Tutor";
-                _context.Accounts.Update(existingUser);
-
                 // Tạo mới đối tượng tutor
                 var tutor = new Tutor
                 {
@@ -180,6 +176,12 @@ namespace ODTLearning.Repositories
                 };
             }
 
+            string idTutor = null;
+
+            if (account.Roles == "Tutor" )
+            {
+                idTutor = _context.Tutors.Where(x => account.Id == x.IdAccount).Select(x => x.Id).ToString();
+            }
             // Nếu tài khoản tồn tại và password đúng, trả về thông tin người dùng
             return new ApiResponse<UserResponse>
             {
@@ -188,6 +190,7 @@ namespace ODTLearning.Repositories
                 Data = new UserResponse
                 {
                     Id = account.Id,
+                    IdTutor = idTutor,
                     FullName = account.FullName,
                     Email = account.Email,
                     Date_of_birth = account.DateOfBirth,
