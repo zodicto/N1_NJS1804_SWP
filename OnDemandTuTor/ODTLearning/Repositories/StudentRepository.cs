@@ -457,23 +457,43 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<object> SelectTutor(string idRequest, string idAccountTutor)
+        public async Task<ApiResponse<SelectTutorModel>> SelectTutor(string idRequest, string idAccountTutor)
         {
             var request = await _context.Requests.SingleOrDefaultAsync(x => x.Id == idRequest);
 
             if (request == null)
             {
-                return null;
+                return new ApiResponse<SelectTutorModel>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy request trong hệ thống",
+                    Data = null
+                };
             }
 
             var tutor = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == idAccountTutor);
 
             if (tutor == null || tutor.Roles != "gia sư")
             {
-                return null;
+                return new ApiResponse<SelectTutorModel>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư trong hệ thống",
+                    Data = null
+                };
             }
             
             var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == request.IdAccount);
+
+            if (user.AccountBalance < request.Price)
+            {
+                return new ApiResponse<SelectTutorModel>
+                {
+                    Success = false,
+                    Message = "Tài khoản user không đủ tiền yêu cầu",
+                    Data = null
+                };
+            }
 
             var rent = new Rent
             {
@@ -489,7 +509,7 @@ namespace ODTLearning.Repositories
             await _context.AddAsync(rent);
             await _context.SaveChangesAsync();
 
-            return new
+            var data = new SelectTutorModel
             {
                 Tutor = new
                 {
@@ -512,6 +532,13 @@ namespace ODTLearning.Repositories
                     Phone = user.Phone
                 }
             };
+
+            return new ApiResponse<SelectTutorModel>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = data
+            };            
         }
     }
 }

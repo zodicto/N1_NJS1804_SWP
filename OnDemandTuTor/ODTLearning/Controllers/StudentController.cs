@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Aqua.EnumerableExtensions;
+using Azure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using ODTLearning.Entities;
@@ -249,22 +251,22 @@ namespace ODTLearning.Controllers
         [HttpPost("SelectTutor")]
         public async Task<IActionResult> SelectTutor(string idRequest, string idTutor)
         {
-            var result = await _repo.SelectTutor(idRequest, idTutor);
+            var response = await _repo.SelectTutor(idRequest, idTutor);
 
-            if (result != null)
+            if (response.Success)
             {
                 return Ok(new
                 {
                     Success = true,
-                    Message = "Thành công",
-                    Data = result
+                    Message = response.Message,
+                    Data = response.Data
                 });
             }
 
             return BadRequest(new
             {
                 Success = false,
-                Message = "Thất bại"
+                Message = response.Message
             });
         }
 
