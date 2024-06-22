@@ -1,5 +1,4 @@
 ﻿using Aqua.EnumerableExtensions;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -18,7 +17,7 @@ namespace ODTLearning.Repositories
         private readonly DbminiCapstoneContext _context;
         private readonly IConfiguration _configuration;
 
-        public AccountRepository(DbminiCapstoneContext context, IConfiguration configuration)
+        public AccountRepository(DbminiCapstoneContext context, IConfiguration configuration, object value)
         {
             _context = context;
             _configuration = configuration;
@@ -27,15 +26,13 @@ namespace ODTLearning.Repositories
         ImageLibrary imgLib = new ImageLibrary();
         EmailLibrary emailLib = new EmailLibrary();
 
-
-        public async Task<bool> IsEmailExist(string email)
+        public bool IsEmailExist(string email)
         {
-            return await _context.Accounts.AnyAsync(a => a.Email == email);
+            return _context.Accounts.Any(a => a.Email == email);
         }
 
-        public async Task<UserResponse> SignUpOfAccount(SignUpModelOfAccount model)
+        public UserResponse SignUpOfAccount(SignUpModelOfAccount model)
         {
-
             var user = new Account
             {
                 Id = Guid.NewGuid().ToString(),
@@ -48,9 +45,10 @@ namespace ODTLearning.Repositories
                 Gender = model.Gender,
                 Roles = "học sinh"
             };
-            // Thêm Account vào context
-            await _context.Accounts.AddAsync(user);
-            await _context.SaveChangesAsync();
+
+            _context.Accounts.Add(user);
+            _context.SaveChanges();
+
             return new UserResponse
             {
                 Id = user.Id,
@@ -64,16 +62,13 @@ namespace ODTLearning.Repositories
                 Phone = user.Phone,
                 AccountBalance = user.AccountBalance
             };
-
         }
 
-        public async Task<ApiResponse<TutorResponse>> SignUpOftutor(string IdAccount, SignUpModelOfTutor model)
+        public ApiResponse<TutorResponse> SignUpOftutor(string IdAccount, SignUpModelOfTutor model)
         {
-            // Tìm kiếm account trong DB bằng id
             var existingUser = _context.Accounts.FirstOrDefault(a => a.Id == IdAccount);
             if (existingUser != null)
             {
-                // Tạo mới đối tượng tutor
                 var tutor = new Tutor
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -83,7 +78,6 @@ namespace ODTLearning.Repositories
                     IdAccount = existingUser.Id
                 };
 
-                // Tạo mới đối tượng educationalqualification
                 var educationalQualification = new EducationalQualification
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -92,15 +86,13 @@ namespace ODTLearning.Repositories
                     Type = model.Type,
                 };
 
-                // Upload ảnh
-                var upload = await imgLib.UploadImage(model.ImageQualification);
+                var upload = imgLib.UploadImage(model.ImageQualification).Result;
                 if (upload)
                 {
                     educationalQualification.Img = model.ImageQualification.FileName;
                 }
 
-                var subjectModel = await _context.Subjects
-                                              .FirstOrDefaultAsync(lm => lm.SubjectName == model.Subject);
+                var subjectModel = _context.Subjects.FirstOrDefault(lm => lm.SubjectName == model.Subject);
 
                 if (subjectModel == null)
                 {
@@ -112,7 +104,6 @@ namespace ODTLearning.Repositories
                     };
                 }
 
-                // Tạo mới đối tượng TutorSubject
                 var tutorSubject = new TutorSubject
                 {
                     Id = Guid.NewGuid().ToString(),
@@ -120,15 +111,13 @@ namespace ODTLearning.Repositories
                     IdTutor = tutor.Id,
                 };
 
-                // Thêm các đối tượng vào DB
-                await _context.Tutors.AddAsync(tutor);
-                await _context.EducationalQualifications.AddAsync(educationalQualification);
-                await _context.TutorSubjects.AddAsync(tutorSubject);
+                _context.Tutors.Add(tutor);
+                _context.EducationalQualifications.Add(educationalQualification);
+                _context.TutorSubjects.Add(tutorSubject);
 
                 try
                 {
-                    await _context.SaveChangesAsync();
-                    // Trả về ID của tutor đã được tạo với tên là idTutor
+                    _context.SaveChanges();
                     return new ApiResponse<TutorResponse>
                     {
                         Success = true,
@@ -138,7 +127,6 @@ namespace ODTLearning.Repositories
                 }
                 catch (Exception ex)
                 {
-                    // Ghi lại lỗi nếu có xảy ra
                     Console.WriteLine($"Error while saving changes: {ex.Message}");
                     return new ApiResponse<TutorResponse>
                     {
@@ -149,7 +137,6 @@ namespace ODTLearning.Repositories
                 }
             }
 
-            // Trường hợp không tìm thấy tài khoản
             return new ApiResponse<TutorResponse>
             {
                 Success = false,
@@ -158,15 +145,10 @@ namespace ODTLearning.Repositories
             };
         }
 
-         
-
-        public async Task<ApiResponse<UserResponse>> SignInValidationOfAccount(SignInModel model)
+        public ApiResponse<UserResponse> SignInValidationOfAccount(SignInModel model)
         {
-            // Kiểm tra tài khoản theo email
-            var account = await _context.Accounts
-                .FirstOrDefaultAsync(u => u.Email == model.Email);
+            var account = _context.Accounts.FirstOrDefault(u => u.Email == model.Email);
 
-            // Nếu tài khoản không tồn tại hoặc password sai, trả về thông báo lỗi
             if (account == null || account.Password != model.Password)
             {
                 return new ApiResponse<UserResponse>
@@ -178,11 +160,11 @@ namespace ODTLearning.Repositories
 
             string idTutor = null;
 
-            if (account.Roles == "gia sư" )
+            if (account.Roles == "gia sư")
             {
-                idTutor = _context.Tutors.Where(x => account.Id == x.IdAccount).Select(x => x.Id).ToString();
+                idTutor = _context.Tutors.Where(x => account.Id == x.IdAccount).Select(x => x.Id).FirstOrDefault();
             }
-            // Nếu tài khoản tồn tại và password đúng, trả về thông tin người dùng
+
             return new ApiResponse<UserResponse>
             {
                 Success = true,
@@ -204,9 +186,7 @@ namespace ODTLearning.Repositories
             };
         }
 
-
-
-        public async Task<TokenModel> GenerateToken(UserResponse user)
+        public TokenModel GenerateToken(UserResponse user)
         {
             var jwttokenhandler = new JwtSecurityTokenHandler();
             var securitykey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["appsettings:secretkey"]));
@@ -214,14 +194,12 @@ namespace ODTLearning.Repositories
 
             var claims = new List<Claim>
             {
-                 new Claim(ClaimTypes.Name, user.FullName + " " + user.Date_of_birth?.ToString("yyyy-MM-dd")),
-                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
-                  new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                 new Claim(ClaimTypes.Role, user.Roles),
-                 new Claim("id", user.Id )
-
+                new Claim(ClaimTypes.Name, user.FullName + " " + user.Date_of_birth?.ToString("yyyy-MM-dd")),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, user.Roles),
+                new Claim("id", user.Id )
             };
-
 
             var tokendescriptor = new SecurityTokenDescriptor
             {
@@ -232,7 +210,7 @@ namespace ODTLearning.Repositories
 
             var token = jwttokenhandler.CreateToken(tokendescriptor);
             var accesstoken = jwttokenhandler.WriteToken(token);
-            var refreshtoken = await GenerateRefreshtoken();
+            var refreshtoken = GenerateRefreshtoken();
 
             var refreshtokenentity = new RefreshToken
             {
@@ -246,8 +224,8 @@ namespace ODTLearning.Repositories
                 ExpiredAt = DateTime.UtcNow,
             };
 
-            await _context.AddAsync(refreshtokenentity);
-            await _context.SaveChangesAsync();
+            _context.Add(refreshtokenentity);
+            _context.SaveChanges();
 
             return new TokenModel
             {
@@ -256,26 +234,24 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<string> GenerateRefreshtoken()
+        public string GenerateRefreshtoken()
         {
             var random = new byte[32];
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(random);
-
                 return Convert.ToBase64String(random);
             }
         }
 
-        public async Task<List<Account>> GetAllUsers()
+        public List<Account> GetAllUsers()
         {
-            var list = await _context.Accounts.ToListAsync();
-            return list;
+            return _context.Accounts.ToList();
         }
 
-        public async Task<bool> UpdateAvatar(string id, IFormFile file)
+        public bool UpdateAvatar(string id, IFormFile file)
         {
-            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+            var user = _context.Accounts.SingleOrDefault(x => x.Id == id);
 
             if (user == null)
             {
@@ -284,7 +260,7 @@ namespace ODTLearning.Repositories
 
             if (user.Avatar != null)
             {
-                var delete = await imgLib.DeleteImage(user.Avatar);
+                var delete = imgLib.DeleteImage(user.Avatar).Result;
 
                 if (!delete)
                 {
@@ -292,7 +268,7 @@ namespace ODTLearning.Repositories
                 }
             }
 
-            var upload = await imgLib.UploadImage(file);
+            var upload = imgLib.UploadImage(file).Result;
 
             if (!upload)
             {
@@ -300,14 +276,14 @@ namespace ODTLearning.Repositories
             }
 
             user.Avatar = file.FileName;
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return true;
         }
 
-        public async Task<string> ChangePassword(string id, ChangePasswordModel model)
+        public string ChangePassword(string id, ChangePasswordModel model)
         {
-            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+            var user = _context.Accounts.SingleOrDefault(x => x.Id == id);
 
             if (user == null)
             {
@@ -325,17 +301,17 @@ namespace ODTLearning.Repositories
             }
 
             user.Password = model.NewPassword;
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return "Thay đổi mật khẩu thành công";
         }
 
-        public async Task<string> ForgotPassword(string Email)
+        public string ForgotPassword(string Email)
         {
             try
             {
-                var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Email == Email);
-                
+                var user = _context.Accounts.SingleOrDefault(x => x.Email == Email);
+
                 if (user == null)
                 {
                     return "Email không tồn tại trong hệ thống";
@@ -343,7 +319,7 @@ namespace ODTLearning.Repositories
 
                 var password = new Random().Next(100000, 999999);
 
-                var result = await emailLib.SendMail("ODTLearning", "Lấy lại mật khẩu", $"Mật khẩu mới là: {password}", Email);
+                var result = emailLib.SendMail("ODTLearning", "Lấy lại mật khẩu", $"Mật khẩu mới là: {password}", Email).Result;
 
                 if (!result)
                 {
@@ -351,9 +327,8 @@ namespace ODTLearning.Repositories
                 }
 
                 user.Password = password.ToString();
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
-
             catch (Exception ex)
             {
                 return "Đã có một số lỗi xảy ra: " + ex.Message;
@@ -361,9 +336,10 @@ namespace ODTLearning.Repositories
 
             return "Gửi mật khẩu mới thành công";
         }
-        public async Task<ApiResponse<bool>> UpdateProfile(string id, UpdateProfile model)
+
+        public ApiResponse<bool> UpdateProfile(string id, UpdateProfile model)
         {
-            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id );
+            var user = _context.Accounts.SingleOrDefault(x => x.Id == id);
 
             if (user == null)
             {
@@ -373,7 +349,7 @@ namespace ODTLearning.Repositories
                     Message = "Không tìm thấy người dùng nào với ID này",
                 };
             }
-            var existingUserWithEmail = await _context.Accounts.SingleOrDefaultAsync(x => x.Email == model.Email && x.Id != id);
+            var existingUserWithEmail = _context.Accounts.SingleOrDefault(x => x.Email == model.Email && x.Id != id);
 
             if (existingUserWithEmail != null)
             {
@@ -385,7 +361,6 @@ namespace ODTLearning.Repositories
                 };
             }
 
-
             user.FullName = model.FullName;
             user.Email = model.Email;
             user.DateOfBirth = model.date_of_birth;
@@ -393,7 +368,7 @@ namespace ODTLearning.Repositories
             user.Address = model.Address;
             user.Phone = model.Phone;
 
-            await _context.SaveChangesAsync();
+            _context.SaveChanges();
 
             return new ApiResponse<bool>
             {
@@ -402,10 +377,9 @@ namespace ODTLearning.Repositories
             };
         }
 
-
-        public async Task<ApiResponse<object>> GetProfile(string id)
+        public ApiResponse<object> GetProfile(string id)
         {
-            var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+            var account = _context.Accounts.SingleOrDefault(x => x.Id == id);
 
             if (account == null)
             {
@@ -436,10 +410,5 @@ namespace ODTLearning.Repositories
                 Data = userProfile
             };
         }
-
-
-
-
-
     }
 }

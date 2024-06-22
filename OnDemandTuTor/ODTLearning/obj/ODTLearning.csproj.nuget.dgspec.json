@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj": {}
+    "D:\\Courseware\\Semester-5\\SWT301\\GitSWT\\N1_NJS1804_SWP\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj": {}
   },
   "projects": {
-    "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj": {
+    "D:\\Courseware\\Semester-5\\SWT301\\GitSWT\\N1_NJS1804_SWP\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj",
+        "projectUniqueName": "D:\\Courseware\\Semester-5\\SWT301\\GitSWT\\N1_NJS1804_SWP\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj",
         "projectName": "ODTLearning",
-        "projectPath": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj",
-        "packagesPath": "C:\\Users\\minht\\.nuget\\packages\\",
-        "outputPath": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\obj\\",
+        "projectPath": "D:\\Courseware\\Semester-5\\SWT301\\GitSWT\\N1_NJS1804_SWP\\OnDemandTuTor\\ODTLearning\\ODTLearning.csproj",
+        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+        "outputPath": "D:\\Courseware\\Semester-5\\SWT301\\GitSWT\\N1_NJS1804_SWP\\OnDemandTuTor\\ODTLearning\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\minht\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [

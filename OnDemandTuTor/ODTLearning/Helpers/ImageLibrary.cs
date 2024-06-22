@@ -1,6 +1,6 @@
 ﻿namespace ODTLearning.Helpers
 {
-    public class ImageLibrary
+    public class ImageLibrary : IImageLibrary
     {
         public async Task<bool> UploadImage(IFormFile file)
         {
