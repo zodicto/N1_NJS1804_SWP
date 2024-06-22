@@ -30,8 +30,8 @@
 
 | Member   | User Case (UC) Assigned    |  Test Case |
 | :------- | :------------------------- | ----------- |
-| Lê Minh Trí | UC1 | Register with the correct information, Register with the exist email |
-| Lê Thành Tài | UC3 | Login with email and password must be correct,Check email exist |
-| Lê Minh Tân | UC2, UC3 | Login with password wrong, Register tutor with the correct information |
-| Nguyễn Trí Thành | UC2 |Register become a tutor without account|
-| Đoàn Đình Quang Trường | UC2 | Register tutor with non existent subject | 
+| Lê Minh Trí | UC1 | MU01 - Register with the correct information, MU02 - Register with the exist email |
+| Lê Thành Tài | UC3 | MU03 - Login with email and password must be correct, MU04 - Check email exist |
+| Lê Minh Tân | UC2, UC3 | MU05 - Login with password wrong, MU06 - Register tutor with the correct information |
+| Nguyễn Trí Thành | UC2 |MU07 - Register become a tutor without account|
+| Đoàn Đình Quang Trường | UC2 | MU08 - Register tutor with non existent subject | 
