@@ -16,9 +16,8 @@
 ### - Database: SQL Server
 
 
-### Bảng Phân Công Các Thành Viên
-
-#### User Cases by Sprint
+## Bảng Phân Công Các Thành Viên
+### User Cases by Sprint
 
 | Sprint   | User Case (UC)             |
 | :------- | :------------------------- |
@@ -27,9 +26,7 @@
 | Sprint 3 | UC4, UC5, UC23, UC24, UC25, UC26, UC27 |
 | Sprint 4 | UC8, UC9, UC10, UC11, UC12, UC13    |
 
-
-#### Member Assignments for Sprints
-
+### Member Assignments for Sprints
 
 | Member   | User Case (UC) Assigned    |
 | :------- | :------------------------- |
