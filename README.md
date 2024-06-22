@@ -16,7 +16,7 @@
 ### - Database: SQL Server
 
 
-## Bảng Phân Công Các Thành Viên
+## __Bảng Phân Công Các Thành Viên__
 ### User Cases by Sprint
 
 | Sprint   | User Case (UC)             |
