@@ -1,0 +1,25 @@
+{
+  "dependencies": {},
+  "parameters": {
+    "ODTLearning.resourceGroupLocation": {
+      "Name": "ODTLearning.resourceGroupLocation",
+      "Type": null,
+      "Value": "southeastasia"
+    },
+    "ODTLearning.subscriptionId": {
+      "Name": "ODTLearning.subscriptionId",
+      "Type": "subscription",
+      "Value": "bd5c731e-5f41-4f2e-8598-ceb69f8216ef"
+    },
+    "ODTLearning.resourceGroupName": {
+      "Name": "ODTLearning.resourceGroupName",
+      "Type": "resourceGroup",
+      "Value": "ODTLerning"
+    },
+    "ODTLearning.resourceName": {
+      "Name": "ODTLearning.resourceName",
+      "Type": null,
+      "Value": "ODTLearning"
+    }
+  }
+}

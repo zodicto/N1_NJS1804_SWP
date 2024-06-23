@@ -3,7 +3,4 @@
   <parameter name="IIS Web Application Name" description="" value="ODTLearning" tags="IisApp">
     <parameterEntry kind="ProviderPath" scope="IisApp" match="^D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\obj\\Release\\net8\.0\\PubTmp\\Out\\$" />
   </parameter>
-  <parameter name="ODTLearning.Entities.DbminiCapstoneContext" description="" value="Data Source=odtlearningdbserver391.database.windows.net,1433;Initial Catalog=ODTLearning_db;User ID=leminhtri;Password=Lehaodang1892003" tags="dbfullsql">
-    <parameterEntry kind="ProviderPath" scope="dbfullsql" match="^D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\obj\\Release\\net8\.0\\PubTmp\\EFSQLScripts\\ODTLearning\.Entities\.DbminiCapstoneContext\.sql$" />
-  </parameter>
 </parameters>

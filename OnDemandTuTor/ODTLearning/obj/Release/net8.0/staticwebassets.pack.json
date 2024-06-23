@@ -1,6 +1,10 @@
 {
   "Files": [
     {
+      "Id": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\01.png",
+      "PackagePath": "staticwebassets\\Images\\01.png"
+    },
+    {
       "Id": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\Screenshot 2024-06-06 234256.png",
       "PackagePath": "staticwebassets\\Images\\Screenshot 2024-06-06 234256.png"
     },
