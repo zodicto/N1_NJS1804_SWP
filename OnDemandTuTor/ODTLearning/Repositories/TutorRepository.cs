@@ -19,7 +19,7 @@ namespace ODTLearning.Repositories
 
         public async Task<object> GetTutorProfile(string id)
         {
-            var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id && x.Roles == "Tutor");
+            var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id && x.Roles == "gia sư");
 
             if (account == null)
             {
@@ -221,7 +221,7 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<ApiResponse<bool>> JoinRequest(string requestId, string tutorId)
+        public async Task<ApiResponse<bool>> JoinRequest(string requestId, string idAccount)
         {
             // Tìm yêu cầu theo IdRequest
             var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
@@ -232,12 +232,24 @@ namespace ODTLearning.Repositories
                 {
                     Success = false,
                     Message = "Không tìm thấy yêu cầu nào",
-                  
                 };
             }
 
-            // Tìm gia sư theo IdTutor
-            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.IdAccount == tutorId);
+
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == idAccount && a.Roles == "Tutor");
+
+            if (account == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư nào với tài khoản này",
+                };
+            }
+
+            // Tìm gia sư theo IdAccount
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.IdAccount == idAccount);
+
 
             if (tutor == null)
             {
@@ -245,9 +257,10 @@ namespace ODTLearning.Repositories
                 {
                     Success = false,
                     Message = "Không tìm thấy gia sư nào",
-                   
                 };
             }
+
+            var tutorId = tutor.Id;
 
             // Kiểm tra xem gia sư đã tham gia yêu cầu này chưa
             var existingRequestLearning = await _context.RequestLearnings
@@ -259,7 +272,6 @@ namespace ODTLearning.Repositories
                 {
                     Success = false,
                     Message = "Gia sư đã tham gia vào yêu cầu này rồi",
-                
                 };
             }
 
@@ -278,13 +290,8 @@ namespace ODTLearning.Repositories
             {
                 Success = true,
                 Message = "Bạn đã tham gia vào yêu cầu của học sinh",
-
             };
         }
-
-
-
-
 
     }
 }

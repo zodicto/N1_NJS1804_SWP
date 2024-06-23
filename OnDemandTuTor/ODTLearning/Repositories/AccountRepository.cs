@@ -46,7 +46,7 @@ namespace ODTLearning.Repositories
                 Email = model.Email,
                 DateOfBirth = model.date_of_birth,
                 Gender = model.Gender,
-                Roles = "Student"
+                Roles = "học sinh"
             };
             // Thêm Account vào context
             await _context.Accounts.AddAsync(user);
@@ -73,10 +73,6 @@ namespace ODTLearning.Repositories
             var existingUser = _context.Accounts.FirstOrDefault(a => a.Id == IdAccount);
             if (existingUser != null)
             {
-                // Cập nhật vai trò của tài khoản thành "tutor"
-                existingUser.Roles = "Tutor";
-                _context.Accounts.Update(existingUser);
-
                 // Tạo mới đối tượng tutor
                 var tutor = new Tutor
                 {
@@ -180,6 +176,12 @@ namespace ODTLearning.Repositories
                 };
             }
 
+            string idTutor = null;
+
+            if (account.Roles == "gia sư" )
+            {
+                idTutor = _context.Tutors.Where(x => account.Id == x.IdAccount).Select(x => x.Id).ToString();
+            }
             // Nếu tài khoản tồn tại và password đúng, trả về thông tin người dùng
             return new ApiResponse<UserResponse>
             {
@@ -188,6 +190,7 @@ namespace ODTLearning.Repositories
                 Data = new UserResponse
                 {
                     Id = account.Id,
+                    IdTutor = idTutor,
                     FullName = account.FullName,
                     Email = account.Email,
                     Date_of_birth = account.DateOfBirth,
@@ -370,21 +373,9 @@ namespace ODTLearning.Repositories
                     Message = "Không tìm thấy người dùng nào với ID này",
                 };
             }
-            var existingUserWithEmail = await _context.Accounts.SingleOrDefaultAsync(x => x.Email == model.Email && x.Id != id);
-
-            if (existingUserWithEmail != null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Email đã được sử dụng bởi người dùng khác. Vui lòng thử lại!",
-                    Data = false
-                };
-            }
 
 
             user.FullName = model.FullName;
-            user.Email = model.Email;
             user.DateOfBirth = model.date_of_birth;
             user.Gender = model.Gender;
             user.Address = model.Address;

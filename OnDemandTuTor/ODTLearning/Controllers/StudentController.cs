@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Aqua.EnumerableExtensions;
+using Azure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using ODTLearning.Entities;
 using ODTLearning.Models;
 using ODTLearning.Repositories;
@@ -243,6 +246,28 @@ namespace ODTLearning.Controllers
                     Details = ex.Message // Optional: Include exception details in the response
                 });
             }
+        }
+
+        [HttpPost("SelectTutor")]
+        public async Task<IActionResult> SelectTutor(string idRequest, string idTutor)
+        {
+            var response = await _repo.SelectTutor(idRequest, idTutor);
+
+            if (response.Success)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = response.Message,
+                    Data = response.Data
+                });
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = response.Message
+            });
         }
 
     }

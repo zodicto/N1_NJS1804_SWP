@@ -23,7 +23,6 @@ namespace ODTLearning.Models
         public string? Address { get; set; }
         public string? Phone { get; set; }
         public string? Avatar { get; set; }
-        public string? Email { get; set; }
 
         public DateOnly? date_of_birth { get; set; }
 

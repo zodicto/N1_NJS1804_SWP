@@ -62,10 +62,10 @@ namespace ODTLearning.Controllers
                 Data = profile
             });
         }
-        [HttpPut("confirmProfile")]
-        public async Task<IActionResult> ChangeStatusTutor(string id, string status)
+        [HttpPut("approveProfile")]
+        public async Task<IActionResult> ApproveProfileTutor(string id)
         {
-            var result = await _repo.ConfirmProfileTutor(id, status);
+            var result = await _repo.ApproveProfileTutor(id);
 
             if (!result)
             {
@@ -79,7 +79,28 @@ namespace ODTLearning.Controllers
             return Ok(new
             {
                 Success = true,
-                Message = status.ToLower() == "approved" ? "Trạng thái của gia sư đã được phê duyệt" : "Trạng thái của gia sư đã bị từ chối"
+                Message = "Trạng thái của gia sư đã được phê duyệt"
+            });
+        }
+
+        [HttpPut("rejectProfile")]
+        public async Task<IActionResult> RejectProfileTutor(string id)
+        {
+            var result = await _repo.RejectProfileTutor(id);
+
+            if (!result)
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    Message = "Không thể thay đổi trạng thái của gia sư"
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                Message = "Trạng thái của gia sư đã được từ chối"
             });
         }
 
