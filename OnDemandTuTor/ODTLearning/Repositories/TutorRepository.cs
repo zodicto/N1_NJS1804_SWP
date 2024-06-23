@@ -178,7 +178,7 @@ namespace ODTLearning.Repositories
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests()
         {
             var pendingRequests = await _context.Requests
-                                                   .Where(r => r.Status == "Approved")
+                                                   .Where(r => r.Status == "Đã duyệt")
                                                    .Select(r => new ViewRequestOfStudent
                                                    {
                                                        Title = r.Title,
@@ -237,7 +237,7 @@ namespace ODTLearning.Repositories
             }
 
             // Tìm gia sư theo IdTutor
-            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.Id == tutorId);
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.IdAccount == tutorId);
 
             if (tutor == null)
             {

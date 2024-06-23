@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "o9HZOzI0yvPnRBxYIVKfwjURXfEeFqoLozj1wiN7Ecs=",
+  "Hash": "u7BMMBmfjDHsfMupuyDpeT+AZMXBOI97DwULYxwSgFU=",
   "Source": "ODTLearning",
   "BasePath": "_content/ODTLearning",
   "Mode": "Default",
@@ -16,6 +16,25 @@
     }
   ],
   "Assets": [
+    {
+      "Identity": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\01.png",
+      "SourceId": "ODTLearning",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\",
+      "BasePath": "_content/ODTLearning",
+      "RelativePath": "Images/01.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\01.png"
+    },
     {
       "Identity": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\kxIY23OFTXiSGNtzhV14XA_0d17dc17f6464ef4974e352b8360d3de_raci_matrix_starter.docx",
       "SourceId": "ODTLearning",

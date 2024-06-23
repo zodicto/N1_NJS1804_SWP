@@ -389,6 +389,7 @@ namespace ODTLearning.Repositories
             user.Gender = model.Gender;
             user.Address = model.Address;
             user.Phone = model.Phone;
+            user.Avatar = model.Avatar;
 
             await _context.SaveChangesAsync();
 
