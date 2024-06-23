@@ -26,9 +26,7 @@ namespace ODTLearning.Controllers
         {
             var vnpayModel = new VnPaymentRequestModel
             {
-                OrderId = new Random().Next(1000, 100000),
-                FullName = model.LastName + " " + model.FirstName,
-                Description = "asdjef",
+                FullName = model.FullName,
                 Amount = model.Amount,
                 CreatedDate = DateTime.Now
             };
