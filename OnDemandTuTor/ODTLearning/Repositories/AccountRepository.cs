@@ -438,7 +438,7 @@ namespace ODTLearning.Repositories
                 FullName = account.FullName,
                 Date_of_birth = account.DateOfBirth,
                 Gender = account.Gender,
-                Avatar = account.Avatar,
+                Avatar = imgLib.GetImanges(account.Avatar),
                 Address = account.Address,
                 Phone = account.Phone,
                 AccountBalance = account.AccountBalance

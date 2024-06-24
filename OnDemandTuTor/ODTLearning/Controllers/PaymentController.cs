@@ -53,7 +53,8 @@ namespace ODTLearning.Controllers
             }
 
             var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
-            user.AccountBalance += response.Amount;
+
+            user.AccountBalance = user.AccountBalance + response.Amount;
             await _context.SaveChangesAsync();
 
             return Ok(new 
