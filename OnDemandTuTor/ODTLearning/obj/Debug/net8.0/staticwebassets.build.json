@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "O36r83NRjgzZE5BO2v19ioZ5pmiQGhGfee0mzYBZL5E=",
+  "Hash": "gQHu0YONf4Z0U/HeMAaqIR9PXN51sKNhzlyn12oe/jU=",
   "Source": "ODTLearning",
   "BasePath": "_content/ODTLearning",
   "Mode": "Default",
@@ -34,6 +34,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\Images\\01.png"
+    },
+    {
+      "Identity": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\account.txt",
+      "SourceId": "ODTLearning",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\",
+      "BasePath": "_content/ODTLearning",
+      "RelativePath": "Images/account.txt",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\Images\\account.txt"
     },
     {
       "Identity": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\kxIY23OFTXiSGNtzhV14XA_0d17dc17f6464ef4974e352b8360d3de_raci_matrix_starter.docx",

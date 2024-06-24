@@ -1,8 +1,10 @@
-﻿namespace ODTLearning.Helpers
+﻿using ODTLearning.Models;
+
+namespace ODTLearning.Helpers
 {
     public class ImageLibrary
     {
-        public async Task<bool> UploadImage(IFormFile file)
+        public async Task<ApiResponse<object>> UploadImage(IFormFile file)
         {
             if (file.Length > 0)
             {
@@ -15,11 +17,25 @@
 
                 if (File.Exists(path))
                 {
-                    return true;
-                }                    
+                    return new ApiResponse<object>
+                    {
+                        Success = true,
+                        Message = "Thành công"
+                    };
+                }
+
+                new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tồn tại file đường dẫn"
+                };
             }
             
-            return false;
+            return new ApiResponse<object>
+            {
+                Success = false,
+                Message = "Không tìm thấy file"
+            };
         }
 
         public async Task<bool> DeleteImage(string fileName)

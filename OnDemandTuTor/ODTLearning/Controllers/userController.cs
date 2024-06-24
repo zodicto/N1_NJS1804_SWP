@@ -429,21 +429,21 @@ namespace ODTLearning.Controllers
         [HttpPut("UpdateAvatar")]
         public async Task<IActionResult> UpdateAvatar(string id, IFormFile file)
         {
-            var result = await _repo.UpdateAvatar(id, file);
+            var response = await _repo.UpdateAvatar(id, file);
 
-            if (result)
+            if (response.Success)
             {
                 return Ok(new
                 {
                     Success = true,
-                    Message = "Update avatar successful"
+                    Message = response.Message
                 });
             }
 
             return BadRequest(new
             {
                 Success = false,
-                Message = "Update avatar fail"
+                Message = response.Message
             });
         }
 

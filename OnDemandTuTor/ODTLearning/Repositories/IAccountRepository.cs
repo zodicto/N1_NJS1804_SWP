@@ -21,7 +21,7 @@ namespace ODTLearning.Repositories
         public  Task<TokenModel> GenerateToken(UserResponse user);
         public Task<string> GenerateRefreshtoken();
         public Task<List<Account>> GetAllUsers();
-        public Task<bool> UpdateAvatar(string id, IFormFile file);
+        public Task<ApiResponse<object>> UpdateAvatar(string id, IFormFile file);
         public Task<string> ChangePassword(string id, ChangePasswordModel model);
         public Task<string> ForgotPassword(string Email);
         public Task<ApiResponse<bool>> UpdateProfile(string id, UpdateProfile model);

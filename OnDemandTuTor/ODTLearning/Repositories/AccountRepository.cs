@@ -94,10 +94,17 @@ namespace ODTLearning.Repositories
 
                 // Upload ảnh
                 var upload = await imgLib.UploadImage(model.ImageQualification);
-                if (upload)
+
+                if (!upload.Success)
                 {
-                    educationalQualification.Img = model.ImageQualification.FileName;
+                    return new ApiResponse<TutorResponse>
+                    {
+                        Success = false,
+                        Message = upload.Message
+                    };                    
                 }
+
+                educationalQualification.Img = model.ImageQualification.FileName;
 
                 var subjectModel = await _context.Subjects
                                               .FirstOrDefaultAsync(lm => lm.SubjectName == model.Subject);
@@ -273,13 +280,17 @@ namespace ODTLearning.Repositories
             return list;
         }
 
-        public async Task<bool> UpdateAvatar(string id, IFormFile file)
+        public async Task<ApiResponse<object>> UpdateAvatar(string id, IFormFile file)
         {
             var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
             {
-                return false;
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng nào với ID này"
+                }; 
             }
 
             if (user.Avatar != null)
@@ -288,21 +299,33 @@ namespace ODTLearning.Repositories
 
                 if (!delete)
                 {
-                    return false;
+                    return new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Xoá avatar cũ thất bại"
+                    }; 
                 }
             }
 
             var upload = await imgLib.UploadImage(file);
 
-            if (!upload)
+            if (!upload.Success)
             {
-                return false;
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = upload.Message
+                }; 
             }
 
             user.Avatar = file.FileName;
             await _context.SaveChangesAsync();
 
-            return true;
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công"
+            }; 
         }
 
         public async Task<string> ChangePassword(string id, ChangePasswordModel model)
@@ -317,11 +340,6 @@ namespace ODTLearning.Repositories
             if (model.Password != user.Password)
             {
                 return "Không đúng mật khẩu";
-            }
-
-            if (model.NewPassword != model.ConfirmNewPassword)
-            {
-                return "Mật khẩu mới và xác nhận mật khẩu không trùng khớp";
             }
 
             user.Password = model.NewPassword;
