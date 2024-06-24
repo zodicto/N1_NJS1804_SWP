@@ -273,37 +273,46 @@ namespace ODTLearning.Repositories
             return list;
         }
 
-        public async Task<bool> UpdateAvatar(string id, IFormFile file)
+        public async Task<ApiResponse<bool>> UpdateAvatar(string id, IFormFile file)
         {
-            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
+            var response = new ApiResponse<bool>();
 
+            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
             if (user == null)
             {
-                return false;
+                response.Success = false;
+                response.Message = "Không tìm thấy người dùng";
+                return response;
             }
 
             if (user.Avatar != null)
             {
                 var delete = await imgLib.DeleteImage(user.Avatar);
-
                 if (!delete)
                 {
-                    return false;
+                    response.Success = false;
+                    response.Message = "Xóa ảnh thất bại";
+                    return response;
                 }
             }
 
             var upload = await imgLib.UploadImage(file);
-
             if (!upload)
             {
-                return false;
+                response.Success = false;
+                response.Message = "Cập nhật ảnh thất bại";
+                return response;
             }
 
             user.Avatar = file.FileName;
             await _context.SaveChangesAsync();
 
-            return true;
+            response.Success = true;
+            response.Message = "Cập nhật ảnh thành công";
+            response.Data = true;
+            return response;
         }
+
 
         public async Task<string> ChangePassword(string id, ChangePasswordModel model)
         {

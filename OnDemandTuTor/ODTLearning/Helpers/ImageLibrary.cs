@@ -35,9 +35,16 @@
             {
                 return false;
             }
-           
-            File.Delete(path);
-            return true;                    
+
+            try
+            {
+                File.Delete(path);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
 

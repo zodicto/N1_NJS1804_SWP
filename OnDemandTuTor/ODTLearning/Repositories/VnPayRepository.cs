@@ -30,7 +30,7 @@ namespace ODTLearning.Repositories
             vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context)); 
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
 
-            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan cho don hang:" + model.OrderId);
+            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toan cho don hang:" + model.FullName);
             vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
             vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:ReturnUrl"]);
             vnpay.AddRequestData("vnp_TxnRef", tick); // Mã tham chiếu của giao dịch tại hệ thống của merchant.Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY.Không được trùng lặp trong ngày    

@@ -431,21 +431,22 @@ namespace ODTLearning.Controllers
         {
             var result = await _repo.UpdateAvatar(id, file);
 
-            if (result)
+            if (result.Success)
             {
                 return Ok(new
                 {
                     Success = true,
-                    Message = "Update avatar successful"
+                    Message = result.Message
                 });
             }
 
             return BadRequest(new
             {
                 Success = false,
-                Message = "Update avatar fail"
+                Message = result.Message
             });
         }
+
 
         [HttpPut("ChangePassword")]
         public async Task<IActionResult> ChangePassword(string id, ChangePasswordModel model)
