@@ -315,9 +315,6 @@ namespace ODTLearning.Repositories
 
             var upload = await imgLib.UploadImage(file);
 
-
-
-
             if (!upload.Success)
             {
                 return new ApiResponse<object>
@@ -330,9 +327,6 @@ namespace ODTLearning.Repositories
 
             user.Avatar = file.FileName;
             await _context.SaveChangesAsync();
-
-
-
 
             return new ApiResponse<object>
             {
@@ -357,7 +351,7 @@ namespace ODTLearning.Repositories
                 return "Không đúng mật khẩu";
             }
 
-            user.Password = model.NewPassword;
+            user.Password = model.New_password;
             await _context.SaveChangesAsync();
 
             return "Thay đổi mật khẩu thành công";
@@ -413,7 +407,6 @@ namespace ODTLearning.Repositories
             user.Gender = model.Gender;
             user.Address = model.Address;
             user.Phone = model.Phone;
-            user.Avatar = model.Avatar;
 
             await _context.SaveChangesAsync();
 
