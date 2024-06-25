@@ -18,7 +18,7 @@ using Microsoft.EntityFrameworkCore;
 using Azure;
 
 namespace ODTLearning.Controllers
-{// test
+{
     [Route("api/[controller]")]
     [ApiController]
     public class userController : ControllerBase
