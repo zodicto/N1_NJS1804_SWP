@@ -17,10 +17,8 @@ using NuGet.Common;
 using Microsoft.EntityFrameworkCore;
 using Azure;
 
-
-// test 
 namespace ODTLearning.Controllers
-{
+{// test
     [Route("api/[controller]")]
     [ApiController]
     public class userController : ControllerBase
