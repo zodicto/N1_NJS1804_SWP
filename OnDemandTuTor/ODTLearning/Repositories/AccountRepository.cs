@@ -359,7 +359,6 @@ namespace ODTLearning.Repositories
 
             user.Password = model.NewPassword;
             await _context.SaveChangesAsync();
-
             return "Thay đổi mật khẩu thành công";
         }
 
