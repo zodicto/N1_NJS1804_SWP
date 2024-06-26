@@ -31,7 +31,7 @@
 | Member   | User Case (UC) Assigned    |  
 | :------- | :------------------------- |
 | Lê Minh Trí | UC2 |  
-| Lê Thành Tài | UC1 | 
+| Lê Thành Tài | UC1,UC3 | 
 | Lê Minh Tân | UC6,UC7 |
 | Nguyễn Trí Thành | UC14 |
 | Đoàn Đình Quang Trường | UC5 | 
