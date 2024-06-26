@@ -50,7 +50,7 @@ namespace ODTLearning.Repositories
                 Gmail = account.Email,
                 Birthdate = account.DateOfBirth,
                 Gender = account.Gender,
-                Avatar = account.Avatar == null ? "" : imgLib.GetImanges(account.Avatar),
+                Avatar = account.Avatar,
                 SpeacializedSkill = tutor.SpecializedSkills,
                 Experience = tutor.Experience,
                 Fields = fields,
