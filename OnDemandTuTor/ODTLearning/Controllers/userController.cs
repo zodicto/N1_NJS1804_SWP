@@ -500,32 +500,7 @@ namespace ODTLearning.Controllers
 
             });
         }
-        [HttpPut("UpdateAvatarFB")]
-        public async Task<IActionResult> UpdateAvatarFB(string idAccount, [FromBody] AvatarUpdateModel avatar )
-        {
-            var response = await _repo.UpdateAvatarFB(idAccount, avatar);
-
-
-            if (response.Success)
-
-            {
-                return Ok(new
-                {
-                    Success = true,
-
-                    Message = response.Message
-
-                });
-            }
-
-            return BadRequest(new
-            {
-                Success = false,
-
-                Message = response.Message
-
-            });
-        }
+       
 
         [HttpPut("ChangePassword")]
         public async Task<IActionResult> ChangePassword(string id, ChangePasswordModel model)

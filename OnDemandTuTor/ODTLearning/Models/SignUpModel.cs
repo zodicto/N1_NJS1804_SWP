@@ -24,7 +24,7 @@ namespace ODTLearning.Models
         public string? Phone { get; set; }
 
         public DateOnly? date_of_birth { get; set; }
-
+        public string? avatar { get; set; }
         public string? Gender { get; set; }
     }
     public class SignUpModelOfTutor 

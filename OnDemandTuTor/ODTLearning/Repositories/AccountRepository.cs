@@ -418,31 +418,7 @@ namespace ODTLearning.Repositories
         }
 
 
-        public async Task<ApiResponse<object>> UpdateAvatarFB(string IdAccount, AvatarUpdateModel avatarModel)
-        {
-            var response = new ApiResponse<bool>();
 
-            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == IdAccount);
-            if (user == null)
-            {
-                return new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy người dùng nào với ID này"
-                };
-            }
-
- 
-            user.Avatar = avatarModel.Avatar;
-
-            await _context.SaveChangesAsync();
-
-            return new ApiResponse<object>
-            {
-                Success = true,
-                Message = "Cập nhật ảnh đại diện thành công"
-            };
-        }
 
 
         public async Task<string> ChangePassword(string id, ChangePasswordModel model)
@@ -512,6 +488,7 @@ namespace ODTLearning.Repositories
             user.FullName = model.FullName;
             user.DateOfBirth = model.date_of_birth;
             user.Gender = model.Gender;
+            user.Avatar = model.avatar;
             user.Address = model.Address;
             user.Phone = model.Phone;
 
