@@ -28,5 +28,6 @@ namespace ODTLearning.Repositories
         public Task<string> ForgotPassword(string Email);
         public Task<ApiResponse<bool>> UpdateProfile(string id, UpdateProfile model);
         public Task<ApiResponse<object>> GetProfile(string id);
+        public Task<ApiResponse<TutorResponse>> SignUpOftutorFB(string IdAccount, SignUpModelOfTutorFB model);
     }
 }

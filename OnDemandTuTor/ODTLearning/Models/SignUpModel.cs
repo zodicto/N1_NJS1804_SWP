@@ -37,4 +37,13 @@ namespace ODTLearning.Models
         public IFormFile? ImageQualification { get; set; }
     }
 
+    public class SignUpModelOfTutorFB
+    {
+        public string? SpecializedSkills { get; set; }
+        public int? Experience { get; set; }
+        public string? Subject { get; set; }
+        public string? QualificationName { get; set; }
+        public string? Type { get; set; }
+        public string? ImageQualification { get; set; }
+    }
 }

@@ -128,6 +128,40 @@ namespace ODTLearning.Controllers
             }
         }
 
+        [HttpPost("registerAsTutorFB")]
+        public async Task<IActionResult> SignUpOfTutorFB(string IDAccount,  SignUpModelOfTutorFB model)
+        {
+            try
+            {
+                var user = await _repo.SignUpOftutorFB(IDAccount, model);
+
+                if (user != null)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        user.Message,
+                        user.Data,
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    user.Message,
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while signing up as a tutor.");
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An internal server error occurred. Please try again later."
+                });
+            }
+        }
+
 
         [HttpPost("login")]
         public async Task<IActionResult> SignIn(SignInModel model)

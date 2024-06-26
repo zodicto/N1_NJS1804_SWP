@@ -165,7 +165,88 @@ namespace ODTLearning.Repositories
             };
         }
 
-         
+        public async Task<ApiResponse<TutorResponse>> SignUpOftutorFB(string IdAccount, SignUpModelOfTutorFB model)
+        {
+            // Tìm kiếm account trong DB bằng id
+            var existingUser = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == IdAccount);
+            if (existingUser == null)
+            {
+                // Trường hợp không tìm thấy tài khoản
+                return new ApiResponse<TutorResponse>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy tài khoản với ID này",
+                };
+            }
+
+            // Tạo mới đối tượng tutor
+            var tutor = new Tutor
+            {
+                Id = Guid.NewGuid().ToString(),
+                SpecializedSkills = model.SpecializedSkills,
+                Experience = model.Experience,
+                Status = "Chưa được duyệt",
+                IdAccount = existingUser.Id
+            };
+
+            // Tạo mới đối tượng educationalqualification
+            var educationalQualification = new EducationalQualification
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdTutor = tutor.Id,
+                QualificationName = model.QualificationName,
+                Type = model.Type,
+                Img = model.ImageQualification
+            };
+
+            // Tìm môn học theo tên
+            var subjectModel = await _context.Subjects.FirstOrDefaultAsync(lm => lm.SubjectName == model.Subject);
+            if (subjectModel == null)
+            {
+                return new ApiResponse<TutorResponse>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy môn học nào với tên này",
+                };
+            }
+
+            // Tạo mới đối tượng TutorSubject
+            var tutorSubject = new TutorSubject
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdSubject = subjectModel.Id,
+                IdTutor = tutor.Id,
+            };
+
+            // Thêm các đối tượng vào DB
+            await _context.Tutors.AddAsync(tutor);
+            await _context.EducationalQualifications.AddAsync(educationalQualification);
+            await _context.TutorSubjects.AddAsync(tutorSubject);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                // Trả về ID của tutor đã được tạo với tên là idTutor
+                return new ApiResponse<TutorResponse>
+                {
+                    Success = true,
+                    Message = "Đăng ký gia sư thành công. Bạn vui lòng chờ duyệt",
+                    Data = new TutorResponse { IdTutor = tutor.Id }
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu có xảy ra
+                Console.WriteLine($"Error while saving changes: {ex.Message}");
+                return new ApiResponse<TutorResponse>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lưu dữ liệu",
+                    Data = null
+                };
+            }
+        }
+
 
         public async Task<ApiResponse<UserResponse>> SignInValidationOfAccount(SignInModel model)
         {
@@ -351,7 +432,7 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            // Cập nhật avatar cho dù hiện tại có avatar hay không
+ 
             user.Avatar = avatarModel.Avatar;
 
             await _context.SaveChangesAsync();
