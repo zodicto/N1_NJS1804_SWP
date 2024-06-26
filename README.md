@@ -21,9 +21,9 @@
 
 | Sprint   | User Case (UC)             |
 | :------- | :------------------------- |
-| Sprint 1 | UC1, UC2, UC3              |
-| Sprint 2 | UC6, UC7, UC14, UC15, UC16, UC17, UC18, UC19, UC20, UC21, UC22 |
-| Sprint 3 | UC4, UC5, UC23, UC24, UC25, UC26, UC27 |
+| Sprint 1 | UC1, UC2, UC3,UC28, UC5 ,UC14,UC6,UC7    |
+| Sprint 2 | UC6, UC14, UC15, UC16, UC17, UC18, UC19, UC20, UC21, UC22 |
+| Sprint 3 | UC4, UC23, UC24, UC25, UC26, UC27 |
 | Sprint 4 | UC8, UC9, UC10, UC11, UC12, UC13    |
 
 ### Member Assignments for Sprint 1
@@ -31,7 +31,9 @@
 | Member   | User Case (UC) Assigned    |  
 | :------- | :------------------------- |
 | Lê Minh Trí | UC2 |  
-| Lê Thành Tài | UC3 | 
-| Lê Minh Tân | UC2, UC3 | 
-| Nguyễn Trí Thành | UC2 |
-| Đoàn Đình Quang Trường | UC2 | 
+| Lê Thành Tài | UC1 | 
+| Lê Minh Tân | UC6,UC7 |
+| Nguyễn Trí Thành | UC14 |
+| Đoàn Đình Quang Trường | UC5 | 
+| Lê Phước Lộc | UC28 |
+
