@@ -7,7 +7,9 @@ public partial class Rent
 {
     public string Id { get; set; } = null!;
 
-    public double? Price { get; set; }
+    public decimal? Price { get; set; }
+
+    public DateTime? CreateDate { get; set; }
 
     public string? IdSubject { get; set; }
 
@@ -17,11 +19,5 @@ public partial class Rent
 
     public string? IdAccount { get; set; }
 
-    public virtual Account? IdAccountNavigation { get; set; }
-
     public virtual Request? IdRequestNavigation { get; set; }
-
-    public virtual Subject? IdSubjectNavigation { get; set; }
-
-    public virtual Tutor? IdTutorNavigation { get; set; }
 }

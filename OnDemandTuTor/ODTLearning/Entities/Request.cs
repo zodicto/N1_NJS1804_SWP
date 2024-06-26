@@ -17,7 +17,7 @@ public partial class Request
 
     public string? Status { get; set; }
 
-    public DateOnly? CreateDate { get; set; }
+    public DateTime? CreateDate { get; set; }
 
     public string? TimeTable { get; set; }
 
@@ -42,4 +42,6 @@ public partial class Request
     public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
 
     public virtual ICollection<RequestLearning> RequestLearnings { get; set; } = new List<RequestLearning>();
+
+    public virtual ICollection<Schedule> Schedules { get; set; } = new List<Schedule>();
 }

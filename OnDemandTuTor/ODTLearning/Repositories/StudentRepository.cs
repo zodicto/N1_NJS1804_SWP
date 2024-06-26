@@ -100,7 +100,7 @@ namespace ODTLearning.Repositories
                 {
                     Id = Guid.NewGuid().ToString(),
                     Title = model.Title,
-                    CreateDate = DateOnly.FromDateTime(DateTime.Now),
+                    CreateDate = DateTime.Now,
                     Price = model.Price,
                     TimeStart = parsedTimeStart,
                     TimeEnd = parsedTimeEnd,
