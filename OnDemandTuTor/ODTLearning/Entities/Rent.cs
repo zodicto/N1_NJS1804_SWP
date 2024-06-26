@@ -7,7 +7,7 @@ public partial class Rent
 {
     public string Id { get; set; } = null!;
 
-    public decimal? Price { get; set; }
+    public double? Price { get; set; }
 
     public string? IdSubject { get; set; }
 

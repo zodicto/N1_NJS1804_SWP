@@ -178,32 +178,18 @@ namespace ODTLearning.Repositories
                 {
                     Title = r.Title,
                     Price = r.Price,
+                    TotalSession = r.TotalSession,
+                    TimeTable = r.TimeTable,
                     Description = r.Description,
                     Subject = r.IdSubjectNavigation.SubjectName, // Assuming you have a Subject property in your Request model
                     LearningMethod = r.LearningMethod,
                     Class = r.IdClassNavigation.ClassName,
-                    Date = r.Schedules.FirstOrDefault().Date,
-                    TimeStart = r.Schedules.FirstOrDefault().TimeStart.ToString(),
-                    TimeEnd = r.Schedules.FirstOrDefault().TimeEnd.ToString(),
+                    TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
+                    TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
                     IdRequest = r.Id,
                     Status = r.Status,
                     FullName = r.IdAccountNavigation.FullName // Include Account Full Name
                 }).ToListAsync();
-
-            // Format the Time string if needed
-            foreach (var request in pendingRequests)
-            {
-                if (!string.IsNullOrEmpty(request.TimeStart))
-                {
-                    var timeOnly = TimeOnly.Parse(request.TimeStart);
-                    request.TimeStart = timeOnly.ToString("HH:mm");
-                }
-                if (!string.IsNullOrEmpty(request.TimeEnd))
-                {
-                    var timeOnly = TimeOnly.Parse(request.TimeEnd);
-                    request.TimeEnd = timeOnly.ToString("HH:mm");
-                }
-            }
 
             return new ApiResponse<List<ViewRequestOfStudent>>
             {
@@ -212,6 +198,7 @@ namespace ODTLearning.Repositories
                 Data = pendingRequests
             };
         }
+
 
 
 

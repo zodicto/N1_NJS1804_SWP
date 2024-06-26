@@ -23,6 +23,6 @@
 
         public string? Phone { get; set; }
 
-        public decimal? AccountBalance { get; set; }
+        public float? AccountBalance { get; set; }
     }
 }

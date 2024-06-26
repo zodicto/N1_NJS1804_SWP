@@ -25,7 +25,7 @@ public partial class Account
 
     public string? Phone { get; set; }
 
-    public decimal? AccountBalance { get; set; }
+    public float? AccountBalance { get; set; }
 
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
@@ -35,5 +35,5 @@ public partial class Account
 
     public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
 
-    public virtual ICollection<Tutor> Tutors { get; set; } = new List<Tutor>();
+    public virtual Tutor? Tutor { get; set; }
 }

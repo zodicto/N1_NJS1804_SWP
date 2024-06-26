@@ -78,7 +78,7 @@ namespace ODTLearning.Repositories
                 TransactionId = vnp_TransactionId.ToString(),
                 Token = vnp_SecureHash.ToString(),
                 VnPayResponseCode = vnp_ResponseCode.ToString(),
-                Amount = decimal.Parse(vnp_Amount)
+                Amount = float.Parse(vnp_Amount)
             };
         }
     }
