@@ -72,11 +72,11 @@ namespace ODTLearning.Repositories
 
             DateTime? date = null;
 
-            if (Condition == "1 tuần") 
+            if (Condition.ToLower() == "1 tuần") 
             {
                 date = DateTime.Now.AddDays(-7);
             }
-            if (Condition == "1 tháng")
+            if (Condition.ToLower() == "1 tháng")
             {
                 date = DateTime.Now.AddMonths(-1);
             }
@@ -88,7 +88,7 @@ namespace ODTLearning.Repositories
 
             var data = rent.Include(x => x.IdRequestNavigation).ThenInclude(x => x.IdSubjectNavigation)
                            .Include(x => x.IdRequestNavigation).ThenInclude(x => x.IdAccountNavigation)
-                           .Join(_context.Tutors.Include(t => t.IdAccountNavigation), r => r.IdTutor, t => t.Id, (r, t) => new
+                           .Join(_context.Accounts, r => r.IdTutor, a => a.Id, (r, a) => new
                            {
                                User = new
                                {
@@ -101,17 +101,17 @@ namespace ODTLearning.Repositories
                                    Phone = r.IdRequestNavigation.IdAccountNavigation.Phone
                                },
                                Subject = r.IdRequestNavigation.IdSubjectNavigation.SubjectName,
-                               //Price = x.Price,
+                               Price = r.Price,
                                CreateDate = r.CreateDate,
                                Tutor = new
                                {
-                                   Name = t.IdAccountNavigation.FullName,
-                                   Email = t.IdAccountNavigation.Email,
-                                   DateOfBirth = t.IdAccountNavigation.DateOfBirth,
-                                   Gender = t.IdAccountNavigation.Gender,
-                                   Avatar = t.IdAccountNavigation.Avatar,
-                                   Address = t.IdAccountNavigation.Address,
-                                   Phone = t.IdAccountNavigation.Phone
+                                   Name = a.FullName,
+                                   Email = a.Email,
+                                   DateOfBirth = a.DateOfBirth,
+                                   Gender = a.Gender,
+                                   Avatar = a.Avatar,
+                                   Address = a.Address,
+                                   Phone = a.Phone
                                },
                            }).ToList();
 

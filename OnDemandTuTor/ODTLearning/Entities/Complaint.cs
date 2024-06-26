@@ -9,8 +9,6 @@ public partial class Complaint
 
     public string? Description { get; set; }
 
-    public string? Status { get; set; }
-
     public string? IdAccount { get; set; }
 
     public string? IdTutor { get; set; }

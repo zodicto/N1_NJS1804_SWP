@@ -490,7 +490,8 @@ namespace ODTLearning.Repositories
             var rent = new Rent
             {
                 Id = Guid.NewGuid().ToString(),
-                //Price = request.Price,                
+                Price = request.Price,   
+                CreateDate = DateTime.Now,                
                 IdSubject = request.IdSubject,
                 IdRequest = idRequest,
                 IdAccount = request.IdAccount,
