@@ -337,6 +337,33 @@ namespace ODTLearning.Repositories
         }
 
 
+        public async Task<ApiResponse<object>> UpdateAvatarFB(string IdAccount, AvatarUpdateModel avatarModel)
+        {
+            var response = new ApiResponse<bool>();
+
+            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == IdAccount);
+            if (user == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng nào với ID này"
+                };
+            }
+
+            // Cập nhật avatar cho dù hiện tại có avatar hay không
+            user.Avatar = avatarModel.Avatar;
+
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Cập nhật ảnh đại diện thành công"
+            };
+        }
+
+
         public async Task<string> ChangePassword(string id, ChangePasswordModel model)
         {
             var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
