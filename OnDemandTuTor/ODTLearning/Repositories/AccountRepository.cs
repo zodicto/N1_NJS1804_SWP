@@ -471,19 +471,18 @@ namespace ODTLearning.Repositories
 
             return "Gửi mật khẩu mới thành công";
         }
-        public async Task<ApiResponse<bool>> UpdateProfile(string id, UpdateProfile model)
+        public async Task<ApiResponse<UpdateProfile>> UpdateProfile(string id, UpdateProfile model)
         {
-            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id );
+            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
             {
-                return new ApiResponse<bool>
+                return new ApiResponse<UpdateProfile>
                 {
                     Success = false,
                     Message = "Không tìm thấy người dùng nào với ID này",
                 };
             }
-
 
             user.FullName = model.FullName;
             user.DateOfBirth = model.date_of_birth;
@@ -494,12 +493,24 @@ namespace ODTLearning.Repositories
 
             await _context.SaveChangesAsync();
 
-            return new ApiResponse<bool>
+            var updatedUserResponse = new UpdateProfile
+            {
+                FullName = user.FullName,
+                date_of_birth = user.DateOfBirth,
+                Gender = user.Gender,
+                avatar = user.Avatar,
+                Address = user.Address,
+                Phone = user.Phone
+            };
+
+            return new ApiResponse<UpdateProfile>
             {
                 Success = true,
                 Message = "Cập nhật thông tin người dùng thành công",
+                Data = updatedUserResponse
             };
         }
+
 
 
         public async Task<ApiResponse<object>> GetProfile(string id)

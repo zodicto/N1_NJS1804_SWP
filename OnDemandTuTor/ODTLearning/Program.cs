@@ -82,7 +82,8 @@ internal class Program
                               {
                                   policy.WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:7133")
                                         .AllowAnyHeader()
-                                        .AllowAnyMethod();
+                                        .AllowAnyMethod()
+                                        .AllowCredentials();
                               });
         });
 

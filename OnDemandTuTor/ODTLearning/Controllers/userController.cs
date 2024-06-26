@@ -562,7 +562,8 @@ namespace ODTLearning.Controllers
             return Ok(new
             {
                 Success = true,
-                response.Message
+                response.Message,
+                response.Data
             });
             }
             catch (Exception ex)
