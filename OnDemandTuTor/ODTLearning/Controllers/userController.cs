@@ -16,6 +16,7 @@ using ODTLearning.Entities;
 using NuGet.Common;
 using Microsoft.EntityFrameworkCore;
 using Azure;
+using System.Security.Claims;
 
 namespace ODTLearning.Controllers
 {
@@ -406,20 +407,35 @@ namespace ODTLearning.Controllers
                 return BadRequest("Google authentication failed");
 
             var claims = authenticateResult.Principal.Identities
-                .FirstOrDefault().Claims.Select(claim => new
-                {
-                    claim.Type,
-                    claim.Value
-                });
+                .FirstOrDefault().Claims.ToList();
+
+            var userId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var userName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var userEmail = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+
+            var user = new UserResponse
+            {
+                Id = userId,
+                FullName = userName,
+                Email = userEmail,
+                Roles = "User"
+            };
+
+            // Gọi phương thức lưu người dùng vào cơ sở dữ liệu
+            var result = await _repo.SaveGoogleUserAsync(user);
+
+            if (!result.Success)
+            {
+                return BadRequest(result.Message);
+            }
 
             return Ok(new
             {
                 Message = "Google authentication successful",
-                Claims = claims
+                Claims = claims.Select(c => new { c.Type, c.Value })
             });
-
-
         }
+
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout([FromBody] LogoutModel model)

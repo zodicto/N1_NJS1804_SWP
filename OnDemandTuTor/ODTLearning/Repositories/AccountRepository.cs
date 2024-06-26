@@ -561,7 +561,38 @@ namespace ODTLearning.Repositories
 
 
 
+        public async Task<ApiResponse<bool>> SaveGoogleUserAsync(UserResponse user)
+        {
+            var existingUser = await _context.Accounts.FirstOrDefaultAsync(a => a.Email == user.Email);
 
+            if (existingUser == null)
+            {
+                var newUser = new Account
+                {
+                    Id = user.Id,
+                    FullName = user.FullName,
+                    Email = user.Email,
+                    Roles = "Học sinh"
+                };
+
+                await _context.Accounts.AddAsync(newUser);
+                await _context.SaveChangesAsync();
+
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "User registered successfully",
+                    Data = true
+                };
+            }
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "User already exists",
+                Data = true
+            };
+        }
 
     }
 }

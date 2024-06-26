@@ -1,3 +1,4 @@
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -50,7 +51,10 @@ internal class Program
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        
         })
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddGoogle(googleOptions =>
         {
             IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
