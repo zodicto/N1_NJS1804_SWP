@@ -235,7 +235,7 @@ namespace ODTLearning.Repositories
             }
 
 
-            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == idAccount && a.Roles == "Tutor");
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == idAccount && a.Roles.ToLower() == "gia sư");
 
             if (account == null)
             {

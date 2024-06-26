@@ -11,12 +11,12 @@ namespace ODTLearning.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class studentController : ControllerBase
+    public class StudentController : ControllerBase
     {
         private readonly IStudentRepository _repo;
         private readonly DbminiCapstoneContext _context;
 
-        public studentController(IStudentRepository repo, DbminiCapstoneContext context)
+        public StudentController(IStudentRepository repo, DbminiCapstoneContext context)
         {
             _repo = repo;
             _context = context;

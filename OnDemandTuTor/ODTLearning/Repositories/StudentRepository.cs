@@ -490,7 +490,7 @@ namespace ODTLearning.Repositories
             var rent = new Rent
             {
                 Id = Guid.NewGuid().ToString(),
-                //  Price = request.Price,
+                //Price = request.Price,                
                 IdSubject = request.IdSubject,
                 IdRequest = idRequest,
                 IdAccount = request.IdAccount,
@@ -537,7 +537,7 @@ namespace ODTLearning.Repositories
         {
             var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
 
-            var tutor = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdAccountTutor && x.Roles == "Gia sư");
+            var tutor = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdAccountTutor && x.Roles.ToLower() == "gia sư");
 
             if (user == null || tutor == null)
             {
