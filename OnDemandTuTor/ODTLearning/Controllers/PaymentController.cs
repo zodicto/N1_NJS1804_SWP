@@ -35,7 +35,7 @@ namespace ODTLearning.Controllers
                     Message = "Not found user"
                 });
             }
-            user.AccountBalance = user.AccountBalance + model.Amount;
+
             var transaction = new Transaction
             {
                 Id = Guid.NewGuid().ToString(),
