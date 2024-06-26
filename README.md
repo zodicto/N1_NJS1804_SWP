@@ -30,10 +30,10 @@
 
 | Member   | User Case (UC) Assigned    |  
 | :------- | :------------------------- |
-| Lê Minh Trí | UC2 |  
-| Lê Thành Tài | UC1,UC3 | 
-| Lê Minh Tân | UC6,UC7 |
-| Nguyễn Trí Thành | UC14 |
-| Đoàn Đình Quang Trường | UC5 | 
-| Lê Phước Lộc | UC28 |
+| Lê Minh Trí | UC2-Register as a tutor |  
+| Lê Thành Tài | UC1-Register ,UC3-Login | 
+| Lê Minh Tân | UC6-Approved Tutor Profile,UC7-Reject Tutor Profile |
+| Nguyễn Trí Thành | UC14-Create Request |
+| Đoàn Đình Quang Trường | UC5-Edit profile | 
+| Lê Phước Lộc | UC28-Change Password |
 
