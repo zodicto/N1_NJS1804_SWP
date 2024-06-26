@@ -7,6 +7,7 @@ using ODTLearning.Entities;
 using ODTLearning.Helpers;
 using ODTLearning.Models;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -533,7 +534,7 @@ namespace ODTLearning.Repositories
                 FullName = account.FullName,
                 Date_of_birth = account.DateOfBirth,
                 Gender = account.Gender,
-                Avatar = imgLib.GetImanges(account.Avatar),
+                Avatar = account.Avatar,
                 Address = account.Address,
                 Phone = account.Phone,
                 AccountBalance = account.AccountBalance
