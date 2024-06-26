@@ -28,10 +28,10 @@
 
 ### Member Assignments for Sprint 1
 
-| Member   | User Case (UC) Assigned    |  Test Case |
-| :------- | :------------------------- | ----------- |
-| Lê Minh Trí | UC1 | MU01 - Register with the correct information, MU02 - Register with the exist email |
-| Lê Thành Tài | UC3 | MU03 - Login with email and password must be correct, MU04 - Check email exist |
-| Lê Minh Tân | UC2, UC3 | MU05 - Login with password wrong, MU06 - Register tutor with the correct information |
-| Nguyễn Trí Thành | UC2 |MU07 - Register become a tutor without account|
-| Đoàn Đình Quang Trường | UC2 | MU08 - Register tutor with non existent subject | 
+| Member   | User Case (UC) Assigned    |  
+| :------- | :------------------------- |
+| Lê Minh Trí | UC2 |  
+| Lê Thành Tài | UC3 | 
+| Lê Minh Tân | UC2, UC3 | 
+| Nguyễn Trí Thành | UC2 |
+| Đoàn Đình Quang Trường | UC2 | 
