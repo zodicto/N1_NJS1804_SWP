@@ -43,6 +43,7 @@ namespace ODTLearning.Controllers
         {
             var response = await _repo.PaymentExecute(Request.Query);
 
+
             if (response == null || response.VnPayResponseCode != "00")
             {
                 return BadRequest(new 

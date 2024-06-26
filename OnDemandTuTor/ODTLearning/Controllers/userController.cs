@@ -429,12 +429,22 @@ namespace ODTLearning.Controllers
                 return BadRequest(result.Message);
             }
 
-            return Ok(new
-            {
-                Message = "Google authentication successful",
-                Claims = claims.Select(c => new { c.Type, c.Value })
-            });
+            // Tạo một URL để chuyển hướng đến ứng dụng client
+            var redirectUrl = "http://localhost:3000/api/user/google-callback"; // URL của ứng dụng client
+
+            // Thêm các thông tin cần thiết vào URL dưới dạng query string
+            var queryParams = new List<string>
+    {
+        $"id={Uri.EscapeDataString(userId)}",
+        $"name={Uri.EscapeDataString(userName)}",
+        $"email={Uri.EscapeDataString(userEmail)}"
+    };
+
+            var finalRedirectUrl = $"{redirectUrl}?{string.Join("&", queryParams)}";
+
+            return Redirect(finalRedirectUrl);
         }
+
 
 
         [HttpPost("logout")]

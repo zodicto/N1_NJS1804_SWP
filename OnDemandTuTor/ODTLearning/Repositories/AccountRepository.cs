@@ -555,6 +555,7 @@ namespace ODTLearning.Repositories
 
             if (existingUser == null)
             {
+                // Người dùng chưa tồn tại, tạo người dùng mới
                 var newUser = new Account
                 {
                     Id = user.Id,
@@ -573,14 +574,22 @@ namespace ODTLearning.Repositories
                     Data = true
                 };
             }
-
-            return new ApiResponse<bool>
+            else
             {
-                Success = true,
-                Message = "User already exists",
-                Data = true
-            };
+                // Người dùng đã tồn tại, cập nhật thông tin người dùng
+                existingUser.FullName = user.FullName;
+                existingUser.Roles = user.Roles; // Cập nhật roles nếu cần, hoặc có thể bỏ qua nếu không muốn cập nhật
+                await _context.SaveChangesAsync();
+
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "User already exists and has been updated",
+                    Data = true
+                };
+            }
         }
+
 
     }
 }
