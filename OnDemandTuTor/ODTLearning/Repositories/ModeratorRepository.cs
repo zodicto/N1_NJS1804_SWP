@@ -17,69 +17,60 @@ namespace ODTLearning.Repositories
             _context = context;
         }
 
-        public async Task<List<ListTutorToConfirm>?> GetListTutorsToCofirm()
+        public async Task<ApiResponse<List<ListTutorToConfirmFB>>> GetListTutorsToConfirm()
         {
-            var tutors = await _context.Tutors
-                .Include(t => t.IdAccountNavigation)
-                .Where(t => t.Status == "Operating")
-                .Select(t => new ListTutorToConfirm
-                {
-                    Id = t.Id,
-                    fullName = t.IdAccountNavigation.FullName
-                })
-                .ToListAsync();
-
-            // Kiểm tra nếu danh sách tutor rỗng thì trả về null
-            if (!tutors.Any())
+            try
             {
-                return null;
-            }
-
-            return tutors;
-        }
-        public async Task<object?> GetTutorProfileToConfirm(string id)
-        {
-            var tutorDetails = await _context.Tutors
-                .Include(t => t.IdAccountNavigation)
-                .Include(t => t.TutorSubjects)
-                    .ThenInclude(ts => ts.IdSubjectNavigation)
-                .Include(t => t.EducationalQualifications)
-                .Where(t => t.IdAccount == id)
-                .Select(t => new
-                {
-                    TutorId = t.Id,
-                    SpecializedSkills = t.SpecializedSkills,
-                    Experience = t.Experience,
-                    Status = t.Status,
-                    Account = new
+                var tutors = await _context.Tutors
+                    .Include(t => t.IdAccountNavigation)
+                    .Include(t => t.TutorSubjects)
+                        .ThenInclude(ts => ts.IdSubjectNavigation)
+                    .Include(t => t.EducationalQualifications)
+                    .Where(t => t.Status == "Chưa duyệt")
+                    .Select(t => new ListTutorToConfirmFB
                     {
-                        Id = t.IdAccountNavigation.Id,
-                        FullName = t.IdAccountNavigation.FullName,
-                        Email = t.IdAccountNavigation.Email,
-                        DateOfBirth = t.IdAccountNavigation.DateOfBirth,
-                        Gender = t.IdAccountNavigation.Gender,
-                        Roles = t.IdAccountNavigation.Roles,
-                        Avatar = t.IdAccountNavigation.Avatar,
-                        Address = t.IdAccountNavigation.Address,
-                        Phone = t.IdAccountNavigation.Phone,
-                        AccountBalance = t.IdAccountNavigation.AccountBalance
-                    },
-                    Fields = t.TutorSubjects.Select(ts => new
-                    {
-                        FieldId = ts.IdSubject,
-                        FieldName = ts.IdSubjectNavigation.SubjectName
-                    }),
-                    EducationalQualifications = t.EducationalQualifications.Select(eq => new
-                    {
-                        CertificateName = eq.QualificationName,
-                        Type = eq.Type,
-                        Img = eq.Img
+                        Id = t.IdAccount, // Sử dụng Id của Tutor
+                        SpecializedSkills = t.SpecializedSkills,
+                        Experience = t.Experience,
+                        Subject = t.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName, // Lấy Subject từ TutorSubjects
+                        QualificationName = t.EducationalQualifications.FirstOrDefault().QualificationName, // Lấy QualificationName từ EducationalQualifications
+                        Type = t.EducationalQualifications.FirstOrDefault().Type, // Lấy Type từ EducationalQualifications
+                        ImageQualification = t.EducationalQualifications.FirstOrDefault().Img // Lấy ImageQualification từ EducationalQualifications
                     })
-                })
-                .FirstOrDefaultAsync();
+                    .ToListAsync();
 
-            return tutorDetails;
+                if (!tutors.Any())
+                {
+                    return new ApiResponse<List<ListTutorToConfirmFB>>
+                    {
+                        Success = false,
+                        Message = "Không có gia sư nào cần xác nhận",
+                        Data = null
+                    };
+                }
+
+                return new ApiResponse<List<ListTutorToConfirmFB>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách gia sư thành công",
+                    Data = tutors
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in GetListTutorsToConfirm: {ex.Message}");
+
+                return new ApiResponse<List<ListTutorToConfirmFB>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách gia sư",
+                    Data = null
+                };
+            }
         }
+
+
         public async Task<ApiResponse<bool>> ApproveRequest(string requestId)
         {
             var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
@@ -130,50 +121,103 @@ namespace ODTLearning.Repositories
                 Message = "Yêu cầu của bạn không được duyệt",
                 Data = true
             };
-        }      
-
-        public async Task<bool> ApproveProfileTutor(string id)
-        {
-            var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
-
-            if (tutor == null)
-            {
-                return false;
-            }
-            
-            tutor.Status = "đã duyệt";
-            _context.Tutors.Update(tutor);
-               
-            var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == tutor.IdAccount);
-            account.Roles = "gia sư";
-            _context.Accounts.Update(account);          
-
-            await _context.SaveChangesAsync();
-            return true;            
         }
 
-        public async Task<bool> RejectProfileTutor(string id)
+        public async Task<ApiResponse<bool>> ApproveProfileTutor(string id)
         {
-            var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
-
-            if (tutor == null)
+            try
             {
-                return false;
+                var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
+
+                if (tutor == null)
+                {
+                    return new ApiResponse<bool>
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy gia sư với ID tài khoản này",
+                        Data = false
+                    };
+                }
+
+                tutor.Status = "Đã duyệt";
+                _context.Tutors.Update(tutor);
+
+                var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == tutor.IdAccount);
+                account.Roles = "Gia sư";
+                _context.Accounts.Update(account);
+
+                await _context.SaveChangesAsync();
+
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "Duyệt gia sư thành công",
+                    Data = true
+                };
             }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in ApproveProfileTutor: {ex.Message}");
 
-            tutor.Status = "từ chối";
-            _context.Tutors.Update(tutor);
-
-            await _context.SaveChangesAsync();
-            return true;
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình duyệt gia sư",
+                    Data = false
+                };
+            }
         }
+
+        public async Task<ApiResponse<bool>> RejectProfileTutor(string id)
+        {
+            try
+            {
+                var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
+
+                if (tutor == null)
+                {
+                    return new ApiResponse<bool>
+                    {
+                        Success = false,
+                        Message = "Không tìm thấy gia sư với ID tài khoản này",
+                        Data = false
+                    };
+                }
+
+                tutor.Status = "Từ chối";
+                _context.Tutors.Update(tutor);
+
+                await _context.SaveChangesAsync();
+
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "Từ chối gia sư thành công",
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in RejectProfileTutor: {ex.Message}");
+
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình từ chối gia sư",
+                    Data = false
+                };
+            }
+        }
+
 
 
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetPendingRequests()
         {
             // Truy vấn danh sách các request có status là "chưa duyệt"
             var pendingRequests = await _context.Requests
-                .Where(r => r.Status == "chưa duyệt")
+                .Where(r => r.Status == "Chưa duyệt")
                 .Select(r => new ViewRequestOfStudent
                 {
                     Title = r.Title,

@@ -20,66 +20,59 @@ namespace ODTLearning.Controllers
             _context = context;
         }
 
-        [HttpGet("listTutor")]
+        [HttpGet("viewListTutor")]
         public async Task<IActionResult> ViewListTutorToConfirm()
         {
-            var tutorList = await _repo.GetListTutorsToCofirm();
-
-            if (tutorList == null || !tutorList.Any())
+            try
             {
-                return NotFound(new
+                var response = await _repo.GetListTutorsToConfirm();
+
+                if (!response.Success)
                 {
-                    Success = false,
-                    Message = "Không có gia sư nào đang chờ duyệt"
+                    return NotFound(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
                 });
             }
-
-            return Ok(new
+            catch (Exception ex)
             {
-                Success = true,
-                Message = "Lấy danh sách gia sư đang chờ duyệt thành công",
-                Data = tutorList
-            });
-        }
-        [HttpGet("viewProfile")]
-        public async Task<IActionResult> GetProfileToConfirm(string IdTutor)
-        {
-            var profile = await _repo.GetTutorProfileToConfirm(IdTutor);
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
 
-            if (profile == null)
-            {
-                return NotFound(new
+                return StatusCode(500, new
                 {
                     Success = false,
-                    Message = "Không tìm thấy hồ sơ gia sư"
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
                 });
             }
-
-            return Ok(new
-            {
-                Success = true,
-                Message = "Lấy hồ sơ gia sư thành công",
-                Data = profile
-            });
         }
+
         [HttpPut("approveProfile")]
         public async Task<IActionResult> ApproveProfileTutor(string id)
         {
             var result = await _repo.ApproveProfileTutor(id);
 
-            if (!result)
+            if (!result.Success)
             {
                 return NotFound(new
                 {
                     Success = false,
-                    Message = "Không thể thay đổi trạng thái của gia sư"
+                    result.Message
                 });
             }
 
             return Ok(new
             {
                 Success = true,
-                Message = "Trạng thái của gia sư đã được phê duyệt"
+                result.Message
             });
         }
 
@@ -88,19 +81,19 @@ namespace ODTLearning.Controllers
         {
             var result = await _repo.RejectProfileTutor(id);
 
-            if (!result)
+            if (!result.Success)
             {
                 return NotFound(new
                 {
                     Success = false,
-                    Message = "Không thể thay đổi trạng thái của gia sư"
+                    Message = result.Message
                 });
             }
 
             return Ok(new
             {
                 Success = true,
-                Message = "Trạng thái của gia sư đã được từ chối"
+                Message = result.Message
             });
         }
 

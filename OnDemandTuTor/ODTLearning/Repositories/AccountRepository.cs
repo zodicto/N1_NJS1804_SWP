@@ -46,7 +46,7 @@ namespace ODTLearning.Repositories
                 Email = model.Email,
                 DateOfBirth = model.date_of_birth,
                 Gender = model.Gender,
-                Roles = "học sinh"
+                Roles = "Học sinh"
             };
             // Thêm Account vào context
             await _context.Accounts.AddAsync(user);
@@ -79,7 +79,7 @@ namespace ODTLearning.Repositories
                     Id = Guid.NewGuid().ToString(),
                     SpecializedSkills = model.SpecializedSkills,
                     Experience = model.Experience,
-                    Status = "Chưa được duyệt",
+                    Status = "Chưa duyệt",
                     IdAccount = existingUser.Id
                 };
 
@@ -185,7 +185,7 @@ namespace ODTLearning.Repositories
                 Id = Guid.NewGuid().ToString(),
                 SpecializedSkills = model.SpecializedSkills,
                 Experience = model.Experience,
-                Status = "Chưa được duyệt",
+                Status = "Chưa duyệt",
                 IdAccount = existingUser.Id
             };
 
@@ -206,7 +206,7 @@ namespace ODTLearning.Repositories
                 return new ApiResponse<TutorResponse>
                 {
                     Success = false,
-                    Message = "Không tìm thấy môn học nào với tên này",
+                    Message = "Không tìm thấy môn học nào với tên này. Vui lòng thử lại!",
                 };
             }
 

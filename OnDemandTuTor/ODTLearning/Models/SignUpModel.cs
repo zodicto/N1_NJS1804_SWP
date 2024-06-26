@@ -46,4 +46,8 @@ namespace ODTLearning.Models
         public string? Type { get; set; }
         public string? ImageQualification { get; set; }
     }
+    public class ListTutorToConfirmFB: SignUpModelOfTutorFB
+    {
+          public string? Id { get; set; }
+    }
 }
