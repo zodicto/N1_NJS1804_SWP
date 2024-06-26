@@ -56,7 +56,7 @@ internal class Program
             IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
             googleOptions.ClientId = googleAuthNSection["ClientId"];
             googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
-            googleOptions.CallbackPath = "/signin-google";
+            googleOptions.CallbackPath = "/google-callback"; 
         })
         .AddJwtBearer(options =>
         {
@@ -76,7 +76,7 @@ internal class Program
             options.AddPolicy(name: MyAllowSpecificOrigins,
                               policy =>
                               {
-                                  policy.WithOrigins("http://localhost:3000", "http://localhost:3001")
+                                  policy.WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:7133")
                                         .AllowAnyHeader()
                                         .AllowAnyMethod();
                               });
