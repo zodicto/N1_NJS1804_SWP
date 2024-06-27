@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using Microsoft.Extensions.Primitives;
 using ODTLearning.Helpers;
 using ODTLearning.Models;
 using System.Security.Policy;
@@ -42,18 +43,20 @@ namespace ODTLearning.Repositories
 
         public async Task<VnPaymentResponseModel> PaymentExecute(IQueryCollection collections)
         {
-            var vnpay = new VnPayLibrary();
+            var vnpay = new VnPayLibrary();      
 
-            foreach (var (key, value) in collections) 
+            foreach (var (key, value) in collections)
             {
-                if(!string.IsNullOrEmpty(key) && key.StartsWith("vnp_"))
+                if (!string.IsNullOrEmpty(key) && key.StartsWith("vnp_"))
                 {
                     vnpay.AddResponseData(key, value.ToString());
                 }
             }
 
-            var vnp_orderId = Convert.ToInt64(vnpay.GetResponseData("vnp_TxnRef"));
-            var vnp_TransactionId = Convert.ToInt64(vnpay.GetResponseData("vnp_TransactionNo"));           
+            var vnp_orderId = vnpay.GetResponseData("vnp_TxnRef");
+            var vnp_TransactionId = vnpay.GetResponseData("vnp_TransactionNo");
+            //var vnp_orderId = Convert.ToInt64(vnpay.GetResponseData("vnp_TxnRef"));
+            //var vnp_TransactionId = Convert.ToInt64(vnpay.GetResponseData("vnp_TransactionNo"));           
             var vnp_ResponseCode = vnpay.GetResponseData("vnp_ResponseCode");
             var vnp_SecureHash = collections.FirstOrDefault(x => x.Key == "vnp_SecureHash").Value;
             var vnp_OrderInfo = vnpay.GetResponseData("vnp_OrderInfo");

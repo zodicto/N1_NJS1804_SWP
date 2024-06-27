@@ -50,7 +50,7 @@ namespace ODTLearning.Repositories
                 Gmail = account.Email,
                 Birthdate = account.DateOfBirth,
                 Gender = account.Gender,
-                Avatar = account.Avatar == null ? "" : imgLib.GetImanges(account.Avatar),
+                Avatar = account.Avatar,
                 SpeacializedSkill = tutor.SpecializedSkills,
                 Experience = tutor.Experience,
                 Fields = fields,
@@ -235,7 +235,7 @@ namespace ODTLearning.Repositories
             }
 
 
-            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == idAccount && a.Roles == "Tutor");
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == idAccount && a.Roles.ToLower() == "gia sư");
 
             if (account == null)
             {

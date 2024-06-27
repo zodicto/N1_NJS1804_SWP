@@ -1,6 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Firebase.Auth;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using ODTLearning.Entities;
+using ODTLearning.Models;
 
 
 namespace ODTLearning.Repositories
@@ -24,13 +26,13 @@ namespace ODTLearning.Repositories
                 if (exsitAccount != null)
                 {
 
-                    if (exsitAccount.Roles == "học sinh")
+                    if (exsitAccount.Roles.ToLower() == "học sinh")
                     {
                         _context.Accounts.Remove(exsitAccount);
                         await _context.SaveChangesAsync();
                         result = true;
                     }
-                    else if (exsitAccount.Roles == "gia sư")
+                    else if (exsitAccount.Roles.ToLower() == "gia sư")
                     {
                         var tutor = _context.Tutors.FirstOrDefault(x => x.IdAccount == IDAccount);
                         // Xóa các đối tượng educational qualifications liên quan đến tutor
@@ -62,6 +64,63 @@ namespace ODTLearning.Repositories
             }
 
             return result;
+        }
+
+        public async Task<ApiResponse<object>> ViewRent(string Condition)
+        {
+            var rent = _context.Rents.AsQueryable();
+
+            DateTime? date = null;
+
+            if (Condition.ToLower() == "1 tuần") 
+            {
+                date = DateTime.Now.AddDays(-7);
+            }
+            if (Condition.ToLower() == "1 tháng")
+            {
+                date = DateTime.Now.AddMonths(-1);
+            }
+
+            if (date != null)
+            {
+                rent = rent.Where(x => x.CreateDate >= date);
+            }
+
+            var data = rent.Include(x => x.IdRequestNavigation).ThenInclude(x => x.IdSubjectNavigation)
+                           .Include(x => x.IdRequestNavigation).ThenInclude(x => x.IdAccountNavigation)
+                           .Join(_context.Accounts, r => r.IdTutor, a => a.Id, (r, a) => new
+                           {
+                               User = new
+                               {
+                                   Name = r.IdRequestNavigation.IdAccountNavigation.FullName,
+                                   Email = r.IdRequestNavigation.IdAccountNavigation.Email,
+                                   DateOfBirth = r.IdRequestNavigation.IdAccountNavigation.DateOfBirth,
+                                   Gender = r.IdRequestNavigation.IdAccountNavigation.Gender,
+                                   Avatar = r.IdRequestNavigation.IdAccountNavigation.Avatar,
+                                   Address = r.IdRequestNavigation.IdAccountNavigation.Address,
+                                   Phone = r.IdRequestNavigation.IdAccountNavigation.Phone
+                               },
+                               Subject = r.IdRequestNavigation.IdSubjectNavigation.SubjectName,
+                               Price = r.Price,
+                               CreateDate = r.CreateDate,
+                               Tutor = new
+                               {
+                                   Name = a.FullName,
+                                   Email = a.Email,
+                                   DateOfBirth = a.DateOfBirth,
+                                   Gender = a.Gender,
+                                   Avatar = a.Avatar,
+                                   Address = a.Address,
+                                   Phone = a.Phone
+                               },
+                           }).ToList();
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = data
+            };
         }
     }
 }

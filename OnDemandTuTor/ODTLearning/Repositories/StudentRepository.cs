@@ -4,6 +4,7 @@ using ODTLearning.Helpers;
 using ODTLearning.Models;
 using System.Globalization;
 using System.Net;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ODTLearning.Repositories
 {
@@ -100,7 +101,7 @@ namespace ODTLearning.Repositories
                 {
                     Id = Guid.NewGuid().ToString(),
                     Title = model.Title,
-                    CreateDate = DateOnly.FromDateTime(DateTime.Now),
+                    CreateDate = DateTime.Now,
                     Price = model.Price,
                     TimeStart = parsedTimeStart,
                     TimeEnd = parsedTimeEnd,
@@ -489,7 +490,8 @@ namespace ODTLearning.Repositories
             var rent = new Rent
             {
                 Id = Guid.NewGuid().ToString(),
-                //  Price = request.Price,
+                Price = request.Price,   
+                CreateDate = DateTime.Now,                
                 IdSubject = request.IdSubject,
                 IdRequest = idRequest,
                 IdAccount = request.IdAccount,
@@ -508,7 +510,7 @@ namespace ODTLearning.Repositories
                     Email = tutor.Email,
                     DateOfBirth = tutor.DateOfBirth,
                     Gender = tutor.Gender,
-                    Avatar = imgLib.GetImanges(tutor.Avatar),
+                    Avatar = tutor.Avatar,
                     Address = tutor.Address,
                     Phone = tutor.Phone
                 },
@@ -518,13 +520,85 @@ namespace ODTLearning.Repositories
                     Email = user.Email,
                     DateOfBirth = user.DateOfBirth,
                     Gender = user.Gender,
-                    Avatar = imgLib.GetImanges(user.Avatar),
+                    Avatar = user.Avatar,
                     Address = user.Address,
                     Phone = user.Phone
                 }
             };
 
             return new ApiResponse<SelectTutorModel>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = data
+            };
+        }
+
+        public async Task<ApiResponse<ComplaintResponse>> CreateComplaint(ComplaintModel model)
+        {
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
+
+            var tutor = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdAccountTutor && x.Roles.ToLower() == "gia sư");
+
+            if (user == null || tutor == null)
+            {
+                return new ApiResponse<ComplaintResponse>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng hoặc gia sư",
+                };
+            }
+
+            if (string.IsNullOrEmpty(model.Description))
+            {
+                return new ApiResponse<ComplaintResponse>
+                {
+                    Success = false,
+                    Message = "Không để trống nội dung",
+                };
+            }
+
+            var idTutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == model.IdAccountTutor);
+
+            var complaint = new Complaint
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = model.Description,
+                IdAccount = model.IdUser,
+                IdTutor = idTutor.Id,
+            };
+
+            await _context.Complaints.AddAsync(complaint);
+            await _context.SaveChangesAsync();
+
+            var data = new ComplaintResponse
+            {
+                User = new
+                {
+                    Name = user.FullName,
+                    Email = user.Email,
+                    DateOfBirth = user.DateOfBirth,
+                    Gender = user.Gender,
+                    Avatar = user.Avatar,
+                    Address = user.Address,
+                    Phone = user.Phone
+                },
+
+                Description = model.Description,
+
+                Tutor = new
+                {
+                    Name = tutor.FullName,
+                    Email = tutor.Email,
+                    DateOfBirth = tutor.DateOfBirth,
+                    Gender = tutor.Gender,
+                    Avatar = tutor.Avatar,
+                    Address = tutor.Address,
+                    Phone = tutor.Phone
+                },
+            };
+
+            return new ApiResponse<ComplaintResponse>
             {
                 Success = true,
                 Message = "Thành công",

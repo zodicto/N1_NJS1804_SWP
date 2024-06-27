@@ -11,12 +11,12 @@ namespace ODTLearning.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class studentController : ControllerBase
+    public class StudentController : ControllerBase
     {
         private readonly IStudentRepository _repo;
         private readonly DbminiCapstoneContext _context;
 
-        public studentController(IStudentRepository repo, DbminiCapstoneContext context)
+        public StudentController(IStudentRepository repo, DbminiCapstoneContext context)
         {
             _repo = repo;
             _context = context;
@@ -249,9 +249,31 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("SelectTutor")]
-        public async Task<IActionResult> SelectTutor(string idRequest, string idTutor)
+        public async Task<IActionResult> SelectTutor(string idRequest, string idAccountTutor)
         {
-            var response = await _repo.SelectTutor(idRequest, idTutor);
+            var response = await _repo.SelectTutor(idRequest, idAccountTutor);
+
+            if (response.Success)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = response.Message,
+                    Data = response.Data
+                });
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = response.Message
+            });
+        }
+
+        [HttpPost("CreateComplaint")]
+        public async Task<IActionResult> CreateComplaint(ComplaintModel model)
+        {
+            var response = await _repo.CreateComplaint(model);
 
             if (response.Success)
             {

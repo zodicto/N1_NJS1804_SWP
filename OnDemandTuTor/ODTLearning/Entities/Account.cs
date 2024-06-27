@@ -27,13 +27,15 @@ public partial class Account
 
     public float? AccountBalance { get; set; }
 
+    public virtual ICollection<Complaint> Complaints { get; set; } = new List<Complaint>();
+
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
     public virtual ICollection<Rent1> Rent1s { get; set; } = new List<Rent1>();
 
-    public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
-
     public virtual ICollection<Request> Requests { get; set; } = new List<Request>();
+
+    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
     public virtual Tutor? Tutor { get; set; }
 }

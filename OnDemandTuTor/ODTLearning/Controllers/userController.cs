@@ -22,14 +22,14 @@ namespace ODTLearning.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class userController : ControllerBase
+    public class UserController : ControllerBase
     {
         private readonly IAccountRepository _repo;
         private readonly IConfiguration _configuration;
         private readonly DbminiCapstoneContext _context;
-        private readonly ILogger<userController> _logger;
+        private readonly ILogger<UserController> _logger;
 
-        public userController(IAccountRepository repo, IConfiguration configuration, DbminiCapstoneContext context, ILogger<userController> logger)
+        public UserController(IAccountRepository repo, IConfiguration configuration, DbminiCapstoneContext context, ILogger<UserController> logger)
         {
             _repo = repo;
             _configuration = configuration;

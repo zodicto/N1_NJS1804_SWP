@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ODTLearning;
 using ODTLearning.Entities;
 using ODTLearning.Repositories;
 using System.Text;
@@ -37,6 +38,7 @@ internal class Program
         builder.Services.AddScoped<ITutorRepository, TutorRepository>();
         builder.Services.AddScoped<IStudentRepository, StudentRepository>();
         builder.Services.AddScoped<IModeratorRepository, ModeratorRepository>();
+        builder.Services.AddScoped<IAdminRepository, AdminRepository>();
         builder.Services.AddSingleton<IVnPayRepository, VnPayRepository>();
 
 

@@ -15,6 +15,10 @@ public partial class Schedule
 
     public string? IdService { get; set; }
 
+    public string? IdRequest { get; set; }
+
+    public virtual Request? IdRequestNavigation { get; set; }
+
     public virtual Service? IdServiceNavigation { get; set; }
 
     public virtual ICollection<Rent1> Rent1s { get; set; } = new List<Rent1>();

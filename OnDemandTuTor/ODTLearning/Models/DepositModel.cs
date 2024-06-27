@@ -2,7 +2,7 @@
 {
     public class DepositModel
     {
-        public string FullName { get; set; }
-        public double Amount { get; set; }
+        public string IdAccount { get; set; }
+        public float Amount { get; set; }
     }
 }

@@ -15,11 +15,11 @@ public partial class Tutor
 
     public string? IdAccount { get; set; }
 
+    public virtual ICollection<Complaint> Complaints { get; set; } = new List<Complaint>();
+
     public virtual ICollection<EducationalQualification> EducationalQualifications { get; set; } = new List<EducationalQualification>();
 
     public virtual Account? IdAccountNavigation { get; set; }
-
-    public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
 
     public virtual ICollection<RequestLearning> RequestLearnings { get; set; } = new List<RequestLearning>();
 
