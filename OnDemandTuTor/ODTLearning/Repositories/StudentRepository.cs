@@ -499,11 +499,12 @@ namespace ODTLearning.Repositories
                 IdSubject = request.IdSubject,
                 IdRequest = idRequest,
                 IdAccount = request.IdAccount,
-                IdTutor = idAccountTutor
+                IdTutor = idAccountTutor                
             };
 
             //user.AccountBalance = user.AccountBalance - request.Price;
             tutor.AccountBalance = tutor.AccountBalance - 50000;
+            request.Status = "Đã thuê";
             await _context.AddAsync(rent);
             await _context.SaveChangesAsync();
 
