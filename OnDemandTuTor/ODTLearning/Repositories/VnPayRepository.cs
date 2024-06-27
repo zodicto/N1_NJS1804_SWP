@@ -62,7 +62,7 @@ namespace ODTLearning.Repositories
             var vnp_OrderInfo = vnpay.GetResponseData("vnp_OrderInfo").ToString();
             var vnp_Amount = vnpay.GetResponseData("vnp_Amount");
 
-            string pattern = @"ID Account (\d+)";
+            string pattern = @"ID Account \s*(.*?)\s* với số tiền";
             Regex regex = new Regex(pattern);
             Match match = regex.Match(vnp_OrderInfo);
             string vnp_IdAccount = match.Groups[1].Value;         
@@ -86,7 +86,7 @@ namespace ODTLearning.Repositories
                 TransactionId = vnp_TransactionId.ToString(),
                 Token = vnp_SecureHash.ToString(),
                 VnPayResponseCode = vnp_ResponseCode.ToString(),
-                Amount = float.Parse(vnp_Amount),
+                Amount = float.Parse(vnp_Amount)/100,
                 IdAccount = vnp_IdAccount.ToString()
             };
         }

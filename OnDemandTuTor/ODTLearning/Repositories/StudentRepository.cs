@@ -469,7 +469,7 @@ namespace ODTLearning.Repositories
 
             var tutor = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == idAccountTutor);
 
-            if (tutor == null || tutor.Roles != "gia sư")
+            if (tutor == null || tutor.Roles.ToLower() != "gia sư")
             {
                 return new ApiResponse<SelectTutorModel>
                 {
@@ -481,15 +481,15 @@ namespace ODTLearning.Repositories
 
             var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == request.IdAccount);
 
-            if (user.AccountBalance < request.Price)
-            {
-                return new ApiResponse<SelectTutorModel>
-                {
-                    Success = false,
-                    Message = "Tài khoản user không đủ tiền yêu cầu",
-                    Data = null
-                };
-            }
+            //if (user.AccountBalance < request.Price)
+            //{
+            //    return new ApiResponse<SelectTutorModel>
+            //    {
+            //        Success = false,
+            //        Message = "Tài khoản user không đủ tiền yêu cầu",
+            //        Data = null
+            //    };
+            //}            
 
             var rent = new Rent
             {
@@ -502,7 +502,8 @@ namespace ODTLearning.Repositories
                 IdTutor = idAccountTutor
             };
 
-            user.AccountBalance = user.AccountBalance - request.Price;
+            //user.AccountBalance = user.AccountBalance - request.Price;
+            tutor.AccountBalance = tutor.AccountBalance - 50000;
             await _context.AddAsync(rent);
             await _context.SaveChangesAsync();
 

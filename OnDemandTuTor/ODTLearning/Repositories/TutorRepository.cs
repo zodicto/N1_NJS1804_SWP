@@ -259,6 +259,15 @@ namespace ODTLearning.Repositories
                 };
             }
 
+            if (account.AccountBalance < 50000)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Bạn cần có 50.000 trong tài khoản để tham gia yêu cầu",
+                };
+            }
+
             var tutorId = tutor.Id;
 
             // Kiểm tra xem gia sư đã tham gia yêu cầu này chưa

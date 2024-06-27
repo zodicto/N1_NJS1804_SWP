@@ -72,11 +72,7 @@ namespace ODTLearning.Controllers
                 await _context.Transactions.AddAsync(transaction);
                 await _context.SaveChangesAsync();
 
-                return BadRequest(new
-                {
-                    Success = false,
-                    Message = $"Payment failed. Error payment VnPay: {response.VnPayResponseCode}",
-                });
+                return Redirect("http://localhost:3000/paymentFail");
             }
 
             var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == response.IdAccount);
@@ -87,11 +83,7 @@ namespace ODTLearning.Controllers
             await _context.Transactions.AddAsync(transaction);
             await _context.SaveChangesAsync();
 
-            return Ok(new
-            {
-                Success = true,
-                Message = "Payment successfully"
-            });
+            return Redirect("http://localhost:3000/paymentSucsess");
         }
     }
 }
