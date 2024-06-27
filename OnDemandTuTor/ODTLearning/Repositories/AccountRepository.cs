@@ -472,13 +472,13 @@ namespace ODTLearning.Repositories
 
             return "Gửi mật khẩu mới thành công";
         }
-        public async Task<ApiResponse<UpdateProfile>> UpdateProfile(string id, UpdateProfile model)
+        public async Task<ApiResponse<object>> UpdateProfile(string id, UpdateProfile model)
         {
             var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
             {
-                return new ApiResponse<UpdateProfile>
+                return new ApiResponse<object>
                 {
                     Success = false,
                     Message = "Không tìm thấy người dùng nào với ID này",
@@ -494,23 +494,27 @@ namespace ODTLearning.Repositories
 
             await _context.SaveChangesAsync();
 
-            var updatedUserResponse = new UpdateProfile
+            var updatedUserResponse = new
             {
+                Id = user.Id,
+                Email = user.Email,
                 FullName = user.FullName,
-                date_of_birth = user.DateOfBirth,
+                Date_of_birth = user.DateOfBirth,
                 Gender = user.Gender,
-                avatar = user.Avatar,
+                Avatar = user.Avatar,
                 Address = user.Address,
-                Phone = user.Phone
+                Phone = user.Phone,
+                AccountBalance = user.AccountBalance
             };
 
-            return new ApiResponse<UpdateProfile>
+            return new ApiResponse<object>
             {
                 Success = true,
                 Message = "Cập nhật thông tin người dùng thành công",
                 Data = updatedUserResponse
             };
         }
+
 
 
 
