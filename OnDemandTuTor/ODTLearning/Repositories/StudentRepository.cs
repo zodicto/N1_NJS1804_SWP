@@ -300,6 +300,7 @@ namespace ODTLearning.Repositories
             // Chuyển đổi danh sách requests thành danh sách RequestLearningModel
             var requestLearningModels = requests.Select(r => new RequestLearningModel
             {
+                IdRequest = r.Id,
                 Title = r.Title,
                 Price = r.Price,
                 Description = r.Description,
@@ -341,6 +342,7 @@ namespace ODTLearning.Repositories
             // Chuyển đổi danh sách requests thành danh sách RequestLearningModel
             var requestLearningModels = requests.Select(r => new RequestLearningModel
             {
+                IdRequest = r.Id,
                 Title = r.Title,
                 Price = r.Price,
                 Description = r.Description,
@@ -382,6 +384,7 @@ namespace ODTLearning.Repositories
             // Chuyển đổi danh sách requests thành danh sách RequestLearningModel
             var requestLearningModels = requests.Select(r => new RequestLearningModel
             {
+                IdRequest = r.Id,
                 Title = r.Title,
                 Price = r.Price,
                 Description = r.Description,
