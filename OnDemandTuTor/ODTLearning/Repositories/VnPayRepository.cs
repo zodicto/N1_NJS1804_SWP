@@ -43,10 +43,12 @@ namespace ODTLearning.Repositories
 
         public async Task<VnPaymentResponseModel> PaymentExecute(IQueryCollection collections)
         {
-            var vnpay = new VnPayLibrary();      
+            var vnpay = new VnPayLibrary();
 
+            var a = "collections: ";
             foreach (var (key, value) in collections)
             {
+                a += key + "= " + value;
                 if (!string.IsNullOrEmpty(key) && key.StartsWith("vnp_"))
                 {
                     vnpay.AddResponseData(key, value.ToString());
@@ -68,7 +70,8 @@ namespace ODTLearning.Repositories
             {
                 return new VnPaymentResponseModel
                 {
-                    Success = false
+                    Success = false,
+                    PaymentMethod = a
                 };
             }
 

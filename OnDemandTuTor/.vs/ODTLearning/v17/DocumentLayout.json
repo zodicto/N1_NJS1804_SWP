@@ -182,8 +182,7 @@
               "RelativeToolTip": "ODTLearning\\Controllers\\userController.cs",
               "ViewState": "AQIAAL4BAAAAAAAAAAAewMoBAAAbAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T12:24:44.482Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-25T12:24:44.482Z"
             },
             {
               "$type": "Document",
@@ -193,7 +192,7 @@
               "RelativeDocumentMoniker": "ODTLearning\\Repositories\\StudentRepository.cs",
               "ToolTip": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\StudentRepository.cs",
               "RelativeToolTip": "ODTLearning\\Repositories\\StudentRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAA4AAAA",
+              "ViewState": "AQIAAGEAAAAAAAAAAAAowHQAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-27T00:23:55.085Z",
               "EditorCaption": ""
@@ -208,8 +207,7 @@
               "RelativeToolTip": "ODTLearning\\Controllers\\StudentController.cs",
               "ViewState": "AQIAAIQAAAAAAAAAAAAowJcAAABJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T00:23:43.516Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T00:23:43.516Z"
             },
             {
               "$type": "Document",
@@ -221,8 +219,7 @@
               "RelativeToolTip": "ODTLearning\\Repositories\\IStudentRepository.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAuwAgAAABrAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T12:14:27.177Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T12:14:27.177Z"
             },
             {
               "$type": "Document",
@@ -234,8 +231,7 @@
               "RelativeToolTip": "ODTLearning\\Repositories\\ModeratorRepository.cs",
               "ViewState": "AQIAAAEBAAAAAAAAAAAAAPEAAAA+AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T06:30:10.09Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-26T06:30:10.09Z"
             },
             {
               "$type": "Document",
@@ -247,8 +243,7 @@
               "RelativeToolTip": "ODTLearning\\Controllers\\PaymentController.cs",
               "ViewState": "AQIAAGEAAAAAAAAAAAAAAB4AAAANAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:20:43.869Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:20:43.869Z"
             },
             {
               "$type": "Document",
@@ -260,8 +255,7 @@
               "RelativeToolTip": "ODTLearning\\Repositories\\TutorRepository.cs",
               "ViewState": "AQIAAOAAAAAAAAAAAAD4v9MAAAAhAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T06:30:37.66Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-26T06:30:37.66Z"
             },
             {
               "$type": "Document",
@@ -273,8 +267,7 @@
               "RelativeToolTip": "ODTLearning\\Repositories\\AdminRepository.cs",
               "ViewState": "AQIAABUBAAAAAAAAAAAMwP0AAAA0AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T12:07:51.08Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-26T12:07:51.08Z"
             },
             {
               "$type": "Document",
@@ -286,8 +279,7 @@
               "RelativeToolTip": "ODTLearning\\Repositories\\AccountRepository.cs",
               "ViewState": "AQIAADYCAAAAAAAAAAAAwDECAAA+AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T11:36:29.525Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T11:36:29.525Z"
             },
             {
               "$type": "Document",
@@ -299,8 +291,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\VnPaymentModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAA0AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:04:30.273Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:04:30.273Z"
             },
             {
               "$type": "Document",
@@ -312,8 +303,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\TutorResponse.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAZAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:03:36.628Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:03:36.628Z"
             },
             {
               "$type": "Document",
@@ -325,8 +315,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\TutorListModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAsAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-16T16:02:19.422Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-16T16:02:19.422Z"
             },
             {
               "$type": "Document",
@@ -338,8 +327,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\TokenModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAkAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-15T10:58:23.519Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-15T10:58:23.519Z"
             },
             {
               "$type": "Document",
@@ -351,8 +339,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\SignUpValidationModel.cs",
               "ViewState": "AQIAAAQAAAAAAAAAAAAzwBYAAAAdAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:01:58.608Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:01:58.608Z"
             },
             {
               "$type": "Document",
@@ -364,8 +351,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\UserResponse.cs",
               "ViewState": "AQIAAAcAAAAAAAAAAAAQwBcAAAAeAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T09:57:38.575Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T09:57:38.575Z"
             },
             {
               "$type": "Document",
@@ -377,8 +363,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\SelectTutorModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:01:48.779Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:01:48.779Z"
             },
             {
               "$type": "Document",
@@ -390,8 +375,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\SearchTutorModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:01:46.529Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:01:46.529Z"
             },
             {
               "$type": "Document",
@@ -403,8 +387,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\RequestLearningModel.cs",
               "ViewState": "AQIAAAcAAAAAAAAAAAAQwBQAAAAcAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:01:07.222Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:01:07.222Z"
             },
             {
               "$type": "Document",
@@ -416,8 +399,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\SignInModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T06:31:02.04Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-26T06:31:02.04Z"
             },
             {
               "$type": "Document",
@@ -429,8 +411,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\SignUpModel.cs",
               "ViewState": "AQIAADcAAAAAAAAAAIA6wC8AAAApAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T14:44:25.911Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T14:44:25.911Z"
             },
             {
               "$type": "Document",
@@ -442,8 +423,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\LogoutModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:01:04.984Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:01:04.984Z"
             },
             {
               "$type": "Document",
@@ -455,8 +435,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\DepositModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAAmAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:00:57.644Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:00:57.644Z"
             },
             {
               "$type": "Document",
@@ -468,8 +447,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\DeleteAccountModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAQAAAASAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:00:48.697Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:00:48.697Z"
             },
             {
               "$type": "Document",
@@ -481,8 +459,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\ComplaintResponse.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:00:46.274Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:00:46.274Z"
             },
             {
               "$type": "Document",
@@ -494,8 +471,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\ComplaintModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAAyAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:00:26.834Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:00:26.834Z"
             },
             {
               "$type": "Document",
@@ -507,8 +483,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\ChangePasswordModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:00:23.666Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:00:23.666Z"
             },
             {
               "$type": "Document",
@@ -520,8 +495,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\ApiResponse.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T15:00:18.314Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T15:00:18.314Z"
             },
             {
               "$type": "Document",
@@ -533,8 +507,7 @@
               "RelativeToolTip": "ODTLearning\\Controllers\\ModaretorController.cs",
               "ViewState": "AQIAAFYAAAAAAAAAAAAgwGgAAAA9AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T06:29:07.62Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-26T06:29:07.62Z"
             },
             {
               "$type": "Document",
@@ -546,8 +519,7 @@
               "RelativeToolTip": "ODTLearning\\Repositories\\IModeratorRepository.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAuwAkAAABSAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T06:43:55.596Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-26T06:43:55.596Z"
             },
             {
               "$type": "Document",
@@ -559,8 +531,7 @@
               "RelativeToolTip": "ODTLearning\\Models\\AvatarUpdateModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T05:36:52.556Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-26T05:36:52.556Z"
             },
             {
               "$type": "Document",
@@ -572,8 +543,7 @@
               "RelativeToolTip": "ODTLearning\\Controllers\\AdminController.cs",
               "ViewState": "AQIAAAIAAAAAAAAAAAAUwBoAAAAhAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-27T11:08:29.471Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-27T11:08:29.471Z"
             },
             {
               "$type": "Document",
