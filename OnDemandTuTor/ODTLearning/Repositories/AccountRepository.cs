@@ -81,7 +81,9 @@ namespace ODTLearning.Repositories
                     SpecializedSkills = model.SpecializedSkills,
                     Experience = model.Experience,
                     Status = "Chưa duyệt",
-                    IdAccount = existingUser.Id
+                    IdAccount = existingUser.Id,
+                    Introduction = model.Introduction,
+                   
                 };
 
                 // Tạo mới đối tượng educationalqualification
@@ -187,7 +189,8 @@ namespace ODTLearning.Repositories
                 SpecializedSkills = model.SpecializedSkills,
                 Experience = model.Experience,
                 Status = "Chưa duyệt",
-                IdAccount = existingUser.Id
+                IdAccount = existingUser.Id,
+                Introduction = model.Introduction,
             };
 
             // Tạo mới đối tượng educationalqualification
@@ -198,6 +201,7 @@ namespace ODTLearning.Repositories
                 QualificationName = model.QualificationName,
                 Type = model.Type,
                 Img = model.ImageQualification
+                
             };
 
             // Tìm môn học theo tên
@@ -265,12 +269,7 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            string idTutor = null;
-
-            if (account.Roles == "gia sư" )
-            {
-                idTutor = _context.Tutors.Where(x => account.Id == x.IdAccount).Select(x => x.Id).ToString();
-            }
+            
             // Nếu tài khoản tồn tại và password đúng, trả về thông tin người dùng
             return new ApiResponse<UserResponse>
             {
@@ -279,7 +278,6 @@ namespace ODTLearning.Repositories
                 Data = new UserResponse
                 {
                     Id = account.Id,
-                    IdTutor = idTutor,
                     FullName = account.FullName,
                     Email = account.Email,
                     Date_of_birth = account.DateOfBirth,

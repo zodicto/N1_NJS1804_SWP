@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ODTLearning.Models
 {
@@ -34,6 +35,7 @@ namespace ODTLearning.Models
         public string? Subject { get; set; }
         public string? QualificationName { get; set; }
         public string? Type { get; set; }
+        public string? Introduction { get; set; }
         public IFormFile? ImageQualification { get; set; }
     }
 
@@ -45,9 +47,13 @@ namespace ODTLearning.Models
         public string? QualificationName { get; set; }
         public string? Type { get; set; }
         public string? ImageQualification { get; set; }
+        public string? Introduction { get; set; }
     }
     public class ListTutorToConfirmFB: SignUpModelOfTutorFB
     {
           public string? Id { get; set; }
+        public string? FullName { get; set; }
+        public DateOnly? date_of_birth { get; set; }
+        public string? Gender { get; set; }
     }
 }

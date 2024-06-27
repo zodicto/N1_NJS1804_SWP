@@ -31,6 +31,10 @@ namespace ODTLearning.Repositories
                     {
                         Id = t.IdAccount, // Sử dụng Id của Tutor
                         SpecializedSkills = t.SpecializedSkills,
+                        Introduction = t.Introduction,
+                        date_of_birth = t.IdAccountNavigation.DateOfBirth,
+                        FullName = t.IdAccountNavigation.FullName,
+                        Gender = t.IdAccountNavigation.Gender,
                         Experience = t.Experience,
                         Subject = t.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName, // Lấy Subject từ TutorSubjects
                         QualificationName = t.EducationalQualifications.FirstOrDefault().QualificationName, // Lấy QualificationName từ EducationalQualifications

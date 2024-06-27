@@ -9,6 +9,8 @@ public partial class Tutor
 
     public string? SpecializedSkills { get; set; }
 
+    public string? Introduction { get; set; }
+
     public int? Experience { get; set; }
 
     public string? Status { get; set; }

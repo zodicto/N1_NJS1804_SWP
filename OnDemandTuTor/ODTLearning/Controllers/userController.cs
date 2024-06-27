@@ -131,11 +131,11 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("registerAsTutorFB")]
-        public async Task<IActionResult> SignUpOfTutorFB(string IDAccount,  SignUpModelOfTutorFB model)
+        public async Task<IActionResult> SignUpOfTutorFB(string id,  SignUpModelOfTutorFB model)
         {
             try
             {
-                var user = await _repo.SignUpOftutorFB(IDAccount, model);
+                var user = await _repo.SignUpOftutorFB(id, model);
 
                 if (user != null)
                 {
