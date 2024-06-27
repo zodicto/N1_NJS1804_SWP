@@ -436,7 +436,8 @@ namespace ODTLearning.Repositories
             // Lấy danh sách gia sư tham gia yêu cầu
             var tutors = request.RequestLearnings.Select(rl => new TutorListModel
             {
-                fullName = rl.IdTutorNavigation.IdAccountNavigation.FullName,
+                id = rl.IdTutorNavigation.IdAccount,
+                fullname = rl.IdTutorNavigation.IdAccountNavigation.FullName,
                 gender = rl.IdTutorNavigation.IdAccountNavigation.Gender,
                 specializedskills= rl.IdTutorNavigation.SpecializedSkills,
                 experience = rl.IdTutorNavigation.Experience,
