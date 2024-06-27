@@ -122,11 +122,11 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("join-request")]
-        public async Task<IActionResult> JoinRequest(string requestId, string tutorId)
+        public async Task<IActionResult> JoinRequest(string requestId, string id)
         {
             try
             {
-                var response = await _repo.JoinRequest(requestId, tutorId);
+                var response = await _repo.JoinRequest(requestId, id);
 
                 if (response.Success)
                 {

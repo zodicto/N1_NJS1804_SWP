@@ -3,6 +3,7 @@ using Microsoft.Extensions.Primitives;
 using ODTLearning.Helpers;
 using ODTLearning.Models;
 using System.Security.Policy;
+using System.Text.RegularExpressions;
 
 namespace ODTLearning.Repositories
 {
@@ -19,8 +20,6 @@ namespace ODTLearning.Repositories
             var tick = DateTime.Now.Ticks.ToString();
 
             var vnpay = new VnPayLibrary();
-           
-            vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
 
             vnpay.AddRequestData("vnp_Version", _config["VnPay:Version"]);
             vnpay.AddRequestData("vnp_Command", _config["VnPay:Command"]);
@@ -31,10 +30,11 @@ namespace ODTLearning.Repositories
             vnpay.AddRequestData("vnp_IpAddr", Utils.GetIpAddress(context)); 
             vnpay.AddRequestData("vnp_Locale", _config["VnPay:Locale"]);
 
-            vnpay.AddRequestData("vnp_OrderInfo", "Thanh toán nạp tiền cho: " + model.FullName);
+            vnpay.AddRequestData("vnp_OrderInfo", $"Thanh toán nạp tiền cho {model.FullName} có ID Account {model.IdAccount} với số tiền {model.Amount}");
             vnpay.AddRequestData("vnp_OrderType", "other"); //default value: other
             vnpay.AddRequestData("vnp_ReturnUrl", _config["VnPay:ReturnUrl"]);
             vnpay.AddRequestData("vnp_TxnRef", tick); // Mã tham chiếu của giao dịch tại hệ thống của merchant.Mã này là duy nhất dùng để phân biệt các đơn hàng gửi sang VNPAY.Không được trùng lặp trong ngày    
+            vnpay.AddRequestData("vnp_ExpireDate", DateTime.Now.AddMinutes(15).ToString("yyyyMMddHHmmss"));            
 
             var paymentUrl = vnpay.CreateRequestUrl(_config["VnPay:BaseUrl"], _config["VnPay:HashSecret"]);
 
@@ -45,10 +45,8 @@ namespace ODTLearning.Repositories
         {
             var vnpay = new VnPayLibrary();
 
-            var a = "collections: ";
             foreach (var (key, value) in collections)
             {
-                a += key + "= " + value;
                 if (!string.IsNullOrEmpty(key) && key.StartsWith("vnp_"))
                 {
                     vnpay.AddResponseData(key, value.ToString());
@@ -61,8 +59,13 @@ namespace ODTLearning.Repositories
             //var vnp_TransactionId = Convert.ToInt64(vnpay.GetResponseData("vnp_TransactionNo"));           
             var vnp_ResponseCode = vnpay.GetResponseData("vnp_ResponseCode");
             var vnp_SecureHash = collections.FirstOrDefault(x => x.Key == "vnp_SecureHash").Value;
-            var vnp_OrderInfo = vnpay.GetResponseData("vnp_OrderInfo");
+            var vnp_OrderInfo = vnpay.GetResponseData("vnp_OrderInfo").ToString();
             var vnp_Amount = vnpay.GetResponseData("vnp_Amount");
+
+            string pattern = @"ID Account (\d+)";
+            Regex regex = new Regex(pattern);
+            Match match = regex.Match(vnp_OrderInfo);
+            string vnp_IdAccount = match.Groups[1].Value;         
 
             bool checkSignature = vnpay.ValidateSignature(vnp_SecureHash, _config["VnPay:HashSecret"]);
 
@@ -70,8 +73,7 @@ namespace ODTLearning.Repositories
             {
                 return new VnPaymentResponseModel
                 {
-                    Success = false,
-                    PaymentMethod = a
+                    Success = false
                 };
             }
 
@@ -84,7 +86,8 @@ namespace ODTLearning.Repositories
                 TransactionId = vnp_TransactionId.ToString(),
                 Token = vnp_SecureHash.ToString(),
                 VnPayResponseCode = vnp_ResponseCode.ToString(),
-                Amount = float.Parse(vnp_Amount)
+                Amount = float.Parse(vnp_Amount),
+                IdAccount = vnp_IdAccount.ToString()
             };
         }
     }

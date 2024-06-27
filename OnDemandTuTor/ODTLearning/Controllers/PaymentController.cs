@@ -36,20 +36,9 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            var transaction = new Transaction
-            {
-                Id = Guid.NewGuid().ToString(),
-                Amount = model.Amount,
-                CreateDate = DateTime.Now,
-                Status = "Thất bại",
-                IdAccount = user.Id,
-            };
-
-            await _context.Transactions.AddAsync(transaction);
-            await _context.SaveChangesAsync();
-
             var vnpayModel = new VnPaymentRequestModel
             {
+                IdAccount = model.Id,
                 FullName = user.FullName,
                 Amount = model.Amount,
                 CreatedDate = DateTime.Now
@@ -64,28 +53,38 @@ namespace ODTLearning.Controllers
 
         }
         [HttpGet("paymentCallBack")]
-        public async Task<ActionResult> PaymentCallBack(string id)
+        public async Task<ActionResult> PaymentCallBack()
         {
             var response = await _repo.PaymentExecute(Request.Query);
 
+            var transaction = new Transaction
+            {
+                Id = Guid.NewGuid().ToString(),
+                Amount = response.Amount,
+                CreateDate = DateTime.Now,
+                IdAccount = response.IdAccount
+            };
 
             if (response == null || response.VnPayResponseCode != "00")
             {
+                transaction.Status = "Thất bại";
+
+                await _context.Transactions.AddAsync(transaction);
+                await _context.SaveChangesAsync();
+
                 return BadRequest(new
                 {
                     Success = false,
                     Message = $"Payment failed. Error payment VnPay: {response.VnPayResponseCode}",
-                    Data = response
                 });
             }
 
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
-
-            var transaction = _context.Transactions.FirstOrDefault(x => x.IdAccount == id);
-
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == response.IdAccount);
+            
             user.AccountBalance = user.AccountBalance + response.Amount;
             transaction.Status = "Thành công";
 
+            await _context.Transactions.AddAsync(transaction);
             await _context.SaveChangesAsync();
 
             return Ok(new
