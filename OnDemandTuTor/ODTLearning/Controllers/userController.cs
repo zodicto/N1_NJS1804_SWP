@@ -17,6 +17,7 @@ using NuGet.Common;
 using Microsoft.EntityFrameworkCore;
 using Azure;
 using System.Security.Claims;
+using Newtonsoft.Json;
 
 namespace ODTLearning.Controllers
 {
@@ -419,7 +420,7 @@ namespace ODTLearning.Controllers
                 Id = userId,
                 FullName = userName,
                 Email = userEmail,
-                Roles = "User",
+                Roles = "Học sinh",
                 Avatar = userAvatar // Gán URL của ảnh đại diện vào thuộc tính Avatar
             };
 
@@ -434,20 +435,23 @@ namespace ODTLearning.Controllers
             // Tạo token
             var token = await _repo.GenerateToken(user);
 
-            return StatusCode(200, new
-            {
-                message = "Đăng nhập Google thành công!",
-                data = new
-                {
-                    user,
-                    token.Access_token,
-                    token.Refresh_token,
-                }
-            });
+            // Trả về một trang HTML với JavaScript để lưu trữ thông tin người dùng và token vào localStorage và redirect về localhost:3000
+            var script = $@"
+    <script>
+        localStorage.setItem('profile', JSON.stringify({{
+            id: '{user.Id}',
+            fullName: '{user.FullName}',
+            email: '{user.Email}',
+            avatar: '{user.Avatar}',
+            roles: '{user.Roles}'
+        }}));
+        localStorage.setItem('access_token', '{token.Access_token}');
+        localStorage.setItem('refresh_token', '{token.Refresh_token}');
+        window.opener.location.href = 'http://localhost:3000';
+        window.close();
+    </script>";
+            return Content(script, "text/html");
         }
-
-
-
 
 
         [HttpPost("logout")]
