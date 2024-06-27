@@ -4,7 +4,6 @@ namespace ODTLearning.Models
 {
     public class RequestLearningModel
     {
-        public string? IdRequest { get; set; }
         public string? Title { get; set; }
         public float? Price { get; set; }
         public string? Description { get; set; }
@@ -22,5 +21,18 @@ namespace ODTLearning.Models
         public string? Fullname { get; set; }
         public string? Status { get; set; }
     }
-
+    public class RequestLearningResponse
+    {
+        public string? IdRequest { get; set; }
+        public string? Title { get; set; }
+        public float? Price { get; set; }
+        public string? Description { get; set; }
+        public string? Subject { get; set; }
+        public string? Learningmethod { get; set; }
+        public string? Class { get; set; }
+        public string? Timestart { get; set; }
+        public string? Timeend { get; set; }
+        public string? Timetable { get; set; }
+        public int? Totalsession { get; set; }
+    }
 }
