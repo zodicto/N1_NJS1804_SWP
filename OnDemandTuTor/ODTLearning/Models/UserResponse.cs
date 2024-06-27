@@ -3,24 +3,24 @@
     public class UserResponse
     {
 
-        public string Id { get; set; } = null!;
+        public string id { get; set; } = null!;
 
-        public string? FullName { get; set; }
+        public string? fullname { get; set; }
 
-        public string? Email { get; set; }
+        public string? email { get; set; }
 
-        public DateOnly? Date_of_birth { get; set; }
+        public DateOnly? date_of_birth { get; set; }
 
-        public string? Gender { get; set; }
+        public string? gender { get; set; }
 
-        public string? Roles { get; set; }
+        public string? roles { get; set; }
 
-        public string? Avatar { get; set; }
+        public string? avatar { get; set; }
 
-        public string? Address { get; set; }
+        public string? address { get; set; }
 
-        public string? Phone { get; set; }
+        public string? phone { get; set; }
 
-        public float? AccountBalance { get; set; }
+        public float? accountbalance { get; set; }
     }
 }

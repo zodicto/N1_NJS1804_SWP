@@ -2,6 +2,6 @@
 {
     public class TutorResponse
     {
-        public string IdTutor { get; set; }
+        public string Idtutor { get; set; }
     }
 }

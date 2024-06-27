@@ -145,11 +145,11 @@ namespace ODTLearning.Controllers
             }
         }
         [HttpGet("appovedRequest")]
-        public async Task<IActionResult> ViewApprovedRequestLearning(string IDAccount)
+        public async Task<IActionResult> ViewApprovedRequestLearning(string id)
         {
             try
             {
-                var response = await _repo.GetApprovedRequestsByAccountId(IDAccount);
+                var response = await _repo.GetApprovedRequestsByAccountId(id);
 
                 if (response.Success)
                 {

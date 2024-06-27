@@ -25,7 +25,7 @@ namespace ODTLearning.Controllers
         [HttpPost("payment")]
         public async Task<ActionResult> Payment(DepositModel model)
         {
-            var user = _context.Accounts.FirstOrDefault(x => x.Id == model.IdAccount);
+            var user = _context.Accounts.FirstOrDefault(x => x.Id == model.Id);
 
             if (user == null)
             {

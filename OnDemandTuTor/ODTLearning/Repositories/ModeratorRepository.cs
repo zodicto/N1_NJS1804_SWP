@@ -30,16 +30,16 @@ namespace ODTLearning.Repositories
                     .Select(t => new ListTutorToConfirmFB
                     {
                         Id = t.IdAccount, // Sử dụng Id của Tutor
-                        SpecializedSkills = t.SpecializedSkills,
-                        Introduction = t.Introduction,
+                        specializedskills = t.SpecializedSkills,
+                        introduction = t.Introduction,
                         date_of_birth = t.IdAccountNavigation.DateOfBirth,
-                        FullName = t.IdAccountNavigation.FullName,
-                        Gender = t.IdAccountNavigation.Gender,
-                        Experience = t.Experience,
-                        Subject = t.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName, // Lấy Subject từ TutorSubjects
-                        QualificationName = t.EducationalQualifications.FirstOrDefault().QualificationName, // Lấy QualificationName từ 
-                        Type = t.EducationalQualifications.FirstOrDefault().Type, // Lấy Type từ EducationalQualifications
-                        ImageQualification = t.EducationalQualifications.FirstOrDefault().Img // Lấy ImageQualification từ EducationalQualifications
+                        fullname = t.IdAccountNavigation.FullName,
+                        gender = t.IdAccountNavigation.Gender,
+                        experience = t.Experience,
+                        subject = t.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName, // Lấy Subject từ TutorSubjects
+                        qualificationname = t.EducationalQualifications.FirstOrDefault().QualificationName, // Lấy QualificationName từ 
+                        type = t.EducationalQualifications.FirstOrDefault().Type, // Lấy Type từ EducationalQualifications
+                        imagequalification = t.EducationalQualifications.FirstOrDefault().Img // Lấy ImageQualification từ EducationalQualifications
                     })
                     .ToListAsync();
 
@@ -226,17 +226,17 @@ namespace ODTLearning.Repositories
                 {
                     Title = r.Title,
                     Price = r.Price,
-                    TotalSession = r.TotalSession,
-                    TimeTable = r.TimeTable,
+                    Totalsession = r.TotalSession,
+                    Timetable  = r.TimeTable,
                     Description = r.Description,
                     Subject = r.IdSubjectNavigation.SubjectName, // Assuming you have a Subject property in your Request model
-                    LearningMethod = r.LearningMethod,
+                    Learningmethod = r.LearningMethod,
                     Class = r.IdClassNavigation.ClassName,
-                    TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
-                    TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
-                    IdRequest = r.Id,
+                    Timestart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
+                    Timeend = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
+                    Idrequest = r.Id,
                     Status = r.Status,
-                    FullName = r.IdAccountNavigation.FullName // Include Account Full Name
+                    Fullname = r.IdAccountNavigation.FullName // Include Account Full Name
                 }).ToListAsync();
 
             return new ApiResponse<List<ViewRequestOfStudent>>

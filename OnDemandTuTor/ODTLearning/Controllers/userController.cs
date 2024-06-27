@@ -43,7 +43,7 @@ namespace ODTLearning.Controllers
         {
             try
             {
-                if (await _repo.IsEmailExist(model.Email))
+                if (await _repo.IsEmailExist(model.email))
                 {
                     return StatusCode(422, new
                     {
@@ -68,7 +68,7 @@ namespace ODTLearning.Controllers
                     });
                 }
                 var token = await _repo.GenerateToken(user);
-                return StatusCode(200,new
+                return StatusCode(200, new
                 {
                     message = "Đăng ký thành công!",
                     data = new
@@ -77,7 +77,7 @@ namespace ODTLearning.Controllers
                         token.Access_token,
                         token.Refresh_token,
                     }
-                    
+
                 });
             }
             catch (Exception ex)
@@ -105,7 +105,7 @@ namespace ODTLearning.Controllers
 
                 if (user != null)
                 {
-                    return StatusCode(200,new
+                    return StatusCode(200, new
                     {
                         Success = true,
                         user.Message,
@@ -113,7 +113,7 @@ namespace ODTLearning.Controllers
                     });
                 }
 
-                return BadRequest(new 
+                return BadRequest(new
                 {
                     Success = false,
                     Message = "Sign up failed, user creation returned null"
@@ -122,7 +122,7 @@ namespace ODTLearning.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while signing up as a tutor.");
-                return StatusCode(500, new 
+                return StatusCode(500, new
                 {
                     Success = false,
                     Message = "An internal server error occurred. Please try again later."
@@ -131,7 +131,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("registerAsTutorFB")]
-        public async Task<IActionResult> SignUpOfTutorFB(string id,  SignUpModelOfTutorFB model)
+        public async Task<IActionResult> SignUpOfTutorFB(string id, SignUpModelOfTutorFB model)
         {
             try
             {
@@ -186,14 +186,14 @@ namespace ODTLearning.Controllers
                 var token = await _repo.GenerateToken(response.Data);
                 if (token != null)
                 {
-                    return StatusCode(200,new
+                    return StatusCode(200, new
                     {
                         message = "Đăng nhập thành công!",
                         data = new
                         {
                             User = response.Data,
                             token.Refresh_token,
-                             token.Access_token,
+                            token.Access_token,
                         }
                     });
                 }
@@ -255,7 +255,7 @@ namespace ODTLearning.Controllers
                     var result = jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase);
                     if (!result)
                     {
-                        return Ok(new 
+                        return Ok(new
                         {
                             Success = false,
                             Message = "Invalid token"
@@ -270,7 +270,7 @@ namespace ODTLearning.Controllers
 
                 if (expireDate > DateTime.UtcNow)
                 {
-                    return BadRequest(new 
+                    return BadRequest(new
                     {
                         Success = false,
                         Message = "Access token has not yet expired"
@@ -282,7 +282,7 @@ namespace ODTLearning.Controllers
 
                 if (storedToken == null)
                 {
-                    return BadRequest(new 
+                    return BadRequest(new
                     {
                         Success = false,
                         Message = "Refresh token does not exist"
@@ -292,7 +292,7 @@ namespace ODTLearning.Controllers
                 //check 5: Check refreshToken is used/revoked?
                 if ((bool)storedToken.IsUsed)
                 {
-                    return BadRequest(new 
+                    return BadRequest(new
                     {
                         Success = false,
                         Message = "Refresh token has been used"
@@ -313,7 +313,7 @@ namespace ODTLearning.Controllers
 
                 if (storedToken.JwtId != jti)
                 {
-                    return BadRequest(new 
+                    return BadRequest(new
                     {
                         Success = false,
                         Message = "Token doesn't match"
@@ -337,22 +337,22 @@ namespace ODTLearning.Controllers
 
                 var userResponse = new UserResponse
                 {
-                    Id = userAccount.Id,
-                    FullName = userAccount.FullName,
-                    Email = userAccount.Email,
-                    Date_of_birth = userAccount.DateOfBirth,
-                    Gender = userAccount.Gender,
-                    Roles = userAccount.Roles,
-                    Avatar = userAccount.Avatar,
-                    Address = userAccount.Address,
-                    Phone = userAccount.Phone,
-                    AccountBalance = userAccount.AccountBalance
+                    id = userAccount.Id,
+                    fullname= userAccount.FullName,
+                    email  = userAccount.Email,
+                    date_of_birth = userAccount.DateOfBirth,
+                    gender = userAccount.Gender,
+                    roles = userAccount.Roles,
+                    avatar = userAccount.Avatar,
+                    address = userAccount.Address,
+                    phone = userAccount.Phone,
+                    accountbalance = userAccount.AccountBalance
                 };
 
                 var token = await _repo.GenerateToken(userResponse);
 
 
-                return Ok(new 
+                return Ok(new
                 {
                     Success = true,
                     Message = "Renew token",
@@ -361,7 +361,7 @@ namespace ODTLearning.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(new 
+                return BadRequest(new
                 {
                     Success = false,
                     Message = "Something went wrong"
@@ -417,11 +417,11 @@ namespace ODTLearning.Controllers
 
             var user = new UserResponse
             {
-                Id = userId,
-                FullName = userName,
-                Email = userEmail,
-                Roles = "Học sinh",
-                Avatar = userAvatar // Gán URL của ảnh đại diện vào thuộc tính Avatar
+                id = userId,
+                fullname = userName,
+                email = userEmail,
+                roles = "Học sinh",
+                avatar = userAvatar // Gán URL của ảnh đại diện vào thuộc tính Avatar
             };
 
             // Gọi phương thức lưu người dùng vào cơ sở dữ liệu
@@ -437,21 +437,35 @@ namespace ODTLearning.Controllers
 
             // Trả về một trang HTML với JavaScript để lưu trữ thông tin người dùng và token vào localStorage và redirect về localhost:3000
             var script = $@"
-    <script>
+<script>
+    if (window.opener) {{
+        window.opener.localStorage.setItem('profile', JSON.stringify({{
+            id: '{user.id}',
+            fullName: '{user.fullname}',
+            email: '{user.email}',
+            avatar: '{user.avatar}',
+            roles: '{user.roles}'
+        }}));
+        window.opener.localStorage.setItem('access_token', '{token.Access_token}');
+        window.opener.localStorage.setItem('refresh_token', '{token.Refresh_token}');
+        window.opener.location.href = 'http://localhost:3000';
+        window.close();
+    }} else {{
         localStorage.setItem('profile', JSON.stringify({{
-            id: '{user.Id}',
-            fullName: '{user.FullName}',
-            email: '{user.Email}',
-            avatar: '{user.Avatar}',
-            roles: '{user.Roles}'
+            id: '{user.id}',
+            fullName: '{user.fullname}',
+            email: '{user.email}',
+            avatar: '{user.avatar}',
+            roles: '{user.roles}'
         }}));
         localStorage.setItem('access_token', '{token.Access_token}');
         localStorage.setItem('refresh_token', '{token.Refresh_token}');
-        window.opener.location.href = 'http://localhost:3000';
-        window.close();
-    </script>";
+        window.location.href = 'http://localhost:3000';
+    }}
+</script>";
             return Content(script, "text/html");
         }
+
 
 
         [HttpPost("logout")]
@@ -459,7 +473,7 @@ namespace ODTLearning.Controllers
         {
             if (model == null || string.IsNullOrEmpty(model.Refresh_token))
             {
-                return BadRequest(new 
+                return BadRequest(new
                 {
                     Success = false,
                     Message = "Refresh token is required"
@@ -471,7 +485,7 @@ namespace ODTLearning.Controllers
 
             if (refreshToken == null)
             {
-                return NotFound(new 
+                return NotFound(new
                 {
                     Success = false,
                     Message = "Invalid refresh token"
@@ -484,7 +498,7 @@ namespace ODTLearning.Controllers
             _context.RefreshTokens.Update(refreshToken);
             await _context.SaveChangesAsync();
 
-            return Ok(new 
+            return Ok(new
             {
                 Success = true,
                 Message = "Logout successful"
@@ -513,11 +527,11 @@ namespace ODTLearning.Controllers
             {
                 Success = false,
 
-                 response.Message
+                response.Message
 
             });
         }
-       
+
 
         [HttpPut("ChangePassword")]
         public async Task<IActionResult> ChangePassword(string id, ChangePasswordModel model)
@@ -564,24 +578,25 @@ namespace ODTLearning.Controllers
         [HttpPut("updateProfile")]
         public async Task<IActionResult> UpdateStudentProfile(string id, [FromBody] UpdateProfile model)
         {
-            try { 
-            var response = await _repo.UpdateProfile(id, model);
-
-            if (!response.Success)
+            try
             {
-                return BadRequest(new
+                var response = await _repo.UpdateProfile(id, model);
+
+                if (!response.Success)
                 {
-                    Success = false,
-                    response.Message
-                });
-            }
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        response.Message
+                    });
+                }
 
-            return Ok(new
-            {
-                Success = true,
-                response.Message,
-                response.Data
-            });
+                return Ok(new
+                {
+                    Success = true,
+                    response.Message,
+                    response.Data
+                });
             }
             catch (Exception ex)
             {

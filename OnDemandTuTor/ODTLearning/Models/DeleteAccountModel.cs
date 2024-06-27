@@ -2,6 +2,6 @@
 {
     public class DeleteAccountModel
     {
-        string? IDAcount;
+        string? id;
     }
 }

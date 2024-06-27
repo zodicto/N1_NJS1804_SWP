@@ -4,7 +4,7 @@ using ODTLearning.Helpers;
 using ODTLearning.Models;
 using System.Globalization;
 using System.Net;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+
 
 namespace ODTLearning.Repositories
 {
@@ -61,9 +61,9 @@ namespace ODTLearning.Repositories
             // Validate và phân tích chuỗi thời gian để đảm bảo nó có định dạng đúng
             TimeOnly? parsedTimeStart = null;
             TimeOnly? parsedTimeEnd = null;
-            if (!string.IsNullOrEmpty(model.TimeStart))
+            if (!string.IsNullOrEmpty(model.Timestart))
             {
-                if (TimeOnly.TryParseExact(model.TimeStart, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+                if (TimeOnly.TryParseExact(model.Timestart, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
                 {
                     parsedTimeStart = time;
                 }
@@ -76,9 +76,9 @@ namespace ODTLearning.Repositories
                     };
                 }
             }
-            if (!string.IsNullOrEmpty(model.TimeEnd))
+            if (!string.IsNullOrEmpty(model.Timeend))
             {
-                if (TimeOnly.TryParseExact(model.TimeEnd, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+                if (TimeOnly.TryParseExact(model.Timeend, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
                 {
                     parsedTimeEnd = time;
                 }
@@ -105,11 +105,11 @@ namespace ODTLearning.Repositories
                     Price = model.Price,
                     TimeStart = parsedTimeStart,
                     TimeEnd = parsedTimeEnd,
-                    TimeTable = model.TimeTable,
-                    TotalSession = model.TotalSession,
+                    TimeTable = model.Timetable,
+                    TotalSession = model.Totalsession,
                     Description = model.Description,
                     Status = "Chưa duyệt",
-                    LearningMethod = model.LearningMethod,
+                    LearningMethod = model.Learningmethod,
                     IdAccount = id,
                     IdSubject = subjectModel.Id,
                     IdClass = Class.Id
@@ -183,9 +183,9 @@ namespace ODTLearning.Repositories
             // Validate và phân tích chuỗi thời gian để đảm bảo nó có định dạng đúng
             TimeOnly? parsedTimeStart = null;
             TimeOnly? parsedTimeEnd = null;
-            if (!string.IsNullOrEmpty(model.TimeStart))
+            if (!string.IsNullOrEmpty(model.Timestart))
             {
-                if (TimeOnly.TryParseExact(model.TimeStart, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+                if (TimeOnly.TryParseExact(model.Timestart, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
                 {
                     parsedTimeStart = time;
                 }
@@ -198,9 +198,9 @@ namespace ODTLearning.Repositories
                     };
                 }
             }
-            if (!string.IsNullOrEmpty(model.TimeEnd))
+            if (!string.IsNullOrEmpty(model.Timeend))
             {
-                if (TimeOnly.TryParseExact(model.TimeEnd, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+                if (TimeOnly.TryParseExact(model.Timeend, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
                 {
                     parsedTimeEnd = time;
                 }
@@ -219,10 +219,10 @@ namespace ODTLearning.Repositories
             requestToUpdate.Price = model.Price ?? requestToUpdate.Price;
             requestToUpdate.TimeStart = parsedTimeStart ?? requestToUpdate.TimeStart;
             requestToUpdate.TimeEnd = parsedTimeEnd ?? requestToUpdate.TimeEnd;
-            requestToUpdate.TimeTable = model.TimeTable ?? requestToUpdate.TimeTable;
-            requestToUpdate.TotalSession = model.TotalSession ?? requestToUpdate.TotalSession;
+            requestToUpdate.TimeTable = model.Timetable ?? requestToUpdate.TimeTable;
+            requestToUpdate.TotalSession = model.Totalsession?? requestToUpdate.TotalSession;
             requestToUpdate.Description = model.Description ?? requestToUpdate.Description;
-            requestToUpdate.LearningMethod = model.LearningMethod ?? requestToUpdate.LearningMethod;
+            requestToUpdate.LearningMethod = model.Learningmethod ?? requestToUpdate.LearningMethod;
             requestToUpdate.IdSubject = subjectEntity.Id;
             requestToUpdate.IdClass = classEntity.Id;
 
@@ -291,8 +291,8 @@ namespace ODTLearning.Repositories
             {
                 return new ApiResponse<List<RequestLearningModel>>
                 {
-                    Success = false,
-                    Message = "Không tìm thấy yêu cầu nào với trạng thái 'Từ chối' cho tài khoản này",
+                    Success = true,
+                    Message = "Không tìm thấy yêu cầu nào với trạng thái 'chờ duyệt' cho tài khoản này",
                     Data = null
                 };
             }
@@ -304,18 +304,18 @@ namespace ODTLearning.Repositories
                 Price = r.Price,
                 Description = r.Description,
                 Subject = r.IdSubjectNavigation?.SubjectName,
-                LearningMethod = r.LearningMethod,
+                Learningmethod = r.LearningMethod,
                 Class = r.IdClassNavigation?.ClassName,
-                TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
-                TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
-                TimeTable = r.TimeTable,
-                TotalSession = r.TotalSession
+                Timestart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
+                Timeend = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
+                Timetable = r.TimeTable,
+                Totalsession = r.TotalSession
             }).ToList();
 
             return new ApiResponse<List<RequestLearningModel>>
             {
                 Success = true,
-                Message = "Danh sách yêu cầu từ chối xử lý đã được truy xuất thành công",
+                Message = "Danh sách yêu cầu dạy học được truy xuất thành công",
                 Data = requestLearningModels
             };
         }
@@ -332,8 +332,8 @@ namespace ODTLearning.Repositories
             {
                 return new ApiResponse<List<RequestLearningModel>>
                 {
-                    Success = false,
-                    Message = "Không tìm thấy yêu cầu nào với trạng thái 'Chờ duyệt' cho tài khoản này",
+                    Success = true,
+                    Message = "Không tìm thấy yêu cầu nào với trạng thái 'đã duyệt' cho tài khoản này",
                     Data = null
                 };
             }
@@ -345,18 +345,18 @@ namespace ODTLearning.Repositories
                 Price = r.Price,
                 Description = r.Description,
                 Subject = r.IdSubjectNavigation?.SubjectName,
-                LearningMethod = r.LearningMethod,
+                Learningmethod = r.LearningMethod,
                 Class = r.IdClassNavigation?.ClassName,
-                TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
-                TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
-                TimeTable = r.TimeTable,
-                TotalSession = r.TotalSession
+                Timestart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
+                Timeend = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
+                Timetable = r.TimeTable,
+                Totalsession = r.TotalSession
             }).ToList();
 
             return new ApiResponse<List<RequestLearningModel>>
             {
                 Success = true,
-                Message = "Danh sách yêu cầu từ chối xử lý đã được truy xuất thành công",
+                Message = "Danh sách đã duyệt được truy xuất thành công",
                 Data = requestLearningModels
             };
         }
@@ -373,7 +373,7 @@ namespace ODTLearning.Repositories
             {
                 return new ApiResponse<List<RequestLearningModel>>
                 {
-                    Success = false,
+                    Success = true,
                     Message = "Không tìm thấy yêu cầu nào với trạng thái 'Từ chối' cho tài khoản này",
                     Data = null
                 };
@@ -386,12 +386,12 @@ namespace ODTLearning.Repositories
                 Price = r.Price,
                 Description = r.Description,
                 Subject = r.IdSubjectNavigation?.SubjectName,
-                LearningMethod = r.LearningMethod,
+                Learningmethod = r.LearningMethod,
                 Class = r.IdClassNavigation?.ClassName,
-                TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
-                TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
-                TimeTable = r.TimeTable,
-                TotalSession = r.TotalSession
+                Timestart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
+                Timeend = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
+                Timetable = r.TimeTable,
+                Totalsession = r.TotalSession
             }).ToList();
 
             return new ApiResponse<List<RequestLearningModel>>
@@ -433,12 +433,12 @@ namespace ODTLearning.Repositories
             // Lấy danh sách gia sư tham gia yêu cầu
             var tutors = request.RequestLearnings.Select(rl => new TutorListModel
             {
-                FullName = rl.IdTutorNavigation.IdAccountNavigation.FullName,
-                Gender = rl.IdTutorNavigation.IdAccountNavigation.Gender,
-                SpecializedSkills = rl.IdTutorNavigation.SpecializedSkills,
-                Experience = rl.IdTutorNavigation.Experience,
-                Subject = rl.IdTutorNavigation.TutorSubjects.FirstOrDefault()?.IdSubjectNavigation.SubjectName,
-                QualificationName = rl.IdTutorNavigation.EducationalQualifications.FirstOrDefault()?.QualificationName
+                fullName = rl.IdTutorNavigation.IdAccountNavigation.FullName,
+                gender = rl.IdTutorNavigation.IdAccountNavigation.Gender,
+                specializedskills= rl.IdTutorNavigation.SpecializedSkills,
+                experience = rl.IdTutorNavigation.Experience,
+                subject  = rl.IdTutorNavigation.TutorSubjects.FirstOrDefault()?.IdSubjectNavigation.SubjectName,
+                qualificationname= rl.IdTutorNavigation.EducationalQualifications.FirstOrDefault()?.QualificationName
             }).ToList();
 
             return new ApiResponse<List<TutorListModel>>
@@ -536,9 +536,9 @@ namespace ODTLearning.Repositories
 
         public async Task<ApiResponse<ComplaintResponse>> CreateComplaint(ComplaintModel model)
         {
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.Id);
 
-            var tutor = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdAccountTutor && x.Roles.ToLower() == "gia sư");
+            var tutor = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdAccounttutor && x.Roles.ToLower() == "gia sư");
 
             if (user == null || tutor == null)
             {
@@ -558,13 +558,13 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            var idTutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == model.IdAccountTutor);
+            var idTutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == model.IdAccounttutor);
 
             var complaint = new Complaint
             {
                 Id = Guid.NewGuid().ToString(),
                 Description = model.Description,
-                IdAccount = model.IdUser,
+                IdAccount = model.Id,
                 IdTutor = idTutor.Id,
             };
 

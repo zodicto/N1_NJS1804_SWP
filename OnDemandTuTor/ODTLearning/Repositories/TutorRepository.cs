@@ -186,30 +186,30 @@ namespace ODTLearning.Repositories
                                                        Price = r.Price,
                                                        Description = r.Description,
                                                        Subject = r.IdSubjectNavigation.SubjectName, // Assuming you have a Subject property in your Request model
-                                                       LearningMethod = r.LearningMethod,
+                                                       Learningmethod = r.LearningMethod,
                                                        Class = r.IdClassNavigation.ClassName,
-                                                       TimeStart = r.TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
-                                                       TimeEnd = r.TimeEnd.ToString(),
-                                                       IdRequest = r.Id, // Include Account ID
-                                                       FullName = r.IdAccountNavigation.FullName // Include Account Full Name
+                                                       Timestart = r.TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
+                                                      Timeend = r.TimeEnd.ToString(),
+                                                       Idrequest = r.Id, // Include Account ID
+                                                       Fullname = r.IdAccountNavigation.FullName // Include Account Full Name
                                                    }).ToListAsync();
 
 
             // Format the Time string if needed
             foreach (var request in pendingRequests)
             {
-                if (!string.IsNullOrEmpty(request.TimeStart))
+                if (!string.IsNullOrEmpty(request.Timestart))
                 {
-                    var timeOnly = TimeOnly.Parse(request.TimeStart);
-                    request.TimeStart = timeOnly.ToString("HH:mm");
+                    var timeOnly = TimeOnly.Parse(request.Timestart);
+                    request.Timestart = timeOnly.ToString("HH:mm");
                 }
             }
             foreach (var request in pendingRequests)
             {
-                if (!string.IsNullOrEmpty(request.TimeEnd))
+                if (!string.IsNullOrEmpty(request.Timeend))
                 {
-                    var timeOnly = TimeOnly.Parse(request.TimeEnd);
-                    request.TimeEnd = timeOnly.ToString("HH:mm");
+                    var timeOnly = TimeOnly.Parse(request.Timeend);
+                    request.Timeend = timeOnly.ToString("HH:mm");
                 }
             }
             return new ApiResponse<List<ViewRequestOfStudent>>

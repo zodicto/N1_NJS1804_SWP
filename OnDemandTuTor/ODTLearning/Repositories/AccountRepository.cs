@@ -40,13 +40,13 @@ namespace ODTLearning.Repositories
             var user = new Account
             {
                 Id = Guid.NewGuid().ToString(),
-                FullName = model.FullName,
-                Password = model.Password,
-                Phone = model.Phone,
+                FullName = model.fullname,
+                Password = model.password,
+                Phone = model.phone,
                 AccountBalance = 0,
-                Email = model.Email,
+                Email = model.email,
                 DateOfBirth = model.date_of_birth,
-                Gender = model.Gender,
+                Gender = model.gender,
                 Roles = "Học sinh"
             };
             // Thêm Account vào context
@@ -54,16 +54,16 @@ namespace ODTLearning.Repositories
             await _context.SaveChangesAsync();
             return new UserResponse
             {
-                Id = user.Id,
-                FullName = user.FullName,
-                Email = user.Email,
-                Date_of_birth = user.DateOfBirth,
-                Gender = user.Gender,
-                Roles = user.Roles,
-                Avatar = user.Avatar,
-                Address = user.Address,
-                Phone = user.Phone,
-                AccountBalance = user.AccountBalance
+                id = user.Id,
+                fullname = user.FullName,
+                email = user.Email,
+                date_of_birth = user.DateOfBirth,
+                gender = user.Gender,
+                roles  = user.Roles,
+                avatar  = user.Avatar,
+                address = user.Address,
+                phone = user.Phone,
+                accountbalance= user.AccountBalance
             };
 
         }
@@ -78,11 +78,11 @@ namespace ODTLearning.Repositories
                 var tutor = new Tutor
                 {
                     Id = Guid.NewGuid().ToString(),
-                    SpecializedSkills = model.SpecializedSkills,
-                    Experience = model.Experience,
+                    SpecializedSkills = model.specializedSkills,
+                    Experience = model.experience,
                     Status = "Chưa duyệt",
                     IdAccount = existingUser.Id,
-                    Introduction = model.Introduction,
+                    Introduction = model.introduction,
                    
                 };
 
@@ -91,12 +91,12 @@ namespace ODTLearning.Repositories
                 {
                     Id = Guid.NewGuid().ToString(),
                     IdTutor = tutor.Id,
-                    QualificationName = model.QualificationName,
-                    Type = model.Type,
+                    QualificationName = model.qualificationame,
+                    Type = model.type,
                 };
 
                 // Upload ảnh
-                var upload = await imgLib.UploadImage(model.ImageQualification);
+                var upload = await imgLib.UploadImage(model.imagequalification);
 
                 if (!upload.Success)
                 {
@@ -107,10 +107,10 @@ namespace ODTLearning.Repositories
                     };                    
                 }
 
-                educationalQualification.Img = model.ImageQualification.FileName;
+                educationalQualification.Img = model.imagequalification.FileName;
 
                 var subjectModel = await _context.Subjects
-                                              .FirstOrDefaultAsync(lm => lm.SubjectName == model.Subject);
+                                              .FirstOrDefaultAsync(lm => lm.SubjectName == model.subject);
 
                 if (subjectModel == null)
                 {
@@ -143,7 +143,7 @@ namespace ODTLearning.Repositories
                     {
                         Success = true,
                         Message = "Đăng ký gia sư thành công. Bạn vui lòng chờ duyệt",
-                        Data = new TutorResponse { IdTutor = tutor.Id }
+                        Data = new TutorResponse { Idtutor = tutor.Id }
                     };
                 }
                 catch (Exception ex)
@@ -186,11 +186,11 @@ namespace ODTLearning.Repositories
             var tutor = new Tutor
             {
                 Id = Guid.NewGuid().ToString(),
-                SpecializedSkills = model.SpecializedSkills,
-                Experience = model.Experience,
+                SpecializedSkills = model.specializedskills,
+                Experience = model.experience,
                 Status = "Chưa duyệt",
                 IdAccount = existingUser.Id,
-                Introduction = model.Introduction,
+                Introduction = model.introduction,
             };
 
             // Tạo mới đối tượng educationalqualification
@@ -198,14 +198,14 @@ namespace ODTLearning.Repositories
             {
                 Id = Guid.NewGuid().ToString(),
                 IdTutor = tutor.Id,
-                QualificationName = model.QualificationName,
-                Type = model.Type,
-                Img = model.ImageQualification
+                QualificationName = model.qualificationname,
+                Type = model.type,
+                Img = model.imagequalification
                 
             };
 
             // Tìm môn học theo tên
-            var subjectModel = await _context.Subjects.FirstOrDefaultAsync(lm => lm.SubjectName == model.Subject);
+            var subjectModel = await _context.Subjects.FirstOrDefaultAsync(lm => lm.SubjectName == model.subject);
             if (subjectModel == null)
             {
                 return new ApiResponse<TutorResponse>
@@ -237,7 +237,7 @@ namespace ODTLearning.Repositories
                 {
                     Success = true,
                     Message = "Đăng ký gia sư thành công. Bạn vui lòng chờ duyệt",
-                    Data = new TutorResponse { IdTutor = tutor.Id }
+                    Data = new TutorResponse { Idtutor = tutor.Id }
                 };
             }
             catch (Exception ex)
@@ -278,16 +278,16 @@ namespace ODTLearning.Repositories
                 Message = "Đăng nhập thành công",
                 Data = new UserResponse
                 {
-                    Id = account.Id,
-                    FullName = account.FullName,
-                    Email = account.Email,
-                    Date_of_birth = account.DateOfBirth,
-                    Gender = account.Gender,
-                    Roles = account.Roles,
-                    Avatar = account.Avatar,
-                    Address = account.Address,
-                    Phone = account.Phone,
-                    AccountBalance = account.AccountBalance
+                    id = account.Id,
+                    fullname= account.FullName,
+                    email= account.Email,
+                    date_of_birth = account.DateOfBirth,
+                    gender = account.Gender,
+                    roles = account.Roles,
+                    avatar = account.Avatar,
+                    address = account.Address,
+                    phone = account.Phone,
+                    accountbalance= account.AccountBalance
                 }
             };
         }
@@ -302,11 +302,11 @@ namespace ODTLearning.Repositories
 
             var claims = new List<Claim>
             {
-                 new Claim(ClaimTypes.Name, user.FullName + " " + user.Date_of_birth?.ToString("yyyy-MM-dd")),
-                 new Claim(JwtRegisteredClaimNames.Email, user.Email),
+                 new Claim(ClaimTypes.Name, user.fullname  + " " + user.date_of_birth?.ToString("yyyy-MM-dd")),
+                 new Claim(JwtRegisteredClaimNames.Email, user.email ),
                   new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                 new Claim(ClaimTypes.Role, user.Roles),
-                 new Claim("id", user.Id )
+                 new Claim(ClaimTypes.Role, user.roles),
+                 new Claim("id", user.id )
 
             };
 
@@ -325,7 +325,7 @@ namespace ODTLearning.Repositories
             var refreshtokenentity = new RefreshToken
             {
                 Id = Guid.NewGuid().ToString(),
-                IdAccount = user.Id,
+                IdAccount = user.id,
                 JwtId = token.Id,
                 Token = refreshtoken,
                 IsUsed = false,
@@ -484,12 +484,12 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            user.FullName = model.FullName;
+            user.FullName = model.fullname;
             user.DateOfBirth = model.date_of_birth;
-            user.Gender = model.Gender;
+            user.Gender = model.gender;
             user.Avatar = model.avatar;
-            user.Address = model.Address;
-            user.Phone = model.Phone;
+            user.Address = model.address;
+            user.Phone = model.phone;
 
             await _context.SaveChangesAsync();
 
@@ -555,19 +555,19 @@ namespace ODTLearning.Repositories
 
         public async Task<ApiResponse<UserResponse>> SaveGoogleUserAsync(UserResponse user)
         {
-            var existingUser = await _context.Accounts.FirstOrDefaultAsync(a => a.Email == user.Email);
+            var existingUser = await _context.Accounts.FirstOrDefaultAsync(a => a.Email == user.email);
 
             if (existingUser == null)
             {
                 // Người dùng chưa tồn tại, tạo người dùng mới
                 var newUser = new Account
                 {
-                    Id = user.Id,
-                    FullName = user.FullName,
-                    Email = user.Email,
-                    Roles = user.Roles,
+                    Id = user.id,
+                    FullName = user.fullname,
+                    Email = user.email ,
+                    Roles = user.roles,
                     AccountBalance = 0, // Đặt AccountBalance bằng 0
-                    Avatar = user.Avatar // Gán URL của ảnh đại diện vào thuộc tính Avatar
+                    Avatar = user.avatar   // Gán URL của ảnh đại diện vào thuộc tính Avatar
                 };
 
                 await _context.Accounts.AddAsync(newUser);
@@ -583,9 +583,9 @@ namespace ODTLearning.Repositories
             else
             {
                 // Người dùng đã tồn tại, cập nhật thông tin người dùng
-                existingUser.FullName = user.FullName;
-                existingUser.Roles = user.Roles; // Cập nhật roles nếu cần, hoặc có thể bỏ qua nếu không muốn cập nhật
-                existingUser.Avatar = user.Avatar; // Cập nhật URL của ảnh đại diện nếu cần
+                existingUser.FullName = user.fullname;
+                existingUser.Roles = user.roles; // Cập nhật roles nếu cần, hoặc có thể bỏ qua nếu không muốn cập nhật
+                existingUser.Avatar = user.avatar ; // Cập nhật URL của ảnh đại diện nếu cần
                 await _context.SaveChangesAsync();
 
                 return new ApiResponse<UserResponse>

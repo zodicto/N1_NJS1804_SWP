@@ -2,11 +2,11 @@
 {
     public class TutorListModel
     {
-        public string? Gender { get; set; }
-        public string? Subject { get; set; }
-        public string? FullName { get; set; }
-        public string? SpecializedSkills { get; set; }
-        public int? Experience { get; set; }
-        public string? QualificationName { get; set; }
+        public string? gender { get; set; }
+        public string? subject { get; set; }
+        public string? fullName { get; set; }
+        public string? specializedskills { get; set; }
+        public int? experience { get; set; }
+        public string? qualificationname { get; set; }
     }
 }

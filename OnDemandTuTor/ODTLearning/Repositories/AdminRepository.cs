@@ -75,12 +75,12 @@ namespace ODTLearning.Repositories
                     .Select(t => new ListAccount
                     {
                         id = t.Id, // Sử dụng Id của Tutor
-                        Email = t.Email,
+                        email = t.Email,
                         date_of_birth = t.DateOfBirth,
-                        FullName = t.FullName,
-                        Gender = t.Gender,
-                        Phone = t.Phone,
-                        Roles = t.Roles,
+                        fullname = t.FullName,
+                        gender = t.Gender,
+                        phone = t.Phone,
+                        roles = t.Roles,
                     }).ToListAsync();
                 return new ApiResponse<List<ListAccount>>
                 {
@@ -112,12 +112,12 @@ namespace ODTLearning.Repositories
                     .Select(t => new ListAccount
                     {
                         id = t.Id, // Sử dụng Id của Tutor
-                        Email = t.Email,
+                        email = t.Email,
                         date_of_birth = t.DateOfBirth,
-                        FullName = t.FullName,
-                        Gender = t.Gender,
-                        Phone = t.Phone,
-                        Roles = t.Roles,
+                        fullname = t.FullName,
+                        gender = t.Gender,
+                        phone = t.Phone,
+                        roles = t.Roles,
                     }).ToListAsync();
                 return new ApiResponse<List<ListAccount>>
                 {
@@ -151,19 +151,19 @@ namespace ODTLearning.Repositories
                     .Where(t => t.Status == "Chưa duyệt")
                     .Select(t => new ViewRequestOfStudent
                     {
-                        IdRequest = t.Id,
+                        Idrequest = t.Id,
                         Title = t.Title,
                         Price = t.Price,
                         Class = t.IdClassNavigation.ClassName,
-                        TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                        TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                        TimeTable = t.TimeTable,
-                        TotalSession = t.TotalSession,
+                        Timestart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        Timeend = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        Timetable = t.TimeTable,
+                        Totalsession = t.TotalSession,
                         Subject = t.IdSubjectNavigation.SubjectName,
-                        FullName = t.IdAccountNavigation.FullName,
+                        Fullname = t.IdAccountNavigation.FullName,
                         Description = t.Description,
                         Status = t.Status,
-                        LearningMethod = t.LearningMethod,
+                        Learningmethod = t.LearningMethod,
                     }).ToListAsync();
                 return new ApiResponse<List<ViewRequestOfStudent>>
                 {
@@ -196,19 +196,19 @@ namespace ODTLearning.Repositories
                     .Where(t => t.Status == "Đã duyệt")
                     .Select(t => new ViewRequestOfStudent
                     {
-                        IdRequest = t.Id,
+                        Idrequest = t.Id,
                         Title = t.Title,
                         Price = t.Price,
                         Class = t.IdClassNavigation.ClassName,
-                        TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                        TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                        TimeTable = t.TimeTable,
-                        TotalSession = t.TotalSession,
+                        Timestart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        Timeend = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        Timetable = t.TimeTable,
+                        Totalsession = t.TotalSession,
                         Subject = t.IdSubjectNavigation.SubjectName,
-                        FullName = t.IdAccountNavigation.FullName,
+                        Fullname = t.IdAccountNavigation.FullName,
                         Description = t.Description,
                         Status = t.Status,
-                        LearningMethod = t.LearningMethod,
+                        Learningmethod = t.LearningMethod,
                     }).ToListAsync();
                 return new ApiResponse<List<ViewRequestOfStudent>>
                 {
@@ -241,19 +241,19 @@ namespace ODTLearning.Repositories
                     .Where(t => t.Status == "Từ chối")
                     .Select(t => new ViewRequestOfStudent
                     {
-                        IdRequest = t.Id,
+                        Idrequest = t.Id,
                         Title = t.Title,
                         Price = t.Price,
                         Class = t.IdClassNavigation.ClassName,
-                        TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                        TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                        TimeTable = t.TimeTable,
-                        TotalSession = t.TotalSession,
+                        Timestart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                       Timeend= t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        Timetable = t.TimeTable,
+                        Totalsession = t.TotalSession,
                         Subject = t.IdSubjectNavigation.SubjectName,
-                        FullName = t.IdAccountNavigation.FullName,
+                        Fullname = t.IdAccountNavigation.FullName,
                         Description = t.Description,
                         Status = t.Status,
-                        LearningMethod = t.LearningMethod,
+                        Learningmethod = t.LearningMethod,
                     }).ToListAsync();
                 return new ApiResponse<List<ViewRequestOfStudent>>
                 {
