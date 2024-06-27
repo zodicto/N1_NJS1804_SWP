@@ -412,13 +412,15 @@ namespace ODTLearning.Controllers
             var userId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var userName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
             var userEmail = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var userAvatar = claims.FirstOrDefault(c => c.Type == "picture")?.Value; // Trích xuất URL của ảnh đại diện
 
             var user = new UserResponse
             {
                 Id = userId,
                 FullName = userName,
                 Email = userEmail,
-                Roles = "User"
+                Roles = "User",
+                Avatar = userAvatar // Gán URL của ảnh đại diện vào thuộc tính Avatar
             };
 
             // Gọi phương thức lưu người dùng vào cơ sở dữ liệu
@@ -429,21 +431,22 @@ namespace ODTLearning.Controllers
                 return BadRequest(result.Message);
             }
 
-            // Tạo một URL để chuyển hướng đến ứng dụng client
-            var redirectUrl = "http://localhost:3000/api/user/google-callback"; // URL của ứng dụng client
+            // Tạo token
+            var token = await _repo.GenerateToken(user);
 
-            // Thêm các thông tin cần thiết vào URL dưới dạng query string
-            var queryParams = new List<string>
-    {
-        $"id={Uri.EscapeDataString(userId)}",
-        $"name={Uri.EscapeDataString(userName)}",
-        $"email={Uri.EscapeDataString(userEmail)}"
-    };
-
-            var finalRedirectUrl = $"{redirectUrl}?{string.Join("&", queryParams)}";
-
-            return Redirect(finalRedirectUrl);
+            return StatusCode(200, new
+            {
+                message = "Đăng nhập Google thành công!",
+                data = new
+                {
+                    user,
+                    token.Access_token,
+                    token.Refresh_token,
+                }
+            });
         }
+
+
 
 
 

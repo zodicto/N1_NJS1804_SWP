@@ -554,7 +554,7 @@ namespace ODTLearning.Repositories
 
 
 
-        public async Task<ApiResponse<bool>> SaveGoogleUserAsync(UserResponse user)
+        public async Task<ApiResponse<UserResponse>> SaveGoogleUserAsync(UserResponse user)
         {
             var existingUser = await _context.Accounts.FirstOrDefaultAsync(a => a.Email == user.Email);
 
@@ -566,17 +566,19 @@ namespace ODTLearning.Repositories
                     Id = user.Id,
                     FullName = user.FullName,
                     Email = user.Email,
-                    Roles = "Học sinh"
+                    Roles = user.Roles,
+                    AccountBalance = 0, // Đặt AccountBalance bằng 0
+                    Avatar = user.Avatar // Gán URL của ảnh đại diện vào thuộc tính Avatar
                 };
 
                 await _context.Accounts.AddAsync(newUser);
                 await _context.SaveChangesAsync();
 
-                return new ApiResponse<bool>
+                return new ApiResponse<UserResponse>
                 {
                     Success = true,
                     Message = "User registered successfully",
-                    Data = true
+                    Data = user
                 };
             }
             else
@@ -584,16 +586,19 @@ namespace ODTLearning.Repositories
                 // Người dùng đã tồn tại, cập nhật thông tin người dùng
                 existingUser.FullName = user.FullName;
                 existingUser.Roles = user.Roles; // Cập nhật roles nếu cần, hoặc có thể bỏ qua nếu không muốn cập nhật
+                existingUser.Avatar = user.Avatar; // Cập nhật URL của ảnh đại diện nếu cần
                 await _context.SaveChangesAsync();
 
-                return new ApiResponse<bool>
+                return new ApiResponse<UserResponse>
                 {
                     Success = true,
                     Message = "User already exists and has been updated",
-                    Data = true
+                    Data = user
                 };
             }
         }
+
+
 
 
     }
