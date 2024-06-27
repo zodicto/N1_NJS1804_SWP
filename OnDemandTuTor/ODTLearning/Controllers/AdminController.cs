@@ -40,5 +40,179 @@ namespace ODTLearning.Controllers
                 Message = response.Message
             });
         }
+
+        [HttpGet("viewAllTutor")]
+        public async Task<IActionResult> ViewListTutor()
+        {
+            try
+            {
+                var response = await _repo.GetListTutor();
+
+                if (!response.Success)
+                {
+                    return NotFound(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
+
+        [HttpGet("viewAllRequestPending")]
+        public async Task<IActionResult> ViewAllRequestPending()
+        {
+            try
+            {
+                var response = await _repo.GetListRequestPending();
+
+                if (!response.Success)
+                {
+                    return NotFound(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
+
+        [HttpGet("viewAllRequestApproved")]
+        public async Task<IActionResult> ViewAllRequestApproved()
+        {
+            try
+            {
+                var response = await _repo.GetListRequestApproved();
+
+                if (!response.Success)
+                {
+                    return NotFound(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
+
+        [HttpGet("viewAllRequestReject")]
+        public async Task<IActionResult> ViewAllRequetReject()
+        {
+            try
+            {
+                var response = await _repo.GetListRequestReject();
+
+                if (!response.Success)
+                {
+                    return NotFound(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
+        [HttpGet("viewAllStudent")]
+        public async Task<IActionResult> ViewListStudent()
+        {
+            try
+            {
+                var response = await _repo.GetListStudent();
+
+                if (!response.Success)
+                {
+                    return NotFound(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
     }
 }

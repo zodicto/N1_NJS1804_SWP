@@ -56,4 +56,19 @@ namespace ODTLearning.Models
         public DateOnly? date_of_birth { get; set; }
         public string? Gender { get; set; }
     }
+
+    public class ListAccount 
+    {
+        public string? id { get; set; }
+        public string? FullName { get; set; }
+
+        public string? Phone { get; set; }
+
+        public string? Email { get; set; }
+
+        public DateOnly? date_of_birth { get; set; }
+
+        public string? Gender { get; set; }
+        public string? Roles { get; set; }
+    }
 }

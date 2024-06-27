@@ -66,13 +66,222 @@ namespace ODTLearning.Repositories
             return result;
         }
 
+        public async Task<ApiResponse<List<ListAccount>>> GetListStudent()
+        {
+            try
+            {
+                var ListStudent = await _context.Accounts
+                   .Where(t => t.Roles == "Học sinh")
+                    .Select(t => new ListAccount
+                    {
+                        id = t.Id, // Sử dụng Id của Tutor
+                        Email = t.Email,
+                        date_of_birth = t.DateOfBirth,
+                        FullName = t.FullName,
+                        Gender = t.Gender,
+                        Phone = t.Phone,
+                        Roles = t.Roles,
+                    }).ToListAsync();
+                return new ApiResponse<List<ListAccount>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách học sinh thành công",
+                    Data = ListStudent
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in GetListTutorsToConfirm: {ex.Message}");
+
+                return new ApiResponse<List<ListAccount>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách gia sư",
+                    Data = null
+                };
+            }
+        }
+
+        public async Task<ApiResponse<List<ListAccount>>> GetListTutor()
+        {
+            try
+            {
+                var ListStudent = await _context.Accounts
+                   .Where(t => t.Roles == "Gia sư")
+                    .Select(t => new ListAccount
+                    {
+                        id = t.Id, // Sử dụng Id của Tutor
+                        Email = t.Email,
+                        date_of_birth = t.DateOfBirth,
+                        FullName = t.FullName,
+                        Gender = t.Gender,
+                        Phone = t.Phone,
+                        Roles = t.Roles,
+                    }).ToListAsync();
+                return new ApiResponse<List<ListAccount>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách gia sư thành công",
+                    Data = ListStudent
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in GetListTutorsToConfirm: {ex.Message}");
+
+                return new ApiResponse<List<ListAccount>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách học sinh",
+                    Data = null
+                };
+            }
+        }
+
+        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetListRequestPending()
+        {
+            try
+            {
+                var ListRequestPending = await _context.Requests
+                    .Include(t => t.IdAccountNavigation)
+                    .Include(t => t.IdClassNavigation)
+                    .Include(t => t.IdSubjectNavigation)
+                    .Where(t => t.Status == "Chưa duyệt")
+                    .Select(t => new ViewRequestOfStudent
+                    {
+                        IdRequest = t.Id,
+                        Title = t.Title,
+                        Price = t.Price,
+                        Class = t.IdClassNavigation.ClassName,
+                        TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeTable = t.TimeTable,
+                        TotalSession = t.TotalSession,
+                        Subject = t.IdSubjectNavigation.SubjectName,
+                        FullName = t.IdAccountNavigation.FullName,
+                        Description = t.Description,
+                        Status = t.Status,
+                        LearningMethod = t.LearningMethod,
+                    }).ToListAsync();
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách học sinh thành công",
+                    Data = ListRequestPending
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in GetListRequestPending: {ex.Message}");
+
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách yêu cầu",
+                    Data = null
+                };
+            }
+        }
+        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetListRequestApproved()
+        {
+            try
+            {
+                var ListRequestPending = await _context.Requests
+                    .Include(t => t.IdAccountNavigation)
+                    .Include(t => t.IdClassNavigation)
+                    .Include(t => t.IdSubjectNavigation)
+                    .Where(t => t.Status == "Đã duyệt")
+                    .Select(t => new ViewRequestOfStudent
+                    {
+                        IdRequest = t.Id,
+                        Title = t.Title,
+                        Price = t.Price,
+                        Class = t.IdClassNavigation.ClassName,
+                        TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeTable = t.TimeTable,
+                        TotalSession = t.TotalSession,
+                        Subject = t.IdSubjectNavigation.SubjectName,
+                        FullName = t.IdAccountNavigation.FullName,
+                        Description = t.Description,
+                        Status = t.Status,
+                        LearningMethod = t.LearningMethod,
+                    }).ToListAsync();
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách học sinh thành công",
+                    Data = ListRequestPending
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in GetListRequestPending: {ex.Message}");
+
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách yêu cầu",
+                    Data = null
+                };
+            }
+        }
+        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetListRequestReject()
+        {
+            try
+            {
+                var ListRequestPending = await _context.Requests
+                    .Include(t => t.IdAccountNavigation)
+                    .Include(t => t.IdClassNavigation)
+                    .Include(t => t.IdSubjectNavigation)
+                    .Where(t => t.Status == "Từ chối")
+                    .Select(t => new ViewRequestOfStudent
+                    {
+                        IdRequest = t.Id,
+                        Title = t.Title,
+                        Price = t.Price,
+                        Class = t.IdClassNavigation.ClassName,
+                        TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeTable = t.TimeTable,
+                        TotalSession = t.TotalSession,
+                        Subject = t.IdSubjectNavigation.SubjectName,
+                        FullName = t.IdAccountNavigation.FullName,
+                        Description = t.Description,
+                        Status = t.Status,
+                        LearningMethod = t.LearningMethod,
+                    }).ToListAsync();
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách học sinh thành công",
+                    Data = ListRequestPending
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in GetListRequestPending: {ex.Message}");
+
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách yêu cầu",
+                    Data = null
+                };
+            }
+        }
         public async Task<ApiResponse<object>> ViewRent(string Condition)
         {
             var rent = _context.Rents.AsQueryable();
 
             DateTime? date = null;
 
-            if (Condition.ToLower() == "1 tuần") 
+            if (Condition.ToLower() == "1 tuần")
             {
                 date = DateTime.Now.AddDays(-7);
             }

@@ -23,11 +23,11 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("createRequest")]
-        public async Task<IActionResult> CreateRequestLearning(string IDAccount, RequestLearningModel model)
+        public async Task<IActionResult> CreateRequestLearning(string id, RequestLearningModel model)
         {
             try
             {
-                var response = await _repo.CreateRequestLearning(IDAccount, model);
+                var response = await _repo.CreateRequestLearning(id, model);
 
                 if (response.Success)
                 {

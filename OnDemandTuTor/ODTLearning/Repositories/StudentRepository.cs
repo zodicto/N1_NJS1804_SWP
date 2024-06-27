@@ -18,12 +18,12 @@ namespace ODTLearning.Repositories
 
         ImageLibrary imgLib = new ImageLibrary();
 
-        public async Task<ApiResponse<bool>> CreateRequestLearning(string IDAccount, RequestLearningModel model)
+        public async Task<ApiResponse<bool>> CreateRequestLearning(string id, RequestLearningModel model)
         {
             // Tìm sinh viên theo IdStudent
             var student = await _context.Accounts
                                   .Include(s => s.Requests)
-                                  .FirstOrDefaultAsync(s => s.Id == IDAccount);
+                                  .FirstOrDefaultAsync(s => s.Id == id);
 
             if (student == null)
             {
@@ -110,7 +110,7 @@ namespace ODTLearning.Repositories
                     Description = model.Description,
                     Status = "Chưa duyệt",
                     LearningMethod = model.LearningMethod,
-                    IdAccount = IDAccount,
+                    IdAccount = id,
                     IdSubject = subjectModel.Id,
                     IdClass = Class.Id
                 };

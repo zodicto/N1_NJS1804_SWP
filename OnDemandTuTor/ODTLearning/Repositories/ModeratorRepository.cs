@@ -37,7 +37,7 @@ namespace ODTLearning.Repositories
                         Gender = t.IdAccountNavigation.Gender,
                         Experience = t.Experience,
                         Subject = t.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName, // Lấy Subject từ TutorSubjects
-                        QualificationName = t.EducationalQualifications.FirstOrDefault().QualificationName, // Lấy QualificationName từ EducationalQualifications
+                        QualificationName = t.EducationalQualifications.FirstOrDefault().QualificationName, // Lấy QualificationName từ 
                         Type = t.EducationalQualifications.FirstOrDefault().Type, // Lấy Type từ EducationalQualifications
                         ImageQualification = t.EducationalQualifications.FirstOrDefault().Img // Lấy ImageQualification từ EducationalQualifications
                     })
