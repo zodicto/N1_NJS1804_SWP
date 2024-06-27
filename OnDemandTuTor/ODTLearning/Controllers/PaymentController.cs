@@ -74,7 +74,8 @@ namespace ODTLearning.Controllers
                 return BadRequest(new
                 {
                     Success = false,
-                    Message = $"Payment failed. Error payment VnPay: {response.VnPayResponseCode}"
+                    Message = $"Payment failed. Error payment VnPay: {response.VnPayResponseCode}",
+                    Data = response
                 });
             }
 
