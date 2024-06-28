@@ -33,10 +33,33 @@ namespace ODTLearning.Repositories
 
             if(tutor != null)
             {
-                _context.RemoveRange(tutor);
+                var educationalQualifications = _context.EducationalQualifications.Where(x => x.IdTutor == tutor.Id);
+                _context.EducationalQualifications.RemoveRange(educationalQualifications);
+
+
+                var requestLearnings = _context.RequestLearnings.Where(x => x.IdTutor == tutor.Id);
+                _context.RequestLearnings.RemoveRange(requestLearnings);
+
+                var tutorSubjects = _context.TutorSubjects.Where(x => x.IdTutor == tutor.Id).ToList();
+                _context.TutorSubjects.RemoveRange(tutorSubjects);
+
+                var complaints = _context.Complaints.Where(x => x.IdTutor == tutor.Id).ToList();
+                _context.Complaints.RemoveRange(complaints);   
+
+                _context.Tutors.Remove(tutor);
             }
 
-            _context.RemoveRange(exsitAccount);
+            var complaints2 = _context.Complaints.Where(x => x.IdAccount == id);
+            _context.Complaints.RemoveRange(complaints2);
+
+            var transactions = _context.Transactions.Where(x => x.IdAccount == id);
+            _context.Transactions.RemoveRange(transactions);
+
+            var requests = _context.Requests.Where(x => x.IdAccount == id);
+            _context.Requests.RemoveRange(requests);
+
+            _context.Accounts.Remove(exsitAccount);
+
             await _context.SaveChangesAsync();
 
             return new ApiResponse<bool>
