@@ -47,9 +47,9 @@ namespace ODTLearning.Repositories
                 {
                     return new ApiResponse<List<ListTutorToConfirmFB>>
                     {
-                        Success = false,
+                        Success = true,
                         Message = "Không có gia sư nào cần xác nhận",
-                        Data = null
+                        Data = []
                     };
                 }
 
@@ -109,7 +109,7 @@ namespace ODTLearning.Repositories
             {
                 return new ApiResponse<bool>
                 {
-                    Success = false,
+                    Success = true,
                     Message = "Không tìm thấy yêu cầu nào",
                     Data = false
                 };
@@ -137,7 +137,7 @@ namespace ODTLearning.Repositories
                 {
                     return new ApiResponse<bool>
                     {
-                        Success = false,
+                        Success = true,
                         Message = "Không tìm thấy gia sư với ID tài khoản này",
                         Data = false
                     };
@@ -183,7 +183,7 @@ namespace ODTLearning.Repositories
                 {
                     return new ApiResponse<bool>
                     {
-                        Success = false,
+                        Success = true,
                         Message = "Không tìm thấy gia sư với ID tài khoản này",
                         Data = false
                     };
@@ -227,7 +227,7 @@ namespace ODTLearning.Repositories
                     Title = r.Title,
                     Price = r.Price,
                     Totalsession = r.TotalSession,
-                    Timetable  = r.TimeTable,
+                    Timetable = r.TimeTable,
                     Description = r.Description,
                     Subject = r.IdSubjectNavigation.SubjectName, // Assuming you have a Subject property in your Request model
                     Learningmethod = r.LearningMethod,
@@ -246,12 +246,5 @@ namespace ODTLearning.Repositories
                 Data = pendingRequests
             };
         }
-
-
-
-
-
-
-
     }
 }

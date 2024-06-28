@@ -96,7 +96,8 @@ namespace ODTLearning.Repositories
                 };
 
                 // Upload ảnh
-                var upload = await imgLib.UploadImage(model.imagequalification);
+                var upload = await imgLib.UploadImage
+                    (model.imagequalification);
 
                 if (!upload.Success)
                 {
@@ -237,7 +238,6 @@ namespace ODTLearning.Repositories
                 {
                     Success = true,
                     Message = "Đăng ký gia sư thành công. Bạn vui lòng chờ duyệt",
-                    Data = new TutorResponse { Idtutor = tutor.Id }
                 };
             }
             catch (Exception ex)

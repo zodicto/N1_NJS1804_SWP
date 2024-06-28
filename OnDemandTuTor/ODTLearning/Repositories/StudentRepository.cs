@@ -293,7 +293,6 @@ namespace ODTLearning.Repositories
                 {
                     Success = true,
                     Message = "Không tìm thấy yêu cầu nào với trạng thái 'chờ duyệt' cho tài khoản này",
-                    Data = null
                 };
             }
 
