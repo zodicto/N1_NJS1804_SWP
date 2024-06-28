@@ -338,8 +338,8 @@ namespace ODTLearning.Controllers
                 var userResponse = new UserResponse
                 {
                     id = userAccount.Id,
-                    fullname= userAccount.FullName,
-                    email  = userAccount.Email,
+                    fullname = userAccount.FullName,
+                    email = userAccount.Email,
                     date_of_birth = userAccount.DateOfBirth,
                     gender = userAccount.Gender,
                     roles = userAccount.Roles,
@@ -465,8 +465,6 @@ namespace ODTLearning.Controllers
 </script>";
             return Content(script, "text/html");
         }
-
-
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout([FromBody] LogoutModel model)

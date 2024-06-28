@@ -534,13 +534,13 @@ namespace ODTLearning.Repositories
             {
                 Id = account.Id,
                 account.Email,
-                FullName = account.FullName,
+                fullname = account.FullName,
                 Date_of_birth = account.DateOfBirth,
                 Gender = account.Gender,
                 Avatar = account.Avatar,
                 Address = account.Address,
                 Phone = account.Phone,
-                AccountBalance = account.AccountBalance
+                Accountbalance = account.AccountBalance
             };
 
             return new ApiResponse<object>

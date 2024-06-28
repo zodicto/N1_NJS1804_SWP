@@ -185,9 +185,11 @@ namespace ODTLearning.Repositories
 
                                                        Price = r.Price,
                                                        Description = r.Description,
-                                                       Subject = r.IdSubjectNavigation.SubjectName, // Assuming you have a Subject property in your Request model
+                                                       Subject = r.IdSubjectNavigation.SubjectName, 
                                                        Learningmethod = r.LearningMethod,
                                                        Class = r.IdClassNavigation.ClassName,
+                                                       Timetable = r.TimeTable,
+                                                       Totalsession = r.TotalSession,
                                                        Timestart = r.TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
                                                       Timeend = r.TimeEnd.ToString(),
                                                        Idrequest = r.Id, // Include Account ID
@@ -220,7 +222,7 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<ApiResponse<bool>> JoinRequest(string requestId, string idAccount)
+        public async Task<ApiResponse<bool>> JoinRequest(string requestId, string id)
         {
             // Tìm yêu cầu theo IdRequest
             var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
@@ -235,7 +237,7 @@ namespace ODTLearning.Repositories
             }
 
 
-            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == idAccount && a.Roles.ToLower() == "gia sư");
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == id && a.Roles.ToLower() == "Gia sư");
 
             if (account == null)
             {
@@ -247,7 +249,7 @@ namespace ODTLearning.Repositories
             }
 
             // Tìm gia sư theo IdAccount
-            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.IdAccount == idAccount);
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.IdAccount == id);
 
 
             if (tutor == null)
