@@ -278,7 +278,7 @@ namespace ODTLearning.Repositories
 
 
 
-        public async Task<ApiResponse<List<RequestLearningModel>>> GetPendingRequestsByAccountId(string accountId)
+        public async Task<ApiResponse<List<RequestLearningResponse>>> GetPendingRequestsByAccountId(string accountId)
         {
             // Truy vấn danh sách các request có status là "Từ chối" và idAccount là accountId
             var requests = await _context.Requests
@@ -289,7 +289,7 @@ namespace ODTLearning.Repositories
 
             if (requests == null || !requests.Any())
             {
-                return new ApiResponse<List<RequestLearningModel>>
+                return new ApiResponse<List<RequestLearningResponse>>
                 {
                     Success = true,
                     Message = "Không tìm thấy yêu cầu nào với trạng thái 'chờ duyệt' cho tài khoản này",
@@ -298,8 +298,9 @@ namespace ODTLearning.Repositories
             }
 
             // Chuyển đổi danh sách requests thành danh sách RequestLearningModel
-            var requestLearningModels = requests.Select(r => new RequestLearningModel
+            var requestLearningModels = requests.Select(r => new RequestLearningResponse
             {
+                Idrequest = r.Id,
                 Title = r.Title,
                 Price = r.Price,
                 Description = r.Description,
@@ -312,14 +313,14 @@ namespace ODTLearning.Repositories
                 Totalsession = r.TotalSession
             }).ToList();
 
-            return new ApiResponse<List<RequestLearningModel>>
+            return new ApiResponse<List<RequestLearningResponse>>
             {
                 Success = true,
                 Message = "Danh sách yêu cầu dạy học được truy xuất thành công",
                 Data = requestLearningModels
             };
         }
-        public async Task<ApiResponse<List<RequestLearningModel>>> GetApprovedRequestsByAccountId(string accountId)
+        public async Task<ApiResponse<List<RequestLearningResponse>>> GetApprovedRequestsByAccountId(string accountId)
         {
             // Truy vấn danh sách các request có status là "Từ chối" và idAccount là accountId
             var requests = await _context.Requests
@@ -330,7 +331,7 @@ namespace ODTLearning.Repositories
 
             if (requests == null || !requests.Any())
             {
-                return new ApiResponse<List<RequestLearningModel>>
+                return new ApiResponse<List<RequestLearningResponse>>
                 {
                     Success = true,
                     Message = "Không tìm thấy yêu cầu nào với trạng thái 'đã duyệt' cho tài khoản này",
@@ -339,8 +340,9 @@ namespace ODTLearning.Repositories
             }
 
             // Chuyển đổi danh sách requests thành danh sách RequestLearningModel
-            var requestLearningModels = requests.Select(r => new RequestLearningModel
+            var requestLearningModels = requests.Select(r => new RequestLearningResponse
             {
+                Idrequest = r.Id,
                 Title = r.Title,
                 Price = r.Price,
                 Description = r.Description,
@@ -353,14 +355,14 @@ namespace ODTLearning.Repositories
                 Totalsession = r.TotalSession
             }).ToList();
 
-            return new ApiResponse<List<RequestLearningModel>>
+            return new ApiResponse<List<RequestLearningResponse>>
             {
                 Success = true,
                 Message = "Danh sách đã duyệt được truy xuất thành công",
                 Data = requestLearningModels
             };
         }
-        public async Task<ApiResponse<List<RequestLearningModel>>> GetRejectRequestsByAccountId(string accountId)
+        public async Task<ApiResponse<List<RequestLearningResponse>>> GetRejectRequestsByAccountId(string accountId)
         {
             // Truy vấn danh sách các request có status là "Từ chối" và idAccount là accountId
             var requests = await _context.Requests
@@ -371,7 +373,7 @@ namespace ODTLearning.Repositories
 
             if (requests == null || !requests.Any())
             {
-                return new ApiResponse<List<RequestLearningModel>>
+                return new ApiResponse<List<RequestLearningResponse>>
                 {
                     Success = true,
                     Message = "Không tìm thấy yêu cầu nào với trạng thái 'Từ chối' cho tài khoản này",
@@ -380,8 +382,9 @@ namespace ODTLearning.Repositories
             }
 
             // Chuyển đổi danh sách requests thành danh sách RequestLearningModel
-            var requestLearningModels = requests.Select(r => new RequestLearningModel
+            var requestLearningModels = requests.Select(r => new RequestLearningResponse
             {
+                Idrequest = r.Id,
                 Title = r.Title,
                 Price = r.Price,
                 Description = r.Description,
@@ -394,7 +397,7 @@ namespace ODTLearning.Repositories
                 Totalsession = r.TotalSession
             }).ToList();
 
-            return new ApiResponse<List<RequestLearningModel>>
+            return new ApiResponse<List<RequestLearningResponse>>
             {
                 Success = true,
                 Message = "Danh sách yêu cầu từ chối xử lý đã được truy xuất thành công",
@@ -433,7 +436,8 @@ namespace ODTLearning.Repositories
             // Lấy danh sách gia sư tham gia yêu cầu
             var tutors = request.RequestLearnings.Select(rl => new TutorListModel
             {
-                fullName = rl.IdTutorNavigation.IdAccountNavigation.FullName,
+                id = rl.IdTutorNavigation.IdAccount,
+                fullname = rl.IdTutorNavigation.IdAccountNavigation.FullName,
                 gender = rl.IdTutorNavigation.IdAccountNavigation.Gender,
                 specializedskills= rl.IdTutorNavigation.SpecializedSkills,
                 experience = rl.IdTutorNavigation.Experience,
@@ -465,7 +469,7 @@ namespace ODTLearning.Repositories
 
             var tutor = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == idAccountTutor);
 
-            if (tutor == null || tutor.Roles != "gia sư")
+            if (tutor == null || tutor.Roles.ToLower() != "gia sư")
             {
                 return new ApiResponse<SelectTutorModel>
                 {
@@ -477,15 +481,15 @@ namespace ODTLearning.Repositories
 
             var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == request.IdAccount);
 
-            if (user.AccountBalance < request.Price)
-            {
-                return new ApiResponse<SelectTutorModel>
-                {
-                    Success = false,
-                    Message = "Tài khoản user không đủ tiền yêu cầu",
-                    Data = null
-                };
-            }
+            //if (user.AccountBalance < request.Price)
+            //{
+            //    return new ApiResponse<SelectTutorModel>
+            //    {
+            //        Success = false,
+            //        Message = "Tài khoản user không đủ tiền yêu cầu",
+            //        Data = null
+            //    };
+            //}            
 
             var rent = new Rent
             {
@@ -495,10 +499,12 @@ namespace ODTLearning.Repositories
                 IdSubject = request.IdSubject,
                 IdRequest = idRequest,
                 IdAccount = request.IdAccount,
-                IdTutor = idAccountTutor
+                IdTutor = idAccountTutor                
             };
 
-            user.AccountBalance = user.AccountBalance - request.Price;
+            //user.AccountBalance = user.AccountBalance - request.Price;
+            tutor.AccountBalance = tutor.AccountBalance - 50000;
+            request.Status = "Đã thuê";
             await _context.AddAsync(rent);
             await _context.SaveChangesAsync();
 

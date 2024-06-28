@@ -4,7 +4,7 @@ namespace ODTLearning.Repositories
 {
     public interface IAdminRepository
     {
-        public Task<bool> DeleteAccount(string IDAccount);
+        public Task<ApiResponse<bool>> DeleteAccount(string id);
         public Task<ApiResponse<object>> ViewRent(string Condition);
         public Task<ApiResponse<List<ListAccount>>> GetListStudent();
         public  Task<ApiResponse<List<ListAccount>>> GetListTutor();

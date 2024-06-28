@@ -249,9 +249,9 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("SelectTutor")]
-        public async Task<IActionResult> SelectTutor(string idRequest, string idAccountTutor)
+        public async Task<IActionResult> SelectTutor(string idrequest, string idaccounttutor)
         {
-            var response = await _repo.SelectTutor(idRequest, idAccountTutor);
+            var response = await _repo.SelectTutor(idrequest, idaccounttutor);
 
             if (response.Success)
             {

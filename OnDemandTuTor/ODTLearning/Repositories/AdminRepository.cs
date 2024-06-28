@@ -16,54 +16,57 @@ namespace ODTLearning.Repositories
             _context = context;
         }
 
-        public async Task<bool> DeleteAccount(string IDAccount)
-        {
-            bool result = false;
+        public async Task<ApiResponse<bool>> DeleteAccount(string id)
+        {        
+            var exsitAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == id);
 
-            try
+            if (exsitAccount == null)
             {
-                var exsitAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == IDAccount);
-                if (exsitAccount != null)
+                return new ApiResponse<bool>
                 {
-
-                    if (exsitAccount.Roles.ToLower() == "học sinh")
-                    {
-                        _context.Accounts.Remove(exsitAccount);
-                        await _context.SaveChangesAsync();
-                        result = true;
-                    }
-                    else if (exsitAccount.Roles.ToLower() == "gia sư")
-                    {
-                        var tutor = _context.Tutors.FirstOrDefault(x => x.IdAccount == IDAccount);
-                        // Xóa các đối tượng educational qualifications liên quan đến tutor
-                        var educationalQualifications = _context.EducationalQualifications.Where(eq => eq.IdTutor == tutor.Id).ToList();
-                        if (educationalQualifications.Any())
-                        {
-                            _context.EducationalQualifications.RemoveRange(educationalQualifications);
-                        }
-
-                        // Xóa các đối tượng tutor fields liên quan đến tutor
-                        var tutorFields = _context.TutorSubjects.Where(tf => tf.IdTutor == tutor.Id).ToList();
-                        if (tutorFields.Any())
-                        {
-                            _context.TutorSubjects.RemoveRange(tutorFields);
-                        }
-
-                        // Xóa đối tượng tutor
-                        _context.Tutors.Remove(tutor);
-                        await _context.SaveChangesAsync();
-                        result = true;
-                    }
-                }
+                    Success = false,
+                    Message = "Không tìm thấy người dùng"
+                };
             }
-            catch (Exception ex)
+
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
+
+            if(tutor != null)
             {
-                // Ghi lại lỗi nếu có xảy ra
-                // Sử dụng logging framework như NLog, Serilog, hoặc bất kỳ framework nào bạn đang sử dụng
-                Console.WriteLine($"Error while deleting account: {ex.Message}");
+                var educationalQualifications = _context.EducationalQualifications.Where(x => x.IdTutor == tutor.Id);
+                _context.EducationalQualifications.RemoveRange(educationalQualifications);
+
+
+                var requestLearnings = _context.RequestLearnings.Where(x => x.IdTutor == tutor.Id);
+                _context.RequestLearnings.RemoveRange(requestLearnings);
+
+                var tutorSubjects = _context.TutorSubjects.Where(x => x.IdTutor == tutor.Id).ToList();
+                _context.TutorSubjects.RemoveRange(tutorSubjects);
+
+                var complaints = _context.Complaints.Where(x => x.IdTutor == tutor.Id).ToList();
+                _context.Complaints.RemoveRange(complaints);   
+
+                _context.Tutors.Remove(tutor);
             }
 
-            return result;
+            var complaints2 = _context.Complaints.Where(x => x.IdAccount == id);
+            _context.Complaints.RemoveRange(complaints2);
+
+            var transactions = _context.Transactions.Where(x => x.IdAccount == id);
+            _context.Transactions.RemoveRange(transactions);
+
+            var requests = _context.Requests.Where(x => x.IdAccount == id);
+            _context.Requests.RemoveRange(requests);
+
+            _context.Accounts.Remove(exsitAccount);
+
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Xóa người dùng thành công"
+            };                      
         }
 
         public async Task<ApiResponse<List<ListAccount>>> GetListStudent()

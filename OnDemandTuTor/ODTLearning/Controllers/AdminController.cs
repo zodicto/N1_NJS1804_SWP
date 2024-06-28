@@ -214,5 +214,26 @@ namespace ODTLearning.Controllers
                 });
             }
         }
+
+        [HttpDelete("DeleteAccount")]
+        public async Task<IActionResult> DeleteAccount(string id)
+        {
+            var response = await _repo.DeleteAccount(id);
+
+            if (response.Success)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = response.Message
+                });
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = response.Message
+            });
+        }
     }
 }
