@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ODTLearning.Entities;
 using ODTLearning.Models;
@@ -22,46 +23,46 @@ namespace ODTLearning.Controllers
         }
 
 
-        [HttpGet("profileTutor")]
+        [HttpGet("GetProfileTutor")]
         public async Task<IActionResult> GetTutorProfile(string id)
         {
-            var result = await _repo.GetTutorProfile(id);
+            var response = await _repo.GetTutorProfile(id);
 
-            if (result == null)
+            if (response.Success)
             {
-                return NotFound(new
+                return Ok(new
                 {
-                    Success = false,
-                    Message = "Get profile tutor fail"
+                    Success = true,
+                    Message = response.Message,
+                    Data = response.Data
                 });
             }
 
-            return Ok(new
+            return BadRequest(new
             {
-                Success = true,
-                Message = "get tutor profile successfully",
-                Data = result
+                Success = false,
+                Message = response.Message
             });
         }
 
-        [HttpPost("updateTutorProfile")]
-        public async Task<IActionResult> UpdateTutorProfile(string idTutor, [FromBody] TutorProfileToUpdate model)
+        [HttpPut("UpdateTutorProfile")]
+        public async Task<IActionResult> UpdateTutorProfile(string id, [FromBody] TutorProfileToUpdate model)
         {
-            var result = await _repo.UpdateTutorProfile(idTutor, model);
+            var response = await _repo.UpdateTutorProfile(id, model);
 
-            if (!result)
+            if (response.Success)
             {
-                return BadRequest(new
+                return Ok(new
                 {
-                    Success = false,
-                    Message = "Update tutor profile failed"
+                    Success = true,
+                    Message = response.Message
                 });
             }
 
-            return Ok(new
+            return BadRequest(new
             {
-                Success = true,
-                Message = "Update tutor profile successfully"
+                Success = false,
+                Message = response.Message
             });
         }
 
