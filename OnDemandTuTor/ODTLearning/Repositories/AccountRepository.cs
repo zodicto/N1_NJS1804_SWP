@@ -484,7 +484,7 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            user.FullName = model.fullname;
+            user.FullName = model.fullName;
             user.DateOfBirth = model.date_of_birth;
             user.Gender = model.gender;
             user.Avatar = model.avatar;
@@ -497,13 +497,14 @@ namespace ODTLearning.Repositories
             {
                 Id = user.Id,
                 Email = user.Email,
-                Fullname = user.FullName,
+                FullName = user.FullName,
                 Date_of_birth = user.DateOfBirth,
                 Gender = user.Gender,
                 Avatar = user.Avatar,
                 Address = user.Address,
                 Phone = user.Phone,
-                Accountbalance = user.AccountBalance
+                Accountbalance = user.AccountBalance,
+                Roles = user.Roles
             };
 
             return new ApiResponse<object>
@@ -533,14 +534,15 @@ namespace ODTLearning.Repositories
             var userProfile = new
             {
                 Id = account.Id,
-                account.Email,
-                fullname = account.FullName,
+                Email = account.Email,
+                FullName = account.FullName,
                 Date_of_birth = account.DateOfBirth,
                 Gender = account.Gender,
                 Avatar = account.Avatar,
                 Address = account.Address,
                 Phone = account.Phone,
-                Accountbalance = account.AccountBalance
+                Accountbalance = account.AccountBalance,
+                Roles = account.Roles
             };
 
             return new ApiResponse<object>

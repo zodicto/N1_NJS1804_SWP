@@ -20,7 +20,7 @@ namespace ODTLearning.Models
 
     public class UpdateProfile
     {
-        public string? fullname { get; set; }
+        public string? fullName { get; set; }
         public string? address { get; set; }
         public string? phone { get; set; }
 
