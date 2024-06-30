@@ -87,10 +87,52 @@ namespace ODTLearning.Controllers
             });
         }
 
+        [HttpPost("AddQualification")]
+        public async Task<IActionResult> AddQualification(string id, AddQualificationModel model)
+        {
+            var response = await _repo.AddQualification(id, model);
+
+            if (response.Success)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = response.Message
+                });
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = response.Message
+            });
+        }
+
         [HttpDelete("DeleteSubject")]
         public async Task<IActionResult> DeleteSubject(string id, string subjectName)
         {
             var response = await _repo.DeleteSubject(id, subjectName);
+
+            if (response.Success)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = response.Message
+                });
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = response.Message
+            });
+        }
+
+        [HttpDelete("DeleteQualification")]
+        public async Task<IActionResult> DeleteQualification(string id, string idQualification)
+        {
+            var response = await _repo.DeleteQualification(id, idQualification);
 
             if (response.Success)
             {

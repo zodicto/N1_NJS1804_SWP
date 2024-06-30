@@ -166,7 +166,7 @@ namespace ODTLearning.Repositories
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Gia sư đã có môn học này"
+                    Message = "Gia sư đã có môn học này trong chương trình"
                 };
             }
 
@@ -184,6 +184,49 @@ namespace ODTLearning.Repositories
             {
                 Success = true,
                 Message = "Thêm môn học thành công"
+            };
+        }
+
+        public async Task<ApiResponse<bool>> AddQualification(string id, AddQualificationModel model)
+        {
+            var tutor = await _context.Tutors.SingleOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư"
+                };
+            }
+
+            var qualification = await _context.EducationalQualifications.FirstOrDefaultAsync(x => x.QualificationName == model.Name && x.Type == model.Type);
+
+            if (qualification != null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = $"{model.Type} đã tồn tại"
+                };
+            }
+
+            qualification = new EducationalQualification
+            {
+                Id = Guid.NewGuid().ToString(),
+                QualificationName = model.Name,
+                Img = model.Img,
+                Type = model.Type,
+                IdTutor = tutor.Id                
+            };
+
+            await _context.EducationalQualifications.AddAsync(qualification);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = $"Thêm {model.Type} thành công"
             };
         }
 
@@ -218,6 +261,40 @@ namespace ODTLearning.Repositories
             {
                 Success = true,
                 Message = "Xóa môn học thành công"
+            };
+        }
+
+        public async Task<ApiResponse<bool>> DeleteQualification(string id, string idQualification)
+        {
+            var tutor = await _context.Tutors.SingleOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư"
+                };
+            }
+
+            var qualification = await _context.EducationalQualifications.FirstOrDefaultAsync(x => x.Id == idQualification);
+
+            if (qualification == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = $"Chứng chỉ/Bằng cấp không tồn tại"
+                };
+            }
+
+            _context.EducationalQualifications.Remove(qualification);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = $"Xóa {qualification.Type} thành công"
             };
         }
 
