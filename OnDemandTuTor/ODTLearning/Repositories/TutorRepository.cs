@@ -53,28 +53,33 @@ namespace ODTLearning.Repositories
             //lay list Qualification cua account
             var qualificationsList = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.EducationalQualifications, t => t.Id, eq => eq.IdTutor, (t, eq) => new
             {
+                Id = eq.Id,
                 Name = eq.QualificationName,
                 Img = eq.Img,
                 Type = eq.Type
-            }).ToList();            
+            }).ToList();
 
+            var idQualifications = "";
             var nameQualifications = "";
             var imgQualifications = "";
             var typeQualifications = "";
 
             foreach (var x in qualificationsList)
             {
+                idQualifications += x.Id + ";";
                 nameQualifications += x.Name + ";";
                 imgQualifications += x.Img + ";";
                 typeQualifications += x.Type + ";";
             }
 
+            idQualifications = idQualifications.Substring(0, idQualifications.Length - 1);
             nameQualifications = nameQualifications.Substring(0, nameQualifications.Length - 1);
             imgQualifications = imgQualifications.Substring(0, imgQualifications.Length - 1);
             typeQualifications = typeQualifications.Substring(0, typeQualifications.Length - 1);
 
             var qualifications = new
             {
+                Id = idQualifications,
                 Name = nameQualifications,
                 Img = imgQualifications,
                 Type = typeQualifications
@@ -127,6 +132,92 @@ namespace ODTLearning.Repositories
             {
                 Success = true,
                 Message = "Cập nhật thông tin gia sư thành công"
+            };
+        }
+
+        public async Task<ApiResponse<bool>> AddSubject(string id, string subjectName)
+        {
+            var tutor = await _context.Tutors.SingleOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư"
+                };
+            }
+
+            var subject = await _context.Subjects.SingleOrDefaultAsync(x => x.SubjectName == subjectName);
+
+            if (subject == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy môn học"
+                };
+            }
+
+            var tutorSubject = await _context.TutorSubjects.FirstOrDefaultAsync(x => x.IdTutor == tutor.Id && x.IdSubject == subject.Id);
+
+            if (tutorSubject == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Gia sư đã có môn học này"
+                };
+            }
+
+            tutorSubject = new TutorSubject
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdTutor = tutor.Id,
+                IdSubject = subject.Id,
+            };
+
+            await _context.TutorSubjects.AddAsync(tutorSubject);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Thêm môn học thành công"
+            };
+        }
+
+        public async Task<ApiResponse<bool>> DeleteSubject(string id, string subjectName)
+        {
+            var tutor = await _context.Tutors.SingleOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư"
+                };
+            }
+
+            var tutorSubject = await _context.TutorSubjects.Include(x => x.IdSubjectNavigation).FirstOrDefaultAsync(x => x.IdSubjectNavigation.SubjectName == subjectName);
+
+            if (tutorSubject == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Gia sư không dạy môn học này"
+                };
+            }
+
+            _context.TutorSubjects.Remove(tutorSubject);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Xóa môn học thành công"
             };
         }
 

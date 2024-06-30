@@ -66,6 +66,48 @@ namespace ODTLearning.Controllers
             });
         }
 
+        [HttpPost("AddSubject")]
+        public async Task<IActionResult> AddSubject(string id, string subjectName)
+        {
+            var response = await _repo.AddSubject(id, subjectName);
+
+            if (response.Success)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = response.Message
+                });
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = response.Message
+            });
+        }
+
+        [HttpDelete("DeleteSubject")]
+        public async Task<IActionResult> DeleteSubject(string id, string subjectName)
+        {
+            var response = await _repo.DeleteSubject(id, subjectName);
+
+            if (response.Success)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = response.Message
+                });
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = response.Message
+            });
+        }
+
         //[HttpPost("searchTutor")]
         //public async Task<IActionResult> GetTutorList(SearchTutorModel model)
         //{
