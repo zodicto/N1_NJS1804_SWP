@@ -61,9 +61,9 @@ namespace ODTLearning.Repositories
             // Validate và phân tích chuỗi thời gian để đảm bảo nó có định dạng đúng
             TimeOnly? parsedTimeStart = null;
             TimeOnly? parsedTimeEnd = null;
-            if (!string.IsNullOrEmpty(model.Timestart))
+            if (!string.IsNullOrEmpty(model.TimeStart))
             {
-                if (TimeOnly.TryParseExact(model.Timestart, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+                if (TimeOnly.TryParseExact(model.TimeStart, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
                 {
                     parsedTimeStart = time;
                 }
@@ -76,9 +76,9 @@ namespace ODTLearning.Repositories
                     };
                 }
             }
-            if (!string.IsNullOrEmpty(model.Timeend))
+            if (!string.IsNullOrEmpty(model.TimeEnd))
             {
-                if (TimeOnly.TryParseExact(model.Timeend, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+                if (TimeOnly.TryParseExact(model.TimeEnd, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
                 {
                     parsedTimeEnd = time;
                 }
@@ -105,11 +105,11 @@ namespace ODTLearning.Repositories
                     Price = model.Price,
                     TimeStart = parsedTimeStart,
                     TimeEnd = parsedTimeEnd,
-                    TimeTable = model.Timetable,
-                    TotalSession = model.Totalsession,
+                    TimeTable = model.TimeTable,
+                    TotalSession = model.TotalSession,
                     Description = model.Description,
                     Status = "Chưa duyệt",
-                    LearningMethod = model.Learningmethod,
+                    LearningMethod = model.LearningMethod,
                     IdAccount = id,
                     IdSubject = subjectModel.Id,
                     IdClass = Class.Id
@@ -183,9 +183,9 @@ namespace ODTLearning.Repositories
             // Validate và phân tích chuỗi thời gian để đảm bảo nó có định dạng đúng
             TimeOnly? parsedTimeStart = null;
             TimeOnly? parsedTimeEnd = null;
-            if (!string.IsNullOrEmpty(model.Timestart))
+            if (!string.IsNullOrEmpty(model.TimeStart))
             {
-                if (TimeOnly.TryParseExact(model.Timestart, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+                if (TimeOnly.TryParseExact(model.TimeStart, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
                 {
                     parsedTimeStart = time;
                 }
@@ -198,9 +198,9 @@ namespace ODTLearning.Repositories
                     };
                 }
             }
-            if (!string.IsNullOrEmpty(model.Timeend))
+            if (!string.IsNullOrEmpty(model.TimeEnd))
             {
-                if (TimeOnly.TryParseExact(model.Timeend, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
+                if (TimeOnly.TryParseExact(model.TimeEnd, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var time))
                 {
                     parsedTimeEnd = time;
                 }
@@ -219,10 +219,10 @@ namespace ODTLearning.Repositories
             requestToUpdate.Price = model.Price ?? requestToUpdate.Price;
             requestToUpdate.TimeStart = parsedTimeStart ?? requestToUpdate.TimeStart;
             requestToUpdate.TimeEnd = parsedTimeEnd ?? requestToUpdate.TimeEnd;
-            requestToUpdate.TimeTable = model.Timetable ?? requestToUpdate.TimeTable;
-            requestToUpdate.TotalSession = model.Totalsession?? requestToUpdate.TotalSession;
+            requestToUpdate.TimeTable = model.TimeTable ?? requestToUpdate.TimeTable;
+            requestToUpdate.TotalSession = model.TotalSession?? requestToUpdate.TotalSession;
             requestToUpdate.Description = model.Description ?? requestToUpdate.Description;
-            requestToUpdate.LearningMethod = model.Learningmethod ?? requestToUpdate.LearningMethod;
+            requestToUpdate.LearningMethod = model.LearningMethod ?? requestToUpdate.LearningMethod;
             requestToUpdate.IdSubject = subjectEntity.Id;
             requestToUpdate.IdClass = classEntity.Id;
 
@@ -299,17 +299,18 @@ namespace ODTLearning.Repositories
             // Chuyển đổi danh sách requests thành danh sách RequestLearningModel
             var requestLearningModels = requests.Select(r => new RequestLearningResponse
             {
-                Idrequest = r.Id,
+                IdRequest = r.Id,
                 Title = r.Title,
                 Price = r.Price,
                 Description = r.Description,
                 Subject = r.IdSubjectNavigation?.SubjectName,
-                Learningmethod = r.LearningMethod,
+                LearningMethod = r.LearningMethod,
                 Class = r.IdClassNavigation?.ClassName,
-                Timestart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
-                Timeend = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
-                Timetable = r.TimeTable,
-                Totalsession = r.TotalSession
+                TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
+                TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
+                TimeTable = r.TimeTable,
+                Status = r.Status,
+                TotalSession = r.TotalSession
             }).ToList();
 
             return new ApiResponse<List<RequestLearningResponse>>
@@ -341,17 +342,18 @@ namespace ODTLearning.Repositories
             // Chuyển đổi danh sách requests thành danh sách RequestLearningModel
             var requestLearningModels = requests.Select(r => new RequestLearningResponse
             {
-                Idrequest = r.Id,
+                IdRequest = r.Id,
                 Title = r.Title,
                 Price = r.Price,
                 Description = r.Description,
                 Subject = r.IdSubjectNavigation?.SubjectName,
-                Learningmethod = r.LearningMethod,
+                LearningMethod = r.LearningMethod,
                 Class = r.IdClassNavigation?.ClassName,
-                Timestart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
-                Timeend = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
-                Timetable = r.TimeTable,
-                Totalsession = r.TotalSession
+                TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
+                TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
+                TimeTable = r.TimeTable,
+                Status = r.Status,
+                TotalSession = r.TotalSession
             }).ToList();
 
             return new ApiResponse<List<RequestLearningResponse>>
@@ -383,17 +385,18 @@ namespace ODTLearning.Repositories
             // Chuyển đổi danh sách requests thành danh sách RequestLearningModel
             var requestLearningModels = requests.Select(r => new RequestLearningResponse
             {
-                Idrequest = r.Id,
+                IdRequest = r.Id,
                 Title = r.Title,
                 Price = r.Price,
                 Description = r.Description,
                 Subject = r.IdSubjectNavigation?.SubjectName,
-                Learningmethod = r.LearningMethod,
+                LearningMethod = r.LearningMethod,
                 Class = r.IdClassNavigation?.ClassName,
-                Timestart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
-                Timeend = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
-                Timetable = r.TimeTable,
-                Totalsession = r.TotalSession
+                TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
+                TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
+                TimeTable = r.TimeTable,
+                Status = r.Status,
+                TotalSession = r.TotalSession
             }).ToList();
 
             return new ApiResponse<List<RequestLearningResponse>>

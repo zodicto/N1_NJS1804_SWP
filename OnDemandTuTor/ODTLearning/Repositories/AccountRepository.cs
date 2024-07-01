@@ -187,7 +187,7 @@ namespace ODTLearning.Repositories
             var tutor = new Tutor
             {
                 Id = Guid.NewGuid().ToString(),
-                SpecializedSkills = model.specializedskills,
+                SpecializedSkills = model.specializedSkills,
                 Experience = model.experience,
                 Status = "Chưa duyệt",
                 IdAccount = existingUser.Id,
@@ -199,9 +199,9 @@ namespace ODTLearning.Repositories
             {
                 Id = Guid.NewGuid().ToString(),
                 IdTutor = tutor.Id,
-                QualificationName = model.qualificationname,
+                QualificationName = model.qualificationName,
                 Type = model.type,
-                Img = model.imagequalification
+                Img = model.imageQualification
                 
             };
 
@@ -503,7 +503,7 @@ namespace ODTLearning.Repositories
                 Avatar = user.Avatar,
                 Address = user.Address,
                 Phone = user.Phone,
-                Accountbalance = user.AccountBalance,
+                user.AccountBalance,
                 Roles = user.Roles
             };
 

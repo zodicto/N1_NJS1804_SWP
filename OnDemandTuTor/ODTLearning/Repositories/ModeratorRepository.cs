@@ -30,16 +30,16 @@ namespace ODTLearning.Repositories
                     .Select(t => new ListTutorToConfirmFB
                     {
                         Id = t.IdAccount, // Sử dụng Id của Tutor
-                        specializedskills = t.SpecializedSkills,
+                        specializedSkills = t.SpecializedSkills,
                         introduction = t.Introduction,
                         date_of_birth = t.IdAccountNavigation.DateOfBirth,
                         fullName = t.IdAccountNavigation.FullName,
                         gender = t.IdAccountNavigation.Gender,
                         experience = t.Experience,
                         subject = t.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName, // Lấy Subject từ TutorSubjects
-                        qualificationname = t.EducationalQualifications.FirstOrDefault().QualificationName, // Lấy QualificationName từ 
+                        qualificationName = t.EducationalQualifications.FirstOrDefault().QualificationName, // Lấy QualificationName từ 
                         type = t.EducationalQualifications.FirstOrDefault().Type, // Lấy Type từ EducationalQualifications
-                        imagequalification = t.EducationalQualifications.FirstOrDefault().Img // Lấy ImageQualification từ EducationalQualifications
+                        imageQualification = t.EducationalQualifications.FirstOrDefault().Img // Lấy ImageQualification từ EducationalQualifications
                     })
                     .ToListAsync();
 
@@ -226,15 +226,15 @@ namespace ODTLearning.Repositories
                 {
                     Title = r.Title,
                     Price = r.Price,
-                    Totalsession = r.TotalSession,
-                    Timetable = r.TimeTable,
+                    TotalSession = r.TotalSession,
+                    TimeTable = r.TimeTable,
                     Description = r.Description,
                     Subject = r.IdSubjectNavigation.SubjectName, // Assuming you have a Subject property in your Request model
-                    Learningmethod = r.LearningMethod,
+                    LearningMethod = r.LearningMethod,
                     Class = r.IdClassNavigation.ClassName,
-                    Timestart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
-                    Timeend = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
-                    Idrequest = r.Id,
+                    TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
+                    TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
+                    IdRequest = r.Id,
                     Status = r.Status,
                     FullName = r.IdAccountNavigation.FullName // Include Account Full Name
                 }).ToListAsync();

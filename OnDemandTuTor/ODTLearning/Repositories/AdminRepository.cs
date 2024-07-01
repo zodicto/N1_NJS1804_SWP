@@ -154,24 +154,24 @@ namespace ODTLearning.Repositories
                     .Where(t => t.Status == "Chưa duyệt")
                     .Select(t => new ViewRequestOfStudent
                     {
-                        Idrequest = t.Id,
+                        IdRequest = t.Id,
                         Title = t.Title,
                         Price = t.Price,
                         Class = t.IdClassNavigation.ClassName,
-                        Timestart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                        Timeend = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                        Timetable = t.TimeTable,
-                        Totalsession = t.TotalSession,
+                        TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeTable = t.TimeTable,
+                        TotalSession = t.TotalSession,
                         Subject = t.IdSubjectNavigation.SubjectName,
                         FullName = t.IdAccountNavigation.FullName,
                         Description = t.Description,
                         Status = t.Status,
-                        Learningmethod = t.LearningMethod,
+                        LearningMethod = t.LearningMethod,
                     }).ToListAsync();
                 return new ApiResponse<List<ViewRequestOfStudent>>
                 {
                     Success = true,
-                    Message = "Lấy danh sách học sinh thành công",
+                    Message = "Lấy danh sách yêu cầu chưa duyệt thành công",
                     Data = ListRequestPending
                 };
             }
@@ -199,24 +199,24 @@ namespace ODTLearning.Repositories
                     .Where(t => t.Status == "Đã duyệt")
                     .Select(t => new ViewRequestOfStudent
                     {
-                        Idrequest = t.Id,
+                        IdRequest = t.Id,
                         Title = t.Title,
                         Price = t.Price,
                         Class = t.IdClassNavigation.ClassName,
-                        Timestart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                        Timeend = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                        Timetable = t.TimeTable,
-                        Totalsession = t.TotalSession,
+                        TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeTable = t.TimeTable,
+                        TotalSession = t.TotalSession,
                         Subject = t.IdSubjectNavigation.SubjectName,
                         FullName = t.IdAccountNavigation.FullName,
                         Description = t.Description,
                         Status = t.Status,
-                        Learningmethod = t.LearningMethod,
+                        LearningMethod = t.LearningMethod,
                     }).ToListAsync();
                 return new ApiResponse<List<ViewRequestOfStudent>>
                 {
                     Success = true,
-                    Message = "Lấy danh sách học sinh thành công",
+                    Message = "Lấy danh sách đã duyệt thành công",
                     Data = ListRequestPending
                 };
             }
@@ -244,24 +244,24 @@ namespace ODTLearning.Repositories
                     .Where(t => t.Status == "Từ chối")
                     .Select(t => new ViewRequestOfStudent
                     {
-                        Idrequest = t.Id,
+                        IdRequest = t.Id,
                         Title = t.Title,
                         Price = t.Price,
                         Class = t.IdClassNavigation.ClassName,
-                        Timestart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                       Timeend= t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                        Timetable = t.TimeTable,
-                        Totalsession = t.TotalSession,
+                        TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                       TimeEnd= t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeTable = t.TimeTable,
+                        TotalSession = t.TotalSession,
                         Subject = t.IdSubjectNavigation.SubjectName,
                         FullName = t.IdAccountNavigation.FullName,
                         Description = t.Description,
                         Status = t.Status,
-                        Learningmethod = t.LearningMethod,
+                        LearningMethod = t.LearningMethod,
                     }).ToListAsync();
                 return new ApiResponse<List<ViewRequestOfStudent>>
                 {
                     Success = true,
-                    Message = "Lấy danh sách học sinh thành công",
+                    Message = "Lấy danh sách yêu cầu bị từ chối thành công",
                     Data = ListRequestPending
                 };
             }

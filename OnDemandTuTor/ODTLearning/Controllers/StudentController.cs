@@ -58,11 +58,11 @@ namespace ODTLearning.Controllers
 
 
         [HttpPut("updateRequest")]
-        public async Task<IActionResult> UpdateRequestLearning(string IDRequest, RequestLearningModel model)
+        public async Task<IActionResult> UpdateRequestLearning(string IdRequest, RequestLearningModel model)
         {
             try
             {
-                var response = await _repo.UpdateRequestLearning(IDRequest , model);
+                var response = await _repo.UpdateRequestLearning(IdRequest , model);
 
                 if (response.Success)
                 {
@@ -91,9 +91,9 @@ namespace ODTLearning.Controllers
         }
 
         [HttpDelete("deleteRequest")]
-        public async Task<IActionResult> DeleteRequestLearning(string IDRquest)
+        public async Task<IActionResult> DeleteRequestLearning(string IdRquest)
         {
-            var request = await _repo.DeleteRequestLearning(IDRquest);
+            var request = await _repo.DeleteRequestLearning(IdRquest);
 
             if (request != null)
             {
@@ -112,11 +112,11 @@ namespace ODTLearning.Controllers
             });
         }
         [HttpGet("pedingRequest")]
-        public async Task<IActionResult> ViewPedingRequestLearning(string IDAccount)
+        public async Task<IActionResult> ViewPedingRequestLearning(string id)
         {
             try
             {
-                var response = await _repo.GetPendingRequestsByAccountId(IDAccount);
+                var response = await _repo.GetPendingRequestsByAccountId(id);
 
                 if (response.Success)
                 {
@@ -179,11 +179,11 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("rejectRequest")]
-        public async Task<IActionResult> ViewRejectRequestLearning(string IDAccount)
+        public async Task<IActionResult> ViewRejectRequestLearning(string id)
         {
             try
             {
-                var response = await _repo.GetRejectRequestsByAccountId(IDAccount);
+                var response = await _repo.GetRejectRequestsByAccountId(id);
 
                 if (response.Success)
                 {
@@ -215,11 +215,11 @@ namespace ODTLearning.Controllers
 
 
         [HttpGet("viewAllTutorsJoinRequest")]
-        public async Task<IActionResult> ViewAllTutorJoinRequest(string requestId)
+        public async Task<IActionResult> ViewAllTutorJoinRequest(string idRequest)
         {
             try
             {
-                var response = await _repo.ViewAllTutorJoinRequest(requestId);
+                var response = await _repo.ViewAllTutorJoinRequest(idRequest);
 
                 if (response.Success)
                 {
@@ -249,9 +249,9 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("SelectTutor")]
-        public async Task<IActionResult> SelectTutor(string idrequest, string idaccounttutor)
+        public async Task<IActionResult> SelectTutor(string idRequest, string idaccounttutor)
         {
-            var response = await _repo.SelectTutor(idrequest, idaccounttutor);
+            var response = await _repo.SelectTutor(idRequest, idaccounttutor);
 
             if (response.Success)
             {

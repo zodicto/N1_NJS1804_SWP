@@ -41,12 +41,12 @@ namespace ODTLearning.Models
 
     public class SignUpModelOfTutorFB
     {
-        public string? specializedskills { get; set; }
+        public string? specializedSkills { get; set; }
         public int? experience { get; set; }
         public string? subject { get; set; }
-        public string? qualificationname { get; set; }
+        public string? qualificationName { get; set; }
         public string? type { get; set; }
-        public string? imagequalification { get; set; }
+        public string? imageQualification { get; set; }
         public string? introduction { get; set; }
     }
     public class ListTutorToConfirmFB: SignUpModelOfTutorFB
