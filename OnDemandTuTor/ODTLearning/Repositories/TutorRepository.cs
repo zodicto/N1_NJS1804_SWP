@@ -2,6 +2,8 @@
 using ODTLearning.Entities;
 using ODTLearning.Helpers;
 using ODTLearning.Models;
+using System.Net;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace ODTLearning.Repositories
@@ -17,13 +19,17 @@ namespace ODTLearning.Repositories
 
         ImageLibrary imgLib = new ImageLibrary();
 
-        public async Task<object> GetTutorProfile(string id)
+        public async Task<ApiResponse<object>> GetTutorProfile(string id)
         {
-            var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id && x.Roles == "gia sư");
+            var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id && x.Roles.ToLower() == "gia sư");
 
             if (account == null)
             {
-                return null;
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư"
+                };
             }
 
             var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
@@ -35,82 +41,261 @@ namespace ODTLearning.Repositories
                 Field = f.SubjectName
             }), t => t.Id, af => af.AccountId, (t, af) => af.Field).ToList();
 
-            //lay list Qualification cua account
-            var qualifications = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.EducationalQualifications, t => t.Id, eq => eq.IdTutor, (t, eq) => new
+            var subjects = "";
+
+            foreach (var x in fields)
             {
+                subjects += x + ";";
+            }
+
+            subjects = subjects.Substring(0, subjects.Length - 1);
+
+            //lay list Qualification cua account
+            var qualificationsList = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.EducationalQualifications, t => t.Id, eq => eq.IdTutor, (t, eq) => new
+            {
+                Id = eq.Id,
                 Name = eq.QualificationName,
-                Img = imgLib.GetImanges(eq.Img),
+                Img = eq.Img,
                 Type = eq.Type
             }).ToList();
 
-            //dua vao model            
-            return new
+            var idQualifications = "";
+            var nameQualifications = "";
+            var imgQualifications = "";
+            var typeQualifications = "";
+
+            foreach (var x in qualificationsList)
             {
-                Id = id,
-                Gmail = account.Email,
-                Birthdate = account.DateOfBirth,
-                Gender = account.Gender,
-                Avatar = account.Avatar,
+                idQualifications += x.Id + ";";
+                nameQualifications += x.Name + ";";
+                imgQualifications += x.Img + ";";
+                typeQualifications += x.Type + ";";
+            }
+
+            idQualifications = idQualifications.Substring(0, idQualifications.Length - 1);
+            nameQualifications = nameQualifications.Substring(0, nameQualifications.Length - 1);
+            imgQualifications = imgQualifications.Substring(0, imgQualifications.Length - 1);
+            typeQualifications = typeQualifications.Substring(0, typeQualifications.Length - 1);
+
+            var qualifications = new
+            {
+                Id = idQualifications,
+                Name = nameQualifications,
+                Img = imgQualifications,
+                Type = typeQualifications
+            };
+
+            //dua vao model
+            var data = new
+            {
                 SpeacializedSkill = tutor.SpecializedSkills,
                 Experience = tutor.Experience,
-                Fields = fields,
+                Introduction = tutor.Introduction,
+                Subjects = subjects,
                 Qualifications = qualifications,
             };
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Lấy thông tin gia sư thành công",
+                Data = data
+            };
+            
         }
 
-        public async Task<bool> UpdateTutorProfile(string idTutor, TutorProfileToUpdate model)
+        public async Task<ApiResponse<bool>> UpdateTutorProfile(string id, TutorProfileToUpdate model)
         {
             var tutor = await _context.Tutors
                 .Include(t => t.IdAccountNavigation)
                 .Include(t => t.TutorSubjects)
                 .ThenInclude(tf => tf.IdSubjectNavigation)
                 .Include(t => t.EducationalQualifications)
-                .FirstOrDefaultAsync(x => x.Id == idTutor);
+                .FirstOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
 
             if (tutor == null)
             {
-                return false;
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư"
+                };
             }
 
-            tutor.SpecializedSkills = model.SpecializedSkills;
+            tutor.SpecializedSkills = model.SpecializedSkill;
             tutor.Experience = model.Experience;
+            tutor.Introduction = model.Introduction;
 
-            if (tutor.IdAccountNavigation != null)
-            {
-                tutor.IdAccountNavigation.FullName = model.FullName;
-                tutor.IdAccountNavigation.Email = model.Gmail;
-                tutor.IdAccountNavigation.Gender = model.Gender;
-            }
-
-
-            var existingField = tutor.TutorSubjects.FirstOrDefault(tf => tf.IdTutorNavigation.Id == model.FieldName);
-            if (existingField == null && !string.IsNullOrEmpty(model.FieldName))
-            {
-                var newField = new TutorSubject
-                {
-                    IdTutor = idTutor,
-                    IdSubject = _context.Subjects.FirstOrDefault(f => f.SubjectName == model.FieldName).Id ?? Guid.NewGuid().ToString(),
-                };
-                tutor.TutorSubjects.Add(newField);
-            }
-
-
-            var existingQualification = tutor.EducationalQualifications.FirstOrDefault(eq => eq.QualificationName == model.FieldName);
-            if (existingQualification == null && !string.IsNullOrEmpty(model.FieldName))
-            {
-                var newQualification = new EducationalQualification
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    QualificationName = model.FieldName,
-                    IdTutor = idTutor
-                };
-                tutor.EducationalQualifications.Add(newQualification);
-            }
-
-            _context.Tutors.Update(tutor);
             await _context.SaveChangesAsync();
 
-            return true;
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Cập nhật thông tin gia sư thành công"
+            };
+        }
+
+        public async Task<ApiResponse<bool>> AddSubject(string id, string subjectName)
+        {
+            var tutor = await _context.Tutors.SingleOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư"
+                };
+            }
+
+            var subject = await _context.Subjects.SingleOrDefaultAsync(x => x.SubjectName == subjectName);
+
+            if (subject == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy môn học"
+                };
+            }
+
+            var tutorSubject = await _context.TutorSubjects.FirstOrDefaultAsync(x => x.IdTutor == tutor.Id && x.IdSubject == subject.Id);
+
+            if (tutorSubject == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Gia sư đã có môn học này trong chương trình"
+                };
+            }
+
+            tutorSubject = new TutorSubject
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdTutor = tutor.Id,
+                IdSubject = subject.Id,
+            };
+
+            await _context.TutorSubjects.AddAsync(tutorSubject);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Thêm môn học thành công"
+            };
+        }
+
+        public async Task<ApiResponse<bool>> AddQualification(string id, AddQualificationModel model)
+        {
+            var tutor = await _context.Tutors.SingleOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư"
+                };
+            }
+
+            var qualification = await _context.EducationalQualifications.FirstOrDefaultAsync(x => x.QualificationName == model.Name && x.Type == model.Type);
+
+            if (qualification != null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = $"{model.Type} đã tồn tại"
+                };
+            }
+
+            qualification = new EducationalQualification
+            {
+                Id = Guid.NewGuid().ToString(),
+                QualificationName = model.Name,
+                Img = model.Img,
+                Type = model.Type,
+                IdTutor = tutor.Id                
+            };
+
+            await _context.EducationalQualifications.AddAsync(qualification);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = $"Thêm {model.Type} thành công"
+            };
+        }
+
+        public async Task<ApiResponse<bool>> DeleteSubject(string id, string subjectName)
+        {
+            var tutor = await _context.Tutors.SingleOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư"
+                };
+            }
+
+            var tutorSubject = await _context.TutorSubjects.Include(x => x.IdSubjectNavigation).FirstOrDefaultAsync(x => x.IdSubjectNavigation.SubjectName == subjectName);
+
+            if (tutorSubject == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Gia sư không dạy môn học này"
+                };
+            }
+
+            _context.TutorSubjects.Remove(tutorSubject);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Xóa môn học thành công"
+            };
+        }
+
+        public async Task<ApiResponse<bool>> DeleteQualification(string id, string idQualification)
+        {
+            var tutor = await _context.Tutors.SingleOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư"
+                };
+            }
+
+            var qualification = await _context.EducationalQualifications.FirstOrDefaultAsync(x => x.Id == idQualification);
+
+            if (qualification == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = $"Chứng chỉ/Bằng cấp không tồn tại"
+                };
+            }
+
+            _context.EducationalQualifications.Remove(qualification);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = $"Xóa {qualification.Type} thành công"
+            };
         }
 
         //public async Task<List<TutorListModel>> SearchTutorList(SearchTutorModel model)
@@ -259,7 +444,7 @@ namespace ODTLearning.Repositories
                     Success = false,
                     Message = "Không tìm thấy gia sư nào",
                 };
-            }
+            }   
 
             if (account.AccountBalance < 50000)
             {
