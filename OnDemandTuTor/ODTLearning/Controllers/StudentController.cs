@@ -285,7 +285,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return BadRequest(new
+            return NotFound(new
             {
                 Success = false,
                 Message = response.Message
@@ -306,7 +306,7 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return BadRequest(new
+            return NotFound(new
             {
                 Success = false,
                 Message = response.Message

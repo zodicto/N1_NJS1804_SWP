@@ -18,6 +18,7 @@ namespace ODTLearning.Repositories
         }
 
         ImageLibrary imgLib = new ImageLibrary();
+        MyLibrary myLib = new MyLibrary();
 
         public async Task<ApiResponse<object>> GetTutorProfile(string id)
         {
@@ -72,10 +73,10 @@ namespace ODTLearning.Repositories
                 typeQualifications += x.Type + ";";
             }
 
-            idQualifications = idQualifications.Substring(0, idQualifications.Length - 1);
-            nameQualifications = nameQualifications.Substring(0, nameQualifications.Length - 1);
-            imgQualifications = imgQualifications.Substring(0, imgQualifications.Length - 1);
-            typeQualifications = typeQualifications.Substring(0, typeQualifications.Length - 1);
+            idQualifications = myLib.DeleteLastIndexString(idQualifications);
+            nameQualifications = myLib.DeleteLastIndexString(nameQualifications);
+            imgQualifications = myLib.DeleteLastIndexString(imgQualifications);
+            typeQualifications = myLib.DeleteLastIndexString(typeQualifications);
 
             var qualifications = new
             {

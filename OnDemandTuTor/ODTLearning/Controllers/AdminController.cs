@@ -235,5 +235,19 @@ namespace ODTLearning.Controllers
                 Message = response.Message
             });
         }
+
+        [HttpGet("ViewAllComplaint")]
+        public async Task<IActionResult> ViewAllComplaint()
+        {
+          
+            var response = await _repo.GetAllComplaint();
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
     }
 }

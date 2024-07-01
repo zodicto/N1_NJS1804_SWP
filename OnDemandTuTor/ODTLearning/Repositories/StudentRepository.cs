@@ -542,13 +542,13 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<ApiResponse<ComplaintResponse>> CreateComplaint(ComplaintModel model)
+        public async Task<ApiResponse<bool>> CreateComplaint(ComplaintModel model)
         {
             var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
 
             if (user == null)
             {
-                return new ApiResponse<ComplaintResponse>
+                return new ApiResponse<bool>
                 {
                     Success = false,
                     Message = "Không tìm thấy người dùng",
@@ -559,7 +559,7 @@ namespace ODTLearning.Repositories
 
             if (tutor == null)
             {
-                return new ApiResponse<ComplaintResponse>
+                return new ApiResponse<bool>
                 {
                     Success = false,
                     Message = "Không tìm thấy gia sư",
@@ -577,38 +577,10 @@ namespace ODTLearning.Repositories
             await _context.Complaints.AddAsync(complaint);
             await _context.SaveChangesAsync();
 
-            var data = new ComplaintResponse
-            {
-                User = new
-                {
-                    Name = user.FullName,
-                    Email = user.Email,
-                    DateOfBirth = user.DateOfBirth,
-                    Gender = user.Gender,
-                    Avatar = user.Avatar,
-                    Address = user.Address,
-                    Phone = user.Phone
-                },
-
-                Description = model.Description,
-
-                Tutor = new
-                {
-                    Name = tutor.IdAccountNavigation.FullName,
-                    Email = tutor.IdAccountNavigation.Email,
-                    DateOfBirth = tutor.IdAccountNavigation.DateOfBirth,
-                    Gender = tutor.IdAccountNavigation.Gender,
-                    Avatar = tutor.IdAccountNavigation.Avatar,
-                    Address = tutor.IdAccountNavigation.Address,
-                    Phone = tutor.IdAccountNavigation.Phone
-                },
-            };
-
-            return new ApiResponse<ComplaintResponse>
+            return new ApiResponse<bool>
             {
                 Success = true,
-                Message = "Thành công",
-                Data = data
+                Message = "Thành công"
             };
         }
 

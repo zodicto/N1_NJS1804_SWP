@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using ODTLearning.Entities;
+using ODTLearning.Helpers;
 using ODTLearning.Models;
 
 
@@ -15,6 +16,8 @@ namespace ODTLearning.Repositories
         {
             _context = context;
         }
+
+        MyLibrary myLib = new MyLibrary();
 
         public async Task<ApiResponse<bool>> DeleteAccount(string id)
         {        
@@ -328,6 +331,109 @@ namespace ODTLearning.Repositories
                            }).ToList();
 
             return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = data
+            };
+        }
+
+        public async Task<ApiResponse<ComplaintResponse>> GetAllComplaint()
+        {
+            var complaint = _context.Complaints.Include(x => x.IdAccountNavigation)
+                                               .Include(x => x.IdTutorNavigation).ThenInclude(x => x.IdAccountNavigation)
+                                               .ToList();
+
+            if (!complaint.Any())
+            {
+                return new ApiResponse<ComplaintResponse>
+                {
+                    Success = true,
+                    Message = "Không có khiếu nại nào"
+                };
+            }
+
+            var user = new Account
+            {
+                Id = "",
+                FullName = "",
+                Email = "",     
+                Gender = "",
+                Avatar = "",
+                Address = "",
+                Phone = "",
+                Roles = ""
+            };
+
+            var description = "";
+
+            var tutor = new Account
+            {
+                Id = "",
+                FullName = "",
+                Email = "",
+                Gender = "",
+                Avatar = "",
+                Address = "",
+                Phone = "",
+                Roles = ""
+            };
+
+            foreach (var c in complaint)
+            {
+                user.Id += c.IdAccountNavigation.Id + ";";
+                user.FullName += c.IdAccountNavigation.FullName + ";";
+                user.Email += c.IdAccountNavigation.Email + ";";
+                user.Gender += c.IdAccountNavigation.Gender + ";";
+                user.Avatar += c.IdAccountNavigation.Avatar + ";";
+                user.Address += c.IdAccountNavigation.Address + ";";
+                user.Phone += c.IdAccountNavigation.Phone + ";";
+                user.Roles += c.IdAccountNavigation.Roles + ";";
+
+                description += c.Description + ";";
+
+                tutor.Id += c.IdTutorNavigation.IdAccountNavigation.Id + ";";
+                tutor.FullName += c.IdTutorNavigation.IdAccountNavigation.FullName + ";";
+                tutor.Email += c.IdTutorNavigation.IdAccountNavigation.Email + ";";
+                tutor.Gender += c.IdTutorNavigation.IdAccountNavigation.Gender + ";";
+                tutor.Avatar += c.IdTutorNavigation.IdAccountNavigation.Avatar + ";";
+                tutor.Address += c.IdTutorNavigation.IdAccountNavigation.Address + ";";
+                tutor.Phone += c.IdTutorNavigation.IdAccountNavigation.Phone + ";";
+                tutor.Roles += c.IdTutorNavigation.IdAccountNavigation.Roles + ";";
+            }
+
+            user.Id = myLib.DeleteLastIndexString(user.Id);
+            user.FullName = myLib.DeleteLastIndexString(user.FullName);
+            user.Email = myLib.DeleteLastIndexString(user.Email);
+            user.Gender = myLib.DeleteLastIndexString(user.Gender);
+            user.Avatar = myLib.DeleteLastIndexString(user.Avatar);
+            user.Address = myLib.DeleteLastIndexString(user.Address);
+            user.Phone = myLib.DeleteLastIndexString(user.Phone);
+            user.Roles = myLib.DeleteLastIndexString(user.Roles);
+
+            description = myLib.DeleteLastIndexString(description);
+
+            tutor.Id = myLib.DeleteLastIndexString(tutor.Id);
+            tutor.FullName = myLib.DeleteLastIndexString(tutor.FullName);
+            tutor.Email = myLib.DeleteLastIndexString(tutor.Email);
+            tutor.Gender = myLib.DeleteLastIndexString(tutor.Gender);
+            tutor.Avatar = myLib.DeleteLastIndexString(tutor.Avatar);
+            tutor.Address = myLib.DeleteLastIndexString(tutor.Address);
+            tutor.Phone = myLib.DeleteLastIndexString(tutor.Phone);
+            tutor.Roles = myLib.DeleteLastIndexString(tutor.Roles);
+
+
+
+            var data = new ComplaintResponse
+            {
+                User = user,
+
+                Description = description,
+
+                Tutor = tutor
+            };
+
+            return new ApiResponse<ComplaintResponse>
             {
                 Success = true,
                 Message = "Thành công",
