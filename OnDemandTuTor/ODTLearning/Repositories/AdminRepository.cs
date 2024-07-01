@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using ODTLearning.Entities;
 using ODTLearning.Helpers;
 using ODTLearning.Models;
+using System.Runtime.ConstrainedExecution;
 
 
 namespace ODTLearning.Repositories
@@ -353,11 +354,12 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            var user = new Account
+            var user = new InfoUserModel
             {
                 Id = "",
                 FullName = "",
-                Email = "",     
+                Email = "",
+                DateOfBirth = "",
                 Gender = "",
                 Avatar = "",
                 Address = "",
@@ -367,11 +369,12 @@ namespace ODTLearning.Repositories
 
             var description = "";
 
-            var tutor = new Account
+            var tutor = new InfoUserModel
             {
                 Id = "",
                 FullName = "",
                 Email = "",
+                DateOfBirth = "",
                 Gender = "",
                 Avatar = "",
                 Address = "",
@@ -384,6 +387,7 @@ namespace ODTLearning.Repositories
                 user.Id += c.IdAccountNavigation.Id + ";";
                 user.FullName += c.IdAccountNavigation.FullName + ";";
                 user.Email += c.IdAccountNavigation.Email + ";";
+                user.DateOfBirth += c.IdAccountNavigation.DateOfBirth + ";";
                 user.Gender += c.IdAccountNavigation.Gender + ";";
                 user.Avatar += c.IdAccountNavigation.Avatar + ";";
                 user.Address += c.IdAccountNavigation.Address + ";";
@@ -395,6 +399,7 @@ namespace ODTLearning.Repositories
                 tutor.Id += c.IdTutorNavigation.IdAccountNavigation.Id + ";";
                 tutor.FullName += c.IdTutorNavigation.IdAccountNavigation.FullName + ";";
                 tutor.Email += c.IdTutorNavigation.IdAccountNavigation.Email + ";";
+                tutor.DateOfBirth += c.IdTutorNavigation.IdAccountNavigation.DateOfBirth + ";";
                 tutor.Gender += c.IdTutorNavigation.IdAccountNavigation.Gender + ";";
                 tutor.Avatar += c.IdTutorNavigation.IdAccountNavigation.Avatar + ";";
                 tutor.Address += c.IdTutorNavigation.IdAccountNavigation.Address + ";";
@@ -405,6 +410,7 @@ namespace ODTLearning.Repositories
             user.Id = myLib.DeleteLastIndexString(user.Id);
             user.FullName = myLib.DeleteLastIndexString(user.FullName);
             user.Email = myLib.DeleteLastIndexString(user.Email);
+            user.DateOfBirth = myLib.DeleteLastIndexString(user.DateOfBirth);
             user.Gender = myLib.DeleteLastIndexString(user.Gender);
             user.Avatar = myLib.DeleteLastIndexString(user.Avatar);
             user.Address = myLib.DeleteLastIndexString(user.Address);
@@ -416,13 +422,12 @@ namespace ODTLearning.Repositories
             tutor.Id = myLib.DeleteLastIndexString(tutor.Id);
             tutor.FullName = myLib.DeleteLastIndexString(tutor.FullName);
             tutor.Email = myLib.DeleteLastIndexString(tutor.Email);
+            tutor.DateOfBirth = myLib.DeleteLastIndexString(tutor.DateOfBirth);
             tutor.Gender = myLib.DeleteLastIndexString(tutor.Gender);
             tutor.Avatar = myLib.DeleteLastIndexString(tutor.Avatar);
             tutor.Address = myLib.DeleteLastIndexString(tutor.Address);
             tutor.Phone = myLib.DeleteLastIndexString(tutor.Phone);
             tutor.Roles = myLib.DeleteLastIndexString(tutor.Roles);
-
-
 
             var data = new ComplaintResponse
             {
@@ -434,6 +439,88 @@ namespace ODTLearning.Repositories
             };
 
             return new ApiResponse<ComplaintResponse>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = data
+            };
+        }
+
+        public async Task<ApiResponse<TransactionResponse>> GetAllTransaction()
+        {
+            var transaction = _context.Transactions.Include(x => x.IdAccountNavigation).ToList();
+
+            if (!transaction.Any())
+            {
+                return new ApiResponse<TransactionResponse>
+                {
+                    Success = true,
+                    Message = "Không có giao dịch nào"
+                };
+            }
+
+            var id = "";
+            var amount = "";
+            var createDate = "";
+            var status = "";
+
+
+            var user = new InfoUserModel
+            {
+                Id = "",
+                FullName = "",
+                Email = "",
+                DateOfBirth = "",
+                Gender = "",
+                Avatar = "",
+                Address = "",
+                Phone = "",
+                Roles = ""
+            };
+
+            foreach (var c in transaction)
+            {
+                id += c.Id + ";";
+                amount += c.Amount + ";";
+                createDate += c.CreateDate + ";";
+                status += c.Status + ";";
+
+                user.Id += c.IdAccountNavigation.Id + ";";
+                user.FullName += c.IdAccountNavigation.FullName + ";";
+                user.Email += c.IdAccountNavigation.Email + ";";
+                user.DateOfBirth += c.IdAccountNavigation.DateOfBirth + ";";
+                user.Gender += c.IdAccountNavigation.Gender + ";";
+                user.Avatar += c.IdAccountNavigation.Avatar + ";";
+                user.Address += c.IdAccountNavigation.Address + ";";
+                user.Phone += c.IdAccountNavigation.Phone + ";";
+                user.Roles += c.IdAccountNavigation.Roles + ";";
+            }
+
+            id = myLib.DeleteLastIndexString(id);
+            amount = myLib.DeleteLastIndexString(amount);
+            createDate = myLib.DeleteLastIndexString(createDate);
+            status = myLib.DeleteLastIndexString(status);
+
+            user.Id = myLib.DeleteLastIndexString(user.Id);
+            user.FullName = myLib.DeleteLastIndexString(user.FullName);
+            user.Email = myLib.DeleteLastIndexString(user.Email);
+            user.DateOfBirth = myLib.DeleteLastIndexString(user.DateOfBirth);
+            user.Gender = myLib.DeleteLastIndexString(user.Gender);
+            user.Avatar = myLib.DeleteLastIndexString(user.Avatar);
+            user.Address = myLib.DeleteLastIndexString(user.Address);
+            user.Phone = myLib.DeleteLastIndexString(user.Phone);
+            user.Roles = myLib.DeleteLastIndexString(user.Roles);
+
+            var data = new TransactionResponse
+            {
+                Id = id,
+                Amount = amount,
+                CreateDate = createDate,
+                Status = status,                
+                User = user
+            };
+
+            return new ApiResponse<TransactionResponse>
             {
                 Success = true,
                 Message = "Thành công",

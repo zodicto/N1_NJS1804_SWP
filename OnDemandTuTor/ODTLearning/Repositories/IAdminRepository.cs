@@ -12,5 +12,6 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<List<ViewRequestOfStudent>>> GetListRequestApproved();
         public Task<ApiResponse<List<ViewRequestOfStudent>>> GetListRequestReject();
         public Task<ApiResponse<ComplaintResponse>> GetAllComplaint();
+        public Task<ApiResponse<TransactionResponse>> GetAllTransaction();
     }
 }

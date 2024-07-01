@@ -238,9 +238,21 @@ namespace ODTLearning.Controllers
 
         [HttpGet("ViewAllComplaint")]
         public async Task<IActionResult> ViewAllComplaint()
-        {
-          
+        {          
             var response = await _repo.GetAllComplaint();
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
+
+        [HttpGet("ViewAllTransaction")]
+        public async Task<IActionResult> ViewAllTransaction()
+        {
+            var response = await _repo.GetAllTransaction();
 
             return Ok(new
             {
