@@ -516,7 +516,7 @@ namespace ODTLearning.Controllers
                 {
                     Success = true,
 
-                    Message = response.Message
+                    response.Message
 
                 });
             }

@@ -3,8 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using ODTLearning;
-
+using ODTLearning.Entities;
 using ODTLearning.Repositories;
 using System.Text;
 using System.Text.Json.Serialization;

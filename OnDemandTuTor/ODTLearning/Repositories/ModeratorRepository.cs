@@ -229,7 +229,7 @@ namespace ODTLearning.Repositories
                     TotalSession = r.TotalSession,
                     TimeTable = r.TimeTable,
                     Description = r.Description,
-                    Subject = r.IdSubjectNavigation.SubjectName, // Assuming you have a Subject property in your Request model
+                    Subject = r.IdSubjectNavigation.SubjectName, 
                     LearningMethod = r.LearningMethod,
                     Class = r.IdClassNavigation.ClassName,
                     TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,

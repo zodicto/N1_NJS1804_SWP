@@ -82,7 +82,7 @@ namespace ODTLearning.Repositories
                     Experience = model.experience,
                     Status = "Chưa duyệt",
                     IdAccount = existingUser.Id,
-                    Introduction = model.introduction,
+                  //  Introduction = model.introduction,
                    
                 };
 
@@ -191,7 +191,7 @@ namespace ODTLearning.Repositories
                 Experience = model.experience,
                 Status = "Chưa duyệt",
                 IdAccount = existingUser.Id,
-                Introduction = model.introduction,
+               // Introducti = model.introduction,
             };
 
             // Tạo mới đối tượng educationalqualification

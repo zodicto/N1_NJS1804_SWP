@@ -3,15 +3,19 @@ using System.Collections.Generic;
 
 namespace ODTLearning.Entities;
 
-public partial class Rent1
+public partial class Review
 {
     public string Id { get; set; } = null!;
 
-    public string? IdSchedule { get; set; }
+    public string? Feedback { get; set; }
+
+    public double? Rating { get; set; }
 
     public string? IdAccount { get; set; }
 
+    public string? IdTutor { get; set; }
+
     public virtual Account? IdAccountNavigation { get; set; }
 
-    public virtual Schedule? IdScheduleNavigation { get; set; }
+    public virtual Tutor? IdTutorNavigation { get; set; }
 }

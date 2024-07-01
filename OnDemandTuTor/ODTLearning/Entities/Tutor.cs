@@ -17,6 +17,8 @@ public partial class Tutor
 
     public string? IdAccount { get; set; }
 
+    public virtual ICollection<Available> Availables { get; set; } = new List<Available>();
+
     public virtual ICollection<Complaint> Complaints { get; set; } = new List<Complaint>();
 
     public virtual ICollection<EducationalQualification> EducationalQualifications { get; set; } = new List<EducationalQualification>();
@@ -24,6 +26,8 @@ public partial class Tutor
     public virtual Account? IdAccountNavigation { get; set; }
 
     public virtual ICollection<RequestLearning> RequestLearnings { get; set; } = new List<RequestLearning>();
+
+    public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
 
     public virtual ICollection<Service> Services { get; set; } = new List<Service>();
 
