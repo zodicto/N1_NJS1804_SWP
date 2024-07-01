@@ -15,5 +15,6 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<List<TutorListModel>>> ViewAllTutorJoinRequest(string requestId);
         public Task<ApiResponse<SelectTutorModel>> SelectTutor(string idRequest, string idAccountTutor);
         public Task<ApiResponse<ComplaintResponse>> CreateComplaint(ComplaintModel model);
+        public Task<ApiResponse<bool>> CreateReview(ReviewModel model);
     }
 }

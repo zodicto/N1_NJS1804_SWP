@@ -544,36 +544,34 @@ namespace ODTLearning.Repositories
 
         public async Task<ApiResponse<ComplaintResponse>> CreateComplaint(ComplaintModel model)
         {
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.Id);
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
 
-            var tutor = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdAccounttutor && x.Roles.ToLower() == "gia sư");
-
-            if (user == null || tutor == null)
+            if (user == null)
             {
                 return new ApiResponse<ComplaintResponse>
                 {
                     Success = false,
-                    Message = "Không tìm thấy người dùng hoặc gia sư",
+                    Message = "Không tìm thấy người dùng",
                 };
             }
 
-            if (string.IsNullOrEmpty(model.Description))
+            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == model.IdAccountTutor && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
             {
                 return new ApiResponse<ComplaintResponse>
                 {
                     Success = false,
-                    Message = "Không để trống nội dung",
+                    Message = "Không tìm thấy gia sư",
                 };
             }
-
-            var idTutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == model.IdAccounttutor);
-
+      
             var complaint = new Complaint
             {
                 Id = Guid.NewGuid().ToString(),
                 Description = model.Description,
-                IdAccount = model.Id,
-                IdTutor = idTutor.Id,
+                IdAccount = model.IdUser,
+                IdTutor = tutor.Id,
             };
 
             await _context.Complaints.AddAsync(complaint);
@@ -596,13 +594,13 @@ namespace ODTLearning.Repositories
 
                 Tutor = new
                 {
-                    Name = tutor.FullName,
-                    Email = tutor.Email,
-                    DateOfBirth = tutor.DateOfBirth,
-                    Gender = tutor.Gender,
-                    Avatar = tutor.Avatar,
-                    Address = tutor.Address,
-                    Phone = tutor.Phone
+                    Name = tutor.IdAccountNavigation.FullName,
+                    Email = tutor.IdAccountNavigation.Email,
+                    DateOfBirth = tutor.IdAccountNavigation.DateOfBirth,
+                    Gender = tutor.IdAccountNavigation.Gender,
+                    Avatar = tutor.IdAccountNavigation.Avatar,
+                    Address = tutor.IdAccountNavigation.Address,
+                    Phone = tutor.IdAccountNavigation.Phone
                 },
             };
 
@@ -611,6 +609,48 @@ namespace ODTLearning.Repositories
                 Success = true,
                 Message = "Thành công",
                 Data = data
+            };
+        }
+
+        public async Task<ApiResponse<bool>> CreateReview(ReviewModel model)
+        {
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
+
+            if (user == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng",
+                };
+            }
+
+            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == model.IdAccountTutor && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư",
+                };
+            }
+ 
+            var review = new Review
+            {
+                Id = Guid.NewGuid().ToString(),
+                Feedback = model.FeedBack,
+                IdAccount = model.IdUser,
+                IdTutor = tutor.Id,
+            };
+
+            await _context.Reviews.AddAsync(review);
+            await _context.SaveChangesAsync();
+           
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Đánh giá thành công"
             };
         }
     }

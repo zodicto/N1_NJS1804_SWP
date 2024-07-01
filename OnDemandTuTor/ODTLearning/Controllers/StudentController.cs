@@ -292,5 +292,26 @@ namespace ODTLearning.Controllers
             });
         }
 
+        [HttpPost("CreateReview")]
+        public async Task<IActionResult> CreateReview(ReviewModel model)
+        {
+            var response = await _repo.CreateReview(model);
+
+            if (response.Success)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = response.Message
+                });
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = response.Message
+            });
+        }
+
     }
 }
