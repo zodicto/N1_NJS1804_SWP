@@ -77,7 +77,7 @@ namespace ODTLearning.Repositories
 
             if (tutor.IdAccountNavigation != null)
             {
-                tutor.IdAccountNavigation.FullName = model.Fullname;
+                tutor.IdAccountNavigation.FullName = model.FullName;
                 tutor.IdAccountNavigation.Email = model.Gmail;
                 tutor.IdAccountNavigation.Gender = model.Gender;
             }
@@ -193,7 +193,7 @@ namespace ODTLearning.Repositories
                                                        Timestart = r.TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
                                                       Timeend = r.TimeEnd.ToString(),
                                                        Idrequest = r.Id, // Include Account ID
-                                                       Fullname = r.IdAccountNavigation.FullName // Include Account Full Name
+                                                       FullName = r.IdAccountNavigation.FullName // Include Account Full Name
                                                    }).ToListAsync();
 
 

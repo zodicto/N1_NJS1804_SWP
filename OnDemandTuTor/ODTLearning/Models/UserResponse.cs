@@ -5,7 +5,7 @@
 
         public string id { get; set; } = null!;
 
-        public string? fullname { get; set; }
+        public string? fullName { get; set; }
 
         public string? email { get; set; }
 
@@ -21,6 +21,6 @@
 
         public string? phone { get; set; }
 
-        public float? accountbalance { get; set; }
+        public float? accountBalance { get; set; }
     }
 }

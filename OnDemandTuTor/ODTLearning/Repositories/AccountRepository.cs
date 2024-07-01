@@ -40,7 +40,7 @@ namespace ODTLearning.Repositories
             var user = new Account
             {
                 Id = Guid.NewGuid().ToString(),
-                FullName = model.fullname,
+                FullName = model.fullName,
                 Password = model.password,
                 Phone = model.phone,
                 AccountBalance = 0,
@@ -55,7 +55,7 @@ namespace ODTLearning.Repositories
             return new UserResponse
             {
                 id = user.Id,
-                fullname = user.FullName,
+                fullName = user.FullName,
                 email = user.Email,
                 date_of_birth = user.DateOfBirth,
                 gender = user.Gender,
@@ -63,7 +63,7 @@ namespace ODTLearning.Repositories
                 avatar  = user.Avatar,
                 address = user.Address,
                 phone = user.Phone,
-                accountbalance= user.AccountBalance
+                accountBalance= user.AccountBalance
             };
 
         }
@@ -279,7 +279,7 @@ namespace ODTLearning.Repositories
                 Data = new UserResponse
                 {
                     id = account.Id,
-                    fullname= account.FullName,
+                    fullName= account.FullName,
                     email= account.Email,
                     date_of_birth = account.DateOfBirth,
                     gender = account.Gender,
@@ -287,7 +287,7 @@ namespace ODTLearning.Repositories
                     avatar = account.Avatar,
                     address = account.Address,
                     phone = account.Phone,
-                    accountbalance= account.AccountBalance
+                    accountBalance= account.AccountBalance
                 }
             };
         }
@@ -302,7 +302,7 @@ namespace ODTLearning.Repositories
 
             var claims = new List<Claim>
             {
-                 new Claim(ClaimTypes.Name, user.fullname  + " " + user.date_of_birth?.ToString("yyyy-MM-dd")),
+                 new Claim(ClaimTypes.Name, user.fullName  + " " + user.date_of_birth?.ToString("yyyy-MM-dd")),
                  new Claim(JwtRegisteredClaimNames.Email, user.email ),
                   new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                  new Claim(ClaimTypes.Role, user.roles),
@@ -484,7 +484,7 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            user.FullName = model.fullname;
+            user.FullName = model.fullName;
             user.DateOfBirth = model.date_of_birth;
             user.Gender = model.gender;
             user.Avatar = model.avatar;
@@ -534,13 +534,14 @@ namespace ODTLearning.Repositories
             {
                 Id = account.Id,
                 account.Email,
-                fullname = account.FullName,
+                fullName = account.FullName,
                 Date_of_birth = account.DateOfBirth,
                 Gender = account.Gender,
                 Avatar = account.Avatar,
                 Address = account.Address,
                 Phone = account.Phone,
-                Accountbalance = account.AccountBalance
+                Roles = account.Roles,
+                AccountBalance = account.AccountBalance
             };
 
             return new ApiResponse<object>
@@ -563,7 +564,7 @@ namespace ODTLearning.Repositories
                 var newUser = new Account
                 {
                     Id = user.id,
-                    FullName = user.fullname,
+                    FullName = user.fullName,
                     Email = user.email ,
                     Roles = user.roles,
                     AccountBalance = 0, // Đặt AccountBalance bằng 0
@@ -583,7 +584,7 @@ namespace ODTLearning.Repositories
             else
             {
                 // Người dùng đã tồn tại, cập nhật thông tin người dùng
-                existingUser.FullName = user.fullname;
+                existingUser.FullName = user.fullName;
                 existingUser.Roles = user.roles; // Cập nhật roles nếu cần, hoặc có thể bỏ qua nếu không muốn cập nhật
                 existingUser.Avatar = user.avatar ; // Cập nhật URL của ảnh đại diện nếu cần
                 await _context.SaveChangesAsync();

@@ -5,7 +5,7 @@ namespace ODTLearning.Models
 {
     public class SignUpModelOfAccount
     {
-        public string? fullname { get; set; }
+        public string? fullName { get; set; }
 
         public string? password { get; set; }
 
@@ -20,7 +20,7 @@ namespace ODTLearning.Models
 
     public class UpdateProfile
     {
-        public string? fullname { get; set; }
+        public string? fullName { get; set; }
         public string? address { get; set; }
         public string? phone { get; set; }
 
@@ -52,7 +52,7 @@ namespace ODTLearning.Models
     public class ListTutorToConfirmFB: SignUpModelOfTutorFB
     {
           public string? Id { get; set; }
-        public string? fullname { get; set; }
+        public string? fullName { get; set; }
         public DateOnly? date_of_birth { get; set; }
         public string? gender { get; set; }
     }
@@ -60,7 +60,7 @@ namespace ODTLearning.Models
     public class ListAccount 
     {
         public string? id { get; set; }
-        public string? fullname { get; set; }
+        public string? fullName { get; set; }
 
         public string? phone { get; set; }
 

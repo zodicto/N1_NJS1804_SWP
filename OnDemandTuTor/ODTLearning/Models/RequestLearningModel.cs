@@ -18,7 +18,7 @@ namespace ODTLearning.Models
     public class ViewRequestOfStudent : RequestLearningModel
     {
         public string? Idrequest { get; set; } // New property for Account ID
-        public string? Fullname { get; set; }
+        public string? FullName { get; set; }
         public string? Status { get; set; }
     }
     public class RequestLearningResponse

@@ -338,7 +338,7 @@ namespace ODTLearning.Controllers
                 var userResponse = new UserResponse
                 {
                     id = userAccount.Id,
-                    fullname = userAccount.FullName,
+                    fullName = userAccount.FullName,
                     email = userAccount.Email,
                     date_of_birth = userAccount.DateOfBirth,
                     gender = userAccount.Gender,
@@ -346,7 +346,7 @@ namespace ODTLearning.Controllers
                     avatar = userAccount.Avatar,
                     address = userAccount.Address,
                     phone = userAccount.Phone,
-                    accountbalance = userAccount.AccountBalance
+                    accountBalance = userAccount.AccountBalance
                 };
 
                 var token = await _repo.GenerateToken(userResponse);
@@ -418,7 +418,7 @@ namespace ODTLearning.Controllers
             var user = new UserResponse
             {
                 id = userId,
-                fullname = userName,
+                fullName = userName,
                 email = userEmail,
                 roles = "Học sinh",
                 avatar = userAvatar // Gán URL của ảnh đại diện vào thuộc tính Avatar
@@ -441,7 +441,7 @@ namespace ODTLearning.Controllers
     if (window.opener) {{
         window.opener.localStorage.setItem('profile', JSON.stringify({{
             id: '{user.id}',
-            fullName: '{user.fullname}',
+            fullName: '{user.fullName}',
             email: '{user.email}',
             avatar: '{user.avatar}',
             roles: '{user.roles}'
@@ -453,7 +453,7 @@ namespace ODTLearning.Controllers
     }} else {{
         localStorage.setItem('profile', JSON.stringify({{
             id: '{user.id}',
-            fullName: '{user.fullname}',
+            fullName: '{user.fullName}',
             email: '{user.email}',
             avatar: '{user.avatar}',
             roles: '{user.roles}'

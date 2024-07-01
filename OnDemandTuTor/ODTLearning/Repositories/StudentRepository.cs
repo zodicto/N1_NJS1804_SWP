@@ -436,7 +436,7 @@ namespace ODTLearning.Repositories
             var tutors = request.RequestLearnings.Select(rl => new TutorListModel
             {
                 id = rl.IdTutorNavigation.IdAccount,
-                fullname = rl.IdTutorNavigation.IdAccountNavigation.FullName,
+                fullName = rl.IdTutorNavigation.IdAccountNavigation.FullName,
                 gender = rl.IdTutorNavigation.IdAccountNavigation.Gender,
                 specializedskills= rl.IdTutorNavigation.SpecializedSkills,
                 experience = rl.IdTutorNavigation.Experience,

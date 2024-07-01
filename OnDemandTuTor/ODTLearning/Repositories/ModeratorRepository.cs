@@ -33,7 +33,7 @@ namespace ODTLearning.Repositories
                         specializedskills = t.SpecializedSkills,
                         introduction = t.Introduction,
                         date_of_birth = t.IdAccountNavigation.DateOfBirth,
-                        fullname = t.IdAccountNavigation.FullName,
+                        fullName = t.IdAccountNavigation.FullName,
                         gender = t.IdAccountNavigation.Gender,
                         experience = t.Experience,
                         subject = t.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName, // Lấy Subject từ TutorSubjects
@@ -236,7 +236,7 @@ namespace ODTLearning.Repositories
                     Timeend = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
                     Idrequest = r.Id,
                     Status = r.Status,
-                    Fullname = r.IdAccountNavigation.FullName // Include Account Full Name
+                    FullName = r.IdAccountNavigation.FullName // Include Account Full Name
                 }).ToListAsync();
 
             return new ApiResponse<List<ViewRequestOfStudent>>
