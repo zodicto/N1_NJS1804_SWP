@@ -529,7 +529,7 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<ApiResponse<object>> GetRevenueByYear(int year)
+        public async Task<ApiResponse<object>> GetRevenueByMonth(int year)
         {
             var rents = await _context.Rents.Where(x => x.CreateDate.Year == year).GroupBy(x => x.CreateDate.Month).Select(x => new
             {                
@@ -554,7 +554,7 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<ApiResponse<object>> GetRevenueByMonth(int month, int year)
+        public async Task<ApiResponse<object>> GetRevenueByWeek(int month, int year)
         {
             var rents = _context.Rents.Where(x => x.CreateDate.Month == month && x.CreateDate.Year == year);
 

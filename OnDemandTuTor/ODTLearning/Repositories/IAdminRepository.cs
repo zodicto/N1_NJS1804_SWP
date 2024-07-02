@@ -13,7 +13,7 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<List<ViewRequestOfStudent>>> GetListRequestReject();
         public Task<ApiResponse<ComplaintResponse>> GetAllComplaint();
         public Task<ApiResponse<TransactionResponse>> GetAllTransaction();
-        public Task<ApiResponse<object>> GetRevenueByYear(int year);
-        public Task<ApiResponse<object>> GetRevenueByMonth(int month, int year);
+        public Task<ApiResponse<object>> GetRevenueByMonth(int year);
+        public Task<ApiResponse<object>> GetRevenueByWeek(int month, int year);
     }
 }

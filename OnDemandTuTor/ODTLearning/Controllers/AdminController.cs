@@ -262,10 +262,10 @@ namespace ODTLearning.Controllers
             });
         }
 
-        [HttpGet("ViewRevenueByYear")]
-        public async Task<IActionResult> ViewRevenueByYear(int year)
+        [HttpGet("ViewRevenueByMonth")]
+        public async Task<IActionResult> ViewRevenueByMonth(int year)
         {
-            var response = await _repo.GetRevenueByYear(year);
+            var response = await _repo.GetRevenueByMonth(year);
 
             return Ok(new
             {
@@ -275,10 +275,10 @@ namespace ODTLearning.Controllers
             });
         }
 
-        [HttpGet("ViewRevenueByMonth")]
-        public async Task<IActionResult> ViewRevenueByMonth(int month, int year)
+        [HttpGet("ViewRevenueByWeek")]
+        public async Task<IActionResult> ViewRevenueByWeek(int month, int year)
         {
-            var response = await _repo.GetRevenueByMonth(month, year);
+            var response = await _repo.GetRevenueByWeek(month, year);
 
             return Ok(new
             {
