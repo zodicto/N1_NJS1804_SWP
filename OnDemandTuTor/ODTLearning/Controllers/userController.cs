@@ -82,7 +82,7 @@ namespace ODTLearning.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An internal server error occurred");
+                _logger.LogError(ex, "Lỗi server");
                 return StatusCode(500, new
                 {
                     message = "Lỗi",
@@ -143,7 +143,6 @@ namespace ODTLearning.Controllers
                     {
                         Success = true,
                         user.Message,
-                        user.Data,
                     });
                 }
 
@@ -155,11 +154,11 @@ namespace ODTLearning.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while signing up as a tutor.");
+                _logger.LogError(ex, "Có lỗi trong qua trình đăng ký gia sư");
                 return StatusCode(500, new
                 {
                     Success = false,
-                    Message = "An internal server error occurred. Please try again later."
+                    Message = "Lỗi server .Vui lòng thử lại sau."
                 });
             }
         }

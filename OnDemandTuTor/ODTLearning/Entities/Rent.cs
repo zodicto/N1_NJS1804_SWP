@@ -11,13 +11,7 @@ public partial class Rent
 
     public DateTime? CreateDate { get; set; }
 
-    public string? IdSubject { get; set; }
-
-    public string? IdRequest { get; set; }
-
     public string? IdTutor { get; set; }
 
     public string? IdAccount { get; set; }
-
-    public virtual Request? IdRequestNavigation { get; set; }
 }

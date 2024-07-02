@@ -108,7 +108,7 @@ namespace ODTLearning.Repositories
                     TimeTable = model.TimeTable,
                     TotalSession = model.TotalSession,
                     Description = model.Description,
-                    Status = "Chưa duyệt",
+                    Status = "Đang duyệt",
                     LearningMethod = model.LearningMethod,
                     IdAccount = id,
                     IdSubject = subjectModel.Id,
@@ -145,7 +145,7 @@ namespace ODTLearning.Repositories
             }
 
             // Kiểm tra trạng thái yêu cầu
-            if (requestToUpdate.Status != "Chưa duyệt")
+            if (requestToUpdate.Status != "Đang duyệt")
             {
                 return new ApiResponse<bool>
                 {
@@ -254,12 +254,12 @@ namespace ODTLearning.Repositories
             }
 
             // Kiểm tra trạng thái của yêu cầu
-            if (requestToDelete.Status != "chưa duyệt")
+            if (requestToDelete.Status != "đang duyệt")
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Chỉ có thể xóa các yêu cầu ở trạng thái 'chưa duyệt'!"
+                    Message = "Chỉ có thể xóa các yêu cầu ở trạng thái đang duyệt!"
                 };
             }
 
@@ -272,7 +272,6 @@ namespace ODTLearning.Repositories
             {
                 Success = true,
                 Message = "Yêu cầu đã được xóa thành công",
-                Data = true
             };
         }
 
@@ -284,7 +283,7 @@ namespace ODTLearning.Repositories
             var requests = await _context.Requests
                 .Include(r => r.IdSubjectNavigation)
                 .Include(r => r.IdClassNavigation)
-                .Where(r => r.IdAccount == accountId && r.Status == "Chưa duyệt")
+                .Where(r => r.IdAccount == accountId && r.Status == "Đang duyệt")
                 .ToListAsync();
 
             if (requests == null || !requests.Any())
@@ -498,8 +497,6 @@ namespace ODTLearning.Repositories
                 Id = Guid.NewGuid().ToString(),
                 Price = request.Price,   
                 CreateDate = DateTime.Now,                
-                IdSubject = request.IdSubject,
-                IdRequest = idRequest,
                 IdAccount = request.IdAccount,
                 IdTutor = idAccountTutor                
             };
@@ -542,75 +539,87 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<ApiResponse<ComplaintResponse>> CreateComplaint(ComplaintModel model)
+        public async Task<ApiResponse<bool>> CreateComplaint(ComplaintModel model)
         {
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.Id);
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
 
-            var tutor = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdAccounttutor && x.Roles.ToLower() == "gia sư");
-
-            if (user == null || tutor == null)
+            if (user == null)
             {
-                return new ApiResponse<ComplaintResponse>
+                return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không tìm thấy người dùng hoặc gia sư",
+                    Message = "Không tìm thấy người dùng",
                 };
             }
 
-            if (string.IsNullOrEmpty(model.Description))
+            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == model.IdAccountTutor && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
             {
-                return new ApiResponse<ComplaintResponse>
+                return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không để trống nội dung",
+                    Message = "Không tìm thấy gia sư",
                 };
             }
-
-            var idTutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == model.IdAccounttutor);
-
+      
             var complaint = new Complaint
             {
                 Id = Guid.NewGuid().ToString(),
                 Description = model.Description,
-                IdAccount = model.Id,
-                IdTutor = idTutor.Id,
+                IdAccount = model.IdUser,
+                IdTutor = tutor.Id,
             };
 
             await _context.Complaints.AddAsync(complaint);
             await _context.SaveChangesAsync();
 
-            var data = new ComplaintResponse
-            {
-                User = new
-                {
-                    Name = user.FullName,
-                    Email = user.Email,
-                    DateOfBirth = user.DateOfBirth,
-                    Gender = user.Gender,
-                    Avatar = user.Avatar,
-                    Address = user.Address,
-                    Phone = user.Phone
-                },
-
-                Description = model.Description,
-
-                Tutor = new
-                {
-                    Name = tutor.FullName,
-                    Email = tutor.Email,
-                    DateOfBirth = tutor.DateOfBirth,
-                    Gender = tutor.Gender,
-                    Avatar = tutor.Avatar,
-                    Address = tutor.Address,
-                    Phone = tutor.Phone
-                },
-            };
-
-            return new ApiResponse<ComplaintResponse>
+            return new ApiResponse<bool>
             {
                 Success = true,
-                Message = "Thành công",
-                Data = data
+                Message = "Thành công"
+            };
+        }
+
+        public async Task<ApiResponse<bool>> CreateReview(ReviewModel model)
+        {
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
+
+            if (user == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng",
+                };
+            }
+
+            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == model.IdAccountTutor && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư",
+                };
+            }
+ 
+            var review = new Review
+            {
+                Id = Guid.NewGuid().ToString(),
+                Feedback = model.FeedBack,
+                IdAccount = model.IdUser,
+                IdTutor = tutor.Id,
+            };
+
+            await _context.Reviews.AddAsync(review);
+            await _context.SaveChangesAsync();
+           
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Đánh giá thành công"
             };
         }
     }

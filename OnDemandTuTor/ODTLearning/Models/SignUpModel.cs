@@ -44,7 +44,7 @@ namespace ODTLearning.Models
         public string? specializedSkills { get; set; }
         public int? experience { get; set; }
         public string? subject { get; set; }
-        public string? qualificationName { get; set; }
+        public string? qualifiCationName { get; set; }
         public string? type { get; set; }
         public string? imageQualification { get; set; }
         public string? introduction { get; set; }

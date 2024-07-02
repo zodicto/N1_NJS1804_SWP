@@ -57,7 +57,7 @@ public partial class DbminiCapstoneContext : DbContext
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Account__3214EC2739E9DFF9");
+            entity.HasKey(e => e.Id).HasName("PK__Account__3214EC27EE649AE9");
 
             entity.ToTable("Account");
 
@@ -73,13 +73,15 @@ public partial class DbminiCapstoneContext : DbContext
             entity.Property(e => e.FullName).HasMaxLength(50);
             entity.Property(e => e.Gender).HasMaxLength(10);
             entity.Property(e => e.Password).HasMaxLength(50);
-            entity.Property(e => e.Phone).HasMaxLength(20);
+            entity.Property(e => e.Phone)
+                .HasMaxLength(20)
+                .IsUnicode(false);
             entity.Property(e => e.Roles).HasMaxLength(50);
         });
 
         modelBuilder.Entity<Available>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Availabl__3214EC27EC2B8455");
+            entity.HasKey(e => e.Id).HasName("PK__Availabl__3214EC27B3F80E90");
 
             entity.ToTable("Available");
 
@@ -107,7 +109,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Booking__3214EC27F7261565");
+            entity.HasKey(e => e.Id).HasName("PK__Booking__3214EC27E80F5F0B");
 
             entity.ToTable("Booking");
 
@@ -144,7 +146,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Class>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Class__3214EC2778159DE8");
+            entity.HasKey(e => e.Id).HasName("PK__Class__3214EC27ECF8572C");
 
             entity.ToTable("Class");
 
@@ -157,7 +159,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Complaint>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Complain__3214EC27BC0FAEE9");
+            entity.HasKey(e => e.Id).HasName("PK__Complain__3214EC272FDDA9F4");
 
             entity.ToTable("Complaint");
 
@@ -185,7 +187,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<EducationalQualification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Educatio__3214EC2799016C20");
+            entity.HasKey(e => e.Id).HasName("PK__Educatio__3214EC279B47A894");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
@@ -205,7 +207,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<RefreshToken>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__RefreshT__3214EC276A977FAC");
+            entity.HasKey(e => e.Id).HasName("PK__RefreshT__3214EC275F6A0B9C");
 
             entity.ToTable("RefreshToken");
 
@@ -233,11 +235,9 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Rent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Rent__3214EC2757667FEA");
+            entity.HasKey(e => e.Id).HasName("PK__Rent__3214EC278D689DB9");
 
             entity.ToTable("Rent");
-
-            entity.HasIndex(e => e.IdRequest, "UQ__Rent__D550988170471CCC").IsUnique();
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
@@ -248,27 +248,15 @@ public partial class DbminiCapstoneContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ID_Account");
-            entity.Property(e => e.IdRequest)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("ID_Request");
-            entity.Property(e => e.IdSubject)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("ID_Subject");
             entity.Property(e => e.IdTutor)
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ID_Tutor");
-
-            entity.HasOne(d => d.IdRequestNavigation).WithOne(p => p.Rent)
-                .HasForeignKey<Rent>(d => d.IdRequest)
-                .HasConstraintName("FK__Rent__ID_Request__00200768");
         });
 
         modelBuilder.Entity<Request>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Request__3214EC27D2DA6CDA");
+            entity.HasKey(e => e.Id).HasName("PK__Request__3214EC27A95E5158");
 
             entity.ToTable("Request");
 
@@ -309,7 +297,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<RequestLearning>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Request___3214EC27D5F42003");
+            entity.HasKey(e => e.Id).HasName("PK__Request___3214EC2749EC9AA0");
 
             entity.ToTable("Request_Learning");
 
@@ -337,7 +325,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Review__3214EC27734F9F0D");
+            entity.HasKey(e => e.Id).HasName("PK__Review__3214EC27CE406F4A");
 
             entity.ToTable("Review");
 
@@ -365,7 +353,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Service>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Service__3214EC27E4D62BEA");
+            entity.HasKey(e => e.Id).HasName("PK__Service__3214EC273ECE31EA");
 
             entity.ToTable("Service");
 
@@ -402,7 +390,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Subject>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Subject__3214EC27F77CB9CA");
+            entity.HasKey(e => e.Id).HasName("PK__Subject__3214EC278D8124DC");
 
             entity.ToTable("Subject");
 
@@ -415,7 +403,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<TimeSlot>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__TimeSlot__3214EC2758F8C618");
+            entity.HasKey(e => e.Id).HasName("PK__TimeSlot__3214EC27FF3EFE17");
 
             entity.ToTable("TimeSlot");
 
@@ -428,7 +416,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Transact__3214EC27BDA8DB2E");
+            entity.HasKey(e => e.Id).HasName("PK__Transact__3214EC27F6144010");
 
             entity.ToTable("Transaction");
 
@@ -450,11 +438,11 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Tutor>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tutor__3214EC271B4D801A");
+            entity.HasKey(e => e.Id).HasName("PK__Tutor__3214EC275B195BC8");
 
             entity.ToTable("Tutor");
 
-            entity.HasIndex(e => e.IdAccount, "UQ__Tutor__213379EAC617C8CA").IsUnique();
+            entity.HasIndex(e => e.IdAccount, "UQ__Tutor__213379EABDAFD58B").IsUnique();
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
@@ -474,7 +462,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<TutorSubject>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tutor_Su__3214EC27B2D0A28B");
+            entity.HasKey(e => e.Id).HasName("PK__Tutor_Su__3214EC27B5E0FAD9");
 
             entity.ToTable("Tutor_Subject");
 

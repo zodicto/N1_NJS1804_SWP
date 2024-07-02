@@ -39,7 +39,5 @@ public partial class Request
 
     public virtual Subject? IdSubjectNavigation { get; set; }
 
-    public virtual Rent? Rent { get; set; }
-
     public virtual ICollection<RequestLearning> RequestLearnings { get; set; } = new List<RequestLearning>();
 }

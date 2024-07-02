@@ -1,9 +1,10 @@
 ﻿namespace ODTLearning.Models
 {
-    public class ComplaintModel
+    public class ReviewModel
     {
         public string IdUser { get; set; }
-        public string Description { get; set; }
+        public string FeedBack { get; set; }
+        public double Rating { get; set; }
         public string IdAccountTutor { get; set; }
     }
 }

@@ -47,7 +47,7 @@ namespace ODTLearning.Repositories
                 Email = model.email,
                 DateOfBirth = model.date_of_birth,
                 Gender = model.gender,
-                Roles = "Học sinh"
+                Roles = "học sinh"
             };
             // Thêm Account vào context
             await _context.Accounts.AddAsync(user);
@@ -183,15 +183,26 @@ namespace ODTLearning.Repositories
                 };
             }
 
+            // Kiểm tra xem đã có gia sư nào với ID_Account này chưa
+            var existingTutor = await _context.Tutors.FirstOrDefaultAsync(t => t.IdAccount == IdAccount);
+            if (existingTutor != null)
+            {
+                return new ApiResponse<TutorResponse>
+                {
+                    Success = false,
+                    Message = "Đã tồn tại gia sư với ID tài khoản này",
+                };
+            }
+
             // Tạo mới đối tượng tutor
             var tutor = new Tutor
             {
                 Id = Guid.NewGuid().ToString(),
                 SpecializedSkills = model.specializedSkills,
                 Experience = model.experience,
-                Status = "Chưa duyệt",
+                Status = "Đang duyệt",
                 IdAccount = existingUser.Id,
-               // Introducti = model.introduction,
+                Introduction = model.introduction,
             };
 
             // Tạo mới đối tượng educationalqualification
@@ -199,10 +210,9 @@ namespace ODTLearning.Repositories
             {
                 Id = Guid.NewGuid().ToString(),
                 IdTutor = tutor.Id,
-                QualificationName = model.qualificationName,
+                QualificationName = model.qualifiCationName,
                 Type = model.type,
                 Img = model.imageQualification
-                
             };
 
             // Tìm môn học theo tên
@@ -225,7 +235,6 @@ namespace ODTLearning.Repositories
             };
 
             // Thêm các đối tượng vào DB
-
             await _context.Tutors.AddAsync(tutor);
             await _context.EducationalQualifications.AddAsync(educationalQualification);
             await _context.TutorSubjects.AddAsync(tutorSubject);
@@ -233,7 +242,6 @@ namespace ODTLearning.Repositories
             try
             {
                 await _context.SaveChangesAsync();
-                // Trả về ID của tutor đã được tạo với tên là idTutor
                 return new ApiResponse<TutorResponse>
                 {
                     Success = true,
@@ -252,6 +260,8 @@ namespace ODTLearning.Repositories
                 };
             }
         }
+
+
 
 
         public async Task<ApiResponse<UserResponse>> SignInValidationOfAccount(SignInModel model)

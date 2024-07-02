@@ -9,6 +9,8 @@ public partial class Booking
 
     public string? Status { get; set; }
 
+    public float? Price { get; set; }
+
     public string? IdAvailable { get; set; }
 
     public string? IdService { get; set; }

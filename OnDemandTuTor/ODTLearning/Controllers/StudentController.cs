@@ -91,24 +91,23 @@ namespace ODTLearning.Controllers
         }
 
         [HttpDelete("deleteRequest")]
-        public async Task<IActionResult> DeleteRequestLearning(string IdRquest)
+        public async Task<IActionResult> DeleteRequestLearning(string idRequest)
         {
-            var request = await _repo.DeleteRequestLearning(IdRquest);
+            var request = await _repo.DeleteRequestLearning(idRequest);
 
             if (request != null)
             {
                 return Ok(new 
                 {
                     Success = true,
-                    Message = "Delete Request Learning successfully",
-                    Data = request
+                   request.Message,
                 });
             }
 
             return BadRequest(new 
             {
                 Success = false,
-                Message = "Delete Request Learning not successfully"
+                request.Message
             });
         }
         [HttpGet("pedingRequest")]
@@ -285,7 +284,28 @@ namespace ODTLearning.Controllers
                 });
             }
 
-            return BadRequest(new
+            return NotFound(new
+            {
+                Success = false,
+                Message = response.Message
+            });
+        }
+
+        [HttpPost("CreateReview")]
+        public async Task<IActionResult> CreateReview(ReviewModel model)
+        {
+            var response = await _repo.CreateReview(model);
+
+            if (response.Success)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = response.Message
+                });
+            }
+
+            return NotFound(new
             {
                 Success = false,
                 Message = response.Message

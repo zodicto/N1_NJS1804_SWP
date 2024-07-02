@@ -26,7 +26,7 @@ namespace ODTLearning.Repositories
                     .Include(t => t.TutorSubjects)
                         .ThenInclude(ts => ts.IdSubjectNavigation)
                     .Include(t => t.EducationalQualifications)
-                    .Where(t => t.Status == "Chưa duyệt")
+                    .Where(t => t.Status == "Đang duyệt")
                     .Select(t => new ListTutorToConfirmFB
                     {
                         Id = t.IdAccount, // Sử dụng Id của Tutor
@@ -37,7 +37,7 @@ namespace ODTLearning.Repositories
                         gender = t.IdAccountNavigation.Gender,
                         experience = t.Experience,
                         subject = t.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName, // Lấy Subject từ TutorSubjects
-                        qualificationName = t.EducationalQualifications.FirstOrDefault().QualificationName, // Lấy QualificationName từ 
+                        qualifiCationName = t.EducationalQualifications.FirstOrDefault().QualificationName, // Lấy QualificationName từ 
                         type = t.EducationalQualifications.FirstOrDefault().Type, // Lấy Type từ EducationalQualifications
                         imageQualification = t.EducationalQualifications.FirstOrDefault().Img // Lấy ImageQualification từ EducationalQualifications
                     })
@@ -147,7 +147,7 @@ namespace ODTLearning.Repositories
                 _context.Tutors.Update(tutor);
 
                 var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == tutor.IdAccount);
-                account.Roles = "Gia sư";
+                account.Roles = "giảng viên";
                 _context.Accounts.Update(account);
 
                 await _context.SaveChangesAsync();

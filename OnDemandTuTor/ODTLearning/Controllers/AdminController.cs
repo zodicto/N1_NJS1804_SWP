@@ -19,27 +19,27 @@ namespace ODTLearning.Controllers
             _context = context;
         }
 
-        [HttpGet("ViewRent")]
-        public async Task<IActionResult> ViewRent(string condition)
-        {
-            var response = await _repo.ViewRent(condition);
+        //[HttpGet("ViewRent")]
+        //public async Task<IActionResult> ViewRent(string condition)
+        //{
+        //    var response = await _repo.ViewRent(condition);
 
-            if (response.Success)
-            {
-                return Ok(new
-                {
-                    Success = true,
-                    Message = response.Message,
-                    Data = response.Data
-                });
-            }
+        //    if (response.Success)
+        //    {
+        //        return Ok(new
+        //        {
+        //            Success = true,
+        //            Message = response.Message,
+        //            Data = response.Data
+        //        });
+        //    }
 
-            return BadRequest(new
-            {
-                Success = false,
-                Message = response.Message
-            });
-        }
+        //    return BadRequest(new
+        //    {
+        //        Success = false,
+        //        Message = response.Message
+        //    });
+        //}
 
         [HttpGet("viewAllTutor")]
         public async Task<IActionResult> ViewListTutor()
@@ -233,6 +233,32 @@ namespace ODTLearning.Controllers
             {
                 Success = false,
                 Message = response.Message
+            });
+        }
+
+        [HttpGet("ViewAllComplaint")]
+        public async Task<IActionResult> ViewAllComplaint()
+        {          
+            var response = await _repo.GetAllComplaint();
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
+
+        [HttpGet("ViewAllTransaction")]
+        public async Task<IActionResult> ViewAllTransaction()
+        {
+            var response = await _repo.GetAllTransaction();
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
             });
         }
     }
