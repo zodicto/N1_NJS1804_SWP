@@ -274,5 +274,18 @@ namespace ODTLearning.Controllers
                 Data = response.Data
             });
         }
+
+        [HttpGet("ViewRevenueByMonth")]
+        public async Task<IActionResult> ViewRevenueByMonth(int month, int year)
+        {
+            var response = await _repo.GetRevenueByMonth(month, year);
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
     }
 }
