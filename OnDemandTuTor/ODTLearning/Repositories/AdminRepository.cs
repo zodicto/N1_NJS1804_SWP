@@ -360,7 +360,7 @@ namespace ODTLearning.Repositories
                 Id = "",
                 FullName = "",
                 Email = "",
-                DateOfBirth = "",
+                date_of_birth = "",
                 Gender = "",
                 Avatar = "",
                 Address = "",
@@ -375,7 +375,7 @@ namespace ODTLearning.Repositories
                 Id = "",
                 FullName = "",
                 Email = "",
-                DateOfBirth = "",
+                date_of_birth = "",
                 Gender = "",
                 Avatar = "",
                 Address = "",
@@ -388,7 +388,7 @@ namespace ODTLearning.Repositories
                 user.Id += c.IdAccountNavigation.Id + ";";
                 user.FullName += c.IdAccountNavigation.FullName + ";";
                 user.Email += c.IdAccountNavigation.Email + ";";
-                user.DateOfBirth += c.IdAccountNavigation.DateOfBirth + ";";
+                user.date_of_birth += c.IdAccountNavigation.DateOfBirth + ";";
                 user.Gender += c.IdAccountNavigation.Gender + ";";
                 user.Avatar += c.IdAccountNavigation.Avatar + ";";
                 user.Address += c.IdAccountNavigation.Address + ";";
@@ -400,7 +400,7 @@ namespace ODTLearning.Repositories
                 tutor.Id += c.IdTutorNavigation.IdAccountNavigation.Id + ";";
                 tutor.FullName += c.IdTutorNavigation.IdAccountNavigation.FullName + ";";
                 tutor.Email += c.IdTutorNavigation.IdAccountNavigation.Email + ";";
-                tutor.DateOfBirth += c.IdTutorNavigation.IdAccountNavigation.DateOfBirth + ";";
+                tutor.date_of_birth += c.IdTutorNavigation.IdAccountNavigation.DateOfBirth + ";";
                 tutor.Gender += c.IdTutorNavigation.IdAccountNavigation.Gender + ";";
                 tutor.Avatar += c.IdTutorNavigation.IdAccountNavigation.Avatar + ";";
                 tutor.Address += c.IdTutorNavigation.IdAccountNavigation.Address + ";";
@@ -411,7 +411,7 @@ namespace ODTLearning.Repositories
             user.Id = myLib.DeleteLastIndexString(user.Id);
             user.FullName = myLib.DeleteLastIndexString(user.FullName);
             user.Email = myLib.DeleteLastIndexString(user.Email);
-            user.DateOfBirth = myLib.DeleteLastIndexString(user.DateOfBirth);
+            user.date_of_birth = myLib.DeleteLastIndexString(user.date_of_birth);
             user.Gender = myLib.DeleteLastIndexString(user.Gender);
             user.Avatar = myLib.DeleteLastIndexString(user.Avatar);
             user.Address = myLib.DeleteLastIndexString(user.Address);
@@ -423,7 +423,7 @@ namespace ODTLearning.Repositories
             tutor.Id = myLib.DeleteLastIndexString(tutor.Id);
             tutor.FullName = myLib.DeleteLastIndexString(tutor.FullName);
             tutor.Email = myLib.DeleteLastIndexString(tutor.Email);
-            tutor.DateOfBirth = myLib.DeleteLastIndexString(tutor.DateOfBirth);
+            tutor.date_of_birth = myLib.DeleteLastIndexString(tutor.date_of_birth);
             tutor.Gender = myLib.DeleteLastIndexString(tutor.Gender);
             tutor.Avatar = myLib.DeleteLastIndexString(tutor.Avatar);
             tutor.Address = myLib.DeleteLastIndexString(tutor.Address);
@@ -471,7 +471,7 @@ namespace ODTLearning.Repositories
                 Id = "",
                 FullName = "",
                 Email = "",
-                DateOfBirth = "",
+                date_of_birth = "",
                 Gender = "",
                 Avatar = "",
                 Address = "",
@@ -489,7 +489,7 @@ namespace ODTLearning.Repositories
                 user.Id += c.IdAccountNavigation.Id + ";";
                 user.FullName += c.IdAccountNavigation.FullName + ";";
                 user.Email += c.IdAccountNavigation.Email + ";";
-                user.DateOfBirth += c.IdAccountNavigation.DateOfBirth + ";";
+                user.date_of_birth += c.IdAccountNavigation.DateOfBirth + ";";
                 user.Gender += c.IdAccountNavigation.Gender + ";";
                 user.Avatar += c.IdAccountNavigation.Avatar + ";";
                 user.Address += c.IdAccountNavigation.Address + ";";
@@ -505,7 +505,7 @@ namespace ODTLearning.Repositories
             user.Id = myLib.DeleteLastIndexString(user.Id);
             user.FullName = myLib.DeleteLastIndexString(user.FullName);
             user.Email = myLib.DeleteLastIndexString(user.Email);
-            user.DateOfBirth = myLib.DeleteLastIndexString(user.DateOfBirth);
+            user.date_of_birth = myLib.DeleteLastIndexString(user.date_of_birth);
             user.Gender = myLib.DeleteLastIndexString(user.Gender);
             user.Avatar = myLib.DeleteLastIndexString(user.Avatar);
             user.Address = myLib.DeleteLastIndexString(user.Address);
