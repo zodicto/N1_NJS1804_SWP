@@ -261,5 +261,18 @@ namespace ODTLearning.Controllers
                 Data = response.Data
             });
         }
+
+        [HttpGet("ViewRevenueByYear")]
+        public async Task<IActionResult> ViewRevenueByYear(int year)
+        {
+            var response = await _repo.GetRevenueByYear(year);
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
     }
 }

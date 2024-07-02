@@ -5,6 +5,7 @@ using ODTLearning.Entities;
 using ODTLearning.Helpers;
 using ODTLearning.Models;
 using System.Runtime.ConstrainedExecution;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
 namespace ODTLearning.Repositories
@@ -37,29 +38,29 @@ namespace ODTLearning.Repositories
 
             if(tutor != null)
             {
-                var educationalQualifications = _context.EducationalQualifications.Where(x => x.IdTutor == tutor.Id);
+                var educationalQualifications = await _context.EducationalQualifications.Where(x => x.IdTutor == tutor.Id).ToListAsync();
                 _context.EducationalQualifications.RemoveRange(educationalQualifications);
 
 
-                var requestLearnings = _context.RequestLearnings.Where(x => x.IdTutor == tutor.Id);
+                var requestLearnings = await _context.RequestLearnings.Where(x => x.IdTutor == tutor.Id).ToListAsync();
                 _context.RequestLearnings.RemoveRange(requestLearnings);
 
-                var tutorSubjects = _context.TutorSubjects.Where(x => x.IdTutor == tutor.Id).ToList();
+                var tutorSubjects = await _context.TutorSubjects.Where(x => x.IdTutor == tutor.Id).ToListAsync();
                 _context.TutorSubjects.RemoveRange(tutorSubjects);
 
-                var complaints = _context.Complaints.Where(x => x.IdTutor == tutor.Id).ToList();
+                var complaints = await _context.Complaints.Where(x => x.IdTutor == tutor.Id).ToListAsync();
                 _context.Complaints.RemoveRange(complaints);   
 
                 _context.Tutors.Remove(tutor);
             }
 
-            var complaints2 = _context.Complaints.Where(x => x.IdAccount == id);
+            var complaints2 = await _context.Complaints.Where(x => x.IdAccount == id).ToListAsync();
             _context.Complaints.RemoveRange(complaints2);
 
-            var transactions = _context.Transactions.Where(x => x.IdAccount == id);
+            var transactions = await _context.Transactions.Where(x => x.IdAccount == id).ToListAsync();
             _context.Transactions.RemoveRange(transactions);
 
-            var requests = _context.Requests.Where(x => x.IdAccount == id);
+            var requests = await _context.Requests.Where(x => x.IdAccount == id).ToListAsync();
             _context.Requests.RemoveRange(requests);
 
             _context.Accounts.Remove(exsitAccount);
@@ -525,6 +526,31 @@ namespace ODTLearning.Repositories
                 Success = true,
                 Message = "Thành công",
                 Data = data
+            };
+        }
+
+        public async Task<ApiResponse<object>> GetRevenueByYear(int year)
+        {
+            var rents = await _context.Rents.Where(x => x.CreateDate.Year == year).GroupBy(x => x.CreateDate.Month).Select(x => new
+            {                
+                Name = $"Tháng {x.Key}" ,
+                Data = x.Sum(r => r.Price)
+            }).ToListAsync();
+
+            if (!rents.Any())
+            {
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = $"Không có việc thuê nào trong năm {year}"
+                };
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = rents
             };
         }
     }

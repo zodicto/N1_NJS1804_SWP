@@ -9,7 +9,7 @@ public partial class Rent
 
     public float? Price { get; set; }
 
-    public DateTime? CreateDate { get; set; }
+    public DateTime CreateDate { get; set; }
 
     public string? IdSubject { get; set; }
 
