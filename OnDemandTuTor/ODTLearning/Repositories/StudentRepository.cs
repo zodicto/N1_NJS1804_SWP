@@ -254,7 +254,7 @@ namespace ODTLearning.Repositories
             }
 
             // Kiểm tra trạng thái của yêu cầu
-            if (requestToDelete.Status != "đang duyệt")
+            if (requestToDelete.Status != "Đang duyệt")
             {
                 return new ApiResponse<bool>
                 {

@@ -97,7 +97,6 @@ namespace ODTLearning.Repositories
             {
                 Success = true,
                 Message = "Yêu cầu đã được duyệt",
-                Data = true
             };
         }
 
@@ -147,7 +146,7 @@ namespace ODTLearning.Repositories
                 _context.Tutors.Update(tutor);
 
                 var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == tutor.IdAccount);
-                account.Roles = "giảng viên";
+                account.Roles = "gia sư";
                 _context.Accounts.Update(account);
 
                 await _context.SaveChangesAsync();
@@ -221,7 +220,7 @@ namespace ODTLearning.Repositories
         {
             // Truy vấn danh sách các request có status là "chưa duyệt"
             var pendingRequests = await _context.Requests
-                .Where(r => r.Status == "Chưa duyệt")
+                .Where(r => r.Status == "đang duyệt")
                 .Select(r => new ViewRequestOfStudent
                 {
                     Title = r.Title,
