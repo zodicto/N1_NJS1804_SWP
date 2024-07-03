@@ -438,6 +438,7 @@ namespace ODTLearning.Repositories
             {
                 id = rl.IdTutorNavigation.IdAccount,
                 fullName = rl.IdTutorNavigation.IdAccountNavigation.FullName,
+                introduction = rl.IdTutorNavigation.Introduction,
                 gender = rl.IdTutorNavigation.IdAccountNavigation.Gender,
                 avatar = rl.IdTutorNavigation.IdAccountNavigation.Avatar, // Bổ sung thuộc tính avatar
                 specializedSkills = rl.IdTutorNavigation.SpecializedSkills,
@@ -665,26 +666,41 @@ namespace ODTLearning.Repositories
                 Data = requestLearningModels
             };
         }
-        public async Task<ApiResponse<List<RequestLearningResponse>>> GetClassCompled(string id)
+        public async Task<ApiResponse<List<RequestLearningResponse>>> GetClassCompled(string accountId)
         {
-            // Truy vấn danh sách các request có status là "Từ chối" và idAccount là accountId
-            var requests = await _context.Requests
-                .Include(r => r.IdSubjectNavigation)
-                .Include(r => r.IdClassNavigation)
-                .Where(r => r.IdAccount == id && r.Status == "Hoàn thành")
-                .ToListAsync();
+            // Tìm kiếm tài khoản theo ID
+            var account = await _context.Accounts
+                .Include(a => a.Requests)
+                    .ThenInclude(r => r.IdSubjectNavigation)
+                .Include(a => a.Requests)
+                    .ThenInclude(r => r.IdClassNavigation)
+                .FirstOrDefaultAsync(a => a.Id == accountId);
 
-            if (requests == null || !requests.Any())
+            if (account == null)
+            {
+                return new ApiResponse<List<RequestLearningResponse>>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy tài khoản với ID này",
+                };
+            }
+
+            // Lọc các request có status là "Hoàn thành"
+            var completedRequests = account.Requests
+                .Where(r => r.Status == "Hoàn thành")
+                .ToList();
+
+            if (!completedRequests.Any())
             {
                 return new ApiResponse<List<RequestLearningResponse>>
                 {
                     Success = true,
-                    Message = "Không tìm thấy yêu cầu nào với trạng thái 'Đang diễn ra' cho tài khoản này",
+                    Message = "Không tìm thấy yêu cầu nào với trạng thái 'Hoàn thành' cho tài khoản này",
                 };
             }
 
             // Chuyển đổi danh sách requests thành danh sách RequestLearningModel
-            var requestLearningModels = requests.Select(r => new RequestLearningResponse
+            var requestLearningModels = completedRequests.Select(r => new RequestLearningResponse
             {
                 IdRequest = r.Id,
                 Title = r.Title,
@@ -703,9 +719,10 @@ namespace ODTLearning.Repositories
             return new ApiResponse<List<RequestLearningResponse>>
             {
                 Success = true,
-                Message = "Danh sách lớp đang diễn được truy xuất thành công",
+                Message = "Danh sách lớp hoàn thành được truy xuất thành công",
                 Data = requestLearningModels
             };
         }
+
     }
 }

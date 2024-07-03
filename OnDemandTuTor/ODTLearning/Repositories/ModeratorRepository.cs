@@ -33,6 +33,7 @@ namespace ODTLearning.Repositories
                         specializedSkills = t.SpecializedSkills,
                         introduction = t.Introduction,
                         date_of_birth = t.IdAccountNavigation.DateOfBirth,
+                        
                         fullName = t.IdAccountNavigation.FullName,
                         gender = t.IdAccountNavigation.Gender,
                         experience = t.Experience,

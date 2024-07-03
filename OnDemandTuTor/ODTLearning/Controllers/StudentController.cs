@@ -307,7 +307,7 @@ namespace ODTLearning.Controllers
         {
             try
             {
-                var response = await _repo.GetClassProcess(id);
+                var response = await _repo.GetClassCompled(id);
 
                 if (response.Success)
                 {
