@@ -258,6 +258,15 @@ namespace ODTLearning.Repositories
                 };
             }
 
+            if (request.Status.ToLower() == "đang diễn ra")
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Yêu cầu đang diễn ra"
+                };
+            }
+
             var requestLearnings = await _context.RequestLearnings.Where(x => x.IdRequest == idRequest).ToListAsync();
 
             if (requestLearnings.Any())
