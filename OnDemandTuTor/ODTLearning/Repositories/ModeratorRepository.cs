@@ -225,7 +225,7 @@ namespace ODTLearning.Repositories
                 {
                     Title = r.Title,
                     Price = r.Price,
-                    TotalSession = r.TotalSession,
+                    TotalSessions = r.TotalSession,
                     TimeTable = r.TimeTable,
                     Description = r.Description,
                     Subject = r.IdSubjectNavigation.SubjectName, 

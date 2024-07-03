@@ -302,68 +302,67 @@ namespace ODTLearning.Repositories
 
         public async Task<ApiResponse<bool>> CreateServiceLearning(string id, ServiceLearningModel model)
         {
-            // Tìm sinh viên theo IdStudent
-            var tutor = await _context.Accounts
-                                  .Include(s => s.Requests)
-                                  .Include(s=>s.Tutor)
-                                  .FirstOrDefaultAsync(s => s.Id == id);
+            // Tìm tài khoản theo IdAccount và vai trò "gia sư"
+            var account = await _context.Accounts
+                                  .Include(a => a.Tutor)
+                                  .FirstOrDefaultAsync(a => a.Id == id && a.Roles.ToLower() == "gia sư");
 
-            if (tutor == null)
+            if (account == null || account.Tutor == null)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không tìm thấy tài khoản nào với ID này!"
+                    Message = "Không tìm thấy tài khoản nào với ID này hoặc bạn chưa đăng ký làm gia sư!",
                 };
             }
 
-            // Tìm LearningModel theo tên
-            var Class = await _context.Classes
-                                              .FirstOrDefaultAsync(cl => cl.ClassName == model.Class);
+            // Tìm lớp học theo tên
+            var classEntity = await _context.Classes.FirstOrDefaultAsync(cl => cl.ClassName == model.Class);
 
-            if (Class == null)
+            if (classEntity == null)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không tìm thấy lớp nào với tên này. Vui lòng chọn lớp 10,11,12"
+                    Message = "Không tìm thấy lớp nào với tên này. Vui lòng chọn lớp 10, 11, 12",
                 };
             }
-            var subjectModel = await _context.Subjects
-                                              .FirstOrDefaultAsync(lm => lm.SubjectName == model.subject);
 
-            if (subjectModel == null)
+            // Tìm môn học theo tên
+            var subjectEntity = await _context.Subjects.FirstOrDefaultAsync(sub => sub.SubjectName == model.subject);
+
+            if (subjectEntity == null)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không tìm thấy môn học nào với tên này. Vui lòng chọn lại!"
+                    Message = "Không tìm thấy môn học nào với tên này. Vui lòng chọn lại!",
                 };
             }
 
+            // Tạo một đối tượng Service mới
+            var serviceOfTutor = new Service
+            {
+                Id = Guid.NewGuid().ToString(),
+                Title = model.tittle,
+                Description = model.Description,
+                PricePerHour = model.PricePerHour,
+                IdClass = classEntity.Id,
+                IdSubject = subjectEntity.Id,
+                IdTutor = account.Tutor.Id // Sử dụng Id của Tutor từ account
+            };
 
-            // Tạo một đối tượng Schedule mới nếu có thông tin về lịch trình
-                var requestOfStudent = new Service 
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Title = model.tittle,
-                    Description = model.Description,
-                    PricePerHour = model.PricePerHour,
-                    IdClass = model.Class,
-                    IdSubject = model.subject,
-                  
-                };
-
-                // Thêm Request vào context
-                //await _context.Requests.AddAsync(requestOfStudent);
-                await _context.SaveChangesAsync();
+            // Thêm Service vào context
+            await _context.Services.AddAsync(serviceOfTutor);
+            await _context.SaveChangesAsync();
 
             return new ApiResponse<bool>
             {
                 Success = true,
-                Message = "Tạo yêu cầu thành công",
+                Message = "Tạo dịch vụ thành công",
             };
         }
+
         //public async Task<List<TutorListModel>> SearchTutorList(SearchTutorModel model)
         //{
         //    //list all
@@ -440,7 +439,7 @@ namespace ODTLearning.Repositories
                                                        LearningMethod = r.LearningMethod,
                                                        Class = r.IdClassNavigation.ClassName,
                                                        TimeTable = r.TimeTable,
-                                                       TotalSession = r.TotalSession,
+                                                       TotalSessions = r.TotalSession,
                                                        TimeStart = r.TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
                                                       TimeEnd = r.TimeEnd.ToString(),
                                                        IdRequest = r.Id, // Include Account ID

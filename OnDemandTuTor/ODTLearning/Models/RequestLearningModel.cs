@@ -13,7 +13,7 @@ namespace ODTLearning.Models
         public string? TimeStart { get; set; }
         public string? TimeEnd { get; set; }
         public string? TimeTable { get; set; }
-        public int? TotalSession { get; set; }
+        public int? TotalSessions { get; set; }
     }
     public class ViewRequestOfStudent : RequestLearningModel
     {

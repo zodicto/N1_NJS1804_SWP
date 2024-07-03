@@ -106,7 +106,7 @@ namespace ODTLearning.Repositories
                     TimeStart = parsedTimeStart,
                     TimeEnd = parsedTimeEnd,
                     TimeTable = model.TimeTable,
-                    TotalSession = model.TotalSession,
+                    TotalSession = model.TotalSessions,
                     Description = model.Description,
                     Status = "Đang duyệt",
                     LearningMethod = model.LearningMethod,
@@ -220,7 +220,7 @@ namespace ODTLearning.Repositories
             requestToUpdate.TimeStart = parsedTimeStart ?? requestToUpdate.TimeStart;
             requestToUpdate.TimeEnd = parsedTimeEnd ?? requestToUpdate.TimeEnd;
             requestToUpdate.TimeTable = model.TimeTable ?? requestToUpdate.TimeTable;
-            requestToUpdate.TotalSession = model.TotalSession?? requestToUpdate.TotalSession;
+            requestToUpdate.TotalSession = model.TotalSessions?? requestToUpdate.TotalSession;
             requestToUpdate.Description = model.Description ?? requestToUpdate.Description;
             requestToUpdate.LearningMethod = model.LearningMethod ?? requestToUpdate.LearningMethod;
             requestToUpdate.IdSubject = subjectEntity.Id;

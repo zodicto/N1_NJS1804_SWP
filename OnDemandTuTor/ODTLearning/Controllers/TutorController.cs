@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using ODTLearning.Entities;
 using ODTLearning.Models;
 using ODTLearning.Repositories;
@@ -295,6 +296,39 @@ namespace ODTLearning.Controllers
                     Success = false,
                     Message = "An error occurred while creating the request learning.",
                     Details = ex.Message
+                });
+            }
+        }
+
+        [HttpPost("createService")]
+        public async Task<IActionResult> CreateServiceLearning(string id, ServiceLearningModel model)
+        {
+            try
+            {
+                var response = await _repo.CreateServiceLearning(id,model);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while retrieving the arrpoved requests.",
+                    Data = ex.Message
                 });
             }
         }

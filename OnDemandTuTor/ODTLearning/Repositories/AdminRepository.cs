@@ -177,7 +177,7 @@ namespace ODTLearning.Repositories
                         TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
                         TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
                         TimeTable = t.TimeTable,
-                        TotalSession = t.TotalSession,
+                        TotalSessions = t.TotalSession,
                         Subject = t.IdSubjectNavigation.SubjectName,
                         FullName = t.IdAccountNavigation.FullName,
                         Description = t.Description,
@@ -222,7 +222,7 @@ namespace ODTLearning.Repositories
                         TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
                         TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
                         TimeTable = t.TimeTable,
-                        TotalSession = t.TotalSession,
+                        TotalSessions = t.TotalSession,
                         Subject = t.IdSubjectNavigation.SubjectName,
                         FullName = t.IdAccountNavigation.FullName,
                         Description = t.Description,
@@ -267,7 +267,7 @@ namespace ODTLearning.Repositories
                         TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
                        TimeEnd= t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
                         TimeTable = t.TimeTable,
-                        TotalSession = t.TotalSession,
+                        TotalSessions = t.TotalSession,
                         Subject = t.IdSubjectNavigation.SubjectName,
                         FullName = t.IdAccountNavigation.FullName,
                         Description = t.Description,
