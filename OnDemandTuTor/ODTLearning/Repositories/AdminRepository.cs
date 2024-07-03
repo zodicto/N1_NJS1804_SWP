@@ -445,20 +445,121 @@ namespace ODTLearning.Repositories
             };
         }
 
+        //public async Task<ApiResponse<object>> GetRevenueByMonth(int year)
+        //{
+        //    var rents = await _context.Rents.Where(x => x.CreateDate.Year == year).GroupBy(x => x.CreateDate.Month).Select(x => new
+        //    {                
+        //        Name = $"Tháng {x.Key}" ,
+        //        Data = x.Sum(r => r.Price)
+        //    }).ToListAsync();
+
+        //    if (!rents.Any())
+        //    {
+        //        return new ApiResponse<object>
+        //        {
+        //            Success = true,
+        //            Message = $"Không có việc thuê nào trong năm {year}"
+        //        };
+        //    }
+
+        //    return new ApiResponse<object>
+        //    {
+        //        Success = true,
+        //        Message = "Thành công",
+        //        Data = rents
+        //    };
+        //}
+
+        //public async Task<ApiResponse<object>> GetRevenueByWeek(int month, int year)
+        //{
+        //    var rents = _context.Rents.Where(x => x.CreateDate.Month == month && x.CreateDate.Year == year);
+
+        //    if (!rents.Any())
+        //    {
+        //        return new ApiResponse<object>
+        //        {
+        //            Success = true,
+        //            Message = $"Không có việc thuê nào trong {month}/{year}"
+        //        };
+        //    }
+
+        //    var data = new List<object>();
+        //    float price1 = 0;
+        //    float price2 = 0;
+        //    float price3 = 0;
+        //    float price4 = 0;
+
+        //    foreach (var x in rents)
+        //    {
+        //        if (x.CreateDate.Day <= 7)
+        //        {
+        //            price1 += (float) x.Price;
+        //        }
+        //        else if (x.CreateDate.Day > 7 && x.CreateDate.Day <= 14)
+        //        {
+        //            price2 += (float) x.Price;
+        //        }
+        //        else if (x.CreateDate.Day > 14 && x.CreateDate.Day <= 21)
+        //        {
+        //            price3 += (float) x.Price;
+        //        }
+        //        else 
+        //        {
+        //            price4 += (float) x.Price;
+        //        }
+        //    }
+
+        //    var week1 = new
+        //    {
+        //        Name = "Tuần 1",
+        //        Data = price1
+        //    };
+
+        //    var week2 = new
+        //    {
+        //        Name = "Tuần 2",
+        //        Data = price2
+        //    };
+
+        //    var week3 = new
+        //    {
+        //        Name = "Tuần 3",
+        //        Data = price3
+        //    };
+
+        //    var week4 = new
+        //    {
+        //        Name = "Tuần 4",
+        //        Data = price4
+        //    };
+
+        //    data.Add(week1);
+        //    data.Add(week2);
+        //    data.Add(week3);
+        //    data.Add(week4);
+
+        //    return new ApiResponse<object>
+        //    {
+        //        Success = true,
+        //        Message = "Thành công",
+        //        Data = data
+        //    };
+        //}
+
         public async Task<ApiResponse<object>> GetRevenueByMonth(int year)
         {
-            var rents = await _context.Rents.Where(x => x.CreateDate.Year == year).GroupBy(x => x.CreateDate.Month).Select(x => new
-            {                
-                Name = $"Tháng {x.Key}" ,
-                Data = x.Sum(r => r.Price)
+            var transactions = await _context.Transactions.Where(x => x.CreateDate.Year == year).GroupBy(x => x.CreateDate.Month).Select(x => new
+            {
+                Name = $"Tháng {x.Key}",
+                Data = x.Sum(r => r.Amount)
             }).ToListAsync();
 
-            if (!rents.Any())
+            if (!transactions.Any())
             {
                 return new ApiResponse<object>
                 {
                     Success = true,
-                    Message = $"Không có việc thuê nào trong năm {year}"
+                    Message = $"Không có giao dịch nào trong năm {year}"
                 };
             }
 
@@ -466,20 +567,20 @@ namespace ODTLearning.Repositories
             {
                 Success = true,
                 Message = "Thành công",
-                Data = rents
+                Data = transactions
             };
         }
 
         public async Task<ApiResponse<object>> GetRevenueByWeek(int month, int year)
         {
-            var rents = _context.Rents.Where(x => x.CreateDate.Month == month && x.CreateDate.Year == year);
+            var transactions = _context.Transactions.Where(x => x.CreateDate.Month == month && x.CreateDate.Year == year);
 
-            if (!rents.Any())
+            if (!transactions.Any())
             {
                 return new ApiResponse<object>
                 {
                     Success = true,
-                    Message = $"Không có việc thuê nào trong {month}/{year}"
+                    Message = $"Không có giao dịch nào trong {month}/{year}"
                 };
             }
 
@@ -489,23 +590,23 @@ namespace ODTLearning.Repositories
             float price3 = 0;
             float price4 = 0;
 
-            foreach (var x in rents)
+            foreach (var x in transactions)
             {
                 if (x.CreateDate.Day <= 7)
                 {
-                    price1 += (float) x.Price;
+                    price1 += (float)x.Amount;
                 }
                 else if (x.CreateDate.Day > 7 && x.CreateDate.Day <= 14)
                 {
-                    price2 += (float) x.Price;
+                    price2 += (float)x.Amount;
                 }
                 else if (x.CreateDate.Day > 14 && x.CreateDate.Day <= 21)
                 {
-                    price3 += (float) x.Price;
+                    price3 += (float)x.Amount;
                 }
-                else 
+                else
                 {
-                    price4 += (float) x.Price;
+                    price4 += (float)x.Amount;
                 }
             }
 

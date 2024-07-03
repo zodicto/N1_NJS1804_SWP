@@ -10,6 +10,7 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<List<ViewRequestOfStudent>>> GetPendingRequests();
         public Task<ApiResponse<bool>> RejectRequest(string requestId);
         public Task<ApiResponse<bool>> ApproveRequest(string requestId);
+        public Task<ApiResponse<bool>> DeleteRequest(string idRequest);
     }
 }
 
