@@ -256,7 +256,7 @@ namespace ODTLearning.Controllers
 
             return Ok(new
             {
-                Success = response.Success,
+                 response.Success,
                 Message = response.Message,
                 Data = response.Data
             });
@@ -269,9 +269,9 @@ namespace ODTLearning.Controllers
 
             return Ok(new
             {
-                Success = response.Success,
-                Message = response.Message,
-                Data = response.Data
+                response.Success,
+                 response.Message,
+                response.Data
             });
         }
     }

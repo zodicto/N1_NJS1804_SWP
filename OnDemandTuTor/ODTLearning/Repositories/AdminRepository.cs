@@ -74,23 +74,24 @@ namespace ODTLearning.Repositories
             };                      
         }
 
-        public async Task<ApiResponse<List<ListAccount>>> GetListStudent()
+        public async Task<ApiResponse<List<ListAllStudent>>> GetListStudent()
         {
             try
             {
                 var ListStudent = await _context.Accounts
                    .Where(t => t.Roles == "Học sinh")
-                    .Select(t => new ListAccount
+                    .Select(t => new ListAllStudent
                     {
-                        id = t.Id, // Sử dụng Id của Tutor
+                        id = t.Id, 
                         email = t.Email,
+                        password = t.Password,                       
                         date_of_birth = t.DateOfBirth,
                         fullName = t.FullName,
                         gender = t.Gender,
                         phone = t.Phone,
                         roles = t.Roles,
                     }).ToListAsync();
-                return new ApiResponse<List<ListAccount>>
+                return new ApiResponse<List<ListAllStudent>>
                 {
                     Success = true,
                     Message = "Lấy danh sách học sinh thành công",
@@ -100,9 +101,9 @@ namespace ODTLearning.Repositories
             catch (Exception ex)
             {
                 // Ghi lại lỗi nếu cần thiết
-                Console.WriteLine($"Error in GetListTutorsToConfirm: {ex.Message}");
+                Console.WriteLine($"Error in GetListsToConfirm: {ex.Message}");
 
-                return new ApiResponse<List<ListAccount>>
+                return new ApiResponse<List<ListAllStudent>>
                 {
                     Success = false,
                     Message = "Đã xảy ra lỗi trong quá trình lấy danh sách gia sư",
@@ -111,38 +112,48 @@ namespace ODTLearning.Repositories
             }
         }
 
-        public async Task<ApiResponse<List<ListAccount>>> GetListTutor()
+        public async Task<ApiResponse<List<ListAlltutor>>> GetListTutor()
         {
             try
             {
-                var ListStudent = await _context.Accounts
-                   .Where(t => t.Roles == "Gia sư")
-                    .Select(t => new ListAccount
+                var ListTutors = await _context.Accounts
+                    .Where(a => a.Roles.ToLower() == "gia sư")
+                    .Include(a => a.Tutor)
+                        .ThenInclude(t => t.TutorSubjects)
+                            .ThenInclude(ts => ts.IdSubjectNavigation)
+                    .Include(a => a.Tutor)
+                        .ThenInclude(t => t.EducationalQualifications)
+                    .Select(a => new ListAlltutor
                     {
-                        id = t.Id, // Sử dụng Id của Tutor
-                        email = t.Email,
-                        date_of_birth = t.DateOfBirth,
-                        fullName = t.FullName,
-                        gender = t.Gender,
-                        phone = t.Phone,
-                        roles = t.Roles,
+                        id = a.Id,
+                        fullName = a.FullName,
+                        date_of_birth = a.DateOfBirth.HasValue ? a.DateOfBirth.Value.ToString("yyyy-MM-dd") : null,
+                        gender = a.Gender,
+                        specializedSkills = a.Tutor.SpecializedSkills,
+                        experience = a.Tutor.Experience,
+                        subject = a.Tutor.TutorSubjects.FirstOrDefault() != null ? a.Tutor.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName : null,
+                        qualifiCationName = a.Tutor.EducationalQualifications.FirstOrDefault() != null ? a.Tutor.EducationalQualifications.FirstOrDefault().QualificationName : null,
+                        type = a.Tutor.EducationalQualifications.FirstOrDefault() != null ? a.Tutor.EducationalQualifications.FirstOrDefault().Type : null,
+                        imageQualification = a.Tutor.EducationalQualifications.FirstOrDefault() != null ? a.Tutor.EducationalQualifications.FirstOrDefault().Img : null,
+                        introduction = a.Tutor.Introduction
                     }).ToListAsync();
-                return new ApiResponse<List<ListAccount>>
+
+                return new ApiResponse<List<ListAlltutor>>
                 {
                     Success = true,
                     Message = "Lấy danh sách gia sư thành công",
-                    Data = ListStudent
+                    Data = ListTutors
                 };
             }
             catch (Exception ex)
             {
                 // Ghi lại lỗi nếu cần thiết
-                Console.WriteLine($"Error in GetListTutorsToConfirm: {ex.Message}");
+                Console.WriteLine($"Error in GetListTutor: {ex.Message}");
 
-                return new ApiResponse<List<ListAccount>>
+                return new ApiResponse<List<ListAlltutor>>
                 {
                     Success = false,
-                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách học sinh",
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách gia sư",
                     Data = null
                 };
             }
@@ -156,7 +167,7 @@ namespace ODTLearning.Repositories
                     .Include(t => t.IdAccountNavigation)
                     .Include(t => t.IdClassNavigation)
                     .Include(t => t.IdSubjectNavigation)
-                    .Where(t => t.Status == "Chưa duyệt")
+                    .Where(t => t.Status == "Đang duyệt")
                     .Select(t => new ViewRequestOfStudent
                     {
                         IdRequest = t.Id,

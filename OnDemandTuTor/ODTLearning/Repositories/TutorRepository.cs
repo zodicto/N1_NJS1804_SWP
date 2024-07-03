@@ -2,6 +2,7 @@
 using ODTLearning.Entities;
 using ODTLearning.Helpers;
 using ODTLearning.Models;
+using System.Globalization;
 using System.Net;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -299,6 +300,70 @@ namespace ODTLearning.Repositories
             };
         }
 
+        public async Task<ApiResponse<bool>> CreateServiceLearning(string id, ServiceLearningModel model)
+        {
+            // Tìm sinh viên theo IdStudent
+            var tutor = await _context.Accounts
+                                  .Include(s => s.Requests)
+                                  .Include(s=>s.Tutor)
+                                  .FirstOrDefaultAsync(s => s.Id == id);
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy tài khoản nào với ID này!"
+                };
+            }
+
+            // Tìm LearningModel theo tên
+            var Class = await _context.Classes
+                                              .FirstOrDefaultAsync(cl => cl.ClassName == model.Class);
+
+            if (Class == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy lớp nào với tên này. Vui lòng chọn lớp 10,11,12"
+                };
+            }
+            var subjectModel = await _context.Subjects
+                                              .FirstOrDefaultAsync(lm => lm.SubjectName == model.subject);
+
+            if (subjectModel == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy môn học nào với tên này. Vui lòng chọn lại!"
+                };
+            }
+
+
+            // Tạo một đối tượng Schedule mới nếu có thông tin về lịch trình
+                var requestOfStudent = new Service 
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Title = model.tittle,
+                    Description = model.Description,
+                    PricePerHour = model.PricePerHour,
+                    IdClass = model.Class,
+                    IdSubject = model.subject,
+                  
+                };
+
+                // Thêm Request vào context
+                //await _context.Requests.AddAsync(requestOfStudent);
+                await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Tạo yêu cầu thành công",
+            };
+        }
         //public async Task<List<TutorListModel>> SearchTutorList(SearchTutorModel model)
         //{
         //    //list all
@@ -368,7 +433,7 @@ namespace ODTLearning.Repositories
                                                    .Select(r => new ViewRequestOfStudent
                                                    {
                                                        Title = r.Title,
-
+                                                       Status = r.Status,
                                                        Price = r.Price,
                                                        Description = r.Description,
                                                        Subject = r.IdSubjectNavigation.SubjectName, 
@@ -410,49 +475,56 @@ namespace ODTLearning.Repositories
 
         public async Task<ApiResponse<bool>> JoinRequest(string requestId, string id)
         {
+            // Kiểm tra đầu vào
+            if (string.IsNullOrEmpty(requestId) || string.IsNullOrEmpty(id))
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Yêu cầu không hợp lệ"
+                };
+            }
+
             // Tìm yêu cầu theo IdRequest
             var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
-
             if (request == null)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không tìm thấy yêu cầu nào",
+                    Message = "Không tìm thấy yêu cầu nào"
                 };
             }
 
-
-            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == id && a.Roles.ToLower() == "Gia sư");
-
+            // Tìm account theo id và role là gia sư
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == id && a.Roles.ToLower() == "gia sư");
             if (account == null)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không tìm thấy gia sư nào với tài khoản này",
+                    Message = "Không tìm thấy gia sư nào với tài khoản này"
                 };
             }
 
             // Tìm gia sư theo IdAccount
             var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.IdAccount == id);
-
-
             if (tutor == null)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không tìm thấy gia sư nào",
+                    Message = "Không tìm thấy gia sư nào"
                 };
-            }   
+            }
 
+            // Kiểm tra số dư tài khoản
             if (account.AccountBalance < 50000)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Bạn cần có 50.000 trong tài khoản để tham gia yêu cầu",
+                    Message = "Bạn cần có 50.000 trong tài khoản để tham gia yêu cầu"
                 };
             }
 
@@ -461,13 +533,12 @@ namespace ODTLearning.Repositories
             // Kiểm tra xem gia sư đã tham gia yêu cầu này chưa
             var existingRequestLearning = await _context.RequestLearnings
                 .FirstOrDefaultAsync(rl => rl.IdRequest == requestId && rl.IdTutor == tutorId);
-
             if (existingRequestLearning != null)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Gia sư đã tham gia vào yêu cầu này rồi",
+                    Message = "Gia sư đã tham gia vào yêu cầu này rồi"
                 };
             }
 
@@ -479,15 +550,140 @@ namespace ODTLearning.Repositories
                 IdRequest = requestId
             };
 
-            _context.RequestLearnings.Add(requestLearning);
-            await _context.SaveChangesAsync();
+            // Cập nhật trạng thái yêu cầu
+            request.Status = "Đang chờ học sinh chấp nhận";
 
-            return new ApiResponse<bool>
+            _context.RequestLearnings.Add(requestLearning);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "Bạn đã tham gia vào yêu cầu của học sinh"
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu có xảy ra
+                Console.WriteLine($"Error while saving changes: {ex.Message}");
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lưu dữ liệu: " + ex.Message
+                };
+            }
+        }
+
+
+        public async Task<ApiResponse<List<RequestLearningResponse>>> GetClassProcess(string accountId)
+        {
+            // Check roles
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId && a.Roles.ToLower() == "gia sư");
+            if (account == null)
+            {
+                return new ApiResponse<List<RequestLearningResponse>>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy nào với ID tài khoản này hoặt bạn phải là gia sư ",
+                };
+            }
+
+            // Tìm gia sư theo IdAccount
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.IdAccount == accountId);
+            if (tutor == null)
+            {
+                return new ApiResponse<List<RequestLearningResponse>>
+                {
+                    Success = false,
+                    Message = "Bạn chưa đăng ký trở thành gia sư hoặt đơn đăng ký của bạn đang được duyệt",
+                };
+            }
+
+            // Lấy tất cả các RequestLearning có IdTutor là tutor.Id
+            var requestLearnings = await _context.RequestLearnings
+                .Include(rl => rl.IdRequestNavigation)
+                    .ThenInclude(r => r.IdSubjectNavigation)
+                .Include(rl => rl.IdRequestNavigation)
+                    .ThenInclude(r => r.IdClassNavigation)
+                .Where(rl => rl.IdTutor == tutor.Id && rl.IdRequestNavigation.Status == "Đang diễn ra")
+                .ToListAsync();
+
+            if (requestLearnings == null || !requestLearnings.Any())
+            {
+                return new ApiResponse<List<RequestLearningResponse>>
+                {
+                    Success = true,
+                    Message = "Không tìm thấy yêu cầu nào với trạng thái 'Đang diễn ra' mà gia sư đã tham gia",
+                };
+            }
+
+            // Chuyển đổi danh sách requestLearnings thành danh sách RequestLearningModel
+            var requestLearningModels = requestLearnings.Select(rl => new RequestLearningResponse
+            {
+                IdRequest = rl.IdRequestNavigation.Id,
+                Title = rl.IdRequestNavigation.Title,
+                Price = rl.IdRequestNavigation.Price,
+                Description = rl.IdRequestNavigation.Description,
+                Subject = rl.IdRequestNavigation.IdSubjectNavigation?.SubjectName,
+                LearningMethod = rl.IdRequestNavigation.LearningMethod,
+                Class = rl.IdRequestNavigation.IdClassNavigation?.ClassName,
+                TimeStart = rl.IdRequestNavigation.TimeStart.HasValue ? rl.IdRequestNavigation.TimeStart.Value.ToString("HH:mm") : null,
+                TimeEnd = rl.IdRequestNavigation.TimeEnd.HasValue ? rl.IdRequestNavigation.TimeEnd.Value.ToString("HH:mm") : null,
+                TimeTable = rl.IdRequestNavigation.TimeTable,
+                Status = rl.IdRequestNavigation.Status,
+                TotalSession = rl.IdRequestNavigation.TotalSession
+            }).ToList();
+
+            return new ApiResponse<List<RequestLearningResponse>>
             {
                 Success = true,
-                Message = "Bạn đã tham gia vào yêu cầu của học sinh",
+                Message = "Danh sách lớp đang diễn ra được truy xuất thành công",
+                Data = requestLearningModels
             };
         }
+
+        public async Task<ApiResponse<bool>> CompledClass(string requestId)
+        {
+            // Tìm request theo IdRequest
+            var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId && r.Status == "Đang diễn ra");
+
+            if (request == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy yêu cầu nào với trạng thái 'Đang diễn ra' cho ID này",
+                };
+            }
+
+            // Thay đổi trạng thái của request thành "Hoàn thành"
+            request.Status = "Hoàn thành";
+
+            try
+            {
+                // Lưu thay đổi vào cơ sở dữ liệu
+                await _context.SaveChangesAsync();
+
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "Bạn đã hoàn thành lớp học",
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu có xảy ra
+                Console.WriteLine($"Error while saving changes: {ex.Message}");
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lưu dữ liệu",
+                };
+            }
+        }
+
 
     }
 }

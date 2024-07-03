@@ -430,7 +430,6 @@ namespace ODTLearning.Repositories
                 {
                     Success = false,
                     Message = "Không tìm thấy yêu cầu nào với ID này",
-                    Data = null
                 };
             }
 
@@ -440,10 +439,12 @@ namespace ODTLearning.Repositories
                 id = rl.IdTutorNavigation.IdAccount,
                 fullName = rl.IdTutorNavigation.IdAccountNavigation.FullName,
                 gender = rl.IdTutorNavigation.IdAccountNavigation.Gender,
-                specializedskills= rl.IdTutorNavigation.SpecializedSkills,
+                avatar = rl.IdTutorNavigation.IdAccountNavigation.Avatar, // Bổ sung thuộc tính avatar
+                specializedSkills = rl.IdTutorNavigation.SpecializedSkills,
                 experience = rl.IdTutorNavigation.Experience,
-                subject  = rl.IdTutorNavigation.TutorSubjects.FirstOrDefault()?.IdSubjectNavigation.SubjectName,
-                qualificationname= rl.IdTutorNavigation.EducationalQualifications.FirstOrDefault()?.QualificationName
+                subject = rl.IdTutorNavigation.TutorSubjects.FirstOrDefault()?.IdSubjectNavigation.SubjectName,
+                imageQualification = rl.IdTutorNavigation.EducationalQualifications.FirstOrDefault()?.Img,
+                qualifiCationName = rl.IdTutorNavigation.EducationalQualifications.FirstOrDefault()?.QualificationName
             }).ToList();
 
             return new ApiResponse<List<TutorListModel>>
@@ -453,6 +454,7 @@ namespace ODTLearning.Repositories
                 Data = tutors
             };
         }
+
 
         public async Task<ApiResponse<SelectTutorModel>> SelectTutor(string idRequest, string idAccountTutor)
         {
@@ -464,7 +466,6 @@ namespace ODTLearning.Repositories
                 {
                     Success = false,
                     Message = "Không tìm thấy request trong hệ thống",
-                    Data = null
                 };
             }
 
@@ -476,7 +477,6 @@ namespace ODTLearning.Repositories
                 {
                     Success = false,
                     Message = "Không tìm thấy gia sư trong hệ thống",
-                    Data = null
                 };
             }
 
@@ -503,7 +503,7 @@ namespace ODTLearning.Repositories
 
             //user.AccountBalance = user.AccountBalance - request.Price;
             tutor.AccountBalance = tutor.AccountBalance - 50000;
-            request.Status = "Đã thuê";
+            request.Status = "Đang diễn ra";
             await _context.AddAsync(rent);
             await _context.SaveChangesAsync();
 
@@ -512,12 +512,12 @@ namespace ODTLearning.Repositories
                 Tutor = new
                 {
                     Name = tutor.FullName,
-                    Email = tutor.Email,
-                    DateOfBirth = tutor.DateOfBirth,
-                    Gender = tutor.Gender,
-                    Avatar = tutor.Avatar,
-                    Address = tutor.Address,
-                    Phone = tutor.Phone
+                  tutor.Email,
+                    tutor.DateOfBirth,
+                    tutor.Gender,
+                    tutor.Avatar,
+                    tutor.Address,
+                    tutor.Phone
                 },
                 User = new
                 {
@@ -620,6 +620,91 @@ namespace ODTLearning.Repositories
             {
                 Success = true,
                 Message = "Đánh giá thành công"
+            };
+        }
+
+        public async Task<ApiResponse<List<RequestLearningResponse>>> GetClassProcess(string id)
+        {
+            // Truy vấn danh sách các request có status là "Từ chối" và idAccount là accountId
+            var requests = await _context.Requests
+                .Include(r => r.IdSubjectNavigation)
+                .Include(r => r.IdClassNavigation)
+                .Where(r => r.IdAccount == id && r.Status == "Đang diễn ra")
+                .ToListAsync();
+
+            if (requests == null || !requests.Any())
+            {
+                return new ApiResponse<List<RequestLearningResponse>>
+                {
+                    Success = true,
+                    Message = "Không tìm thấy yêu cầu nào với trạng thái 'Đang diễn ra' cho tài khoản này",
+                };
+            }
+
+            // Chuyển đổi danh sách requests thành danh sách RequestLearningModel
+            var requestLearningModels = requests.Select(r => new RequestLearningResponse
+            {
+                IdRequest = r.Id,
+                Title = r.Title,
+                Price = r.Price,
+                Description = r.Description,
+                Subject = r.IdSubjectNavigation?.SubjectName,
+                LearningMethod = r.LearningMethod,
+                Class = r.IdClassNavigation?.ClassName,
+                TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
+                TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
+                TimeTable = r.TimeTable,
+                Status = r.Status,
+                TotalSession = r.TotalSession
+            }).ToList();
+
+            return new ApiResponse<List<RequestLearningResponse>>
+            {
+                Success = true,
+                Message = "Danh sách lớp đang diễn được truy xuất thành công",
+                Data = requestLearningModels
+            };
+        }
+        public async Task<ApiResponse<List<RequestLearningResponse>>> GetClassCompled(string id)
+        {
+            // Truy vấn danh sách các request có status là "Từ chối" và idAccount là accountId
+            var requests = await _context.Requests
+                .Include(r => r.IdSubjectNavigation)
+                .Include(r => r.IdClassNavigation)
+                .Where(r => r.IdAccount == id && r.Status == "Hoàn thành")
+                .ToListAsync();
+
+            if (requests == null || !requests.Any())
+            {
+                return new ApiResponse<List<RequestLearningResponse>>
+                {
+                    Success = true,
+                    Message = "Không tìm thấy yêu cầu nào với trạng thái 'Đang diễn ra' cho tài khoản này",
+                };
+            }
+
+            // Chuyển đổi danh sách requests thành danh sách RequestLearningModel
+            var requestLearningModels = requests.Select(r => new RequestLearningResponse
+            {
+                IdRequest = r.Id,
+                Title = r.Title,
+                Price = r.Price,
+                Description = r.Description,
+                Subject = r.IdSubjectNavigation?.SubjectName,
+                LearningMethod = r.LearningMethod,
+                Class = r.IdClassNavigation?.ClassName,
+                TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
+                TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
+                TimeTable = r.TimeTable,
+                Status = r.Status,
+                TotalSession = r.TotalSession
+            }).ToList();
+
+            return new ApiResponse<List<RequestLearningResponse>>
+            {
+                Success = true,
+                Message = "Danh sách lớp đang diễn được truy xuất thành công",
+                Data = requestLearningModels
             };
         }
     }

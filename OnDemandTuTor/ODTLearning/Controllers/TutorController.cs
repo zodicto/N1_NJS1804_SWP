@@ -232,5 +232,71 @@ namespace ODTLearning.Controllers
                 });
             }
         }
+        [HttpGet("classActive")]
+        public async Task<IActionResult> ViewClassActive(string id)
+        {
+            try
+            {
+                var response = await _repo.GetClassProcess(id);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        response.Data
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An error occurred while creating the request learning.",
+                    Details = ex.Message
+                });
+            }
+        }
+        [HttpPut("classCompled")]
+        public async Task<IActionResult> CompledAClass(string idRequest)
+        {
+            try
+            {
+                var response = await _repo.CompledClass(idRequest);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        response.Data
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An error occurred while creating the request learning.",
+                    Details = ex.Message
+                });
+            }
+        }
     }
 }

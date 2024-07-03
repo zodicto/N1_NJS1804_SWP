@@ -268,7 +268,73 @@ namespace ODTLearning.Controllers
                 Message = response.Message
             });
         }
+        [HttpGet("classActive")]
+        public async Task<IActionResult> ViewClassActive(string id)
+        {
+            try
+            {
+                var response = await _repo.GetClassProcess(id);
 
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        response.Data
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An error occurred while creating the request learning.",
+                    Details = ex.Message 
+                });
+            }
+        }
+
+        [HttpGet("classCompled")]
+        public async Task<IActionResult> ViewClassCompled(string id)
+        {
+            try
+            {
+                var response = await _repo.GetClassProcess(id);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        response.Data
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An error occurred while creating the request learning.",
+                    Details = ex.Message
+                });
+            }
+        }
         [HttpPost("CreateComplaint")]
         public async Task<IActionResult> CreateComplaint(ComplaintModel model)
         {
@@ -279,8 +345,8 @@ namespace ODTLearning.Controllers
                 return Ok(new
                 {
                     Success = true,
-                    Message = response.Message,
-                    Data = response.Data
+                    response.Message,
+                    response.Data
                 });
             }
 
