@@ -774,15 +774,6 @@ namespace ODTLearning.Repositories
 
             var revenue = _context.Transactions.Where(x => x.CreateDate.Year == now.Year && x.CreateDate.Month == now.Month).GroupBy(x => x.CreateDate.Month).Select(x => x.Sum(r => r.Amount));
 
-            if (revenue.Any())
-            {
-                return new ApiResponse<object>
-                {
-                    Success = true,
-                    Message = $"Không có giao dịch nào trong tháng này"
-                };
-            }
-
             return new ApiResponse<object>
             {
                 Success = true,
