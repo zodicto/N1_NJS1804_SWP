@@ -371,7 +371,7 @@ namespace ODTLearning.Repositories
                 Id = "",
                 FullName = "",
                 Email = "",
-                DateOfBirth = "",
+                date_of_birth = "",
                 Gender = "",
                 Avatar = "",
                 Address = "",
@@ -386,7 +386,7 @@ namespace ODTLearning.Repositories
                 Id = "",
                 FullName = "",
                 Email = "",
-                DateOfBirth = "",
+                date_of_birth = "",
                 Gender = "",
                 Avatar = "",
                 Address = "",
@@ -399,7 +399,7 @@ namespace ODTLearning.Repositories
                 user.Id += c.IdAccountNavigation.Id + ";";
                 user.FullName += c.IdAccountNavigation.FullName + ";";
                 user.Email += c.IdAccountNavigation.Email + ";";
-                user.DateOfBirth += c.IdAccountNavigation.DateOfBirth + ";";
+                user.date_of_birth += c.IdAccountNavigation.DateOfBirth + ";";
                 user.Gender += c.IdAccountNavigation.Gender + ";";
                 user.Avatar += c.IdAccountNavigation.Avatar + ";";
                 user.Address += c.IdAccountNavigation.Address + ";";
@@ -411,7 +411,7 @@ namespace ODTLearning.Repositories
                 tutor.Id += c.IdTutorNavigation.IdAccountNavigation.Id + ";";
                 tutor.FullName += c.IdTutorNavigation.IdAccountNavigation.FullName + ";";
                 tutor.Email += c.IdTutorNavigation.IdAccountNavigation.Email + ";";
-                tutor.DateOfBirth += c.IdTutorNavigation.IdAccountNavigation.DateOfBirth + ";";
+                tutor.date_of_birth += c.IdTutorNavigation.IdAccountNavigation.DateOfBirth + ";";
                 tutor.Gender += c.IdTutorNavigation.IdAccountNavigation.Gender + ";";
                 tutor.Avatar += c.IdTutorNavigation.IdAccountNavigation.Avatar + ";";
                 tutor.Address += c.IdTutorNavigation.IdAccountNavigation.Address + ";";
@@ -422,7 +422,7 @@ namespace ODTLearning.Repositories
             user.Id = myLib.DeleteLastIndexString(user.Id);
             user.FullName = myLib.DeleteLastIndexString(user.FullName);
             user.Email = myLib.DeleteLastIndexString(user.Email);
-            user.DateOfBirth = myLib.DeleteLastIndexString(user.DateOfBirth);
+            user.date_of_birth = myLib.DeleteLastIndexString(user.date_of_birth);
             user.Gender = myLib.DeleteLastIndexString(user.Gender);
             user.Avatar = myLib.DeleteLastIndexString(user.Avatar);
             user.Address = myLib.DeleteLastIndexString(user.Address);
@@ -434,7 +434,7 @@ namespace ODTLearning.Repositories
             tutor.Id = myLib.DeleteLastIndexString(tutor.Id);
             tutor.FullName = myLib.DeleteLastIndexString(tutor.FullName);
             tutor.Email = myLib.DeleteLastIndexString(tutor.Email);
-            tutor.DateOfBirth = myLib.DeleteLastIndexString(tutor.DateOfBirth);
+            tutor.date_of_birth = myLib.DeleteLastIndexString(tutor.date_of_birth);
             tutor.Gender = myLib.DeleteLastIndexString(tutor.Gender);
             tutor.Avatar = myLib.DeleteLastIndexString(tutor.Avatar);
             tutor.Address = myLib.DeleteLastIndexString(tutor.Address);
@@ -482,7 +482,7 @@ namespace ODTLearning.Repositories
                 Id = "",
                 FullName = "",
                 Email = "",
-                DateOfBirth = "",
+                date_of_birth = "",
                 Gender = "",
                 Avatar = "",
                 Address = "",
@@ -500,7 +500,7 @@ namespace ODTLearning.Repositories
                 user.Id += c.IdAccountNavigation.Id + ";";
                 user.FullName += c.IdAccountNavigation.FullName + ";";
                 user.Email += c.IdAccountNavigation.Email + ";";
-                user.DateOfBirth += c.IdAccountNavigation.DateOfBirth + ";";
+                user.date_of_birth += c.IdAccountNavigation.DateOfBirth + ";";
                 user.Gender += c.IdAccountNavigation.Gender + ";";
                 user.Avatar += c.IdAccountNavigation.Avatar + ";";
                 user.Address += c.IdAccountNavigation.Address + ";";
@@ -516,7 +516,7 @@ namespace ODTLearning.Repositories
             user.Id = myLib.DeleteLastIndexString(user.Id);
             user.FullName = myLib.DeleteLastIndexString(user.FullName);
             user.Email = myLib.DeleteLastIndexString(user.Email);
-            user.DateOfBirth = myLib.DeleteLastIndexString(user.DateOfBirth);
+            user.date_of_birth = myLib.DeleteLastIndexString(user.date_of_birth);
             user.Gender = myLib.DeleteLastIndexString(user.Gender);
             user.Avatar = myLib.DeleteLastIndexString(user.Avatar);
             user.Address = myLib.DeleteLastIndexString(user.Address);
@@ -540,7 +540,7 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<ApiResponse<object>> GetRevenueByYear(int year)
+        public async Task<ApiResponse<object>> GetRevenueByMonth(int year)
         {
             var rents = await _context.Rents.Where(x => x.CreateDate.Year == year).GroupBy(x => x.CreateDate.Month).Select(x => new
             {                
@@ -562,6 +562,82 @@ namespace ODTLearning.Repositories
                 Success = true,
                 Message = "Thành công",
                 Data = rents
+            };
+        }
+
+        public async Task<ApiResponse<object>> GetRevenueByWeek(int month, int year)
+        {
+            var rents = _context.Rents.Where(x => x.CreateDate.Month == month && x.CreateDate.Year == year);
+
+            if (!rents.Any())
+            {
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = $"Không có việc thuê nào trong {month}/{year}"
+                };
+            }
+
+            var data = new List<object>();
+            float price1 = 0;
+            float price2 = 0;
+            float price3 = 0;
+            float price4 = 0;
+
+            foreach (var x in rents)
+            {
+                if (x.CreateDate.Day <= 7)
+                {
+                    price1 += (float) x.Price;
+                }
+                else if (x.CreateDate.Day > 7 && x.CreateDate.Day <= 14)
+                {
+                    price2 += (float) x.Price;
+                }
+                else if (x.CreateDate.Day > 14 && x.CreateDate.Day <= 21)
+                {
+                    price3 += (float) x.Price;
+                }
+                else 
+                {
+                    price4 += (float) x.Price;
+                }
+            }
+
+            var week1 = new
+            {
+                Name = "Tuần 1",
+                Data = price1
+            };
+
+            var week2 = new
+            {
+                Name = "Tuần 2",
+                Data = price2
+            };
+
+            var week3 = new
+            {
+                Name = "Tuần 3",
+                Data = price3
+            };
+
+            var week4 = new
+            {
+                Name = "Tuần 4",
+                Data = price4
+            };
+
+            data.Add(week1);
+            data.Add(week2);
+            data.Add(week3);
+            data.Add(week4);
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = data
             };
         }
     }
