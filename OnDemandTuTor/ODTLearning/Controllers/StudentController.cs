@@ -378,5 +378,27 @@ namespace ODTLearning.Controllers
             });
         }
 
+        [HttpGet("ViewSignUpTutor")]
+        public async Task<IActionResult> ViewSignUpTutor(string id)
+        {
+            var response = await _repo.GetSignUpTutor(id);
+
+            if (response.Success)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = response.Message,
+                    Data = response.Data
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                Message = response.Message
+            });
+        }
+
     }
 }

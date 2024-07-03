@@ -707,5 +707,50 @@ namespace ODTLearning.Repositories
                 Data = requestLearningModels
             };
         }
+
+        public async Task<ApiResponse<object>> GetSignUpTutor(string id)
+        {
+            var tutor = _context.Tutors
+                    .Include(t => t.IdAccountNavigation)
+                    .Include(t => t.TutorSubjects)
+                        .ThenInclude(ts => ts.IdSubjectNavigation)
+                    .Include(t => t.EducationalQualifications)
+                    .Where(t => t.IdAccount == id)
+                    .Select(t => new 
+                    {
+                        Id = t.IdAccount,
+                        FullName = t.IdAccountNavigation.FullName,
+                        Gender = t.IdAccountNavigation.Gender,
+                        Date_of_birth = t.IdAccountNavigation.DateOfBirth,
+                        Email = t.IdAccountNavigation.Email,
+                        Avatar = t.IdAccountNavigation.Avatar,
+                        Address = t.IdAccountNavigation.Address,
+                        Phone = t.IdAccountNavigation.Phone,
+                        SpecializedSkills = t.SpecializedSkills,
+                        Introduction = t.Introduction,                       
+                        Experience = t.Experience,
+                        Subject = t.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName, 
+                        QualifiCationName = t.EducationalQualifications.FirstOrDefault().QualificationName, 
+                        Type = t.EducationalQualifications.FirstOrDefault().Type, 
+                        ImageQualification = t.EducationalQualifications.FirstOrDefault().Img,
+                        Status = t.Status
+                    });                    
+
+            if (!tutor.Any())
+            {
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Không có đơn đăng ký gia sư"
+                };
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Lấy danh sách gia sư thành công",
+                Data = tutor
+            };
+        }
     }
 }
