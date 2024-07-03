@@ -300,5 +300,44 @@ namespace ODTLearning.Controllers
                 Data = response.Data
             });
         }
+
+        [HttpGet("ViewRevenueThisMonth")]
+        public async Task<IActionResult> ViewRevenueThisMonth()
+        {
+            var response = await _repo.GetRevenueThisMonth();
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
+
+        [HttpGet("ViewAmountStudent")]
+        public async Task<IActionResult> ViewAmountStudent()
+        {
+            var response = await _repo.GetAmountStudent();
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
+
+        [HttpGet("ViewAmountTutor")]
+        public async Task<IActionResult> ViewAmountTutor()
+        {
+            var response = await _repo.GetAmountTutor();
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
     }
 }

@@ -766,6 +766,53 @@ namespace ODTLearning.Repositories
                 Message = "Thành công",
                 Data = data
             };
+        }        
+
+        public async Task<ApiResponse<object>> GetRevenueThisMonth()
+        {
+            var now = DateTime.Now;
+
+            var revenue = _context.Transactions.Where(x => x.CreateDate.Year == now.Year && x.CreateDate.Month == now.Month).GroupBy(x => x.CreateDate.Month).Select(x => x.Sum(r => r.Amount));
+
+            if (revenue.Any())
+            {
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = $"Không có giao dịch nào trong tháng này"
+                };
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = revenue
+            };
+        }
+
+        public async Task<ApiResponse<int>> GetAmountStudent()
+        {
+            var count = _context.Accounts.Count(x => x.Roles.ToLower() == "học sinh");
+
+            return new ApiResponse<int>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = count
+            };
+        }
+
+        public async Task<ApiResponse<int>> GetAmountTutor()
+        {
+            var count = _context.Accounts.Count(x => x.Roles.ToLower() == "gia sư");
+
+            return new ApiResponse<int>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = count
+            };
         }
     }
 }
