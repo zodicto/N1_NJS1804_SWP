@@ -610,28 +610,53 @@ namespace ODTLearning.Repositories
                 }
             }
 
+            var monthData = "";
+
+            if (month < 10)
+            {
+                monthData = $"0{month}";
+            }
+            else
+            {
+                monthData = $"{month}";
+            }
+
+            var lastDay = new DateTime(year, month, 1).AddMonths(1).AddDays(-1).Day;
+
             var week1 = new
             {
                 Name = "Tuần 1",
-                Data = price1
+                Date = $"01/{monthData}/{year} - 07/{monthData}/{year}",
+                Revenue = price1, 
+                Month = month,
+                Year = year
             };
 
             var week2 = new
             {
                 Name = "Tuần 2",
-                Data = price2
+                Date = $"08/{monthData}/{year} - 14/{monthData}/{year}",
+                Revenue = price2,
+                Month = month,
+                Year = year
             };
 
             var week3 = new
             {
                 Name = "Tuần 3",
-                Data = price3
+                Date = $"15/{monthData}/{year} - 21/{monthData}/{year}",
+                Revenue = price3,
+                Month = month,
+                Year = year
             };
 
             var week4 = new
             {
                 Name = "Tuần 4",
-                Data = price4
+                Date = $"22/{monthData}/{year} - {lastDay}/{monthData}/{year}",
+                Revenue = price4,
+                Month = month,
+                Year = year
             };
 
             data.Add(week1);
