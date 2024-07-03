@@ -727,33 +727,9 @@ namespace ODTLearning.Repositories
 
         public async Task<ApiResponse<object>> GetSignUpTutor(string id)
         {
-            var tutor = _context.Tutors
-                    .Include(t => t.IdAccountNavigation)
-                    .Include(t => t.TutorSubjects)
-                        .ThenInclude(ts => ts.IdSubjectNavigation)
-                    .Include(t => t.EducationalQualifications)
-                    .Where(t => t.IdAccount == id)
-                    .Select(t => new 
-                    {
-                        Id = t.IdAccount,
-                        FullName = t.IdAccountNavigation.FullName,
-                        Gender = t.IdAccountNavigation.Gender,
-                        Date_of_birth = t.IdAccountNavigation.DateOfBirth,
-                        Email = t.IdAccountNavigation.Email,
-                        Avatar = t.IdAccountNavigation.Avatar,
-                        Address = t.IdAccountNavigation.Address,
-                        Phone = t.IdAccountNavigation.Phone,
-                        SpecializedSkills = t.SpecializedSkills,
-                        Introduction = t.Introduction,                       
-                        Experience = t.Experience,
-                        Subject = t.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName, 
-                        QualifiCationName = t.EducationalQualifications.FirstOrDefault().QualificationName, 
-                        Type = t.EducationalQualifications.FirstOrDefault().Type, 
-                        ImageQualification = t.EducationalQualifications.FirstOrDefault().Img,
-                        Status = t.Status
-                    });                    
+            var tutor = await _context.Tutors.Include(t => t.IdAccountNavigation).FirstOrDefaultAsync(t => t.IdAccount == id);
 
-            if (!tutor.Any())
+            if (tutor == null)
             {
                 return new ApiResponse<object>
                 {
@@ -762,13 +738,44 @@ namespace ODTLearning.Repositories
                 };
             }
 
+            var subjects = await _context.Tutors.Where(x => x.IdAccount == id).Join(_context.TutorSubjects.Join(_context.Subjects, tf => tf.IdSubject, f => f.Id, (tf, f) => new
+            {
+                AccountId = tf.IdTutor,
+                Field = f.SubjectName
+            }), t => t.Id, af => af.AccountId, (t, af) => af.Field).ToListAsync();
+
+            var qualifications = await _context.Tutors.Where(x => x.IdAccount == id).Join(_context.EducationalQualifications, t => t.Id, eq => eq.IdTutor, (t, eq) => new
+            {
+                Id = eq.Id,
+                Name = eq.QualificationName,
+                Img = eq.Img,
+                Type = eq.Type
+            }).ToListAsync();
+
+            var data = new
+            {
+                Id = tutor.IdAccount,
+                FullName = tutor.IdAccountNavigation.FullName,
+                Gender = tutor.IdAccountNavigation.Gender,
+                Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
+                Email = tutor.IdAccountNavigation.Email,
+                Avatar = tutor.IdAccountNavigation.Avatar,
+                Address = tutor.IdAccountNavigation.Address,
+                Phone = tutor.IdAccountNavigation.Phone,
+                SpecializedSkills = tutor.SpecializedSkills,
+                Introduction = tutor.Introduction,
+                Experience = tutor.Experience,
+                Subjects = subjects,
+                Qualifications = qualifications,
+                Status = tutor.Status
+            };
+
             return new ApiResponse<object>
             {
                 Success = true,
                 Message = "Lấy danh sách gia sư thành công",
-                Data = tutor
+                Data = data
             };
         }
-
     }
 }

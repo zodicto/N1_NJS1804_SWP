@@ -262,30 +262,30 @@ namespace ODTLearning.Controllers
             });
         }
 
-        [HttpGet("ViewRevenueByMonth")]
-        public async Task<IActionResult> ViewRevenueByMonth(int year)
-        {
-            var response = await _repo.GetRevenueByMonth(year);
+        //[HttpGet("ViewRevenueByMonth")]
+        //public async Task<IActionResult> ViewRevenueByMonth(int year)
+        //{
+        //    var response = await _repo.GetRevenueByMonth(year);
 
-            return Ok(new
-            {
-                Success = response.Success,
-                Message = response.Message,
-                Data = response.Data
-            });
-        }
+        //    return Ok(new
+        //    {
+        //        Success = response.Success,
+        //        Message = response.Message,
+        //        Data = response.Data
+        //    });
+        //}
 
-        [HttpGet("ViewRevenueByWeek")]
-        public async Task<IActionResult> ViewRevenueByWeek(int month, int year)
-        {
-            var response = await _repo.GetRevenueByWeek(month, year);
+        //[HttpGet("ViewRevenueByWeek")]
+        //public async Task<IActionResult> ViewRevenueByWeek(int month, int year)
+        //{
+        //    var response = await _repo.GetRevenueByWeek(month, year);
 
-            return Ok(new
-            {
-                response.Success,
-                 response.Message,
-                response.Data
-            });
-        }
+        //    return Ok(new
+        //    {
+        //        response.Success,
+        //        response.Message,
+        //        response.Data
+        //    });
+        //}
     }
 }

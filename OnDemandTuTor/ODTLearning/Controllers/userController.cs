@@ -397,7 +397,6 @@ namespace ODTLearning.Controllers
             };
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
-
         [HttpGet("google-callback")]
         public async Task<IActionResult> GoogleCallback()
         {
@@ -412,18 +411,18 @@ namespace ODTLearning.Controllers
             var userId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var userName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
             var userEmail = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var userAvatar = claims.FirstOrDefault(c => c.Type == "picture")?.Value; // Trích xuất URL của ảnh đại diện
+            var userAvatar = claims.FirstOrDefault(c => c.Type == "picture")?.Value;
 
             var user = new UserResponse
             {
                 id = userId,
                 fullName = userName,
                 email = userEmail,
-                roles = "Học sinh",
-                avatar = userAvatar // Gán URL của ảnh đại diện vào thuộc tính Avatar
+                roles = "học sinh",
+                avatar = userAvatar
             };
 
-            // Gọi phương thức lưu người dùng vào cơ sở dữ liệu
+            // Lưu người dùng và tạo token
             var result = await _repo.SaveGoogleUserAsync(user);
 
             if (!result.Success)
@@ -431,39 +430,41 @@ namespace ODTLearning.Controllers
                 return BadRequest(result.Message);
             }
 
-            // Tạo token
-            var token = await _repo.GenerateToken(user);
+            // Gọi API login để đăng nhập vào trang web
+            var loginResponse = await _repo.SignInValidationOfAccount(new SignInModel { Email = user.email, Password = user.id }); // Giả sử mật khẩu là userId hoặc có cách khác để xác thực
 
-            // Trả về một trang HTML với JavaScript để lưu trữ thông tin người dùng và token vào localStorage và redirect về localhost:3000
+            if (!loginResponse.Success)
+            {
+                return BadRequest(loginResponse.Message);
+            }
+
+            var token = await _repo.GenerateToken(loginResponse.Data);
+
+            // Điều hướng trở lại ứng dụng của bạn với token và thông tin người dùng được lưu trong localStorage
             var script = $@"
 <script>
-    if (window.opener) {{
-        window.opener.localStorage.setItem('profile', JSON.stringify({{
-            id: '{user.id}',
-            fullName: '{user.fullName}',
-            email: '{user.email}',
-            avatar: '{user.avatar}',
-            roles: '{user.roles}'
-        }}));
-        window.opener.localStorage.setItem('access_token', '{token.Access_token}');
-        window.opener.localStorage.setItem('refresh_token', '{token.Refresh_token}');
-        window.opener.location.href = 'http://localhost:3000';
-        window.close();
-    }} else {{
-        localStorage.setItem('profile', JSON.stringify({{
-            id: '{user.id}',
-            fullName: '{user.fullName}',
-            email: '{user.email}',
-            avatar: '{user.avatar}',
-            roles: '{user.roles}'
-        }}));
-        localStorage.setItem('access_token', '{token.Access_token}');
-        localStorage.setItem('refresh_token', '{token.Refresh_token}');
-        window.location.href = 'http://localhost:3000';
-    }}
+    const user = {{
+        id: '{user.id}',
+        fullName: '{user.fullName}',
+        email: '{user.email}',
+        avatar: '{user.avatar}',
+        roles: '{user.roles}'
+    }};
+    const accessToken = '{token.Access_token}';
+    const refreshToken = '{token.Refresh_token}';
+
+    localStorage.setItem('profile', JSON.stringify(user));
+    localStorage.setItem('access_token', accessToken);
+    localStorage.setItem('refresh_token', refreshToken);
+
+    window.location.href = 'http://localhost:3000';
 </script>";
             return Content(script, "text/html");
         }
+
+
+
+
 
         [HttpPost("logout")]
         public async Task<IActionResult> Logout([FromBody] LogoutModel model)
