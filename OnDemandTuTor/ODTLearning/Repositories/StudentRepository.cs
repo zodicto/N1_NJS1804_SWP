@@ -755,8 +755,8 @@ namespace ODTLearning.Repositories
             var data = new
             {
                 Id = tutor.IdAccount,
-                FullName = tutor.IdAccountNavigation.FullName,
-                Gender = tutor.IdAccountNavigation.Gender,
+                tutor.IdAccountNavigation.FullName,
+                tutor.IdAccountNavigation.Gender,
                 Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
                 Email = tutor.IdAccountNavigation.Email,
                 Avatar = tutor.IdAccountNavigation.Avatar,

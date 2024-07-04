@@ -9,4 +9,10 @@
         public string? Description { get; set; }
         public string? LearningMethod { get; set; }
     }
+
+    public class TimeAvailableModel
+    {
+       public string? Date { get; set; }
+       public string?  TimeSlot {get;set;}
+    }
 }

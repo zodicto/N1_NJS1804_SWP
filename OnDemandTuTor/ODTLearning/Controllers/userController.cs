@@ -410,9 +410,6 @@ namespace ODTLearning.Controllers
                     data = new { error = "Google authentication failed" }
                 });
 
-            // Lấy các token đã lưu
-            var accessToken = authenticateResult.Properties.GetTokenValue("access_token");
-
             var claims = authenticateResult.Principal.Identities
                 .FirstOrDefault().Claims.ToList();
 
@@ -443,14 +440,32 @@ namespace ODTLearning.Controllers
 
             var savedUser = result.Data;
 
-            // Gọi API login để đăng nhập vào trang web
-            var loginModel = new SignInModel { Email = user.email, Password = "GG" };
-
+            // Generate token
             var token = await _repo.GenerateToken(savedUser);
 
-            var redirectUrl = $"http://localhost:3000/login?access_token={Uri.EscapeDataString(token.Access_token)}&refresh_token={Uri.EscapeDataString(token.Refresh_token)}&user_id={Uri.EscapeDataString(savedUser.id)}&user_name={Uri.EscapeDataString(savedUser.fullName)}&user_email={Uri.EscapeDataString(savedUser.email)}&user_avatar={Uri.EscapeDataString(savedUser.avatar)}&user_roles={Uri.EscapeDataString(savedUser.roles)}";
-            return Redirect(redirectUrl);
+            // Send data back to the front-end using postMessage
+            var script = $@"
+        <script>
+            window.opener.postMessage(
+                {{
+                    profile: JSON.stringify({{
+                        id: '{savedUser.id}',
+                        fullName: '{System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(savedUser.fullName)}',
+                        email: '{System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(savedUser.email)}',
+                        avatar: '{System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(savedUser.avatar)}',
+                        roles: '{System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(savedUser.roles)}'
+                    }}),
+                    accessToken: '{token.Access_token}',
+                    refreshToken: '{token.Refresh_token}'
+                }},
+                'http://localhost:3000'
+            );
+            window.close();
+        </script>";
+            return Content(script, "text/html");
         }
+
+
 
 
 
