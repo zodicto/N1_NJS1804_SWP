@@ -198,5 +198,26 @@ namespace ODTLearning.Controllers
                 });
             }
         }
+
+        [HttpDelete("DeleteRequest")]
+        public async Task<IActionResult> DeleteRequest(string idRequest)
+        {
+            var result = await _repo.DeleteRequest(idRequest);
+
+            if (!result.Success)
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    Message = result.Message
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                Message = result.Message
+            });
+        }
     }
 }

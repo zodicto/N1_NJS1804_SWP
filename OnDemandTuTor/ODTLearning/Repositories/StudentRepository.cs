@@ -309,7 +309,7 @@ namespace ODTLearning.Repositories
                 TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
                 TimeTable = r.TimeTable,
                 Status = r.Status,
-                TotalSession = r.TotalSession
+                TotalSessions = r.TotalSession
             }).ToList();
 
             return new ApiResponse<List<RequestLearningResponse>>
@@ -352,7 +352,7 @@ namespace ODTLearning.Repositories
                 TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
                 TimeTable = r.TimeTable,
                 Status = r.Status,
-                TotalSession = r.TotalSession
+                TotalSessions = r.TotalSession
             }).ToList();
 
             return new ApiResponse<List<RequestLearningResponse>>
@@ -395,7 +395,7 @@ namespace ODTLearning.Repositories
                 TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
                 TimeTable = r.TimeTable,
                 Status = r.Status,
-                TotalSession = r.TotalSession
+                TotalSessions = r.TotalSession
             }).ToList();
 
             return new ApiResponse<List<RequestLearningResponse>>
@@ -656,7 +656,7 @@ namespace ODTLearning.Repositories
                 TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
                 TimeTable = r.TimeTable,
                 Status = r.Status,
-                TotalSession = r.TotalSession
+                TotalSessions = r.TotalSession
             }).ToList();
 
             return new ApiResponse<List<RequestLearningResponse>>
@@ -713,7 +713,7 @@ namespace ODTLearning.Repositories
                 TimeEnd = r.TimeEnd.HasValue ? r.TimeEnd.Value.ToString("HH:mm") : null,
                 TimeTable = r.TimeTable,
                 Status = r.Status,
-                TotalSession = r.TotalSession
+                TotalSessions = r.TotalSession
             }).ToList();
 
             return new ApiResponse<List<RequestLearningResponse>>

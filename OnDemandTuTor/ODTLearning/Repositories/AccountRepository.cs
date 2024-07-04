@@ -302,7 +302,32 @@ namespace ODTLearning.Repositories
             };
         }
 
+        public async Task<ApiResponse<UserResponse>> SignInValidationOfGGAccount(SignInGGModel model)
+        {
+            // Kiểm tra tài khoản theo email
+            var account = await _context.Accounts
+                .FirstOrDefaultAsync(u => u.Email == model.Email);
 
+            // Nếu tài khoản tồn tại và password đúng, trả về thông tin người dùng
+            return new ApiResponse<UserResponse>
+            {
+                Success = true,
+                Message = "Đăng nhập thành công",
+                Data = new UserResponse
+                {
+                    id = account.Id,
+                    fullName = account.FullName,
+                    email = account.Email,
+                    date_of_birth = account.DateOfBirth,
+                    gender = account.Gender,
+                    roles = account.Roles,
+                    avatar = account.Avatar,
+                    address = account.Address,
+                    phone = account.Phone,
+                    accountBalance = account.AccountBalance
+                }
+            };
+        }
 
         public async Task<TokenModel> GenerateToken(UserResponse user)
         {
@@ -565,7 +590,7 @@ namespace ODTLearning.Repositories
 
 
 
-        public async Task<ApiResponse<UserResponse>> SaveGoogleUserAsync(UserResponse user)
+        public async Task<ApiResponse<UserResponse>> SaveGoogleUserAsync(UserGG user)
         {
             var existingUser = await _context.Accounts.FirstOrDefaultAsync(a => a.Email == user.email);
 
@@ -576,7 +601,7 @@ namespace ODTLearning.Repositories
                 {
                     Id = user.id,
                     FullName = user.fullName,
-                    Email = user.email ,
+                    Email = user.email,
                     Roles = user.roles,
                     AccountBalance = 0, // Đặt AccountBalance bằng 0
                     Avatar = user.avatar   // Gán URL của ảnh đại diện vào thuộc tính Avatar
@@ -585,11 +610,21 @@ namespace ODTLearning.Repositories
                 await _context.Accounts.AddAsync(newUser);
                 await _context.SaveChangesAsync();
 
+                var userResponse = new UserResponse
+                {
+                    id = newUser.Id,
+                    fullName = newUser.FullName,
+                    email = newUser.Email,
+                    roles = newUser.Roles,
+                    avatar = newUser.Avatar,
+                    accountBalance = newUser.AccountBalance
+                };
+
                 return new ApiResponse<UserResponse>
                 {
                     Success = true,
                     Message = "User registered successfully",
-                    Data = user
+                    Data = userResponse
                 };
             }
             else
@@ -597,20 +632,27 @@ namespace ODTLearning.Repositories
                 // Người dùng đã tồn tại, cập nhật thông tin người dùng
                 existingUser.FullName = user.fullName;
                 existingUser.Roles = user.roles; // Cập nhật roles nếu cần, hoặc có thể bỏ qua nếu không muốn cập nhật
-                existingUser.Avatar = user.avatar ; // Cập nhật URL của ảnh đại diện nếu cần
+                existingUser.Avatar = user.avatar; // Cập nhật URL của ảnh đại diện nếu cần
                 await _context.SaveChangesAsync();
+
+                var userResponse = new UserResponse
+                {
+                    id = existingUser.Id,
+                    fullName = existingUser.FullName,
+                    email = existingUser.Email,
+                    roles = existingUser.Roles,
+                    avatar = existingUser.Avatar,
+                    accountBalance = existingUser.AccountBalance
+                };
 
                 return new ApiResponse<UserResponse>
                 {
                     Success = true,
                     Message = "User already exists and has been updated",
-                    Data = user
+                    Data = userResponse
                 };
             }
         }
-
-
-
 
     }
 }

@@ -18,6 +18,6 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<bool>> CreateReview(ReviewModel model);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetClassProcess(string id);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetClassCompled(string id);
-        public Task<ApiResponse<object>> GetSignUpTutor(string id);
+        public Task<ApiResponse<object>> GetSignUpTutor(string id);        
     }
 }

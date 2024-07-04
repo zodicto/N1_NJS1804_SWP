@@ -23,4 +23,21 @@
 
         public float? accountBalance { get; set; }
     }
+
+    public class UserGG
+    {
+
+        public string id { get; set; } = null!;
+
+        public string? fullName { get; set; }
+
+        public string? email { get; set; }
+
+
+        public string? roles { get; set; }
+
+        public string? avatar { get; set; }
+
+
+    }
 }

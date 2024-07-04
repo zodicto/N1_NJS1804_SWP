@@ -22,7 +22,7 @@ namespace ODTLearning.Repositories
         MyLibrary myLib = new MyLibrary();
 
         public async Task<ApiResponse<bool>> DeleteAccount(string id)
-        {        
+        {
             var exsitAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == id);
 
             if (exsitAccount == null)
@@ -36,7 +36,7 @@ namespace ODTLearning.Repositories
 
             var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
 
-            if(tutor != null)
+            if (tutor != null)
             {
                 var educationalQualifications = await _context.EducationalQualifications.Where(x => x.IdTutor == tutor.Id).ToListAsync();
                 _context.EducationalQualifications.RemoveRange(educationalQualifications);
@@ -49,7 +49,7 @@ namespace ODTLearning.Repositories
                 _context.TutorSubjects.RemoveRange(tutorSubjects);
 
                 var complaints = await _context.Complaints.Where(x => x.IdTutor == tutor.Id).ToListAsync();
-                _context.Complaints.RemoveRange(complaints);   
+                _context.Complaints.RemoveRange(complaints);
 
                 _context.Tutors.Remove(tutor);
             }
@@ -71,7 +71,7 @@ namespace ODTLearning.Repositories
             {
                 Success = true,
                 Message = "Xóa người dùng thành công"
-            };                      
+            };
         }
 
         public async Task<ApiResponse<List<ListAllStudent>>> GetListStudent()
@@ -82,9 +82,9 @@ namespace ODTLearning.Repositories
                    .Where(t => t.Roles == "Học sinh")
                     .Select(t => new ListAllStudent
                     {
-                        id = t.Id, 
+                        id = t.Id,
                         email = t.Email,
-                        password = t.Password,                       
+                        password = t.Password,
                         date_of_birth = t.DateOfBirth,
                         fullName = t.FullName,
                         gender = t.Gender,
@@ -265,7 +265,7 @@ namespace ODTLearning.Repositories
                         Price = t.Price,
                         Class = t.IdClassNavigation.ClassName,
                         TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
-                       TimeEnd= t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
                         TimeTable = t.TimeTable,
                         TotalSessions = t.TotalSession,
                         Subject = t.IdSubjectNavigation.SubjectName,
@@ -447,7 +447,7 @@ namespace ODTLearning.Repositories
 
         //public async Task<ApiResponse<object>> GetRevenueByMonth(int year)
         //{
-        //    var rents = await _context.Rents.Where(x => x.CreateDate. == year).GroupBy(x => x.CreateDate.).Select(x => new
+        //    var rents = await _context.Rents.Where(x => x.CreateDate.Year == year).GroupBy(x => x.CreateDate.Month).Select(x => new
         //    {                
         //        Name = $"Tháng {x.Key}" ,
         //        Data = x.Sum(r => r.Price)
@@ -472,8 +472,7 @@ namespace ODTLearning.Repositories
 
         //public async Task<ApiResponse<object>> GetRevenueByWeek(int month, int year)
         //{
-
-        //    var rents = _context.Rents.Where(x => x.CreateDate == month && x.CreateDate.Year == year);
+        //    var rents = _context.Rents.Where(x => x.CreateDate.Month == month && x.CreateDate.Year == year);
 
         //    if (!rents.Any())
         //    {
@@ -546,5 +545,274 @@ namespace ODTLearning.Repositories
         //        Data = data
         //    };
         //}
+
+        public async Task<ApiResponse<object>> GetRevenueByMonth(int year)
+        {
+            var transactions = await _context.Transactions.Where(x => x.CreateDate.Year == year).GroupBy(x => x.CreateDate.Month).Select(x => new
+            {
+                Name = $"Tháng {x.Key}",
+                Data = x.Sum(r => r.Amount)
+            }).ToListAsync();
+
+            if (!transactions.Any())
+            {
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = $"Không có giao dịch nào trong năm {year}"
+                };
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = transactions
+            };
+        }
+
+        public async Task<ApiResponse<object>> GetRevenueByWeek(int month, int year)
+        {
+            var transactions = _context.Transactions.Where(x => x.CreateDate.Month == month && x.CreateDate.Year == year);
+
+            if (!transactions.Any())
+            {
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = $"Không có giao dịch nào trong {month}/{year}"
+                };
+            }
+
+            var data = new List<object>();
+            float price1 = 0;
+            float price2 = 0;
+            float price3 = 0;
+            float price4 = 0;
+
+            foreach (var x in transactions)
+            {
+                if (x.CreateDate.Day <= 7)
+                {
+                    price1 += (float)x.Amount;
+                }
+                else if (x.CreateDate.Day > 7 && x.CreateDate.Day <= 14)
+                {
+                    price2 += (float)x.Amount;
+                }
+                else if (x.CreateDate.Day > 14 && x.CreateDate.Day <= 21)
+                {
+                    price3 += (float)x.Amount;
+                }
+                else
+                {
+                    price4 += (float)x.Amount;
+                }
+            }
+
+            var monthData = "";
+
+            if (month < 10)
+            {
+                monthData = $"0{month}";
+            }
+            else
+            {
+                monthData = $"{month}";
+            }
+
+            var lastDay = new DateTime(year, month, 1).AddMonths(1).AddDays(-1).Day;
+
+            var week1 = new
+            {
+                Name = "Tuần 1",
+                Date = $"01/{monthData}/{year} - 07/{monthData}/{year}",
+                Revenue = price1,
+                Month = month,
+                Year = year
+            };
+
+            var week2 = new
+            {
+                Name = "Tuần 2",
+                Date = $"08/{monthData}/{year} - 14/{monthData}/{year}",
+                Revenue = price2,
+                Month = month,
+                Year = year
+            };
+
+            var week3 = new
+            {
+                Name = "Tuần 3",
+                Date = $"15/{monthData}/{year} - 21/{monthData}/{year}",
+                Revenue = price3,
+                Month = month,
+                Year = year
+            };
+
+            var week4 = new
+            {
+                Name = "Tuần 4",
+                Date = $"22/{monthData}/{year} - {lastDay}/{monthData}/{year}",
+                Revenue = price4,
+                Month = month,
+                Year = year
+            };
+
+            data.Add(week1);
+            data.Add(week2);
+            data.Add(week3);
+            data.Add(week4);
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = data
+            };
+        }
+
+        public async Task<ApiResponse<object>> GetRevenueByYear(int year)
+        {
+            var data = new List<object>();
+
+            for (int month = 1; month <= 12; month++)
+            {
+                var transactions = _context.Transactions.Where(x => x.CreateDate.Month == month && x.CreateDate.Year == year);
+
+                float price1 = 0;
+                float price2 = 0;
+                float price3 = 0;
+                float price4 = 0;
+
+                foreach (var x in transactions)
+                {
+                    if (x.CreateDate.Day <= 7)
+                    {
+                        price1 += (float)x.Amount;
+                    }
+                    else if (x.CreateDate.Day > 7 && x.CreateDate.Day <= 14)
+                    {
+                        price2 += (float)x.Amount;
+                    }
+                    else if (x.CreateDate.Day > 14 && x.CreateDate.Day <= 21)
+                    {
+                        price3 += (float)x.Amount;
+                    }
+                    else
+                    {
+                        price4 += (float)x.Amount;
+                    }
+                }
+
+                var monthData = "";
+
+                if (month < 10)
+                {
+                    monthData = $"0{month}";
+                }
+                else
+                {
+                    monthData = $"{month}";
+                }
+
+                var lastDay = new DateTime(year, month, 1).AddMonths(1).AddDays(-1).Day;
+
+                var week1 = new
+                {
+                    Name = "Tuần 1",
+                    Date = $"01/{monthData}/{year} - 07/{monthData}/{year}",
+                    Revenue = price1,
+                    Month = month,
+                    Year = year
+                };
+
+                var week2 = new
+                {
+                    Name = "Tuần 2",
+                    Date = $"08/{monthData}/{year} - 14/{monthData}/{year}",
+                    Revenue = price2,
+                    Month = month,
+                    Year = year
+                };
+
+                var week3 = new
+                {
+                    Name = "Tuần 3",
+                    Date = $"15/{monthData}/{year} - 21/{monthData}/{year}",
+                    Revenue = price3,
+                    Month = month,
+                    Year = year
+                };
+
+                var week4 = new
+                {
+                    Name = "Tuần 4",
+                    Date = $"22/{monthData}/{year} - {lastDay}/{monthData}/{year}",
+                    Revenue = price4,
+                    Month = month,
+                    Year = year
+                };
+
+                data.Add(week1);
+                data.Add(week2);
+                data.Add(week3);
+                data.Add(week4);
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = data
+            };
+        }
+
+        public async Task<ApiResponse<object>> GetRevenueThisMonth()
+        {
+            var now = DateTime.Now;
+
+            var revenue = _context.Transactions.Where(x => x.CreateDate.Year == now.Year && x.CreateDate.Month == now.Month).GroupBy(x => x.CreateDate.Month).Select(x => x.Sum(r => r.Amount));
+
+            if (revenue.Any())
+            {
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = $"Không có giao dịch nào trong tháng này"
+                };
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = revenue
+            };
+        }
+
+        public async Task<ApiResponse<int>> GetAmountStudent()
+        {
+            var count = _context.Accounts.Count(x => x.Roles.ToLower() == "học sinh");
+
+            return new ApiResponse<int>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = count
+            };
+        }
+
+        public async Task<ApiResponse<int>> GetAmountTutor()
+        {
+            var count = _context.Accounts.Count(x => x.Roles.ToLower() == "gia sư");
+
+            return new ApiResponse<int>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = count
+            };
+        }
     }
 }

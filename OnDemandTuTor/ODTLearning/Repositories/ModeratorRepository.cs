@@ -33,7 +33,7 @@ namespace ODTLearning.Repositories
                         specializedSkills = t.SpecializedSkills,
                         introduction = t.Introduction,
                         date_of_birth = t.IdAccountNavigation.DateOfBirth,
-                        
+
                         fullName = t.IdAccountNavigation.FullName,
                         gender = t.IdAccountNavigation.Gender,
                         experience = t.Experience,
@@ -215,8 +215,6 @@ namespace ODTLearning.Repositories
             }
         }
 
-
-
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetPendingRequests()
         {
             // Truy vấn danh sách các request có status là "chưa duyệt"
@@ -229,7 +227,7 @@ namespace ODTLearning.Repositories
                     TotalSessions = r.TotalSession,
                     TimeTable = r.TimeTable,
                     Description = r.Description,
-                    Subject = r.IdSubjectNavigation.SubjectName, 
+                    Subject = r.IdSubjectNavigation.SubjectName,
                     LearningMethod = r.LearningMethod,
                     Class = r.IdClassNavigation.ClassName,
                     TimeStart = r.TimeStart.HasValue ? r.TimeStart.Value.ToString("HH:mm") : null,
@@ -246,5 +244,37 @@ namespace ODTLearning.Repositories
                 Data = pendingRequests
             };
         }
+
+        public async Task<ApiResponse<bool>> DeleteRequest(string idRequest)
+        {
+            var request = await _context.Requests.SingleOrDefaultAsync(x => x.Id == idRequest);
+
+            if (request == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy yêu cầu"
+                };
+            }
+
+            var requestLearnings = await _context.RequestLearnings.Where(x => x.IdRequest == idRequest).ToListAsync();
+
+            if (requestLearnings.Any())
+            {
+                _context.RequestLearnings.RemoveRange(requestLearnings);
+            }
+
+            _context.Requests.Remove(request);       
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Xóa yêu cầu thành công"
+            };
+        }
+
+
     }
 }

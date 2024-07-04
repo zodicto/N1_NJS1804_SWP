@@ -632,7 +632,7 @@ namespace ODTLearning.Repositories
                 TimeEnd = rl.IdRequestNavigation.TimeEnd.HasValue ? rl.IdRequestNavigation.TimeEnd.Value.ToString("HH:mm") : null,
                 TimeTable = rl.IdRequestNavigation.TimeTable,
                 Status = rl.IdRequestNavigation.Status,
-                TotalSession = rl.IdRequestNavigation.TotalSession
+                TotalSessions = rl.IdRequestNavigation.TotalSession
             }).ToList();
 
             return new ApiResponse<List<RequestLearningResponse>>

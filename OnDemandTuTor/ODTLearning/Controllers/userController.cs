@@ -389,7 +389,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("signin-google")]
-        public async Task<IActionResult> SignInWithGoogle()
+        public IActionResult SignInWithGoogle()
         {
             var properties = new AuthenticationProperties
             {
@@ -397,13 +397,21 @@ namespace ODTLearning.Controllers
             };
             return Challenge(properties, GoogleDefaults.AuthenticationScheme);
         }
+
         [HttpGet("google-callback")]
         public async Task<IActionResult> GoogleCallback()
         {
             var authenticateResult = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
 
             if (!authenticateResult.Succeeded)
-                return BadRequest("Google authentication failed");
+                return StatusCode(422, new
+                {
+                    message = "Google authentication failed",
+                    data = new { error = "Google authentication failed" }
+                });
+
+            // Lấy các token đã lưu
+            var accessToken = authenticateResult.Properties.GetTokenValue("access_token");
 
             var claims = authenticateResult.Principal.Identities
                 .FirstOrDefault().Claims.ToList();
@@ -411,57 +419,38 @@ namespace ODTLearning.Controllers
             var userId = claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
             var userName = claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
             var userEmail = claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var userAvatar = claims.FirstOrDefault(c => c.Type == "picture")?.Value;
+            var userAvatar = claims.FirstOrDefault(c => c.Type == "urn:google:picture")?.Value;
 
-            var user = new UserResponse
+            var user = new UserGG
             {
                 id = userId,
                 fullName = userName,
                 email = userEmail,
                 roles = "học sinh",
-                avatar = userAvatar
+                avatar = userAvatar,
             };
 
-            // Lưu người dùng và tạo token
             var result = await _repo.SaveGoogleUserAsync(user);
 
             if (!result.Success)
             {
-                return BadRequest(result.Message);
+                return StatusCode(500, new
+                {
+                    message = "Lỗi",
+                    data = new { error = result.Message }
+                });
             }
+
+            var savedUser = result.Data;
 
             // Gọi API login để đăng nhập vào trang web
-            var loginResponse = await _repo.SignInValidationOfAccount(new SignInModel { Email = user.email, Password = user.id }); // Giả sử mật khẩu là userId hoặc có cách khác để xác thực
+            var loginModel = new SignInModel { Email = user.email, Password = "GG" };
 
-            if (!loginResponse.Success)
-            {
-                return BadRequest(loginResponse.Message);
-            }
+            var token = await _repo.GenerateToken(savedUser);
 
-            var token = await _repo.GenerateToken(loginResponse.Data);
-
-            // Điều hướng trở lại ứng dụng của bạn với token và thông tin người dùng được lưu trong localStorage
-            var script = $@"
-<script>
-    const user = {{
-        id: '{user.id}',
-        fullName: '{user.fullName}',
-        email: '{user.email}',
-        avatar: '{user.avatar}',
-        roles: '{user.roles}'
-    }};
-    const accessToken = '{token.Access_token}';
-    const refreshToken = '{token.Refresh_token}';
-
-    localStorage.setItem('profile', JSON.stringify(user));
-    localStorage.setItem('access_token', accessToken);
-    localStorage.setItem('refresh_token', refreshToken);
-
-    window.location.href = 'http://localhost:3000';
-</script>";
-            return Content(script, "text/html");
+            var redirectUrl = $"http://localhost:3000/login?access_token={Uri.EscapeDataString(token.Access_token)}&refresh_token={Uri.EscapeDataString(token.Refresh_token)}&user_id={Uri.EscapeDataString(savedUser.id)}&user_name={Uri.EscapeDataString(savedUser.fullName)}&user_email={Uri.EscapeDataString(savedUser.email)}&user_avatar={Uri.EscapeDataString(savedUser.avatar)}&user_roles={Uri.EscapeDataString(savedUser.roles)}";
+            return Redirect(redirectUrl);
         }
-
 
 
 

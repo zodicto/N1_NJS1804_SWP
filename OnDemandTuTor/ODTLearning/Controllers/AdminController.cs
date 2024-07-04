@@ -238,7 +238,7 @@ namespace ODTLearning.Controllers
 
         [HttpGet("ViewAllComplaint")]
         public async Task<IActionResult> ViewAllComplaint()
-        {          
+        {
             var response = await _repo.GetAllComplaint();
 
             return Ok(new
@@ -256,36 +256,88 @@ namespace ODTLearning.Controllers
 
             return Ok(new
             {
-                 response.Success,
+                response.Success,
                 Message = response.Message,
                 Data = response.Data
             });
         }
 
-        //[HttpGet("ViewRevenueByMonth")]
-        //public async Task<IActionResult> ViewRevenueByMonth(int year)
-        //{
-        //    var response = await _repo.GetRevenueByMonth(year);
+        [HttpGet("ViewRevenueByMonth")]
+        public async Task<IActionResult> ViewRevenueByMonth(int year)
+        {
+            var response = await _repo.GetRevenueByMonth(year);
 
-        //    return Ok(new
-        //    {
-        //        Success = response.Success,
-        //        Message = response.Message,
-        //        Data = response.Data
-        //    });
-        //}
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
 
-        //[HttpGet("ViewRevenueByWeek")]
-        //public async Task<IActionResult> ViewRevenueByWeek(int month, int year)
-        //{
-        //    var response = await _repo.GetRevenueByWeek(month, year);
+        [HttpGet("ViewRevenueByWeek")]
+        public async Task<IActionResult> ViewRevenueByWeek(int month, int year)
+        {
+            var response = await _repo.GetRevenueByWeek(month, year);
 
-        //    return Ok(new
-        //    {
-        //        response.Success,
-        //        response.Message,
-        //        response.Data
-        //    });
-        //}
+            return Ok(new
+            {
+                response.Success,
+                response.Message,
+                response.Data
+            });
+        }
+
+        [HttpGet("ViewRevenueByYear")]
+        public async Task<IActionResult> ViewRevenueByYear(int year)
+        {
+            var response = await _repo.GetRevenueByYear(year);
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
+
+        [HttpGet("ViewRevenueThisMonth")]
+        public async Task<IActionResult> ViewRevenueThisMonth()
+        {
+            var response = await _repo.GetRevenueThisMonth();
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
+
+        [HttpGet("ViewAmountStudent")]
+        public async Task<IActionResult> ViewAmountStudent()
+        {
+            var response = await _repo.GetAmountStudent();
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
+
+        [HttpGet("ViewAmountTutor")]
+        public async Task<IActionResult> ViewAmountTutor()
+        {
+            var response = await _repo.GetAmountTutor();
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
     }
 }
