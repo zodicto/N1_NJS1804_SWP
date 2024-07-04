@@ -19,11 +19,15 @@ public partial class Tutor
 
     public virtual ICollection<Available> Availables { get; set; } = new List<Available>();
 
+    public virtual ICollection<ClassRequest> ClassRequests { get; set; } = new List<ClassRequest>();
+
     public virtual ICollection<Complaint> Complaints { get; set; } = new List<Complaint>();
 
     public virtual ICollection<EducationalQualification> EducationalQualifications { get; set; } = new List<EducationalQualification>();
 
     public virtual Account? IdAccountNavigation { get; set; }
+
+    public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();
 
     public virtual ICollection<RequestLearning> RequestLearnings { get; set; } = new List<RequestLearning>();
 
