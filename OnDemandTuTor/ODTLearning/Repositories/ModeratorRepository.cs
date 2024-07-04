@@ -274,6 +274,13 @@ namespace ODTLearning.Repositories
                 _context.RequestLearnings.RemoveRange(requestLearnings);
             }
 
+            var classRequests2 = await _context.ClassRequests.Where(x => x.IdRequest == idRequest).ToListAsync();
+
+            if (classRequests2.Any())
+            {
+                _context.ClassRequests.RemoveRange(classRequests2);
+            }
+
             _context.Requests.Remove(request);       
             await _context.SaveChangesAsync();
 
