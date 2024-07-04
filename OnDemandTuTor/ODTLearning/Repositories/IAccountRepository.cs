@@ -28,5 +28,6 @@ namespace ODTLearning.Repositories
         public  Task<ApiResponse<object>> UpdateProfile(string id, UpdateProfile model);
         public Task<ApiResponse<object>> GetProfile(string id);
         public Task<ApiResponse<TutorResponse>> SignUpOftutorFB(string IdAccount, SignUpModelOfTutorFB model);
+        public Task<ApiResponse<object>> GetClassRequest(string id);
     }
 }
