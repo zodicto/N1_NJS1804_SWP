@@ -7,7 +7,7 @@ namespace ODTLearning.Repositories
     {
         public Task<ApiResponse<bool>> CreateRequestLearning(string IDAccount, RequestLearningModel model);
         public Task<ApiResponse<bool>> UpdateRequestLearning(string requestId, RequestLearningModel model);
-        public Task<ApiResponse<bool>> DeleteRequestLearning(string requestId);
+        public Task<ApiResponse<bool>> DeleteRequestLearning(string requestId, string accountId);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetPendingRequestsByAccountId(string id);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetApprovedRequestsByAccountId(string id);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetRejectRequestsByAccountId(string accountId);

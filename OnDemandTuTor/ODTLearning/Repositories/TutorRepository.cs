@@ -346,7 +346,6 @@ namespace ODTLearning.Repositories
                 Id = Guid.NewGuid().ToString(),
                 Title = model.tittle,
                 Description = model.Description,
-             
                 PricePerHour = model.PricePerHour,
                 IdClass = classEntity.Id,
                 IdSubject = subjectEntity.Id,
@@ -436,69 +435,45 @@ namespace ODTLearning.Repositories
                 Message = "Tạo thời gian rảnh thành công",
             };
         }
+        public async Task<ApiResponse<List<ServiceLearningModel>>> GetAllServicesByAccountId(string id)
+        {
+            // Tìm tài khoản theo IdAccount và vai trò "gia sư"
+            var account = await _context.Accounts
+                                  .Include(a => a.Tutor)
+                                  .FirstOrDefaultAsync(a => a.Id == id && a.Roles.ToLower() == "gia sư");
 
+            if (account == null || account.Tutor == null)
+            {
+                return new ApiResponse<List<ServiceLearningModel>>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy tài khoản nào với ID này hoặc bạn chưa đăng ký làm gia sư!",
+                    Data = null
+                };
+            }
 
-        //public async Task<List<TutorListModel>> SearchTutorList(SearchTutorModel model)
-        //{
-        //    //list all
-        //    var accountQuerry = _context.Accounts.Where(x => x.Roles == "Tutor");
+            // Tìm tất cả các dịch vụ của gia sư
+            var services = await _context.Services
+                                 .Where(s => s.IdTutor == account.Tutor.Id)
+                                 .ToListAsync();
 
-        //    //list search by name
-        //    if (!string.IsNullOrEmpty(model.Name))
-        //    {
-        //        accountQuerry = accountQuerry.Where(x => x.FullName.Contains(model.Name));
-        //        if (!accountQuerry.Any())
-        //        {
-        //            return null;
-        //        }
-        //    }
+            // Chuyển đổi các dịch vụ sang mô hình ServiceLearningModel
+            var serviceModels = services.Select(s => new ServiceLearningModel
+            {
+                tittle = s.Title,
+                Description = s.Description,
+                PricePerHour = s.PricePerHour,
+                Class = _context.Classes.FirstOrDefault(cl => cl.Id == s.IdClass)?.ClassName,
+                subject = _context.Subjects.FirstOrDefault(sub => sub.Id == s.IdSubject)?.SubjectName
+            }).ToList();
 
-        //    //list search by field
-        //    if (!string.IsNullOrEmpty(model.Field))
-        //    {
-        //        //lay field can search
-        //        var field = await _context.Subjects.FirstOrDefaultAsync(x => x.SubjectName == model.Field);
-        //        if (field == null)
-        //        {
-        //            return null;
-        //        }
-        //        accountQuerry = _context.TutorSubjects.Where(x => x.IdSubject == field.Id).Join(_context.Tutors, tf => tf.IdTutor, t => t.Id, (tf, t) => t).Join(accountQuerry, t => t.IdAccount, aq => aq.Id, (t, aq) => aq);
-        //    }
-
-        //    if (!accountQuerry.Any())
-        //    {
-        //        return null;
-        //    }
-        //    //lay id cua cac account can search
-        //    var idAccountQuerry = accountQuerry.Select(x => x.Id).ToList();
-
-        //    var list = new List<TutorListModel>();
-
-        //    foreach (var id in idAccountQuerry)
-        //    {
-        //        //lay list cac ten field cua tung account
-        //        var fields = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.TutorSubjects.Join(_context.Subjects, tf => tf.IdSubject, f => f.Id, (tf, f) => new
-        //        {
-        //            AccountId = tf.IdTutor,
-        //            Field = f.SubjectName
-        //        }), t => t.Id, af => af.AccountId, (t, af) => af.Field).ToList();
-
-        //        //dua vao model
-        //        var account = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
-
-        //        var k = new TutorListModel
-        //        {
-        //            FirstName = account.FullName,
-        //            Gmail = account.Email,
-        //            Birthdate = account.DateOfBirth,
-        //            Gender = account.Gender,
-        //            Field = fields
-        //        };
-
-        //        list.Add(k);
-        //    }
-        //    return list;
-        //}
+            return new ApiResponse<List<ServiceLearningModel>>
+            {
+                Success = true,
+                Message = "Lấy danh sách dịch vụ thành công",
+                Data = serviceModels
+            };
+        }
 
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests()
         {

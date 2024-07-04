@@ -91,9 +91,9 @@ namespace ODTLearning.Controllers
         }
 
         [HttpDelete("deleteRequest")]
-        public async Task<IActionResult> DeleteRequestLearning(string idRequest)
+        public async Task<IActionResult> DeleteRequestLearning(string id,string idRequest)
         {
-            var request = await _repo.DeleteRequestLearning(idRequest);
+            var request = await _repo.DeleteRequestLearning(id,idRequest);
 
             if (request != null)
             {

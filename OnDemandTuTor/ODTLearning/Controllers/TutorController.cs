@@ -364,5 +364,39 @@ namespace ODTLearning.Controllers
                 });
             }
         }
+        [HttpGet("getAllServicesByAccountId")]
+        public async Task<IActionResult> GetAllServicesByAccountId(string id)
+        {
+            try
+            {
+                var response = await _repo.GetAllServicesByAccountId(id);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        Data = response.Data
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while retrieving the services.",
+                    Data = ex.Message
+                });
+            }
+        }
+
     }
 }

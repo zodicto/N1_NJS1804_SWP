@@ -238,31 +238,42 @@ namespace ODTLearning.Repositories
         }
 
 
-        public async Task<ApiResponse<bool>> DeleteRequestLearning(string requestId)
+        public async Task<ApiResponse<bool>> DeleteRequestLearning(string requestId, string accountId)
         {
-            // Tìm request theo requestId
+            // Tìm tài khoản theo accountId
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
+
+            if (account == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy tài khoản nào với ID này!"
+                };
+            }
+
+            // Tìm request theo requestId và accountId
             var requestToDelete = await _context.Requests
-                                                .FirstOrDefaultAsync(r => r.Id == requestId);
+                                                 .FirstOrDefaultAsync(r => r.Id == requestId && r.IdAccount == accountId);
 
             if (requestToDelete == null)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không tìm thấy yêu cầu nào với ID này!"
+                    Message = "Không tìm thấy yêu cầu nào với ID này hoặc yêu cầu không thuộc về tài khoản này!"
                 };
             }
 
             // Kiểm tra trạng thái của yêu cầu
-            if (requestToDelete.Status != "Đang duyệt")
+            if (requestToDelete.Status != "Đang duyệt" || requestToDelete.Status != "Đã duyệt")
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Chỉ có thể xóa các yêu cầu ở trạng thái đang duyệt!"
+                    Message = "Chỉ có thể xóa các yêu cầu ở trạng thái đang duyệt hoặt đã duyệt!"
                 };
             }
-
 
             // Xóa request
             _context.Requests.Remove(requestToDelete);
@@ -274,6 +285,7 @@ namespace ODTLearning.Repositories
                 Message = "Yêu cầu đã được xóa thành công",
             };
         }
+
 
 
 
@@ -758,16 +770,16 @@ namespace ODTLearning.Repositories
                 tutor.IdAccountNavigation.FullName,
                 tutor.IdAccountNavigation.Gender,
                 Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
-                Email = tutor.IdAccountNavigation.Email,
-                Avatar = tutor.IdAccountNavigation.Avatar,
-                Address = tutor.IdAccountNavigation.Address,
-                Phone = tutor.IdAccountNavigation.Phone,
-                SpecializedSkills = tutor.SpecializedSkills,
-                Introduction = tutor.Introduction,
-                Experience = tutor.Experience,
+                tutor.IdAccountNavigation.Email,
+                tutor.IdAccountNavigation.Avatar,
+                tutor.IdAccountNavigation.Address,
+                tutor.IdAccountNavigation.Phone,
+                tutor.SpecializedSkills,
+                tutor.Introduction,
+                tutor.Experience,
                 Subjects = subjects,
                 Qualifications = qualifications,
-                Status = tutor.Status
+                tutor.Status
             };
 
             return new ApiResponse<object>
