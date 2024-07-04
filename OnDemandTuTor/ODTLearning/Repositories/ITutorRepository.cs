@@ -18,5 +18,7 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<bool>> CreateServiceLearning(string id, ServiceLearningModel model);
         public Task<ApiResponse<bool>> CreateTimeAvailable(string id, TimeAvailableModel time);
         public Task<ApiResponse<List<ServiceLearningModel>>> GetAllServicesByAccountId(string id);
+        public Task<ApiResponse<bool>> DeleteServiceById(string serviceId);
+        public Task<ApiResponse<ServiceLearningModel>> UpdateServiceById(string serviceId, ServiceLearningModel model);
     }
 }

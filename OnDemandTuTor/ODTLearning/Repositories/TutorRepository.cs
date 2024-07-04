@@ -315,7 +315,19 @@ namespace ODTLearning.Repositories
                     Message = "Không tìm thấy tài khoản nào với ID này hoặc bạn chưa đăng ký làm gia sư!",
                 };
             }
+            // Kiểm tra số dư tài khoản
+            const float costPerService = 50000;
+            int serviceCount = await _context.Services.CountAsync(s => s.IdTutor == account.Tutor.Id);
+            float requiredBalance = (serviceCount + 1) * costPerService;
 
+            if (account.AccountBalance < requiredBalance)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = $"Số dư tài khoản không đủ. Bạn cần ít nhất {requiredBalance} để tạo dịch vụ này.",
+                };
+            }
             // Tìm lớp học theo tên
             var classEntity = await _context.Classes.FirstOrDefaultAsync(cl => cl.ClassName == model.Class);
 
@@ -474,6 +486,95 @@ namespace ODTLearning.Repositories
                 Data = serviceModels
             };
         }
+        public async Task<ApiResponse<bool>> DeleteServiceById(string serviceId)
+        {
+            var service = await _context.Services
+                                        .Include(s => s.Bookings)
+                                        .FirstOrDefaultAsync(s => s.Id == serviceId);
+
+            if (service == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy dịch vụ với ID này."
+                };
+            }
+
+            var ongoingBooking = service.Bookings.Any(b => b.Status == "Đang diễn ra");
+            if (ongoingBooking)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không thể xóa dịch vụ vì có booking đang diễn ra."
+                };
+            }
+
+            _context.Services.Remove(service);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Xóa dịch vụ thành công."
+            };
+        }
+        public async Task<ApiResponse<ServiceLearningModel>> UpdateServiceById(string serviceId, ServiceLearningModel model)
+        {
+            // Tìm dịch vụ theo serviceId
+            var service = await _context.Services
+                                        .Include(s => s.Bookings)
+                                        .FirstOrDefaultAsync(s => s.Id == serviceId);
+
+            if (service == null)
+            {
+                return new ApiResponse<ServiceLearningModel>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy dịch vụ với ID này."
+                };
+            }
+
+            var ongoingBooking = service.Bookings.Any(b => b.Status == "Đang diễn ra");
+            if (ongoingBooking)
+            {
+                return new ApiResponse<ServiceLearningModel>
+                {
+                    Success = false,
+                    Message = "Không thể cập nhật dịch vụ vì có booking đang diễn ra."
+                };
+            }
+
+            // Cập nhật thông tin dịch vụ
+            service.Title = model.tittle;
+            service.Description = model.Description;
+            service.PricePerHour = model.PricePerHour;
+            service.IdClass = (await _context.Classes.FirstOrDefaultAsync(c => c.ClassName == model.Class))?.Id;
+            service.IdSubject = (await _context.Subjects.FirstOrDefaultAsync(s => s.SubjectName == model.subject))?.Id;
+
+            _context.Services.Update(service);
+            await _context.SaveChangesAsync();
+
+            // Tạo đối tượng ServiceLearningModel để trả về thông tin cập nhật
+            var updatedServiceModel = new ServiceLearningModel
+            {
+                PricePerHour = service.PricePerHour,
+                tittle = service.Title,
+                subject = (await _context.Subjects.FirstOrDefaultAsync(s => s.Id == service.IdSubject))?.SubjectName,
+                Class = (await _context.Classes.FirstOrDefaultAsync(c => c.Id == service.IdClass))?.ClassName,
+                Description = service.Description,
+                LearningMethod = model.LearningMethod // Assuming LearningMethod is updated or used somewhere else
+            };
+
+            return new ApiResponse<ServiceLearningModel>
+            {
+                Success = true,
+                Message = "Cập nhật dịch vụ thành công.",
+                Data = updatedServiceModel
+            };
+        }
+
 
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests()
         {

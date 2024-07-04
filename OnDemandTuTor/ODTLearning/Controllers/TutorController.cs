@@ -364,7 +364,7 @@ namespace ODTLearning.Controllers
                 });
             }
         }
-        [HttpGet("getAllServicesByAccountId")]
+        [HttpGet("getAllServices")]
         public async Task<IActionResult> GetAllServicesByAccountId(string id)
         {
             try
@@ -397,6 +397,72 @@ namespace ODTLearning.Controllers
                 });
             }
         }
+        [HttpPut("updateService")]
+        public async Task<IActionResult> UpdateService(string idService, [FromBody] ServiceLearningModel model)
+        {
+            try
+            {
+                var response = await _repo.UpdateServiceById(idService, model);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        Data = response.Data
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while updating the service.",
+                    Data = ex.Message
+                });
+            }
+        }
+        [HttpDelete("deleteService")]
+        public async Task<IActionResult> DeleteService(string serviceId)
+        {
+            try
+            {
+                var response = await _repo.DeleteServiceById(serviceId);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while deleting the service.",
+                    Data = ex.Message
+                });
+            }
+        }
+
 
     }
 }
