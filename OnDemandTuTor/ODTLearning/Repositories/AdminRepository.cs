@@ -772,15 +772,21 @@ namespace ODTLearning.Repositories
         {
             var now = DateTime.Now;
 
-            var revenue = _context.Transactions.Where(x => x.CreateDate.Year == now.Year && x.CreateDate.Month == now.Month).GroupBy(x => x.CreateDate.Month).Select(x => x.Sum(r => r.Amount));
+            var transactions = await _context.Transactions.Where(x => x.CreateDate.Year == now.Year && x.CreateDate.Month == now.Month).ToListAsync();
 
-            if (revenue.Any())
+            if (!transactions.Any())
             {
                 return new ApiResponse<object>
                 {
                     Success = true,
-                    Message = $"Không có giao dịch nào trong tháng này"
+                    Message = "không có giao dịch nào trong tháng này"
                 };
+            }
+
+            float? revenue = 0;
+            foreach ( var x in transactions)
+            {
+                revenue += x.Amount;
             }
 
             return new ApiResponse<object>
