@@ -470,9 +470,9 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            var tutor = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == idAccountTutor);
+            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).SingleOrDefaultAsync(x => x.Id == idAccountTutor);
 
-            if (tutor == null || tutor.Roles.ToLower() != "gia sư")
+            if (tutor == null || tutor.IdAccountNavigation.Roles.ToLower() != "gia sư")
             {
                 return new ApiResponse<SelectTutorModel>
                 {
@@ -499,26 +499,34 @@ namespace ODTLearning.Repositories
                 Price = request.Price,   
                 CreateDate = DateTime.Now,                
                 IdAccount = request.IdAccount,
-                IdTutor = idAccountTutor                
+                IdTutor = tutor.Id                
+            };
+
+            var classRequest = new ClassRequest
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdRequest = idRequest,
+                IdTutor = tutor.Id
             };
 
             //user.AccountBalance = user.AccountBalance - request.Price;
-            tutor.AccountBalance = tutor.AccountBalance - 50000;
+            tutor.IdAccountNavigation.AccountBalance = tutor.IdAccountNavigation.AccountBalance - 50000;
             request.Status = "Đang diễn ra";
             await _context.AddAsync(rent);
+            await _context.AddAsync(classRequest);
             await _context.SaveChangesAsync();
 
             var data = new SelectTutorModel
             {
                 Tutor = new
                 {
-                    Name = tutor.FullName,
-                  tutor.Email,
-                    tutor.DateOfBirth,
-                    tutor.Gender,
-                    tutor.Avatar,
-                    tutor.Address,
-                    tutor.Phone
+                    Name = tutor.IdAccountNavigation.FullName,
+                    Email = tutor.IdAccountNavigation.Email,
+                    DateOfBirth = tutor.IdAccountNavigation.DateOfBirth,
+                    Gender = tutor.IdAccountNavigation.Gender,
+                    Avatar = tutor.IdAccountNavigation.Avatar,
+                    Address = tutor.IdAccountNavigation.Address,
+                    Phone = tutor.IdAccountNavigation.Phone
                 },
                 User = new
                 {

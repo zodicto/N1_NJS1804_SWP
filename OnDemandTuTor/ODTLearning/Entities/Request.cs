@@ -33,6 +33,8 @@ public partial class Request
 
     public string? IdSubject { get; set; }
 
+    public virtual ICollection<ClassRequest> ClassRequests { get; set; } = new List<ClassRequest>();
+
     public virtual Account? IdAccountNavigation { get; set; }
 
     public virtual Class? IdClassNavigation { get; set; }
