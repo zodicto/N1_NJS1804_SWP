@@ -433,7 +433,7 @@ namespace ODTLearning.Controllers
             }
         }
 
-        [HttpDelete("GetService")]
+        [HttpGet("GetService")]
         public async Task<IActionResult> GetService()
         {
             try

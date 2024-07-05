@@ -431,7 +431,7 @@ namespace ODTLearning.Controllers
             }
         }
 
-        [HttpDelete("GetReview")]
+        [HttpGet("GetReview")]
         public async Task<IActionResult> GetReview(string id)
         {
             try
