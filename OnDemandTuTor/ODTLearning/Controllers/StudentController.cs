@@ -433,6 +433,38 @@ namespace ODTLearning.Controllers
             }
         }
 
+        [HttpDelete("GetService")]
+        public async Task<IActionResult> GetService()
+        {
+            try
+            {
+                var response = await _repo.GetService();
 
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        response.Data
+                    });
+                }
+
+                return NotFound(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while get reviews.",
+                    Data = ex.Message
+                });
+            }
+        }
     }
 }

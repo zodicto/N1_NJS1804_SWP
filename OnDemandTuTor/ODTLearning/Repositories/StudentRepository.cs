@@ -880,5 +880,74 @@ namespace ODTLearning.Repositories
             };
         }
 
+        public async Task<ApiResponse<object>> GetService()
+        {
+            var services = await _context.Services.Include(x => x.IdClassNavigation).Include(x => x.IdSubjectNavigation).ToListAsync();
+
+            if (!services.Any())
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Chưa có dịch vụ nào",
+                };
+            }
+
+            var list = new List<object>();
+
+            foreach (var service in services)
+            {
+                var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).SingleOrDefaultAsync(x => x.Id == service.IdTutor);
+
+                var dates = await _context.Dates.Where(x => x.IdService == service.Id).ToListAsync();
+
+                foreach (var date in dates)
+                {
+                    var timeSlots = await _context.TimeSlots.Where(x => x.IdDate == date.Id).ToListAsync();
+
+                    var timeTable = new
+                    {
+                        Date = date,
+                        TimeSlots = timeSlots
+                    };
+
+                    var data = new
+                    {
+                        Tutor = new
+                        {
+                            Id = tutor.IdAccountNavigation.Id,
+                            FullName = tutor.IdAccountNavigation.FullName,
+                            Email = tutor.IdAccountNavigation.Email,
+                            Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
+                            Gender = tutor.IdAccountNavigation.Gender,
+                            Avatar = tutor.IdAccountNavigation.Avatar,
+                            Address = tutor.IdAccountNavigation.Address,
+                            Phone = tutor.IdAccountNavigation.Phone
+                        },
+
+                        Service = new
+                        {
+                            PricePerHour = service.PricePerHour,
+                            Title = service.Title,
+                            Description = service.Description,
+                            LearningMethod = service.LearningMethod,
+                            Subject = service.IdSubjectNavigation.SubjectName,
+                            Class = service.IdClassNavigation.ClassName
+                        },
+
+                        TimeTable = timeTable
+                    };
+
+                    list.Add(data);
+                }     
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = list
+            };
+        }
     }
 }

@@ -19,5 +19,6 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<List<RequestLearningResponse>>> GetClassCompled(string id);
         public Task<ApiResponse<object>> GetSignUpTutor(string id);
         public Task<ApiResponse<bool>> BookingServiceLearning(string id, string idService, BookingServiceLearingModels model);
+        public Task<ApiResponse<object>> GetService();
     }
 }
