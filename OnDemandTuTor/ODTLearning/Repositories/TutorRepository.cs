@@ -304,8 +304,8 @@ namespace ODTLearning.Repositories
         {
             // Tìm tài khoản theo IdAccount và vai trò "gia sư"
             var account = await _context.Accounts
-                                  .Include(a => a.Tutor)
-                                  .FirstOrDefaultAsync(a => a.Id == id && a.Roles.ToLower() == "gia sư");
+                                   .Include(a => a.Tutor)
+                                   .FirstOrDefaultAsync(a => a.Id == id && a.Roles.ToLower() == "gia sư");
 
             if (account == null || account.Tutor == null)
             {
@@ -315,6 +315,7 @@ namespace ODTLearning.Repositories
                     Message = "Không tìm thấy tài khoản nào với ID này hoặc bạn chưa đăng ký làm gia sư!",
                 };
             }
+
             // Kiểm tra số dư tài khoản
             const float costPerService = 50000;
             int serviceCount = await _context.Services.CountAsync(s => s.IdTutor == account.Tutor.Id);
@@ -328,6 +329,7 @@ namespace ODTLearning.Repositories
                     Message = $"Số dư tài khoản không đủ. Bạn cần ít nhất {requiredBalance} để tạo dịch vụ này.",
                 };
             }
+
             // Tìm lớp học theo tên
             var classEntity = await _context.Classes.FirstOrDefaultAsync(cl => cl.ClassName == model.Class);
 
@@ -358,6 +360,7 @@ namespace ODTLearning.Repositories
                 Id = Guid.NewGuid().ToString(),
                 Title = model.tittle,
                 Description = model.Description,
+                LearningMethod = model.LearningMethod,
                 PricePerHour = model.PricePerHour,
                 IdClass = classEntity.Id,
                 IdSubject = subjectEntity.Id,
@@ -368,13 +371,42 @@ namespace ODTLearning.Repositories
             await _context.Services.AddAsync(serviceOfTutor);
             await _context.SaveChangesAsync();
 
+            // Thêm Date và TimeSlot vào context
+            foreach (var dateModel in model.Schedule)
+            {
+                var dateEntity = new ODTLearning.Entities.Date
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Date1 = DateOnly.Parse(dateModel.Date),
+                    IdService = serviceOfTutor.Id
+                };
+
+                await _context.Dates.AddAsync(dateEntity);
+                await _context.SaveChangesAsync();
+
+                foreach (var timeSlot in dateModel.TimeSlots)
+                {
+                    var timeSlotEntity = new TimeSlot
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        TimeSlot1 = TimeOnly.Parse(timeSlot),
+                        IdDate = dateEntity.Id
+                    };
+
+                    await _context.TimeSlots.AddAsync(timeSlotEntity);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
             return new ApiResponse<bool>
             {
                 Success = true,
                 Message = "Tạo dịch vụ thành công",
             };
         }
-       
+
+
         public async Task<ApiResponse<List<ServiceLearningModel>>> GetAllServicesByAccountId(string id)
         {
             // Tìm tài khoản theo IdAccount và vai trò "gia sư"
@@ -416,8 +448,7 @@ namespace ODTLearning.Repositories
         public async Task<ApiResponse<bool>> DeleteServiceById(string serviceId)
         {
             var service = await _context.Services
-                                        .Include(s => s.Bookings)
-                                        .FirstOrDefaultAsync(s => s.Id == serviceId);
+                                          .FirstOrDefaultAsync(s => s.Id == serviceId);
 
             if (service == null)
             {
@@ -428,15 +459,15 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            var ongoingBooking = service.Bookings.Any(b => b.Status == "Đang diễn ra");
-            if (ongoingBooking)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không thể xóa dịch vụ vì có booking đang diễn ra."
-                };
-            }
+            //var ongoingBooking = service.Bookings.Any(b => b.Status == "Đang diễn ra");
+            //if (ongoingBooking)
+            //{
+            //    return new ApiResponse<bool>
+            //    {
+            //        Success = false,
+            //        Message = "Không thể xóa dịch vụ vì có booking đang diễn ra."
+            //    };
+            //}
 
             _context.Services.Remove(service);
             await _context.SaveChangesAsync();
@@ -451,7 +482,6 @@ namespace ODTLearning.Repositories
         {
             // Tìm dịch vụ theo serviceId
             var service = await _context.Services
-                                        .Include(s => s.Bookings)
                                         .FirstOrDefaultAsync(s => s.Id == serviceId);
 
             if (service == null)
@@ -463,15 +493,15 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            var ongoingBooking = service.Bookings.Any(b => b.Status == "Đang diễn ra");
-            if (ongoingBooking)
-            {
-                return new ApiResponse<ServiceLearningModel>
-                {
-                    Success = false,
-                    Message = "Không thể cập nhật dịch vụ vì có booking đang diễn ra."
-                };
-            }
+            //var ongoingBooking = service.Bookings.Any(b => b.Status == "Đang diễn ra");
+            //if (ongoingBooking)
+            //{
+            //    return new ApiResponse<ServiceLearningModel>
+            //    {
+            //        Success = false,
+            //        Message = "Không thể cập nhật dịch vụ vì có booking đang diễn ra."
+            //    };
+            //}
 
             // Cập nhật thông tin dịch vụ
             service.Title = model.tittle;
