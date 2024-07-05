@@ -778,9 +778,9 @@ namespace ODTLearning.Repositories
 
                         User = new
                         {
-                            Name = user.FullName,
+                            FullName = user.FullName,
                             Email = user.Email,
-                            DateOfBirth = user.DateOfBirth,
+                            Date_of_birth = user.DateOfBirth,
                             Gender = user.Gender,
                             Avatar = user.Avatar,
                             Address = user.Address,
@@ -789,9 +789,9 @@ namespace ODTLearning.Repositories
 
                         Tutor = new
                         {
-                            Name = tutor.IdAccountNavigation.FullName,
+                            FullName = tutor.IdAccountNavigation.FullName,
                             Email = tutor.IdAccountNavigation.Email,
-                            DateOfBirth = tutor.IdAccountNavigation.DateOfBirth,
+                            Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
                             Gender = tutor.IdAccountNavigation.Gender,
                             Avatar = tutor.IdAccountNavigation.Avatar,
                             Address = tutor.IdAccountNavigation.Address,
