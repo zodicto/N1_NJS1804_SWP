@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Firebase.Auth;
+using Microsoft.EntityFrameworkCore;
 using ODTLearning.Entities;
 using ODTLearning.Helpers;
 using ODTLearning.Models;
@@ -790,7 +791,55 @@ namespace ODTLearning.Repositories
             }
         }
 
+        public async Task<ApiResponse<object>> GetReview(string id)
+        {
+            var reviews = await _context.Reviews.Include(x => x.IdAccountNavigation)
+                                               .Include(x => x.IdTutorNavigation).ThenInclude(x => x.IdAccountNavigation)
+                                               .Where(x => x.IdTutorNavigation.IdAccount == id).ToListAsync();
 
+            if (!reviews.Any())
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Gia sư chưa có đánh giá nào",
+                };
+            }
+
+            var list = new List<object>();
+
+            foreach (var review in reviews)
+            {
+                var data = new
+                {
+                    IdReview = review.Id,
+
+                    User = new
+                    {
+                        Id = review.IdAccountNavigation.Id,
+                        FullName = review.IdAccountNavigation.FullName,
+                        Email = review.IdAccountNavigation.Email,
+                        Date_of_birth = review.IdAccountNavigation.DateOfBirth,
+                        Gender = review.IdAccountNavigation.Gender,
+                        Avatar = review.IdAccountNavigation.Avatar,
+                        Address = review.IdAccountNavigation.Address,
+                        Phone = review.IdAccountNavigation.Phone
+                    },
+
+                    Rating = review.Rating,
+                    Feedback = review.Feedback,
+                };
+
+                list.Add(data);
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = list
+            };
+        }
     }
 }
 

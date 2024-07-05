@@ -18,5 +18,6 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<List<ServiceLearningModel>>> GetAllServicesByAccountId(string id);
         public Task<ApiResponse<bool>> DeleteServiceById(string serviceId);
         public Task<ApiResponse<ServiceLearningModel>> UpdateServiceById(string serviceId, ServiceLearningModel model);
+        public Task<ApiResponse<object>> GetReview(string id);
     }
 }

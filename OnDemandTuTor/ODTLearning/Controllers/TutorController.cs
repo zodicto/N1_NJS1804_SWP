@@ -431,6 +431,37 @@ namespace ODTLearning.Controllers
             }
         }
 
+        [HttpDelete("GetReview")]
+        public async Task<IActionResult> GetReview(string id)
+        {
+            try
+            {
+                var response = await _repo.GetReview(id);
 
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message
+                    });
+                }
+
+                return NotFound(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while get reviews.",
+                    Data = ex.Message
+                });
+            }
+        }
     }
 }
