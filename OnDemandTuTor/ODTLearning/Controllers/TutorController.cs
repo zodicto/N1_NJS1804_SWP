@@ -332,38 +332,6 @@ namespace ODTLearning.Controllers
                 });
             }
         }
-        [HttpPost("createTimeAvailable")]
-        public async Task<IActionResult> CreateTimeAvailavle(string id, TimeAvailableModel model)
-        {
-            try
-            {
-                var response = await _repo.CreateTimeAvailable(id, model);
-
-                if (response.Success)
-                {
-                    return StatusCode(200, new
-                    {
-                        Success = true,
-                        response.Message,
-                    });
-                }
-
-                return BadRequest(new
-                {
-                    Success = false,
-                    response.Message
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new ApiResponse<string>
-                {
-                    Success = false,
-                    Message = "An error occurred while retrieving the arrpoved requests.",
-                    Data = ex.Message
-                });
-            }
-        }
         [HttpGet("getServices")]
         public async Task<IActionResult> GetAllServicesByAccountId(string id)
         {
@@ -377,7 +345,7 @@ namespace ODTLearning.Controllers
                     {
                         Success = true,
                         response.Message,
-                        Data = response.Data
+                        response.Data
                     });
                 }
 

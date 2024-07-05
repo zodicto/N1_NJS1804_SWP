@@ -39,29 +39,136 @@ namespace ODTLearning.Repositories
             if (tutor != null)
             {
                 var educationalQualifications = await _context.EducationalQualifications.Where(x => x.IdTutor == tutor.Id).ToListAsync();
-                _context.EducationalQualifications.RemoveRange(educationalQualifications);
 
+                if (educationalQualifications.Any())
+                {
+                    _context.EducationalQualifications.RemoveRange(educationalQualifications);
+                }               
 
                 var requestLearnings = await _context.RequestLearnings.Where(x => x.IdTutor == tutor.Id).ToListAsync();
-                _context.RequestLearnings.RemoveRange(requestLearnings);
+
+                if (requestLearnings.Any())
+                {
+                    _context.RequestLearnings.RemoveRange(requestLearnings);
+                }
 
                 var tutorSubjects = await _context.TutorSubjects.Where(x => x.IdTutor == tutor.Id).ToListAsync();
-                _context.TutorSubjects.RemoveRange(tutorSubjects);
 
+                if (tutorSubjects.Any())
+                {
+                    _context.TutorSubjects.RemoveRange(tutorSubjects);
+                }
+                
                 var complaints = await _context.Complaints.Where(x => x.IdTutor == tutor.Id).ToListAsync();
-                _context.Complaints.RemoveRange(complaints);
+
+                if (complaints.Any())
+                {
+                    _context.Complaints.RemoveRange(complaints);
+                }
+
+                var classRequests = await _context.ClassRequests.Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (classRequests.Any())
+                {
+                    _context.ClassRequests.RemoveRange(classRequests);
+                }
+
+                var rents = await _context.Rents.Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (rents.Any())
+                {
+                    _context.Rents.RemoveRange(rents);
+                }
+
+                var services = await _context.Services.Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (services.Any())
+                {
+                    _context.Services.RemoveRange(services);
+
+                    foreach (var service in services)
+                    {
+                        var bookings = await _context.Bookings.Where(x => x.IdService == service.Id).ToListAsync();
+
+                        if (bookings.Any())
+                        {
+                            _context.Bookings.RemoveRange(bookings);
+                        }
+                    }
+                }
+
+                var availables = await _context.Availables.Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (availables.Any())
+                {
+                    _context.Availables.RemoveRange(availables);
+
+                    foreach (var available in availables)
+                    {
+                        var bookings = await _context.Bookings.Where(x => x.IdService == available.Id).ToListAsync();
+
+                        if (bookings.Any())
+                        {
+                            _context.Bookings.RemoveRange(bookings);
+                        }
+                    }
+                }
 
                 _context.Tutors.Remove(tutor);
             }
 
             var complaints2 = await _context.Complaints.Where(x => x.IdAccount == id).ToListAsync();
-            _context.Complaints.RemoveRange(complaints2);
+
+            if (complaints2.Any())
+            {
+                _context.Complaints.RemoveRange(complaints2);
+            }
+            
 
             var transactions = await _context.Transactions.Where(x => x.IdAccount == id).ToListAsync();
-            _context.Transactions.RemoveRange(transactions);
+
+            if (transactions.Any())
+            {
+                _context.Transactions.RemoveRange(transactions);
+            }
+
+            var rents2 = await _context.Rents.Where(x => x.IdAccount == exsitAccount.Id).ToListAsync();
+
+            if (rents2.Any())
+            {
+                _context.Rents.RemoveRange(rents2);
+            }
 
             var requests = await _context.Requests.Where(x => x.IdAccount == id).ToListAsync();
-            _context.Requests.RemoveRange(requests);
+
+            if (requests.Any())
+            {
+                _context.Requests.RemoveRange(requests);
+
+                foreach (var request in requests)
+                {
+                    var requestLearnings2 = await _context.RequestLearnings.Where(x => x.IdRequest == request.Id).ToListAsync();
+
+                    if (requestLearnings2.Any())
+                    {
+                        _context.RequestLearnings.RemoveRange(requestLearnings2);
+                    }
+
+                    var classRequests2 = await _context.ClassRequests.Where(x => x.IdRequest == request.Id).ToListAsync();
+
+                    if (classRequests2.Any())
+                    {
+                        _context.ClassRequests.RemoveRange(classRequests2);
+                    }
+                }
+            }
+
+            var bookings2 = await _context.Bookings.Where(x => x.IdAccount == exsitAccount.Id).ToListAsync();
+
+            if (bookings2.Any())
+            {
+                _context.Bookings.RemoveRange(bookings2);
+            }
 
             _context.Accounts.Remove(exsitAccount);
 

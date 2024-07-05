@@ -17,8 +17,6 @@ public partial class Tutor
 
     public string? IdAccount { get; set; }
 
-    public virtual ICollection<Available> Availables { get; set; } = new List<Available>();
-
     public virtual ICollection<ClassRequest> ClassRequests { get; set; } = new List<ClassRequest>();
 
     public virtual ICollection<Complaint> Complaints { get; set; } = new List<Complaint>();

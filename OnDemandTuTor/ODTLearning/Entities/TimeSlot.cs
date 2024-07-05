@@ -9,5 +9,9 @@ public partial class TimeSlot
 
     public TimeOnly? TimeSlot1 { get; set; }
 
-    public virtual ICollection<Available> Availables { get; set; } = new List<Available>();
+    public string? IdDate { get; set; }
+
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    public virtual Date? IdDateNavigation { get; set; }
 }

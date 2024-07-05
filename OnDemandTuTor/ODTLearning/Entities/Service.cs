@@ -13,13 +13,15 @@ public partial class Service
 
     public string? Description { get; set; }
 
+    public string? LearningMethod { get; set; }
+
     public string? IdTutor { get; set; }
 
     public string? IdClass { get; set; }
 
     public string? IdSubject { get; set; }
 
-    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+    public virtual ICollection<Date> Dates { get; set; } = new List<Date>();
 
     public virtual Class? IdClassNavigation { get; set; }
 

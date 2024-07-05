@@ -8,7 +8,15 @@
         public string? Class { get; set; }
         public string? Description { get; set; }
         public string? LearningMethod { get; set; }
+        public List<ServiceDateModel>? Schedule { get; set; }
     }
+
+    public class ServiceDateModel
+    {
+        public string? Date { get; set; }
+        public List<string>? TimeSlots { get; set; }
+    }
+
 
     public class TimeAvailableModel
     {
