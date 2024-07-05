@@ -88,31 +88,34 @@ namespace ODTLearning.Repositories
 
                     foreach (var service in services)
                     {
-                        var bookings = await _context.Bookings.Where(x => x.IdService == service.Id).ToListAsync();
+                        var dates = await _context.Dates.Where(x => x.IdService == service.Id).ToListAsync();
 
-                        if (bookings.Any())
+                        if (dates.Any())
                         {
-                            _context.Bookings.RemoveRange(bookings);
+                            _context.Dates.RemoveRange(dates);
+
+                            foreach (var date in dates)
+                            {
+                                var timeSlots = await _context.TimeSlots.Where(x => x.IdDate == date.Id).ToListAsync();
+
+                                if (timeSlots.Any())
+                                {
+                                    _context.TimeSlots.RemoveRange(timeSlots);
+
+                                    foreach (var timeSlot in timeSlots)
+                                    {
+                                        var bookings = await _context.Bookings.Where(x => x.IdTimeSlot == timeSlot.Id).ToListAsync();
+
+                                        if (bookings.Any())
+                                        {
+                                            _context.Bookings.RemoveRange(bookings);
+                                        }
+                                    }
+                                }
+                            }                            
                         }
                     }
-                }
-
-                var availables = await _context.Availables.Where(x => x.IdTutor == tutor.Id).ToListAsync();
-
-                if (availables.Any())
-                {
-                    _context.Availables.RemoveRange(availables);
-
-                    foreach (var available in availables)
-                    {
-                        var bookings = await _context.Bookings.Where(x => x.IdService == available.Id).ToListAsync();
-
-                        if (bookings.Any())
-                        {
-                            _context.Bookings.RemoveRange(bookings);
-                        }
-                    }
-                }
+                }              
 
                 _context.Tutors.Remove(tutor);
             }
