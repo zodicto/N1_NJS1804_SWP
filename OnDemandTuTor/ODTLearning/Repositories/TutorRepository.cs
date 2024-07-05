@@ -793,6 +793,17 @@ namespace ODTLearning.Repositories
 
         public async Task<ApiResponse<object>> GetReview(string id)
         {
+            var tutor = await _context.Tutors.SingleOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+
+            if (tutor == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư"
+                };
+            }
+
             var reviews = await _context.Reviews.Include(x => x.IdAccountNavigation)
                                                .Include(x => x.IdTutorNavigation).ThenInclude(x => x.IdAccountNavigation)
                                                .Where(x => x.IdTutorNavigation.IdAccount == id).ToListAsync();

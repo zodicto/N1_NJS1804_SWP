@@ -431,7 +431,7 @@ namespace ODTLearning.Controllers
             }
         }
 
-        [HttpDelete("GetReview")]
+        [HttpGet("GetReview")]
         public async Task<IActionResult> GetReview(string id)
         {
             try
@@ -443,7 +443,8 @@ namespace ODTLearning.Controllers
                     return StatusCode(200, new
                     {
                         Success = true,
-                        response.Message
+                        response.Message,
+                        response.Data
                     });
                 }
 
