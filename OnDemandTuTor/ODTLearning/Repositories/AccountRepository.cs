@@ -631,8 +631,14 @@ namespace ODTLearning.Repositories
             {
                 // Người dùng đã tồn tại, cập nhật thông tin người dùng
                 existingUser.FullName = user.fullName;
-                existingUser.Roles = user.roles; // Cập nhật roles nếu cần, hoặc có thể bỏ qua nếu không muốn cập nhật
                 existingUser.Avatar = user.avatar; // Cập nhật URL của ảnh đại diện nếu cần
+
+                // Chỉ cập nhật roles nếu vai trò hiện tại không phải là "gia sư"
+                if (existingUser.Roles.ToLower() != "gia sư")
+                {
+                    existingUser.Roles = user.roles;
+                }
+
                 await _context.SaveChangesAsync();
 
                 var userResponse = new UserResponse
@@ -653,7 +659,7 @@ namespace ODTLearning.Repositories
                 };
             }
         }
-       
+
 
         public async Task<ApiResponse<object>> GetClassRequest(string id)
         {

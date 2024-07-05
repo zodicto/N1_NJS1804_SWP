@@ -824,29 +824,16 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            // Tìm slot thời gian khả dụng dựa trên Date và TimeSlot từ model
-            var availableSlot = await _context.Availables
-                .Include(a => a.IdTimeSlotNavigation)
-                .FirstOrDefaultAsync(a => a.Date == model.date && a.IdTimeSlotNavigation.TimeSlot1 == TimeOnly.Parse(model.timeAvalable));
-
-            if (availableSlot == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy slot thời gian khả dụng!",
-                };
-            }
 
             // Tạo đối tượng Booking mới
             var newBooking = new Booking
             {
                 Id = Guid.NewGuid().ToString(),
-                IdService = idService,
+
                 IdAccount = id,
                 Duration = model.Duration,
                 Price = model.Price,
-                IdAvailable = availableSlot.Id,
+
                 Status = "Đang diễn ra" // hoặc trạng thái khởi tạo phù hợp khác
             };
 
