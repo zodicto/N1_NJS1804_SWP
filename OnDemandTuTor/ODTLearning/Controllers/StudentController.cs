@@ -399,6 +399,39 @@ namespace ODTLearning.Controllers
                 Message = response.Message
             });
         }
+        [HttpPost("BookingServiceLearning")]
+        public async Task<IActionResult> BookingServiceLearning(string id, string idService, [FromBody] BookingServiceLearingModels model)
+        {
+            try
+            {
+                var response = await _repo.BookingServiceLearning(id, idService, model);
+
+                if (response.Success)
+                {
+                    return Ok(new
+                    {
+                        Success = true,
+                        Message = response.Message
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An error occurred while booking the service.",
+                    Details = ex.Message
+                });
+            }
+        }
+
 
     }
 }

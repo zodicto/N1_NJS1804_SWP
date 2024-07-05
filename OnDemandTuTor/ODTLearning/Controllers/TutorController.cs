@@ -364,7 +364,7 @@ namespace ODTLearning.Controllers
                 });
             }
         }
-        [HttpGet("getAllServices")]
+        [HttpGet("getServices")]
         public async Task<IActionResult> GetAllServicesByAccountId(string id)
         {
             try

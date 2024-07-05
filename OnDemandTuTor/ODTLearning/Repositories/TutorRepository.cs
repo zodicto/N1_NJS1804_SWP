@@ -460,7 +460,6 @@ namespace ODTLearning.Repositories
                 {
                     Success = false,
                     Message = "Không tìm thấy tài khoản nào với ID này hoặc bạn chưa đăng ký làm gia sư!",
-                    Data = null
                 };
             }
 
@@ -701,7 +700,6 @@ namespace ODTLearning.Repositories
             };
 
             // Cập nhật trạng thái yêu cầu
-            request.Status = "Đang chờ học sinh chấp nhận";
 
             _context.RequestLearnings.Add(requestLearning);
 

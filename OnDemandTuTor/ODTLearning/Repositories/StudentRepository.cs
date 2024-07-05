@@ -238,7 +238,7 @@ namespace ODTLearning.Repositories
         }
 
 
-        public async Task<ApiResponse<bool>> DeleteRequestLearning(string requestId, string accountId)
+        public async Task<ApiResponse<bool>> DeleteRequestLearning(string accountId, string requestId)
         {
             // Tìm tài khoản theo accountId
             var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
@@ -265,17 +265,19 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            // Kiểm tra trạng thái của yêu cầu
-            if (requestToDelete.Status != "Đang duyệt" || requestToDelete.Status != "Đã duyệt")
+            // Kiểm tra nếu request tồn tại trong bảng RequestLearning
+            var requestInRequestLearning = await _context.RequestLearnings
+                                                         .AnyAsync(rl => rl.IdRequest == requestId);
+
+            if (requestInRequestLearning)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Chỉ có thể xóa các yêu cầu ở trạng thái đang duyệt hoặt đã duyệt!"
+                    Message = "Đã có gia sư tham gia vào yêu cầu. Không thể xóa request."
                 };
             }
 
-            // Xóa request
             _context.Requests.Remove(requestToDelete);
             await _context.SaveChangesAsync();
 
@@ -285,6 +287,7 @@ namespace ODTLearning.Repositories
                 Message = "Yêu cầu đã được xóa thành công",
             };
         }
+
 
 
 
@@ -797,5 +800,85 @@ namespace ODTLearning.Repositories
                 Data = data
             };
         }
+        public async Task<ApiResponse<bool>> BookingServiceLearning(string id, string idService, BookingServiceLearingModels model)
+        {
+            // Tìm tài khoản theo id
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == id);
+            if (account == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy tài khoản nào với ID này!",
+                };
+            }
+
+            // Tìm dịch vụ theo idService
+            var service = await _context.Services.FirstOrDefaultAsync(s => s.Id == idService);
+            if (service == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy dịch vụ nào với ID này!",
+                };
+            }
+
+            // Tìm slot thời gian khả dụng dựa trên Date và TimeSlot từ model
+            var availableSlot = await _context.Availables
+                .Include(a => a.IdTimeSlotNavigation)
+                .FirstOrDefaultAsync(a => a.Date == model.date && a.IdTimeSlotNavigation.TimeSlot1 == TimeOnly.Parse(model.timeAvalable));
+
+            if (availableSlot == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy slot thời gian khả dụng!",
+                };
+            }
+
+            // Tạo đối tượng Booking mới
+            var newBooking = new Booking
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdService = idService,
+                IdAccount = id,
+                Duration = model.Duration,
+                Price = model.Price,
+                IdAvailable = availableSlot.Id,
+                Status = "Đang diễn ra" // hoặc trạng thái khởi tạo phù hợp khác
+            };
+
+            // Thêm Booking vào context
+            await _context.Bookings.AddAsync(newBooking);
+
+            // Tìm tài khoản của tutor
+            var tutor = await _context.Tutors
+                .Include(t => t.IdAccountNavigation)
+                .FirstOrDefaultAsync(t => t.Id == service.IdTutor);
+
+            if (tutor == null || tutor.IdAccountNavigation == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy tài khoản của gia sư!",
+                };
+            }
+
+            // Trừ 50000 từ AccountBalance của tutor
+            tutor.IdAccountNavigation.AccountBalance -= 50000;
+
+            // Lưu thay đổi vào context
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Đặt dịch vụ thành công và tài khoản của gia sư đã bị trừ 50000.",
+            };
+        }
+
     }
 }
