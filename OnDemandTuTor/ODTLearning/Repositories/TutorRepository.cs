@@ -403,6 +403,7 @@ namespace ODTLearning.Repositories
                     {
                         Id = Guid.NewGuid().ToString(),
                         TimeSlot1 = TimeOnly.Parse(timeSlot),
+                        Status = "Chưa đặt",
                         IdDate = dateEntity.Id
                     };
 

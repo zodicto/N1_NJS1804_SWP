@@ -965,7 +965,7 @@ namespace ODTLearning.Repositories
                 Schedule = service.Dates.Select(date => new
                 {
                     Date = date.Date1.HasValue ? date.Date1.Value.ToString("yyyy-MM-dd") : null, // Định dạng chuỗi cho Date
-                    TimeSlots = date.TimeSlots.Select(slot => slot.TimeSlot1.HasValue ? slot.TimeSlot1.Value.ToString("HH:mm") : null).ToList() // Định dạng chuỗi cho TimeSlot
+                    TimeSlots = date.TimeSlots.Select(slot => slot.TimeSlot1.HasValue && slot.Status.ToLower() == "chưa đặt" ? slot.TimeSlot1.Value.ToString("HH:mm") : null).ToList() // Định dạng chuỗi cho TimeSlot
                 }).ToList()
             }).Cast<object>().ToList();
 
