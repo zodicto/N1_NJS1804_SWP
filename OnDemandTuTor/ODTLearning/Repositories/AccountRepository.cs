@@ -711,7 +711,7 @@ namespace ODTLearning.Repositories
                         {
                             Name = existingUser.FullName,
                             Email = existingUser.Email,
-                            DateOfBirth = existingUser.DateOfBirth,
+                            Date_of_birth = existingUser.DateOfBirth,
                             Gender = existingUser.Gender,
                             Avatar = existingUser.Avatar,
                             Address = existingUser.Address,
@@ -722,7 +722,7 @@ namespace ODTLearning.Repositories
                         {
                             Name = tutor.IdAccountNavigation.FullName,
                             Email = tutor.IdAccountNavigation.Email,
-                            DateOfBirth = tutor.IdAccountNavigation.DateOfBirth,
+                            Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
                             Gender = tutor.IdAccountNavigation.Gender,
                             Avatar = tutor.IdAccountNavigation.Avatar,
                             Address = tutor.IdAccountNavigation.Address,
@@ -832,42 +832,44 @@ namespace ODTLearning.Repositories
 
             if (existingUser.Roles.ToLower() == "học sinh")
             {
-                var classRequests = await _context.ClassRequests.Include(x => x.IdRequestNavigation).Where(x => x.IdRequestNavigation.IdAccount == id).ToListAsync();
+                var bookings = await _context.Bookings.Include(x => x.IdAccountNavigation)
+                                                      .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
+                                                      .Where(x => x.IdAccount == id)
+                                                      .ToListAsync();
+                
 
-                if (!classRequests.Any())
+                if (!bookings.Any())
                 {
                     return new ApiResponse<object>
                     {
                         Success = false,
-                        Message = "Không có lớp học nào"
+                        Message = "Bạn không có lớp học",
                     };
                 }
 
                 var list = new List<object>();
 
-                foreach (var classRequest in classRequests)
+                foreach (var booking in bookings)
                 {
-                    var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == classRequest.IdTutor);
+                    var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor);
 
                     var data = new
                     {
-                        Title = classRequest.IdRequestNavigation?.Title,
-                        Subject = classRequest.IdRequestNavigation.IdSubjectNavigation?.SubjectName,
-                        TotalSession = classRequest.IdRequestNavigation.TotalSession,
-                        Price = classRequest.IdRequestNavigation.Price,
-                        Description = classRequest.IdRequestNavigation.Description,
-                        Class = classRequest.IdRequestNavigation.IdClassNavigation?.ClassName,
-                        LearningMethod = classRequest.IdRequestNavigation.LearningMethod,
-                        TimeTable = classRequest.IdRequestNavigation.TimeTable,
-                        TimeStart = classRequest.IdRequestNavigation.TimeStart,
-                        TimeEnd = classRequest.IdRequestNavigation.TimeEnd,
-                        Status = classRequest.IdRequestNavigation.Status,
+                        Title = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title,
+                        Subject = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdSubjectNavigation?.SubjectName,
+                        Price = booking.Price,
+                        Description = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Description,
+                        Class = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdClassNavigation?.ClassName,
+                        LearningMethod = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.LearningMethod,
+                        Date = booking.IdTimeSlotNavigation.IdDateNavigation.Date1,
+                        TimeSlot = booking.IdTimeSlotNavigation.TimeSlot1,
+                        Status = booking.Status,
 
                         User = new
                         {
                             Name = existingUser.FullName,
                             Email = existingUser.Email,
-                            DateOfBirth = existingUser.DateOfBirth,
+                            Date_of_birth = existingUser.DateOfBirth,
                             Gender = existingUser.Gender,
                             Avatar = existingUser.Avatar,
                             Address = existingUser.Address,
@@ -878,7 +880,7 @@ namespace ODTLearning.Repositories
                         {
                             Name = tutor.IdAccountNavigation.FullName,
                             Email = tutor.IdAccountNavigation.Email,
-                            DateOfBirth = tutor.IdAccountNavigation.DateOfBirth,
+                            Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
                             Gender = tutor.IdAccountNavigation.Gender,
                             Avatar = tutor.IdAccountNavigation.Avatar,
                             Address = tutor.IdAccountNavigation.Address,
@@ -901,51 +903,53 @@ namespace ODTLearning.Repositories
             {
                 var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.IdAccountNavigation.Id == id);
 
-                var classRequests = await _context.ClassRequests.Include(x => x.IdRequestNavigation).Where(x => x.IdTutor == tutor.Id).ToListAsync();
+                var bookings = await _context.Bookings.Include(x => x.IdAccountNavigation)
+                                                      .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
+                                                      .Where(x => x.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor == tutor.Id)
+                                                      .ToListAsync();
 
-                if (!classRequests.Any())
+
+                if (!bookings.Any())
                 {
                     return new ApiResponse<object>
                     {
-                        Success = true,
-                        Message = "Không có lớp học nào"
+                        Success = false,
+                        Message = "Bạn không có lớp học",
                     };
                 }
 
                 var list = new List<object>();
 
-                foreach (var classRequest in classRequests)
+                foreach (var booking in bookings)
                 {
-                    var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == classRequest.IdRequestNavigation.IdAccount);
+                    var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == booking.IdAccount);
 
                     var data = new
                     {
-                        Title = classRequest.IdRequestNavigation?.Title,
-                        Subject = classRequest.IdRequestNavigation.IdSubjectNavigation?.SubjectName,
-                        TotalSession = classRequest.IdRequestNavigation.TotalSession,
-                        Price = classRequest.IdRequestNavigation.Price,
-                        Description = classRequest.IdRequestNavigation.Description,
-                        Class = classRequest.IdRequestNavigation.IdClassNavigation?.ClassName,
-                        LearningMethod = classRequest.IdRequestNavigation.LearningMethod,
-                        TimeTable = classRequest.IdRequestNavigation.TimeTable,
-                        TimeStart = classRequest.IdRequestNavigation.TimeStart,
-                        TimeEnd = classRequest.IdRequestNavigation.TimeEnd,
-                        Status = classRequest.IdRequestNavigation.Status,
+                        Title = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title,
+                        Subject = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdSubjectNavigation?.SubjectName,
+                        Price = booking.Price,
+                        Description = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Description,
+                        Class = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdClassNavigation?.ClassName,
+                        LearningMethod = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.LearningMethod,
+                        Date = booking.IdTimeSlotNavigation.IdDateNavigation.Date1,
+                        TimeSlot = booking.IdTimeSlotNavigation.TimeSlot1,
+                        Status = booking.Status,
 
                         User = new
                         {
-                            FullName = user.FullName,
-                            Email = user.Email,
-                            Date_of_birth = user.DateOfBirth,
-                            Gender = user.Gender,
-                            Avatar = user.Avatar,
-                            Address = user.Address,
-                            Phone = user.Phone
+                            Name = existingUser.FullName,
+                            Email = existingUser.Email,
+                            Date_of_birth = existingUser.DateOfBirth,
+                            Gender = existingUser.Gender,
+                            Avatar = existingUser.Avatar,
+                            Address = existingUser.Address,
+                            Phone = existingUser.Phone
                         },
 
                         Tutor = new
                         {
-                            FullName = tutor.IdAccountNavigation.FullName,
+                            Name = tutor.IdAccountNavigation.FullName,
                             Email = tutor.IdAccountNavigation.Email,
                             Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
                             Gender = tutor.IdAccountNavigation.Gender,

@@ -868,6 +868,9 @@ namespace ODTLearning.Repositories
                     // Thêm Booking vào context
                     await _context.Bookings.AddAsync(newBooking);
 
+                    // Cập nhật status của TimeSlot
+                    selectedTimeSlot.Status = "Đã đặt";
+
                     // Trừ 50000 từ AccountBalance của tutor
                     service.IdTutorNavigation.IdAccountNavigation.AccountBalance -= 50000;
                     Console.WriteLine("service.IdTutorNavigation.IdAccountNavigation.AccountBalance: " + service.IdTutorNavigation.IdAccountNavigation.AccountBalance);

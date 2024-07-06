@@ -666,5 +666,27 @@ namespace ODTLearning.Controllers
                 Data = response.Data
             });           
         }
+
+        [HttpGet("ViewClassService")]
+        public async Task<IActionResult> GetClassService(string id)
+        {
+            var response = await _repo.GetClassService(id);
+
+            if (!response.Success)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = response.Message
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
     }
 }
