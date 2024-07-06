@@ -817,5 +817,162 @@ namespace ODTLearning.Repositories
             };
         }
 
+        public async Task<ApiResponse<object>> GetClassService(string id)
+        {
+            var existingUser = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existingUser == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng"
+                };
+            }
+
+            if (existingUser.Roles.ToLower() == "học sinh")
+            {
+                var classRequests = await _context.ClassRequests.Include(x => x.IdRequestNavigation).Where(x => x.IdRequestNavigation.IdAccount == id).ToListAsync();
+
+                if (!classRequests.Any())
+                {
+                    return new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Không có lớp học nào"
+                    };
+                }
+
+                var list = new List<object>();
+
+                foreach (var classRequest in classRequests)
+                {
+                    var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == classRequest.IdTutor);
+
+                    var data = new
+                    {
+                        Title = classRequest.IdRequestNavigation?.Title,
+                        Subject = classRequest.IdRequestNavigation.IdSubjectNavigation?.SubjectName,
+                        TotalSession = classRequest.IdRequestNavigation.TotalSession,
+                        Price = classRequest.IdRequestNavigation.Price,
+                        Description = classRequest.IdRequestNavigation.Description,
+                        Class = classRequest.IdRequestNavigation.IdClassNavigation?.ClassName,
+                        LearningMethod = classRequest.IdRequestNavigation.LearningMethod,
+                        TimeTable = classRequest.IdRequestNavigation.TimeTable,
+                        TimeStart = classRequest.IdRequestNavigation.TimeStart,
+                        TimeEnd = classRequest.IdRequestNavigation.TimeEnd,
+                        Status = classRequest.IdRequestNavigation.Status,
+
+                        User = new
+                        {
+                            Name = existingUser.FullName,
+                            Email = existingUser.Email,
+                            DateOfBirth = existingUser.DateOfBirth,
+                            Gender = existingUser.Gender,
+                            Avatar = existingUser.Avatar,
+                            Address = existingUser.Address,
+                            Phone = existingUser.Phone
+                        },
+
+                        Tutor = new
+                        {
+                            Name = tutor.IdAccountNavigation.FullName,
+                            Email = tutor.IdAccountNavigation.Email,
+                            DateOfBirth = tutor.IdAccountNavigation.DateOfBirth,
+                            Gender = tutor.IdAccountNavigation.Gender,
+                            Avatar = tutor.IdAccountNavigation.Avatar,
+                            Address = tutor.IdAccountNavigation.Address,
+                            Phone = tutor.IdAccountNavigation.Phone
+                        }
+                    };
+
+                    list.Add(data);
+                }
+
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Thành công",
+                    Data = list
+                };
+            }
+
+            if (existingUser.Roles.ToLower() == "gia sư")
+            {
+                var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.IdAccountNavigation.Id == id);
+
+                var classRequests = await _context.ClassRequests.Include(x => x.IdRequestNavigation).Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (!classRequests.Any())
+                {
+                    return new ApiResponse<object>
+                    {
+                        Success = true,
+                        Message = "Không có lớp học nào"
+                    };
+                }
+
+                var list = new List<object>();
+
+                foreach (var classRequest in classRequests)
+                {
+                    var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == classRequest.IdRequestNavigation.IdAccount);
+
+                    var data = new
+                    {
+                        Title = classRequest.IdRequestNavigation?.Title,
+                        Subject = classRequest.IdRequestNavigation.IdSubjectNavigation?.SubjectName,
+                        TotalSession = classRequest.IdRequestNavigation.TotalSession,
+                        Price = classRequest.IdRequestNavigation.Price,
+                        Description = classRequest.IdRequestNavigation.Description,
+                        Class = classRequest.IdRequestNavigation.IdClassNavigation?.ClassName,
+                        LearningMethod = classRequest.IdRequestNavigation.LearningMethod,
+                        TimeTable = classRequest.IdRequestNavigation.TimeTable,
+                        TimeStart = classRequest.IdRequestNavigation.TimeStart,
+                        TimeEnd = classRequest.IdRequestNavigation.TimeEnd,
+                        Status = classRequest.IdRequestNavigation.Status,
+
+                        User = new
+                        {
+                            FullName = user.FullName,
+                            Email = user.Email,
+                            Date_of_birth = user.DateOfBirth,
+                            Gender = user.Gender,
+                            Avatar = user.Avatar,
+                            Address = user.Address,
+                            Phone = user.Phone
+                        },
+
+                        Tutor = new
+                        {
+                            FullName = tutor.IdAccountNavigation.FullName,
+                            Email = tutor.IdAccountNavigation.Email,
+                            Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
+                            Gender = tutor.IdAccountNavigation.Gender,
+                            Avatar = tutor.IdAccountNavigation.Avatar,
+                            Address = tutor.IdAccountNavigation.Address,
+                            Phone = tutor.IdAccountNavigation.Phone
+                        }
+                    };
+
+                    list.Add(data);
+                }
+
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Thành công",
+                    Data = list
+                };
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = false,
+                Message = "Người dùng không phải học sinh hay gia sư"
+            };
+        }
+
+
     }
 }

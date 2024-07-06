@@ -15,6 +15,8 @@ public partial class Booking
 
     public string? IdTimeSlot { get; set; }
 
+    public string? IdService { get; set; }
+
     public string? IdAccount { get; set; }
 
     public virtual Account? IdAccountNavigation { get; set; }
