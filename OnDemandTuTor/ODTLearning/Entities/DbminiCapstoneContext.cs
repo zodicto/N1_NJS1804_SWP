@@ -93,10 +93,6 @@ public partial class DbminiCapstoneContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("ID_Account");
-            entity.Property(e => e.IdService)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("ID_Service");
             entity.Property(e => e.IdTimeSlot)
                 .HasMaxLength(50)
                 .IsUnicode(false)
