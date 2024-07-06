@@ -320,14 +320,26 @@ namespace ODTLearning.Repositories
             // Kiểm tra số dư tài khoản
             const float costPerService = 50000;
             int serviceCount = await _context.Services.CountAsync(s => s.IdTutor == account.Tutor.Id);
-            float requiredBalance = (serviceCount + 1) * costPerService;
+            float remainingBalance = account.AccountBalance ?? 0;
 
-            if (account.AccountBalance < requiredBalance)
+            if (remainingBalance < costPerService)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = $"Số dư tài khoản không đủ. Bạn cần ít nhất {requiredBalance} để tạo dịch vụ này.",
+                    Message = $"Số dư tài khoản không đủ. Bạn cần ít nhất {costPerService} để tạo dịch vụ này.",
+                };
+            }
+
+            int maxServicesThatCanBeCreated = (int)(remainingBalance / costPerService);
+            int remainingServicesThatCanBeCreated = maxServicesThatCanBeCreated - serviceCount;
+
+            if (remainingServicesThatCanBeCreated <= 0)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = $"Số dư tài khoản không đủ để tạo thêm dịch vụ. Bạn có thể tạo thêm {remainingServicesThatCanBeCreated} dịch vụ nữa.",
                 };
             }
 
@@ -398,14 +410,22 @@ namespace ODTLearning.Repositories
                 }
             }
 
+            // Cập nhật lại số dư tài khoản sau khi tạo dịch vụ
+            account.AccountBalance -= costPerService;
             await _context.SaveChangesAsync();
+
+            // Tính lại số dịch vụ có thể tạo sau khi trừ số dư tài khoản
+            float newRemainingBalance = account.AccountBalance ?? 0;
+            int newMaxServicesThatCanBeCreated = (int)(newRemainingBalance / costPerService);
+            int newRemainingServicesThatCanBeCreated = newMaxServicesThatCanBeCreated - serviceCount;
 
             return new ApiResponse<bool>
             {
                 Success = true,
-                Message = "Tạo dịch vụ thành công",
+                Message = $"Tạo dịch vụ thành công. Bạn có thể tạo thêm {newRemainingServicesThatCanBeCreated} dịch vụ nữa.",
             };
         }
+
 
 
         public async Task<ApiResponse<List<ServiceLearningModel>>> GetAllServicesByAccountId(string id)
@@ -483,6 +503,8 @@ namespace ODTLearning.Repositories
         {
             // Tìm dịch vụ theo serviceId
             var service = await _context.Services
+                                        .Include(s => s.IdTutorNavigation)
+                                        .ThenInclude(t => t.IdAccountNavigation)
                                         .FirstOrDefaultAsync(s => s.Id == serviceId);
 
             if (service == null)
@@ -494,15 +516,15 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            //var ongoingBooking = service.Bookings.Any(b => b.Status == "Đang diễn ra");
-            //if (ongoingBooking)
-            //{
-            //    return new ApiResponse<ServiceLearningModel>
-            //    {
-            //        Success = false,
-            //        Message = "Không thể cập nhật dịch vụ vì có booking đang diễn ra."
-            //    };
-            //}
+            var account = service.IdTutorNavigation?.IdAccountNavigation;
+            if (account == null)
+            {
+                return new ApiResponse<ServiceLearningModel>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy tài khoản liên kết với dịch vụ này."
+                };
+            }
 
             // Cập nhật thông tin dịch vụ
             service.Title = model.tittle;
@@ -514,24 +536,48 @@ namespace ODTLearning.Repositories
             _context.Services.Update(service);
             await _context.SaveChangesAsync();
 
-            // Tạo đối tượng ServiceLearningModel để trả về thông tin cập nhật
-            var updatedServiceModel = new ServiceLearningModel
+            // Kiểm tra số dư tài khoản sau khi cập nhật dịch vụ
+            const float costPerService = 50000;
+            int serviceCount = await _context.Services.CountAsync(s => s.IdTutor == service.IdTutor);
+            float remainingBalance = account.AccountBalance ?? 0;
+
+            if (remainingBalance < costPerService)
             {
-                PricePerHour = service.PricePerHour,
-                tittle = service.Title,
-                subject = (await _context.Subjects.FirstOrDefaultAsync(s => s.Id == service.IdSubject))?.SubjectName,
-                Class = (await _context.Classes.FirstOrDefaultAsync(c => c.Id == service.IdClass))?.ClassName,
-                Description = service.Description,
-                LearningMethod = model.LearningMethod // Assuming LearningMethod is updated or used somewhere else
-            };
+                return new ApiResponse<ServiceLearningModel>
+                {
+                    Success = true,
+                    Message = "Cập nhật dịch vụ thành công. Tuy nhiên, số dư tài khoản không đủ để tạo thêm dịch vụ mới.",
+                    Data = new ServiceLearningModel
+                    {
+                        PricePerHour = service.PricePerHour,
+                        tittle = service.Title,
+                        subject = (await _context.Subjects.FirstOrDefaultAsync(s => s.Id == service.IdSubject))?.SubjectName,
+                        Class = (await _context.Classes.FirstOrDefaultAsync(c => c.Id == service.IdClass))?.ClassName,
+                        Description = service.Description,
+                        LearningMethod = model.LearningMethod
+                    }
+                };
+            }
+
+            int maxServicesThatCanBeCreated = (int)(remainingBalance / costPerService);
+            int remainingServicesThatCanBeCreated = maxServicesThatCanBeCreated - serviceCount;
 
             return new ApiResponse<ServiceLearningModel>
             {
                 Success = true,
-                Message = "Cập nhật dịch vụ thành công.",
-                Data = updatedServiceModel
+                Message = $"Cập nhật dịch vụ thành công. Bạn có thể tạo thêm {remainingServicesThatCanBeCreated} dịch vụ nữa.",
+                Data = new ServiceLearningModel
+                {
+                    PricePerHour = service.PricePerHour,
+                    tittle = service.Title,
+                    subject = (await _context.Subjects.FirstOrDefaultAsync(s => s.Id == service.IdSubject))?.SubjectName,
+                    Class = (await _context.Classes.FirstOrDefaultAsync(c => c.Id == service.IdClass))?.ClassName,
+                    Description = service.Description,
+                    LearningMethod = model.LearningMethod
+                }
             };
         }
+
 
 
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests()

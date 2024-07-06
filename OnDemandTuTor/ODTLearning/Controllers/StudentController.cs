@@ -433,12 +433,13 @@ namespace ODTLearning.Controllers
             }
         }
 
-        [HttpGet("GetService")]
-        public async Task<IActionResult> GetService()
+
+        [HttpGet("GetAllService")]
+        public async Task<IActionResult> GetAllService()
         {
             try
             {
-                var response = await _repo.GetService();
+                var response = await _repo.GetAllServices();
 
                 if (response.Success)
                 {

@@ -17,10 +17,4 @@
         public List<string>? TimeSlots { get; set; }
     }
 
-
-    public class TimeAvailableModel
-    {
-       public string? Date { get; set; }
-       public string?  TimeSlot {get;set;}
-    }
 }

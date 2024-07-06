@@ -237,7 +237,6 @@ namespace ODTLearning.Repositories
             };
         }
 
-
         public async Task<ApiResponse<bool>> DeleteRequestLearning(string accountId, string requestId)
         {
             // Tìm tài khoản theo accountId
@@ -802,13 +801,13 @@ namespace ODTLearning.Repositories
                 Data = data
             };
         }
-        public async Task<ApiResponse<bool>> BookingServiceLearning(string id, string idService, BookingServiceLearingModels model)
+        public async Task<ApiResponse<BookingServiceModel>> BookingServiceLearning(string id, string idService, BookingServiceLearingModels model)
         {
             // Tìm tài khoản theo id
             var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == id);
             if (account == null)
             {
-                return new ApiResponse<bool>
+                return new ApiResponse<BookingServiceModel>
                 {
                     Success = false,
                     Message = "Không tìm thấy tài khoản nào với ID này!",
@@ -816,127 +815,156 @@ namespace ODTLearning.Repositories
             }
 
             // Tìm dịch vụ theo idService
-            var service = await _context.Services.FirstOrDefaultAsync(s => s.Id == idService);
+            var service = await _context.Services
+                                        .Include(s => s.IdTutorNavigation)
+                                        .ThenInclude(t => t.IdAccountNavigation)
+                                        .Include(s => s.Dates)
+                                        .ThenInclude(d => d.TimeSlots)
+                                        .FirstOrDefaultAsync(s => s.Id == idService);
             if (service == null)
             {
-                return new ApiResponse<bool>
+                return new ApiResponse<BookingServiceModel>
                 {
                     Success = false,
                     Message = "Không tìm thấy dịch vụ nào với ID này!",
                 };
             }
 
+            // Tìm ngày và khung giờ phù hợp
+            var selectedDate = service.Dates.FirstOrDefault(d => d.Date1 == model.date);
+            if (selectedDate == null)
+            {
+                return new ApiResponse<BookingServiceModel>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy ngày nào phù hợp với dịch vụ này!",
+                };
+            }
 
+            // Tìm khung giờ dựa vào ID của date và so sánh với bảng timeslot
+            var selectedTimeSlot = await _context.TimeSlots.FirstOrDefaultAsync(ts => ts.IdDate == selectedDate.Id && ts.TimeSlot1.ToString() == model.timeAvalable);
+            if (selectedTimeSlot == null)
+            {
+                return new ApiResponse<BookingServiceModel>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy khung giờ nào phù hợp với dịch vụ này!",
+                };
+            }
             // Tạo đối tượng Booking mới
             var newBooking = new Booking
             {
                 Id = Guid.NewGuid().ToString(),
-
                 IdAccount = id,
                 Duration = model.Duration,
                 Price = model.Price,
-
-                Status = "Đang diễn ra" // hoặc trạng thái khởi tạo phù hợp khác
+                Status = "Đang diễn ra",
+                IdTimeSlot = selectedTimeSlot.Id
             };
 
             // Thêm Booking vào context
             await _context.Bookings.AddAsync(newBooking);
 
-            // Tìm tài khoản của tutor
-            var tutor = await _context.Tutors
-                .Include(t => t.IdAccountNavigation)
-                .FirstOrDefaultAsync(t => t.Id == service.IdTutor);
-
-            if (tutor == null || tutor.IdAccountNavigation == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy tài khoản của gia sư!",
-                };
-            }
-
             // Trừ 50000 từ AccountBalance của tutor
-            tutor.IdAccountNavigation.AccountBalance -= 50000;
+            service.IdTutorNavigation.IdAccountNavigation.AccountBalance -= 50000;
 
             // Lưu thay đổi vào context
             await _context.SaveChangesAsync();
 
-            return new ApiResponse<bool>
+            // Chuẩn bị dữ liệu trả về
+            var data = new BookingServiceModel
+            {
+                Tutor = new
+                {
+                    Name = service.IdTutorNavigation.IdAccountNavigation.FullName,
+                    Email = service.IdTutorNavigation.IdAccountNavigation.Email,
+                    DateOfBirth = service.IdTutorNavigation.IdAccountNavigation.DateOfBirth,
+                    Gender = service.IdTutorNavigation.IdAccountNavigation.Gender,
+                    Avatar = service.IdTutorNavigation.IdAccountNavigation.Avatar,
+                    Address = service.IdTutorNavigation.IdAccountNavigation.Address,
+                    Phone = service.IdTutorNavigation.IdAccountNavigation.Phone
+                },
+                User = new
+                {
+                    Name = account.FullName,
+                    Email = account.Email,
+                    DateOfBirth = account.DateOfBirth,
+                    Gender = account.Gender,
+                    Avatar = account.Avatar,
+                    Address = account.Address,
+                    Phone = account.Phone
+                },
+                Service = new
+                {
+                    Title = service.Title,
+                    Description = service.Description,
+                    PricePerHour = service.PricePerHour,
+                    LearningMethod = service.LearningMethod,
+                    Class = service.IdClassNavigation?.ClassName,
+                    Subject = service.IdSubjectNavigation?.SubjectName
+                },
+                Booking = new
+                {
+                    Date = selectedDate.Date1,
+                    TimeSlot = selectedTimeSlot.TimeSlot1,
+                    Duration = newBooking.Duration,
+                    Price = newBooking.Price,
+                    Status = newBooking.Status
+                }
+            };
+
+            return new ApiResponse<BookingServiceModel>
             {
                 Success = true,
                 Message = "Đặt dịch vụ thành công và tài khoản của gia sư đã bị trừ 50000.",
+                Data = data
             };
         }
 
-        public async Task<ApiResponse<object>> GetService()
+        public async Task<ApiResponse<List<object>>> GetAllServices()
         {
-            var services = await _context.Services.Include(x => x.IdClassNavigation).Include(x => x.IdSubjectNavigation).ToListAsync();
+            var services = await _context.Services
+                .Include(s => s.IdClassNavigation)
+                .Include(s => s.IdSubjectNavigation)
+                .Include(s => s.IdTutorNavigation)
+                    .ThenInclude(t => t.IdAccountNavigation)
+                .Include(s => s.Dates)
+                    .ThenInclude(d => d.TimeSlots)
+                .ToListAsync();
 
             if (!services.Any())
             {
-                return new ApiResponse<object>
+                return new ApiResponse<List<object>>
                 {
                     Success = false,
-                    Message = "Chưa có dịch vụ nào",
+                    Message = "Không có dịch vụ nào được tìm thấy",
                 };
             }
 
-            var list = new List<object>();
-
-            foreach (var service in services)
+            var serviceModels = services.Select(service => new
             {
-                var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).SingleOrDefaultAsync(x => x.Id == service.IdTutor);
-
-                var dates = await _context.Dates.Where(x => x.IdService == service.Id).ToListAsync();
-
-                foreach (var date in dates)
+                Id = service.Id, // Bao gồm Id của dịch vụ
+                PricePerHour = service.PricePerHour,
+                tittle = service.Title,
+                Description = service.Description,
+                LearningMethod = service.LearningMethod,
+                Class = service.IdClassNavigation?.ClassName,
+                subject = service.IdSubjectNavigation?.SubjectName,
+                Schedule = service.Dates.Select(date => new
                 {
-                    var timeSlots = await _context.TimeSlots.Where(x => x.IdDate == date.Id).ToListAsync();
+                    Date = date.Date1.HasValue ? date.Date1.Value.ToString("yyyy-MM-dd") : null, // Định dạng chuỗi cho Date
+                    TimeSlots = date.TimeSlots.Select(slot => slot.TimeSlot1.HasValue ? slot.TimeSlot1.Value.ToString("HH:mm") : null).ToList() // Định dạng chuỗi cho TimeSlot
+                }).ToList()
+            }).Cast<object>().ToList();
 
-                    var timeTable = new
-                    {
-                        Date = date,
-                        TimeSlots = timeSlots
-                    };
-
-                    var data = new
-                    {
-                        Tutor = new
-                        {
-                            Id = tutor.IdAccountNavigation.Id,
-                            FullName = tutor.IdAccountNavigation.FullName,
-                            Email = tutor.IdAccountNavigation.Email,
-                            Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
-                            Gender = tutor.IdAccountNavigation.Gender,
-                            Avatar = tutor.IdAccountNavigation.Avatar,
-                            Address = tutor.IdAccountNavigation.Address,
-                            Phone = tutor.IdAccountNavigation.Phone
-                        },
-
-                        Service = new
-                        {
-                            PricePerHour = service.PricePerHour,
-                            Title = service.Title,
-                            Description = service.Description,
-                            LearningMethod = service.LearningMethod,
-                            Subject = service.IdSubjectNavigation.SubjectName,
-                            Class = service.IdClassNavigation.ClassName
-                        },
-
-                        TimeTable = timeTable
-                    };
-
-                    list.Add(data);
-                }     
-            }
-
-            return new ApiResponse<object>
+            return new ApiResponse<List<object>>
             {
                 Success = true,
-                Message = "Thành công",
-                Data = list
+                Message = "Lấy danh sách dịch vụ thành công",
+                Data = serviceModels
             };
         }
+
+
     }
 }
