@@ -428,7 +428,7 @@ namespace ODTLearning.Repositories
 
 
 
-        public async Task<ApiResponse<List<ServiceLearningModel>>> GetAllServicesByAccountId(string id)
+        public async Task<ApiResponse<List<object>>> GetAllServicesByAccountId(string id)
         {
             // Tìm tài khoản theo IdAccount và vai trò "gia sư"
             var account = await _context.Accounts
@@ -437,7 +437,7 @@ namespace ODTLearning.Repositories
 
             if (account == null || account.Tutor == null)
             {
-                return new ApiResponse<List<ServiceLearningModel>>
+                return new ApiResponse<List<object>>
                 {
                     Success = false,
                     Message = "Không tìm thấy tài khoản nào với ID này hoặc bạn chưa đăng ký làm gia sư!",
@@ -447,25 +447,50 @@ namespace ODTLearning.Repositories
             // Tìm tất cả các dịch vụ của gia sư
             var services = await _context.Services
                                  .Where(s => s.IdTutor == account.Tutor.Id)
+                                 .Include(s => s.Dates)
+                                 .ThenInclude(d => d.TimeSlots)
                                  .ToListAsync();
 
-            // Chuyển đổi các dịch vụ sang mô hình ServiceLearningModel
-            var serviceModels = services.Select(s => new ServiceLearningModel
+            // Chuyển đổi các dịch vụ sang mô hình ServiceLearningModel và bao gồm ID của dịch vụ
+            var serviceModels = services.Select(s => new
             {
-                tittle = s.Title,
-                Description = s.Description,
-                PricePerHour = s.PricePerHour,
-                Class = _context.Classes.FirstOrDefault(cl => cl.Id == s.IdClass)?.ClassName,
-                subject = _context.Subjects.FirstOrDefault(sub => sub.Id == s.IdSubject)?.SubjectName
+                Id = s.Id, // Truyền ID của service
+                ServiceDetails = new ServiceLearningModel
+                {
+                    tittle = s.Title,
+                    Description = s.Description,
+                    PricePerHour = s.PricePerHour,
+                    Class = _context.Classes.FirstOrDefault(cl => cl.Id == s.IdClass)?.ClassName,
+                    subject = _context.Subjects.FirstOrDefault(sub => sub.Id == s.IdSubject)?.SubjectName,
+                    LearningMethod = s.LearningMethod,
+                    Schedule = s.Dates.Select(d => new ServiceDateModel
+                    {
+                        Date = d.Date1.HasValue ? d.Date1.Value.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd") : null,
+                        TimeSlots = d.TimeSlots
+                             .Where(ts => ts.TimeSlot1.HasValue)
+                             .Select(ts => ts.TimeSlot1.Value.ToString("HH:mm"))
+                             .ToList()
+                    }).ToList()
+                }
             }).ToList();
 
-            return new ApiResponse<List<ServiceLearningModel>>
+            // Kiểm tra các giá trị trong serviceModels
+            foreach (var serviceModel in serviceModels)
+            {
+                Console.WriteLine($"Service ID: {serviceModel.Id}");
+                Console.WriteLine($"Title: {serviceModel.ServiceDetails.tittle}");
+                Console.WriteLine($"LearningMethod: {serviceModel.ServiceDetails.LearningMethod}");
+                Console.WriteLine($"Schedule: {serviceModel.ServiceDetails.Schedule}");
+            }
+
+            return new ApiResponse<List<object>>
             {
                 Success = true,
                 Message = "Lấy danh sách dịch vụ thành công",
-                Data = serviceModels
+                Data = serviceModels.Cast<object>().ToList()
             };
         }
+
         public async Task<ApiResponse<bool>> DeleteServiceById(string serviceId)
         {
             var service = await _context.Services

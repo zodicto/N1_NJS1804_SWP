@@ -95,7 +95,7 @@ namespace ODTLearning.Repositories
 
 
             // Tạo một đối tượng Schedule mới nếu có thông tin về lịch trình
-            if ( parsedTimeStart.HasValue && parsedTimeEnd.HasValue)
+            if (parsedTimeStart.HasValue && parsedTimeEnd.HasValue)
             {
                 var requestOfStudent = new Request
                 {
@@ -220,7 +220,7 @@ namespace ODTLearning.Repositories
             requestToUpdate.TimeStart = parsedTimeStart ?? requestToUpdate.TimeStart;
             requestToUpdate.TimeEnd = parsedTimeEnd ?? requestToUpdate.TimeEnd;
             requestToUpdate.TimeTable = model.TimeTable ?? requestToUpdate.TimeTable;
-            requestToUpdate.TotalSession = model.TotalSessions?? requestToUpdate.TotalSession;
+            requestToUpdate.TotalSession = model.TotalSessions ?? requestToUpdate.TotalSession;
             requestToUpdate.Description = model.Description ?? requestToUpdate.Description;
             requestToUpdate.LearningMethod = model.LearningMethod ?? requestToUpdate.LearningMethod;
             requestToUpdate.IdSubject = subjectEntity.Id;
@@ -286,10 +286,6 @@ namespace ODTLearning.Repositories
                 Message = "Yêu cầu đã được xóa thành công",
             };
         }
-
-
-
-
 
         public async Task<ApiResponse<List<RequestLearningResponse>>> GetPendingRequestsByAccountId(string accountId)
         {
@@ -512,10 +508,10 @@ namespace ODTLearning.Repositories
             var rent = new Rent
             {
                 Id = Guid.NewGuid().ToString(),
-                Price = request.Price,   
-                CreateDate = DateTime.Now,                
+                Price = request.Price,
+                CreateDate = DateTime.Now,
                 IdAccount = request.IdAccount,
-                IdTutor = tutor.Id                
+                IdTutor = tutor.Id
             };
 
             var classRequest = new ClassRequest
@@ -587,7 +583,7 @@ namespace ODTLearning.Repositories
                     Message = "Không tìm thấy gia sư",
                 };
             }
-      
+
             var complaint = new Complaint
             {
                 Id = Guid.NewGuid().ToString(),
@@ -629,7 +625,7 @@ namespace ODTLearning.Repositories
                     Message = "Không tìm thấy gia sư",
                 };
             }
- 
+
             var review = new Review
             {
                 Id = Guid.NewGuid().ToString(),
@@ -640,7 +636,7 @@ namespace ODTLearning.Repositories
 
             await _context.Reviews.AddAsync(review);
             await _context.SaveChangesAsync();
-           
+
             return new ApiResponse<bool>
             {
                 Success = true,
@@ -813,6 +809,7 @@ namespace ODTLearning.Repositories
                     Message = "Không tìm thấy tài khoản nào với ID này!",
                 };
             }
+            Console.WriteLine("Account ID: " + account.Id);
 
             // Tìm dịch vụ theo idService
             var service = await _context.Services
@@ -829,6 +826,7 @@ namespace ODTLearning.Repositories
                     Message = "Không tìm thấy dịch vụ nào với ID này!",
                 };
             }
+            Console.WriteLine("Service ID: " + service.Id);
 
             // Tìm ngày và khung giờ phù hợp
             var selectedDate = service.Dates.FirstOrDefault(d => d.Date1 == model.date);
@@ -840,84 +838,98 @@ namespace ODTLearning.Repositories
                     Message = "Không tìm thấy ngày nào phù hợp với dịch vụ này!",
                 };
             }
+            Console.WriteLine("Selected Date ID: " + selectedDate.Id);
+            Console.WriteLine("Service ID from Date: " + selectedDate.IdService);
 
             // Tìm khung giờ dựa vào ID của date và so sánh với bảng timeslot
-            var selectedTimeSlot = await _context.TimeSlots.FirstOrDefaultAsync(ts => ts.IdDate == selectedDate.Id && ts.TimeSlot1.ToString() == model.timeAvalable);
-            if (selectedTimeSlot == null)
+            foreach (var ts in selectedDate.TimeSlots)
             {
-                return new ApiResponse<BookingServiceModel>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy khung giờ nào phù hợp với dịch vụ này!",
-                };
-            }
-            // Tạo đối tượng Booking mới
-            var newBooking = new Booking
-            {
-                Id = Guid.NewGuid().ToString(),
-                IdAccount = id,
-                Duration = model.Duration,
-                Price = model.Price,
-                Status = "Đang diễn ra",
-                IdTimeSlot = selectedTimeSlot.Id
-            };
+                var timeSlot24Hour = DateTime.Parse(ts.TimeSlot1.ToString()).ToString("HH:mm");
+                Console.WriteLine("TimeSlot1 (24-hour): " + timeSlot24Hour);
+                Console.WriteLine("model.timeAvalable: " + model.timeAvalable);
 
-            // Thêm Booking vào context
-            await _context.Bookings.AddAsync(newBooking);
+                if (timeSlot24Hour == model.timeAvalable)
+                {
+                    Console.WriteLine("Matched TimeSlot: " + ts.Id);
 
-            // Trừ 50000 từ AccountBalance của tutor
-            service.IdTutorNavigation.IdAccountNavigation.AccountBalance -= 50000;
+                    var selectedTimeSlot = ts;
 
-            // Lưu thay đổi vào context
-            await _context.SaveChangesAsync();
+                    // Tạo đối tượng Booking mới
+                    var newBooking = new Booking
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        IdAccount = id,
+                        Duration = model.Duration,
+                        Price = model.Price,
+                        Status = "Đang diễn ra",
+                        IdTimeSlot = selectedTimeSlot.Id
+                    };
 
-            // Chuẩn bị dữ liệu trả về
-            var data = new BookingServiceModel
-            {
-                Tutor = new
-                {
-                    Name = service.IdTutorNavigation.IdAccountNavigation.FullName,
-                    Email = service.IdTutorNavigation.IdAccountNavigation.Email,
-                    DateOfBirth = service.IdTutorNavigation.IdAccountNavigation.DateOfBirth,
-                    Gender = service.IdTutorNavigation.IdAccountNavigation.Gender,
-                    Avatar = service.IdTutorNavigation.IdAccountNavigation.Avatar,
-                    Address = service.IdTutorNavigation.IdAccountNavigation.Address,
-                    Phone = service.IdTutorNavigation.IdAccountNavigation.Phone
-                },
-                User = new
-                {
-                    Name = account.FullName,
-                    Email = account.Email,
-                    DateOfBirth = account.DateOfBirth,
-                    Gender = account.Gender,
-                    Avatar = account.Avatar,
-                    Address = account.Address,
-                    Phone = account.Phone
-                },
-                Service = new
-                {
-                    Title = service.Title,
-                    Description = service.Description,
-                    PricePerHour = service.PricePerHour,
-                    LearningMethod = service.LearningMethod,
-                    Class = service.IdClassNavigation?.ClassName,
-                    Subject = service.IdSubjectNavigation?.SubjectName
-                },
-                Booking = new
-                {
-                    Date = selectedDate.Date1,
-                    TimeSlot = selectedTimeSlot.TimeSlot1,
-                    Duration = newBooking.Duration,
-                    Price = newBooking.Price,
-                    Status = newBooking.Status
+                    // Thêm Booking vào context
+                    await _context.Bookings.AddAsync(newBooking);
+
+                    // Trừ 50000 từ AccountBalance của tutor
+                    service.IdTutorNavigation.IdAccountNavigation.AccountBalance -= 50000;
+                    Console.WriteLine("service.IdTutorNavigation.IdAccountNavigation.AccountBalance: " + service.IdTutorNavigation.IdAccountNavigation.AccountBalance);
+
+                    // Lưu thay đổi vào context
+                    await _context.SaveChangesAsync();
+
+                    // Chuẩn bị dữ liệu trả về
+                    var data = new BookingServiceModel
+                    {
+                        Tutor = new
+                        {
+                            Name = service.IdTutorNavigation.IdAccountNavigation.FullName,
+                            Email = service.IdTutorNavigation.IdAccountNavigation.Email,
+                            DateOfBirth = service.IdTutorNavigation.IdAccountNavigation.DateOfBirth,
+                            Gender = service.IdTutorNavigation.IdAccountNavigation.Gender,
+                            Avatar = service.IdTutorNavigation.IdAccountNavigation.Avatar,
+                            Address = service.IdTutorNavigation.IdAccountNavigation.Address,
+                            Phone = service.IdTutorNavigation.IdAccountNavigation.Phone
+                        },
+                        User = new
+                        {
+                            Name = account.FullName,
+                            Email = account.Email,
+                            DateOfBirth = account.DateOfBirth,
+                            Gender = account.Gender,
+                            Avatar = account.Avatar,
+                            Address = account.Address,
+                            Phone = account.Phone
+                        },
+                        Service = new
+                        {
+                            Title = service.Title,
+                            Description = service.Description,
+                            PricePerHour = service.PricePerHour,
+                            LearningMethod = service.LearningMethod,
+                            Class = service.IdClassNavigation?.ClassName,
+                            Subject = service.IdSubjectNavigation?.SubjectName
+                        },
+                        Booking = new
+                        {
+                            Date = selectedDate.Date1,
+                            TimeSlot = selectedTimeSlot.TimeSlot1,
+                            Duration = newBooking.Duration,
+                            Price = newBooking.Price,
+                            Status = newBooking.Status
+                        }
+                    };
+
+                    return new ApiResponse<BookingServiceModel>
+                    {
+                        Success = true,
+                        Message = "Đặt dịch vụ thành công và tài khoản của gia sư đã bị trừ 50000.",
+                        Data = data
+                    };
                 }
-            };
+            }
 
             return new ApiResponse<BookingServiceModel>
             {
-                Success = true,
-                Message = "Đặt dịch vụ thành công và tài khoản của gia sư đã bị trừ 50000.",
-                Data = data
+                Success = false,
+                Message = "Không tìm thấy khung giờ nào phù hợp với dịch vụ này!",
             };
         }
 
@@ -964,7 +976,6 @@ namespace ODTLearning.Repositories
                 Data = serviceModels
             };
         }
-
 
     }
 }

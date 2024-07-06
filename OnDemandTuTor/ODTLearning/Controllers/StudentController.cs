@@ -412,7 +412,10 @@ namespace ODTLearning.Controllers
                     return Ok(new
                     {
                         Success = true,
-                        Message = response.Message
+                        Message = response.Message,
+                        response.Data
+
+
                     });
                 }
 
