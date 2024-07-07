@@ -371,7 +371,7 @@ namespace ODTLearning.Repositories
             var serviceOfTutor = new Service
             {
                 Id = Guid.NewGuid().ToString(),
-                Title = model.tittle,
+                Title = model.Title,
                 Description = model.Description,
                 LearningMethod = model.LearningMethod,
                 PricePerHour = model.PricePerHour,
@@ -403,6 +403,7 @@ namespace ODTLearning.Repositories
                     {
                         Id = Guid.NewGuid().ToString(),
                         TimeSlot1 = TimeOnly.Parse(timeSlot),
+                        Status = "Chưa đặt",
                         IdDate = dateEntity.Id
                     };
 
@@ -411,7 +412,6 @@ namespace ODTLearning.Repositories
             }
 
             // Cập nhật lại số dư tài khoản sau khi tạo dịch vụ
-            account.AccountBalance -= costPerService;
             await _context.SaveChangesAsync();
 
             // Tính lại số dịch vụ có thể tạo sau khi trừ số dư tài khoản
@@ -457,7 +457,7 @@ namespace ODTLearning.Repositories
                 Id = s.Id, // Truyền ID của service
                 ServiceDetails = new ServiceLearningModel
                 {
-                    tittle = s.Title,
+                    Title = s.Title,
                     Description = s.Description,
                     PricePerHour = s.PricePerHour,
                     Class = _context.Classes.FirstOrDefault(cl => cl.Id == s.IdClass)?.ClassName,
@@ -478,7 +478,7 @@ namespace ODTLearning.Repositories
             foreach (var serviceModel in serviceModels)
             {
                 Console.WriteLine($"Service ID: {serviceModel.Id}");
-                Console.WriteLine($"Title: {serviceModel.ServiceDetails.tittle}");
+                Console.WriteLine($"Title: {serviceModel.ServiceDetails.Title}");
                 Console.WriteLine($"LearningMethod: {serviceModel.ServiceDetails.LearningMethod}");
                 Console.WriteLine($"Schedule: {serviceModel.ServiceDetails.Schedule}");
             }
@@ -552,7 +552,7 @@ namespace ODTLearning.Repositories
             }
 
             // Cập nhật thông tin dịch vụ
-            service.Title = model.tittle;
+            service.Title = model.Title;
             service.Description = model.Description;
             service.PricePerHour = model.PricePerHour;
             service.IdClass = (await _context.Classes.FirstOrDefaultAsync(c => c.ClassName == model.Class))?.Id;
@@ -575,7 +575,7 @@ namespace ODTLearning.Repositories
                     Data = new ServiceLearningModel
                     {
                         PricePerHour = service.PricePerHour,
-                        tittle = service.Title,
+                        Title = service.Title,
                         subject = (await _context.Subjects.FirstOrDefaultAsync(s => s.Id == service.IdSubject))?.SubjectName,
                         Class = (await _context.Classes.FirstOrDefaultAsync(c => c.Id == service.IdClass))?.ClassName,
                         Description = service.Description,
@@ -594,7 +594,7 @@ namespace ODTLearning.Repositories
                 Data = new ServiceLearningModel
                 {
                     PricePerHour = service.PricePerHour,
-                    tittle = service.Title,
+                    Title = service.Title,
                     subject = (await _context.Subjects.FirstOrDefaultAsync(s => s.Id == service.IdSubject))?.SubjectName,
                     Class = (await _context.Classes.FirstOrDefaultAsync(c => c.Id == service.IdClass))?.ClassName,
                     Description = service.Description,

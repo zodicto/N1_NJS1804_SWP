@@ -605,7 +605,7 @@ namespace ODTLearning.Repositories
         public async Task<ApiResponse<bool>> CreateReview(ReviewModel model)
         {
             var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
-
+            Console.WriteLine("userid : " + user?.Id);
             if (user == null)
             {
                 return new ApiResponse<bool>
@@ -615,8 +615,9 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == model.IdAccountTutor && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
-
+            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation)
+                                             .FirstOrDefaultAsync(x => x.IdAccount == model.IdAccountTutor && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+            Console.WriteLine("tutorid : " + tutor?.Id);
             if (tutor == null)
             {
                 return new ApiResponse<bool>
@@ -630,8 +631,9 @@ namespace ODTLearning.Repositories
             {
                 Id = Guid.NewGuid().ToString(),
                 Feedback = model.FeedBack,
+                Rating = model.Rating,
                 IdAccount = model.IdUser,
-                IdTutor = tutor.Id,
+                IdTutor = tutor.Id
             };
 
             await _context.Reviews.AddAsync(review);
@@ -643,6 +645,7 @@ namespace ODTLearning.Repositories
                 Message = "Đánh giá thành công"
             };
         }
+
 
         public async Task<ApiResponse<List<RequestLearningResponse>>> GetClassProcess(string id)
         {
@@ -868,6 +871,9 @@ namespace ODTLearning.Repositories
                     // Thêm Booking vào context
                     await _context.Bookings.AddAsync(newBooking);
 
+                    // Cập nhật status của TimeSlot
+                    selectedTimeSlot.Status = "Đã đặt";
+
                     // Trừ 50000 từ AccountBalance của tutor
                     service.IdTutorNavigation.IdAccountNavigation.AccountBalance -= 50000;
                     Console.WriteLine("service.IdTutorNavigation.IdAccountNavigation.AccountBalance: " + service.IdTutorNavigation.IdAccountNavigation.AccountBalance);
@@ -920,7 +926,7 @@ namespace ODTLearning.Repositories
                     return new ApiResponse<BookingServiceModel>
                     {
                         Success = true,
-                        Message = "Đặt dịch vụ thành công và tài khoản của gia sư đã bị trừ 50000.",
+                        Message = "Đặt dịch vụ thành công .",
                         Data = data
                     };
                 }
@@ -955,9 +961,9 @@ namespace ODTLearning.Repositories
 
             var serviceModels = services.Select(service => new
             {
-                Id = service.Id, // Bao gồm Id của dịch vụ
+                IdService = service.Id, // Bao gồm Id của dịch vụ
                 PricePerHour = service.PricePerHour,
-                tittle = service.Title,
+                Title = service.Title,
                 Description = service.Description,
                 LearningMethod = service.LearningMethod,
                 Class = service.IdClassNavigation?.ClassName,
@@ -965,7 +971,7 @@ namespace ODTLearning.Repositories
                 Schedule = service.Dates.Select(date => new
                 {
                     Date = date.Date1.HasValue ? date.Date1.Value.ToString("yyyy-MM-dd") : null, // Định dạng chuỗi cho Date
-                    TimeSlots = date.TimeSlots.Select(slot => slot.TimeSlot1.HasValue ? slot.TimeSlot1.Value.ToString("HH:mm") : null).ToList() // Định dạng chuỗi cho TimeSlot
+                    TimeSlots = date.TimeSlots.Select(slot => slot.TimeSlot1.HasValue && slot.Status.ToLower() == "chưa đặt" ? slot.TimeSlot1.Value.ToString("HH:mm") : null).ToList() // Định dạng chuỗi cho TimeSlot
                 }).ToList()
             }).Cast<object>().ToList();
 

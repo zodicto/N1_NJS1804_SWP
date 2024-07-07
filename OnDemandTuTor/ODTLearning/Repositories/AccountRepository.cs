@@ -545,7 +545,7 @@ namespace ODTLearning.Repositories
             return new ApiResponse<object>
             {
                 Success = true,
-                Message = "Cập nhật thông tin người dùng thành công",
+                Message = "Cập nhật thông tin thành công",
                 Data = updatedUserResponse
             };
         }
@@ -583,7 +583,7 @@ namespace ODTLearning.Repositories
             return new ApiResponse<object>
             {
                 Success = true,
-                Message = "Lấy thông tin người dùng thành công",
+                Message = "Lấy thông tin thành công",
                 Data = userProfile
             };
         }
@@ -604,7 +604,7 @@ namespace ODTLearning.Repositories
                     Email = user.email,
                     Roles = user.roles,
                     AccountBalance = 0, // Đặt AccountBalance bằng 0
-                    Avatar = user.avatar   // Gán URL của ảnh đại diện vào thuộc tính Avatar
+                    Avatar = user.avatar // Gán URL của ảnh đại diện vào thuộc tính Avatar
                 };
 
                 await _context.Accounts.AddAsync(newUser);
@@ -629,7 +629,7 @@ namespace ODTLearning.Repositories
             }
             else
             {
-                // Người dùng đã tồn tại, cập nhật thông tin người dùng
+                // Người dùng đã tồn tại, cập nhật thông tin người dùng ngoại trừ AccountBalance và Roles nếu roles là "gia sư"
                 existingUser.FullName = user.fullName;
                 existingUser.Avatar = user.avatar; // Cập nhật URL của ảnh đại diện nếu cần
 
@@ -711,7 +711,7 @@ namespace ODTLearning.Repositories
                         {
                             Name = existingUser.FullName,
                             Email = existingUser.Email,
-                            DateOfBirth = existingUser.DateOfBirth,
+                            Date_of_birth = existingUser.DateOfBirth,
                             Gender = existingUser.Gender,
                             Avatar = existingUser.Avatar,
                             Address = existingUser.Address,
@@ -722,7 +722,7 @@ namespace ODTLearning.Repositories
                         {
                             Name = tutor.IdAccountNavigation.FullName,
                             Email = tutor.IdAccountNavigation.Email,
-                            DateOfBirth = tutor.IdAccountNavigation.DateOfBirth,
+                            Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
                             Gender = tutor.IdAccountNavigation.Gender,
                             Avatar = tutor.IdAccountNavigation.Avatar,
                             Address = tutor.IdAccountNavigation.Address,
@@ -816,6 +816,167 @@ namespace ODTLearning.Repositories
                 Message = "Người dùng không phải học sinh hay gia sư"
             };
         }
+
+        public async Task<ApiResponse<object>> GetClassService(string id)
+        {
+            var existingUser = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existingUser == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng"
+                };
+            }
+
+            if (existingUser.Roles.ToLower() == "học sinh")
+            {
+                var bookings = await _context.Bookings.Include(x => x.IdAccountNavigation)
+                                                      .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
+                                                      .Where(x => x.IdAccount == id)
+                                                      .ToListAsync();
+                
+
+                if (!bookings.Any())
+                {
+                    return new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Bạn không có lớp học",
+                    };
+                }
+
+                var list = new List<object>();
+
+                foreach (var booking in bookings)
+                {
+                    var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor);
+
+                    var data = new
+                    {
+                        Title = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title,
+                        Subject = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdSubjectNavigation?.SubjectName,
+                        Price = booking.Price,
+                        Description = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Description,
+                        Class = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdClassNavigation?.ClassName,
+                        LearningMethod = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.LearningMethod,
+                        Date = booking.IdTimeSlotNavigation.IdDateNavigation.Date1,
+                        TimeSlot = booking.IdTimeSlotNavigation.TimeSlot1,
+                        Status = booking.Status,
+
+                        User = new
+                        {
+                            Name = existingUser.FullName,
+                            Email = existingUser.Email,
+                            Date_of_birth = existingUser.DateOfBirth,
+                            Gender = existingUser.Gender,
+                            Avatar = existingUser.Avatar,
+                            Address = existingUser.Address,
+                            Phone = existingUser.Phone
+                        },
+
+                        Tutor = new
+                        {
+                            Name = tutor.IdAccountNavigation.FullName,
+                            Email = tutor.IdAccountNavigation.Email,
+                            Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
+                            Gender = tutor.IdAccountNavigation.Gender,
+                            Avatar = tutor.IdAccountNavigation.Avatar,
+                            Address = tutor.IdAccountNavigation.Address,
+                            Phone = tutor.IdAccountNavigation.Phone
+                        }
+                    };
+
+                    list.Add(data);
+                }
+
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Thành công",
+                    Data = list
+                };
+            }
+
+            if (existingUser.Roles.ToLower() == "gia sư")
+            {
+                var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.IdAccountNavigation.Id == id);
+
+                var bookings = await _context.Bookings.Include(x => x.IdAccountNavigation)
+                                                      .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
+                                                      .Where(x => x.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor == tutor.Id)
+                                                      .ToListAsync();
+
+
+                if (!bookings.Any())
+                {
+                    return new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Bạn không có lớp học",
+                    };
+                }
+
+                var list = new List<object>();
+
+                foreach (var booking in bookings)
+                {
+                    var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == booking.IdAccount);
+
+                    var data = new
+                    {
+                        Title = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title,
+                        Subject = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdSubjectNavigation?.SubjectName,
+                        Price = booking.Price,
+                        Description = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Description,
+                        Class = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdClassNavigation?.ClassName,
+                        LearningMethod = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.LearningMethod,
+                        Date = booking.IdTimeSlotNavigation.IdDateNavigation.Date1,
+                        TimeSlot = booking.IdTimeSlotNavigation.TimeSlot1,
+                        Status = booking.Status,
+
+                        User = new
+                        {
+                            Name = existingUser.FullName,
+                            Email = existingUser.Email,
+                            Date_of_birth = existingUser.DateOfBirth,
+                            Gender = existingUser.Gender,
+                            Avatar = existingUser.Avatar,
+                            Address = existingUser.Address,
+                            Phone = existingUser.Phone
+                        },
+
+                        Tutor = new
+                        {
+                            Name = tutor.IdAccountNavigation.FullName,
+                            Email = tutor.IdAccountNavigation.Email,
+                            Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
+                            Gender = tutor.IdAccountNavigation.Gender,
+                            Avatar = tutor.IdAccountNavigation.Avatar,
+                            Address = tutor.IdAccountNavigation.Address,
+                            Phone = tutor.IdAccountNavigation.Phone
+                        }
+                    };
+
+                    list.Add(data);
+                }
+
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Thành công",
+                    Data = list
+                };
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = false,
+                Message = "Người dùng không phải học sinh hay gia sư"
+            };
+        }
+
 
     }
 }

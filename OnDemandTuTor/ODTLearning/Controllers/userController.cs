@@ -19,6 +19,7 @@ using Azure;
 using System.Security.Claims;
 using Newtonsoft.Json;
 
+
 namespace ODTLearning.Controllers
 {
     [Route("api/[controller]")]
@@ -445,23 +446,24 @@ namespace ODTLearning.Controllers
 
             // Send data back to the front-end using postMessage
             var script = $@"
-        <script>
-            window.opener.postMessage(
-                {{
-                    profile: JSON.stringify({{
-                        id: '{savedUser.id}',
-                        fullName: '{System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(savedUser.fullName)}',
-                        email: '{System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(savedUser.email)}',
-                        avatar: '{System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(savedUser.avatar)}',
-                        roles: '{System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(savedUser.roles)}'
-                    }}),
-                    accessToken: '{token.Access_token}',
-                    refreshToken: '{token.Refresh_token}'
-                }},
-                'http://localhost:3000'
-            );
-            window.close();
-        </script>";
+<script>
+    window.opener.postMessage(
+        {{
+            profile: JSON.stringify({{
+                id: '{savedUser.id}',
+                fullName: '{System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(savedUser.fullName)}',
+                email: '{System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(savedUser.email)}',
+                avatar: '{System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(savedUser.avatar)}',
+                accountBalance: '{savedUser.accountBalance?.ToString() ?? "0"}',
+                roles: '{System.Text.Encodings.Web.JavaScriptEncoder.Default.Encode(savedUser.roles)}'
+            }}),
+            accessToken: '{token.Access_token}',
+            refreshToken: '{token.Refresh_token}'
+        }},
+        'http://localhost:3000'
+    );
+    window.close();
+</script>";
             return Content(script, "text/html");
         }
 
@@ -664,6 +666,28 @@ namespace ODTLearning.Controllers
                 Message = response.Message,
                 Data = response.Data
             });           
+        }
+
+        [HttpGet("ViewClassService")]
+        public async Task<IActionResult> GetClassService(string id)
+        {
+            var response = await _repo.GetClassService(id);
+
+            if (!response.Success)
+            {
+                return BadRequest(new
+                {
+                    Success = false,
+                    Message = response.Message
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                Message = response.Message,
+                Data = response.Data
+            });
         }
     }
 }
