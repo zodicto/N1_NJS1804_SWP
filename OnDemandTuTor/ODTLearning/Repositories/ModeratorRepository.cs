@@ -17,7 +17,7 @@ namespace ODTLearning.Repositories
             _context = context;
         }
 
-        public async Task<ApiResponse<List<ListTutorToConfirmFB>>> GetListTutorsToConfirm()
+        public async Task<ApiResponse<List<ListTutorToConfirm>>> GetListTutorsToConfirm()
         {
             try
             {
@@ -27,7 +27,7 @@ namespace ODTLearning.Repositories
                         .ThenInclude(ts => ts.IdSubjectNavigation)
                     .Include(t => t.EducationalQualifications)
                     .Where(t => t.Status == "Đang duyệt")
-                    .Select(t => new ListTutorToConfirmFB
+                    .Select(t => new ListTutorToConfirm
                     {
                         Id = t.IdAccount, // Sử dụng Id của Tutor
                         specializedSkills = t.SpecializedSkills,
@@ -46,7 +46,7 @@ namespace ODTLearning.Repositories
 
                 if (!tutors.Any())
                 {
-                    return new ApiResponse<List<ListTutorToConfirmFB>>
+                    return new ApiResponse<List<ListTutorToConfirm>>
                     {
                         Success = true,
                         Message = "Không có gia sư nào cần xác nhận",
@@ -54,7 +54,7 @@ namespace ODTLearning.Repositories
                     };
                 }
 
-                return new ApiResponse<List<ListTutorToConfirmFB>>
+                return new ApiResponse<List<ListTutorToConfirm>>
                 {
                     Success = true,
                     Message = "Lấy danh sách gia sư thành công",
@@ -66,7 +66,7 @@ namespace ODTLearning.Repositories
                 // Ghi lại lỗi nếu cần thiết
                 Console.WriteLine($"Error in GetListTutorsToConfirm: {ex.Message}");
 
-                return new ApiResponse<List<ListTutorToConfirmFB>>
+                return new ApiResponse<List<ListTutorToConfirm>>
                 {
                     Success = false,
                     Message = "Đã xảy ra lỗi trong quá trình lấy danh sách gia sư",

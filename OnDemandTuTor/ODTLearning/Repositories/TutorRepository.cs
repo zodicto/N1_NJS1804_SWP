@@ -821,47 +821,7 @@ namespace ODTLearning.Repositories
                 Data = requestLearningModels
             };
         }
-
-        public async Task<ApiResponse<bool>> CompledClass(string requestId)
-        {
-            // Tìm request theo IdRequest
-            var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId && r.Status == "Đang diễn ra");
-
-            if (request == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy yêu cầu nào với trạng thái 'Đang diễn ra' cho ID này",
-                };
-            }
-
-            // Thay đổi trạng thái của request thành "Hoàn thành"
-            request.Status = "Hoàn thành";
-
-            try
-            {
-                // Lưu thay đổi vào cơ sở dữ liệu
-                await _context.SaveChangesAsync();
-
-                return new ApiResponse<bool>
-                {
-                    Success = true,
-                    Message = "Bạn đã hoàn thành lớp học",
-                };
-            }
-            catch (Exception ex)
-            {
-                // Ghi lại lỗi nếu có xảy ra
-                Console.WriteLine($"Error while saving changes: {ex.Message}");
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Đã xảy ra lỗi trong quá trình lưu dữ liệu",
-                };
-            }
-        }
-
+      
         public async Task<ApiResponse<object>> GetReview(string id)
         {
             var tutor = await _context.Tutors.SingleOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");

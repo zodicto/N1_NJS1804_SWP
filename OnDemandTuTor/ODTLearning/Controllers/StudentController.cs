@@ -357,10 +357,31 @@ namespace ODTLearning.Controllers
             });
         }
 
-        [HttpPost("CreateReview")]
-        public async Task<IActionResult> CreateReview(ReviewModel model)
+        [HttpPost("CreateReviewRequest")]
+        public async Task<IActionResult> CreateReviewRequest(ReviewRequestModel model)
         {
-            var response = await _repo.CreateReview(model);
+            var response = await _repo.CreateReviewRequest(model);
+
+            if (response.Success)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = response.Message
+                });
+            }
+
+            return NotFound(new
+            {
+                Success = false,
+                Message = response.Message
+            });
+        }
+
+        [HttpPost("CreateReviewService")]
+        public async Task<IActionResult> CreateReviewService(ReviewServiceModel model)
+        {
+            var response = await _repo.CreateReviewService(model);
 
             if (response.Success)
             {
@@ -466,6 +487,72 @@ namespace ODTLearning.Controllers
                 {
                     Success = false,
                     Message = "An error occurred while get reviews.",
+                    Data = ex.Message
+                });
+            }
+        }
+
+        [HttpPut("CompleteClassRequest")]
+        public async Task<IActionResult> CompleteClassRequest(string idClassRequest)
+        {
+            try
+            {
+                var response = await _repo.CompleteClassRequest(idClassRequest);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message
+                    });
+                }
+
+                return NotFound(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while complete class.",
+                    Data = ex.Message
+                });
+            }
+        }
+
+        [HttpPut("CompleteClassService")]
+        public async Task<IActionResult> CompleteClassService(string idBooking)
+        {
+            try
+            {
+                var response = await _repo.CompleteClassService(idBooking);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message
+                    });
+                }
+
+                return NotFound(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while complete class.",
                     Data = ex.Message
                 });
             }

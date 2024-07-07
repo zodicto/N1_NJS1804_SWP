@@ -66,110 +66,9 @@ namespace ODTLearning.Repositories
                 accountBalance= user.AccountBalance
             };
 
-        }
+        }        
 
         public async Task<ApiResponse<TutorResponse>> SignUpOftutor(string IdAccount, SignUpModelOfTutor model)
-        {
-            // Tìm kiếm account trong DB bằng id
-            var existingUser = _context.Accounts.FirstOrDefault(a => a.Id == IdAccount);
-            if (existingUser != null)
-            {
-                // Tạo mới đối tượng tutor
-                var tutor = new Tutor
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    SpecializedSkills = model.specializedSkills,
-                    Experience = model.experience,
-                    Status = "Chưa duyệt",
-                    IdAccount = existingUser.Id,
-                  //  Introduction = model.introduction,
-                   
-                };
-
-                // Tạo mới đối tượng educationalqualification
-                var educationalQualification = new EducationalQualification
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    IdTutor = tutor.Id,
-                    QualificationName = model.qualificationame,
-                    Type = model.type,
-                };
-
-                // Upload ảnh
-                var upload = await imgLib.UploadImage
-                    (model.imagequalification);
-
-                if (!upload.Success)
-                {
-                    return new ApiResponse<TutorResponse>
-                    {
-                        Success = false,
-                        Message = upload.Message
-                    };                    
-                }
-
-                educationalQualification.Img = model.imagequalification.FileName;
-
-                var subjectModel = await _context.Subjects
-                                              .FirstOrDefaultAsync(lm => lm.SubjectName == model.subject);
-
-                if (subjectModel == null)
-                {
-                    return new ApiResponse<TutorResponse>
-                    {
-                        Success = false,
-                        Message = "Không tìm thấy môn học nào với tên này",
-                        Data = null
-                    };
-                }
-
-                // Tạo mới đối tượng TutorSubject
-                var tutorSubject = new TutorSubject
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    IdSubject = subjectModel.Id,
-                    IdTutor = tutor.Id,
-                };
-
-                // Thêm các đối tượng vào DB
-                await _context.Tutors.AddAsync(tutor);
-                await _context.EducationalQualifications.AddAsync(educationalQualification);
-                await _context.TutorSubjects.AddAsync(tutorSubject);
-
-                try
-                {
-                    await _context.SaveChangesAsync();
-                    // Trả về ID của tutor đã được tạo với tên là idTutor
-                    return new ApiResponse<TutorResponse>
-                    {
-                        Success = true,
-                        Message = "Đăng ký gia sư thành công. Bạn vui lòng chờ duyệt",
-                        Data = new TutorResponse { Idtutor = tutor.Id }
-                    };
-                }
-                catch (Exception ex)
-                {
-                    // Ghi lại lỗi nếu có xảy ra
-                    Console.WriteLine($"Error while saving changes: {ex.Message}");
-                    return new ApiResponse<TutorResponse>
-                    {
-                        Success = false,
-                        Message = "Đã xảy ra lỗi trong quá trình lưu dữ liệu",
-                        Data = null
-                    };
-                }
-            }
-
-            // Trường hợp không tìm thấy tài khoản
-            return new ApiResponse<TutorResponse>
-            {
-                Success = false,
-                Message = "Không tìm thấy tài khoản với ID này",
-                Data = null
-            };
-        }
-
-        public async Task<ApiResponse<TutorResponse>> SignUpOftutorFB(string IdAccount, SignUpModelOfTutorFB model)
         {
             // Tìm kiếm account trong DB bằng id
             var existingUser = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == IdAccount);
@@ -695,6 +594,7 @@ namespace ODTLearning.Repositories
 
                     var data = new
                     {
+                        IdClassRequest = classRequest.Id,
                         Title = classRequest.IdRequestNavigation?.Title,
                         Subject = classRequest.IdRequestNavigation.IdSubjectNavigation?.SubjectName,
                         TotalSession = classRequest.IdRequestNavigation.TotalSession,
@@ -764,6 +664,7 @@ namespace ODTLearning.Repositories
 
                     var data = new
                     {
+                        IdClassRequest = classRequest.Id,
                         Title = classRequest.IdRequestNavigation?.Title,
                         Subject = classRequest.IdRequestNavigation.IdSubjectNavigation?.SubjectName,
                         TotalSession = classRequest.IdRequestNavigation.TotalSession,
@@ -855,6 +756,7 @@ namespace ODTLearning.Repositories
 
                     var data = new
                     {
+                        IdBooking = booking.Id,
                         Title = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title,
                         Subject = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdSubjectNavigation?.SubjectName,
                         Price = booking.Price,
@@ -926,6 +828,7 @@ namespace ODTLearning.Repositories
 
                     var data = new
                     {
+                        IdBooking = booking.Id,
                         Title = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title,
                         Subject = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdSubjectNavigation?.SubjectName,
                         Price = booking.Price,

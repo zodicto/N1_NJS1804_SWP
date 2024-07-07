@@ -602,7 +602,7 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<ApiResponse<bool>> CreateReview(ReviewModel model)
+        public async Task<ApiResponse<bool>> CreateReviewRequest(ReviewRequestModel model)
         {
             var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
             Console.WriteLine("userid : " + user?.Id);
@@ -615,8 +615,75 @@ namespace ODTLearning.Repositories
                 };
             }
 
+            var classRequest = await _context.ClassRequests.SingleOrDefaultAsync(x => x.Id == model.IdClassRequest);
+
+            if (classRequest == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy lớp học",
+                };
+            }
+
             var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation)
-                                             .FirstOrDefaultAsync(x => x.IdAccount == model.IdAccountTutor && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+                                             .FirstOrDefaultAsync(x => x.Id == classRequest.IdTutor && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+            Console.WriteLine("tutorid : " + tutor?.Id);
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư",
+                };
+            }
+
+            var review = new Review
+            {
+                Id = Guid.NewGuid().ToString(),
+                Feedback = model.FeedBack,
+                Rating = model.Rating,
+                IdAccount = model.IdUser,
+                IdTutor = tutor.Id
+            };
+
+            await _context.Reviews.AddAsync(review);
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Đánh giá thành công"
+            };
+        }
+
+        public async Task<ApiResponse<bool>> CreateReviewService(ReviewServiceModel model)
+        {
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
+            Console.WriteLine("userid : " + user?.Id);
+            if (user == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng",
+                };
+            }
+
+            var booking = await _context.Bookings.Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
+                .SingleOrDefaultAsync(x => x.Id == model.IdBooking);
+
+            if (booking == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy lớp học",
+                };
+            }
+
+            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation)
+                                             .FirstOrDefaultAsync(x => x.Id == booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
             Console.WriteLine("tutorid : " + tutor?.Id);
             if (tutor == null)
             {
@@ -983,5 +1050,50 @@ namespace ODTLearning.Repositories
             };
         }
 
+        public async Task<ApiResponse<bool>> CompleteClassRequest(string idClassRequest)
+        {
+            var classRequest = await _context.ClassRequests.Include(x => x.IdRequestNavigation).SingleOrDefaultAsync(x => x.Id == idClassRequest); 
+
+            if (classRequest == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy lớp học"
+                };
+            }
+
+            classRequest.IdRequestNavigation.Status = "Hoàn thành";
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Bạn đã hoàn thành lớp học"
+            };
+        }
+
+        public async Task<ApiResponse<bool>> CompleteClassService(string idBooking)
+        {
+            var booking = await _context.Bookings.SingleOrDefaultAsync(x => x.Id == idBooking);
+
+            if (booking == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy lớp học"
+                };
+            }
+
+            booking.Status = "Hoàn thành";
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Bạn đã hoàn thành lớp học"
+            };
+        }
     }
 }

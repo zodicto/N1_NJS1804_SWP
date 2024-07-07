@@ -14,11 +14,14 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<List<TutorListModel>>> ViewAllTutorJoinRequest(string requestId);
         public Task<ApiResponse<SelectTutorModel>> SelectTutor(string idRequest, string idAccountTutor);
         public Task<ApiResponse<bool>> CreateComplaint(ComplaintModel model);
-        public Task<ApiResponse<bool>> CreateReview(ReviewModel model);
+        public Task<ApiResponse<bool>> CreateReviewRequest(ReviewRequestModel model);
+        public Task<ApiResponse<bool>> CreateReviewService(ReviewServiceModel model);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetClassProcess(string id);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetClassCompled(string id);
         public Task<ApiResponse<object>> GetSignUpTutor(string id);
         public Task<ApiResponse<BookingServiceModel>> BookingServiceLearning(string id, string idService, BookingServiceLearingModels model);
         public Task<ApiResponse<List<object>>> GetAllServices();
+        public Task<ApiResponse<bool>> CompleteClassRequest(string idClassRequest);
+        public Task<ApiResponse<bool>> CompleteClassService(string idBooking);
     }
 }

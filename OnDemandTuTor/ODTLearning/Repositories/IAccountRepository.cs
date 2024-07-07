@@ -20,14 +20,13 @@ namespace ODTLearning.Repositories
 
         public  Task<TokenModel> GenerateToken(UserResponse user);
         public Task<string> GenerateRefreshtoken();
-        public Task<List<Account>> GetAllUsers();
+        public Task<List<Account>> GetAllUsers();   
         public Task<ApiResponse<object>> UpdateAvatar(string id, IFormFile file);
 
         public Task<string> ChangePassword(string id, ChangePasswordModel model);
         public Task<string> ForgotPassword(string Email);
         public  Task<ApiResponse<object>> UpdateProfile(string id, UpdateProfile model);
         public Task<ApiResponse<object>> GetProfile(string id);
-        public Task<ApiResponse<TutorResponse>> SignUpOftutorFB(string IdAccount, SignUpModelOfTutorFB model);
         public Task<ApiResponse<object>> GetClassRequest(string id);
         public Task<ApiResponse<object>> GetClassService(string id);
     }

@@ -33,23 +33,13 @@ namespace ODTLearning.Models
         public string? specializedSkills { get; set; }
         public int? experience { get; set; }
         public string? subject { get; set; }
-        public string? qualificationame { get; set; }
-        public string? type { get; set; }
-        public string? introduction { get; set; }
-        public IFormFile? imagequalification { get; set; }
-    }
-
-    public class SignUpModelOfTutorFB
-    {
-        public string? specializedSkills { get; set; }
-        public int? experience { get; set; }
-        public string? subject { get; set; }
         public string? qualifiCationName { get; set; }
         public string? type { get; set; }
         public string? imageQualification { get; set; }
         public string? introduction { get; set; }
     }
-    public class ListTutorToConfirmFB : SignUpModelOfTutorFB
+
+    public class ListTutorToConfirm : SignUpModelOfTutor
     {
         public string? Id { get; set; }
         public string? fullName { get; set; }
