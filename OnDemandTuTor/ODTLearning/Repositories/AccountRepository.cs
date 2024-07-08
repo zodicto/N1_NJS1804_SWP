@@ -609,6 +609,7 @@ namespace ODTLearning.Repositories
 
                         User = new
                         {
+                            idUser = existingUser.Id,
                             Name = existingUser.FullName,
                             Email = existingUser.Email,
                             Date_of_birth = existingUser.DateOfBirth,
@@ -620,6 +621,7 @@ namespace ODTLearning.Repositories
 
                         Tutor = new
                         {
+                            idAccountTutor = tutor.IdAccountNavigation.Id,
                             Name = tutor.IdAccountNavigation.FullName,
                             Email = tutor.IdAccountNavigation.Email,
                             Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
