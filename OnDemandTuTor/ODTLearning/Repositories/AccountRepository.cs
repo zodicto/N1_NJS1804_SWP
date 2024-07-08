@@ -516,7 +516,9 @@ namespace ODTLearning.Repositories
 
             if (existingUser.Roles.ToLower() == "học sinh")
             {
-                var classRequests = await _context.ClassRequests.Include(x => x.IdRequestNavigation).Where(x => x.IdRequestNavigation.IdAccount == id).ToListAsync();
+                var classRequests = await _context.ClassRequests.Include(x => x.IdRequestNavigation).ThenInclude(x => x.IdClassNavigation)
+                                                                .Include(x => x.IdRequestNavigation).ThenInclude(x => x.IdSubjectNavigation)
+                                                                .Where(x => x.IdRequestNavigation.IdAccount == id).ToListAsync();
 
                 if (!classRequests.Any())
                 {
@@ -677,7 +679,10 @@ namespace ODTLearning.Repositories
             if (existingUser.Roles.ToLower() == "học sinh")
             {
                 var bookings = await _context.Bookings.Include(x => x.IdAccountNavigation)
+                                                      .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x =>   x.IdServiceNavigation)
+                                                                                                                                .ThenInclude(x => x.IdClassNavigation)
                                                       .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
+                                                                                                                                .ThenInclude(x => x.IdSubjectNavigation)
                                                       .Where(x => x.IdAccount == id)
                                                       .ToListAsync();
                 
