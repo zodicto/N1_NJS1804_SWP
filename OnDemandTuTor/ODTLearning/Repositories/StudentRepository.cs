@@ -123,7 +123,7 @@ namespace ODTLearning.Repositories
             return new ApiResponse<bool>
             {
                 Success = true,
-                Message = "Tạo yêu cầu thành công",
+                Message = "Tạo yêu cầu thành công. Yêu cầu của bạn đang chờ duyệt!",
             };
         }
 
@@ -555,7 +555,7 @@ namespace ODTLearning.Repositories
             return new ApiResponse<SelectTutorModel>
             {
                 Success = true,
-                Message = "Thành công",
+                Message = "Bạn đã chấp nhận gia sư cho yêu câu của mình.",
                 Data = data
             };
         }
@@ -573,23 +573,25 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == model.IdAccountTutor && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
+            var accountTutor = await _context.Accounts.Include(x => x.Tutor).SingleOrDefaultAsync(x => x.Id == model.IdAccountTutor);
 
-            if (tutor == null)
+            if (accountTutor == null || accountTutor.Roles.ToLower() != "gia sư" || accountTutor.Tutor == null)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không tìm thấy gia sư",
+                    Message = "Không tìm thấy gia sư trong hệ thống",
                 };
             }
+
+            var tutorId = accountTutor.Tutor.Id;
 
             var complaint = new Complaint
             {
                 Id = Guid.NewGuid().ToString(),
                 Description = model.Description,
                 IdAccount = model.IdUser,
-                IdTutor = tutor.Id,
+                IdTutor = tutorId, // Sử dụng Id của Tutor
             };
 
             await _context.Complaints.AddAsync(complaint);
@@ -601,6 +603,7 @@ namespace ODTLearning.Repositories
                 Message = "Thành công"
             };
         }
+
 
         public async Task<ApiResponse<bool>> CreateReviewRequest(ReviewRequestModel model)
         {

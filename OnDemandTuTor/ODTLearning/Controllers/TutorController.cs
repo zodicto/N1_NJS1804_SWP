@@ -216,12 +216,19 @@ namespace ODTLearning.Controllers
 
                 if (response.Success)
                 {
-                    return StatusCode(200,
-                        response.Message
-                        );
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        response.Data
+                    });
                 }
 
-                return BadRequest(response);
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
             }
             catch (Exception ex)
             {

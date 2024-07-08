@@ -494,7 +494,9 @@ namespace ODTLearning.Repositories
         public async Task<ApiResponse<bool>> DeleteServiceById(string serviceId)
         {
             var service = await _context.Services
-                                          .FirstOrDefaultAsync(s => s.Id == serviceId);
+                                         .Include(s => s.Dates)
+                                         .ThenInclude(d => d.TimeSlots)
+                                         .FirstOrDefaultAsync(s => s.Id == serviceId);
 
             if (service == null)
             {
@@ -505,15 +507,18 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            //var ongoingBooking = service.Bookings.Any(b => b.Status == "Đang diễn ra");
-            //if (ongoingBooking)
-            //{
-            //    return new ApiResponse<bool>
-            //    {
-            //        Success = false,
-            //        Message = "Không thể xóa dịch vụ vì có booking đang diễn ra."
-            //    };
-            //}
+            var ongoingBooking = service.Dates
+                                        .SelectMany(d => d.TimeSlots)
+                                        .Any(ts => ts.Bookings.Any(b => b.Status == "Đang diễn ra" || b.Status == "Hoàn thành"));
+
+            if (ongoingBooking)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không thể xóa dịch vụ vì có booking đang diễn ra."
+                };
+            }
 
             _context.Services.Remove(service);
             await _context.SaveChangesAsync();
@@ -524,6 +529,7 @@ namespace ODTLearning.Repositories
                 Message = "Xóa dịch vụ thành công."
             };
         }
+
         public async Task<ApiResponse<ServiceLearningModel>> UpdateServiceById(string serviceId, ServiceLearningModel model)
         {
             // Tìm dịch vụ theo serviceId
