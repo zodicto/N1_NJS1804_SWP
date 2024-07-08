@@ -473,34 +473,7 @@ namespace ODTLearning.Controllers
             });
         }
 
-        [HttpPut("UpdateAvatar")]
-        public async Task<IActionResult> UpdateAvatar(string id, IFormFile file)
-        {
-            var response = await _repo.UpdateAvatar(id, file);
-
-
-            if (response.Success)
-
-            {
-                return Ok(new
-                {
-                    Success = true,
-
-                    response.Message
-
-                });
-            }
-
-            return BadRequest(new
-            {
-                Success = false,
-
-                response.Message
-
-            });
-        }
-
-
+       
         [HttpPut("ChangePassword")]
         public async Task<IActionResult> ChangePassword(string id, ChangePasswordModel model)
         {

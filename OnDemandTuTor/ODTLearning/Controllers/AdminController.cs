@@ -19,28 +19,6 @@ namespace ODTLearning.Controllers
             _context = context;
         }
 
-        //[HttpGet("ViewRent")]
-        //public async Task<IActionResult> ViewRent(string condition)
-        //{
-        //    var response = await _repo.ViewRent(condition);
-
-        //    if (response.Success)
-        //    {
-        //        return Ok(new
-        //        {
-        //            Success = true,
-        //            Message = response.Message,
-        //            Data = response.Data
-        //        });
-        //    }
-
-        //    return BadRequest(new
-        //    {
-        //        Success = false,
-        //        Message = response.Message
-        //    });
-        //}
-
         [HttpGet("viewAllTutor")]
         public async Task<IActionResult> ViewListTutor()
         {

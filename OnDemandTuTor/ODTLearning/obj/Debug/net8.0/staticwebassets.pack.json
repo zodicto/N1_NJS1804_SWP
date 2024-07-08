@@ -1,24 +1,8 @@
 {
   "Files": [
     {
-      "Id": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\01.png",
-      "PackagePath": "staticwebassets\\Images\\01.png"
-    },
-    {
-      "Id": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\NỀN ẢO.png",
-      "PackagePath": "staticwebassets\\Images\\NỀN ẢO.png"
-    },
-    {
-      "Id": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\Screenshot 2024-06-06 234256.png",
-      "PackagePath": "staticwebassets\\Images\\Screenshot 2024-06-06 234256.png"
-    },
-    {
-      "Id": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\account.txt",
-      "PackagePath": "staticwebassets\\Images\\account.txt"
-    },
-    {
-      "Id": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\kxIY23OFTXiSGNtzhV14XA_0d17dc17f6464ef4974e352b8360d3de_raci_matrix_starter.docx",
-      "PackagePath": "staticwebassets\\Images\\kxIY23OFTXiSGNtzhV14XA_0d17dc17f6464ef4974e352b8360d3de_raci_matrix_starter.docx"
+      "Id": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\image\\01.png",
+      "PackagePath": "staticwebassets\\image\\01.png"
     },
     {
       "Id": "obj\\Debug\\net8.0\\staticwebassets\\msbuild.ODTLearning.Microsoft.AspNetCore.StaticWebAssets.props",

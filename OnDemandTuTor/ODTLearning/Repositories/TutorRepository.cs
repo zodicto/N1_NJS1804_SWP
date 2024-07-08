@@ -19,7 +19,6 @@ namespace ODTLearning.Repositories
             _context = context;
         }
 
-        ImageLibrary imgLib = new ImageLibrary();
         MyLibrary myLib = new MyLibrary();
 
         public async Task<ApiResponse<object>> GetTutorProfile(string id)
@@ -339,7 +338,7 @@ namespace ODTLearning.Repositories
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = $"Số dư tài khoản không đủ để tạo thêm dịch vụ. Bạn có thể tạo thêm {remainingServicesThatCanBeCreated} dịch vụ nữa.",
+                    Message = $"Số dư tài khoản không đủ để tạo thêm dịch vụ. Bạn cần nạp thêm!",
                 };
             }
 
@@ -703,17 +702,33 @@ namespace ODTLearning.Repositories
                 };
             }
 
+            var tutorId = tutor.Id;
+
             // Kiểm tra số dư tài khoản
-            if (account.AccountBalance < 50000)
+            const float costPerService = 50000;
+            int requestCount = await _context.RequestLearnings.Include(x => x.IdRequestNavigation).CountAsync(s => s.IdTutor == tutorId && s.IdRequestNavigation.Status.ToLower() == "đã duyệt");
+            float remainingBalance = account.AccountBalance ?? 0;
+
+            if (remainingBalance < costPerService)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Bạn cần có 50.000 trong tài khoản để tham gia yêu cầu"
+                    Message = $"Số dư tài khoản không đủ. Bạn cần ít nhất {costPerService} để tạo dịch vụ này.",
                 };
             }
 
-            var tutorId = tutor.Id;
+            int maxRequestThatCanBeJoined = (int)(remainingBalance / costPerService);
+            int remainingRequestThatCanBeJoined = maxRequestThatCanBeJoined - requestCount;
+
+            if (remainingRequestThatCanBeJoined <= 0)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = $"Số dư tài khoản không đủ để tham gia thêm yêu cầu. Bạn đã tham gia {requestCount} yêu cầu.",
+                };
+            }
 
             // Kiểm tra xem gia sư đã tham gia yêu cầu này chưa
             var existingRequestLearning = await _context.RequestLearnings
@@ -759,7 +774,6 @@ namespace ODTLearning.Repositories
                 };
             }
         }
-
 
         public async Task<ApiResponse<List<RequestLearningResponse>>> GetClassProcess(string accountId)
         {

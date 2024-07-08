@@ -25,7 +25,6 @@ namespace ODTLearning.Repositories
             _configuration = configuration;
         }
 
-        ImageLibrary imgLib = new ImageLibrary();
         EmailLibrary emailLib = new EmailLibrary();
 
 
@@ -296,65 +295,7 @@ namespace ODTLearning.Repositories
         }
 
 
-        public async Task<ApiResponse<object>> UpdateAvatar(string id, IFormFile file)
-
-        {
-            var response = new ApiResponse<bool>();
-
-            var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
-            if (user == null)
-            {
-
-                return new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy người dùng nào với ID này"
-                }; 
-
-            }
-
-            if (user.Avatar != null)
-            {
-                var delete = await imgLib.DeleteImage(user.Avatar);
-                if (!delete)
-                {
-
-                    return new ApiResponse<object>
-                    {
-                        Success = false,
-                        Message = "Xoá avatar cũ thất bại"
-                    }; 
-
-                }
-            }
-
-            var upload = await imgLib.UploadImage(file);
-
-            if (!upload.Success)
-            {
-                return new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = upload.Message
-                }; 
-
-            }
-
-            user.Avatar = file.FileName;
-            await _context.SaveChangesAsync();
-
-            return new ApiResponse<object>
-            {
-                Success = true,
-                Message = "Thành công"
-            }; 
-
-        }
-
-
-
-
-
+       
         public async Task<string> ChangePassword(string id, ChangePasswordModel model)
         {
             var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);

@@ -16,7 +16,6 @@ namespace ODTLearning.Repositories
             _context = context;
         }
 
-        ImageLibrary imgLib = new ImageLibrary();
 
         public async Task<ApiResponse<bool>> CreateRequestLearning(string id, RequestLearningModel model)
         {

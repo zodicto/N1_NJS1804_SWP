@@ -117,7 +117,6 @@ internal class Program
         // Use CORS
         app.UseCors(MyAllowSpecificOrigins);
 
-        app.UseStaticFiles();
 
         app.UseAuthentication();
         app.UseAuthorization();

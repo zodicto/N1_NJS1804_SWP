@@ -151,28 +151,6 @@ namespace ODTLearning.Controllers
             });
         }
 
-        //[HttpPost("searchTutor")]
-        //public async Task<IActionResult> GetTutorList(SearchTutorModel model)
-        //{
-        //    var result = await _repo.SearchTutorList(model);
-
-        //    if (result == null)
-        //    {
-        //        return NotFound(new
-        //        {
-        //            Success = false,
-        //            Message = "Not found"
-        //        });
-        //    }
-
-        //    return Ok(new
-        //    {
-        //        Success = true,
-        //        Message = "Get list tutor successfully",
-        //        Data = result
-        //    });
-        //}
-
         [HttpGet("viewRequest")]
         public async Task<IActionResult> ViewRequest()
         {
