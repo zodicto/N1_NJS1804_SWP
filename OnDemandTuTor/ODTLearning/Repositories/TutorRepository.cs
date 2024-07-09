@@ -529,17 +529,19 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<ApiResponse<ServiceLearningModel>> UpdateServiceById(string serviceId, ServiceLearningModel model)
+        public async Task<ApiResponse<object>> UpdateServiceById(string serviceId, ServiceLearningModel model)
         {
             // Tìm dịch vụ theo serviceId
             var service = await _context.Services
                                         .Include(s => s.IdTutorNavigation)
                                         .ThenInclude(t => t.IdAccountNavigation)
+                                        .Include(s => s.Dates)
+                                        .ThenInclude(d => d.TimeSlots)
                                         .FirstOrDefaultAsync(s => s.Id == serviceId);
 
             if (service == null)
             {
-                return new ApiResponse<ServiceLearningModel>
+                return new ApiResponse<object>
                 {
                     Success = false,
                     Message = "Không tìm thấy dịch vụ với ID này."
@@ -549,65 +551,134 @@ namespace ODTLearning.Repositories
             var account = service.IdTutorNavigation?.IdAccountNavigation;
             if (account == null)
             {
-                return new ApiResponse<ServiceLearningModel>
+                return new ApiResponse<object>
                 {
                     Success = false,
                     Message = "Không tìm thấy tài khoản liên kết với dịch vụ này."
                 };
             }
 
+            // Kiểm tra và định dạng ngày và time slots
+            foreach (var schedule in model.Schedule ?? new List<ServiceDateModel>())
+            {
+                if (!DateTime.TryParseExact(schedule.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                {
+                    return new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Định dạng ngày không hợp lệ. Vui lòng sử dụng định dạng yyyy-MM-dd."
+                    };
+                }
+
+                foreach (var timeSlot in schedule.TimeSlots ?? new List<string>())
+                {
+                    if (!DateTime.TryParseExact(timeSlot, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
+                    {
+                        return new ApiResponse<object>
+                        {
+                            Success = false,
+                            Message = "Định dạng time slot không hợp lệ. Vui lòng sử dụng định dạng HH:mm."
+                        };
+                    }
+                }
+            }
+
+            // Kiểm tra lớp học
+            var classEntity = await _context.Classes.FirstOrDefaultAsync(cl => cl.ClassName == model.Class);
+            if (classEntity == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy lớp nào với tên này. Vui lòng chọn lớp 10, 11, 12",
+                };
+            }
+
+            // Kiểm tra môn học
+            var subjectEntity = await _context.Subjects.FirstOrDefaultAsync(sub => sub.SubjectName == model.subject);
+            if (subjectEntity == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy môn học nào với tên này. Vui lòng chọn lại!",
+                };
+            }
+
+            // Cập nhật thông tin dịch vụ
+            service.Title = model.Title;
+            service.Description = model.Description;
+            service.LearningMethod = model.LearningMethod;
+            service.PricePerHour = model.PricePerHour;
+            service.IdClass = classEntity.Id;
+            service.IdSubject = subjectEntity.Id;
             // Cập nhật thông tin dịch vụ
             service.Title = model.Title;
             service.Description = model.Description;
             service.PricePerHour = model.PricePerHour;
-            service.IdClass = (await _context.Classes.FirstOrDefaultAsync(c => c.ClassName == model.Class))?.Id;
-            service.IdSubject = (await _context.Subjects.FirstOrDefaultAsync(s => s.SubjectName == model.subject))?.Id;
+            service.IdClass = classEntity.Id;
+            service.IdSubject = subjectEntity.Id;
 
+            _context.Services.Update(service);
+
+            // Thêm Date và TimeSlot vào context
+            foreach (var dateModel in model.Schedule)
+            {
+                var dateEntity = new ODTLearning.Entities.Date
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Date1 = DateOnly.Parse(dateModel.Date),
+                    IdService = service.Id
+                };
+
+                await _context.Dates.AddAsync(dateEntity);
+
+                foreach (var timeSlot in dateModel.TimeSlots)
+                {
+                    var timeSlotEntity = new TimeSlot
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        TimeSlot1 = TimeOnly.Parse(timeSlot),
+                        Status = "Chưa đặt",
+                        IdDate = dateEntity.Id
+                    };
+
+                    await _context.TimeSlots.AddAsync(timeSlotEntity);
+                }
+            }
+
+            await _context.SaveChangesAsync();
             _context.Services.Update(service);
             await _context.SaveChangesAsync();
 
-            // Kiểm tra số dư tài khoản sau khi cập nhật dịch vụ
-            const float costPerService = 50000;
-            int serviceCount = await _context.Services.CountAsync(s => s.IdTutor == service.IdTutor);
-            float remainingBalance = account.AccountBalance ?? 0;
-
-            if (remainingBalance < costPerService)
-            {
-                return new ApiResponse<ServiceLearningModel>
+                return new ApiResponse<object>
                 {
                     Success = true,
                     Message = "Cập nhật dịch vụ thành công. Tuy nhiên, số dư tài khoản không đủ để tạo thêm dịch vụ mới.",
-                    Data = new ServiceLearningModel
+                    Data = new
                     {
-                        PricePerHour = service.PricePerHour,
-                        Title = service.Title,
-                        subject = (await _context.Subjects.FirstOrDefaultAsync(s => s.Id == service.IdSubject))?.SubjectName,
-                        Class = (await _context.Classes.FirstOrDefaultAsync(c => c.Id == service.IdClass))?.ClassName,
-                        Description = service.Description,
-                        LearningMethod = model.LearningMethod
+                        Id = service.Id,
+                        ServiceDetails = new ServiceLearningModel
+                        {
+                            PricePerHour = service.PricePerHour,
+                            Title = service.Title,
+                            subject = subjectEntity.SubjectName,
+                            Class = classEntity.ClassName,
+                            Description = service.Description,
+                            LearningMethod = model.LearningMethod,
+                            Schedule = service.Dates.Select(d => new ServiceDateModel
+                            {
+                                Date = d.Date1.HasValue ? d.Date1.Value.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd") : null,
+                                TimeSlots = d.TimeSlots
+                                    .Where(ts => ts.TimeSlot1.HasValue)
+                                    .Select(ts => ts.TimeSlot1.Value.ToString("HH:mm"))
+                                    .ToList()
+                            }).ToList()
+                        }
                     }
                 };
-            }
-
-            int maxServicesThatCanBeCreated = (int)(remainingBalance / costPerService);
-            int remainingServicesThatCanBeCreated = maxServicesThatCanBeCreated - serviceCount;
-
-            return new ApiResponse<ServiceLearningModel>
-            {
-                Success = true,
-                Message = $"Cập nhật dịch vụ thành công. Bạn có thể tạo thêm {remainingServicesThatCanBeCreated} dịch vụ nữa.",
-                Data = new ServiceLearningModel
-                {
-                    PricePerHour = service.PricePerHour,
-                    Title = service.Title,
-                    subject = (await _context.Subjects.FirstOrDefaultAsync(s => s.Id == service.IdSubject))?.SubjectName,
-                    Class = (await _context.Classes.FirstOrDefaultAsync(c => c.Id == service.IdClass))?.ClassName,
-                    Description = service.Description,
-                    LearningMethod = model.LearningMethod
-                }
-            };
+            
         }
-
 
 
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests()
