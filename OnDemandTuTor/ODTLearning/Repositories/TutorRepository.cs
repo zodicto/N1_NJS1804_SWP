@@ -163,7 +163,7 @@ namespace ODTLearning.Repositories
 
             var tutorSubject = await _context.TutorSubjects.FirstOrDefaultAsync(x => x.IdTutor == tutor.Id && x.IdSubject == subject.Id);
 
-            if (tutorSubject == null)
+            if (tutorSubject != null)
             {
                 return new ApiResponse<bool>
                 {
