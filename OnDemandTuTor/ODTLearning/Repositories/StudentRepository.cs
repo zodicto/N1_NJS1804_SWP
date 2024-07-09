@@ -3,6 +3,7 @@ using ODTLearning.Entities;
 using ODTLearning.Helpers;
 using ODTLearning.Models;
 using System.Globalization;
+using System.Linq;
 using System.Net;
 
 
@@ -932,6 +933,24 @@ namespace ODTLearning.Repositories
 
                     var selectedTimeSlot = ts;
 
+                    //check thời gian học lấn sang timeslot khác
+                    var checkTimeslots = await _context.TimeSlots.Where(x => x.TimeSlot1 > selectedTimeSlot.TimeSlot1).ToListAsync();
+
+                    var timeStart = (TimeOnly) selectedTimeSlot.TimeSlot1;
+                    var timeEnd = timeStart.AddMinutes((double) model.Duration);
+
+                    foreach (var x in checkTimeslots)
+                    {
+                        if (timeEnd > x.TimeSlot1)
+                        {
+                            return new ApiResponse<BookingServiceModel>
+                            {
+                                Success = false,
+                                Message = "Thời gian học của bạn bị lấn lịch học khác của gia sư. Vui lòng điều chỉnh lại thời gian học hoặc chọn buổi học khác!",
+                            };
+                        }
+                    }                        
+
                     // Tạo đối tượng Booking mới
                     var newBooking = new Booking
                     {
@@ -949,8 +968,16 @@ namespace ODTLearning.Repositories
                     // Cập nhật status của TimeSlot
                     selectedTimeSlot.Status = "Đã đặt";
 
-                    // Trừ 50000 từ AccountBalance của tutor
-                    service.IdTutorNavigation.IdAccountNavigation.AccountBalance -= 50000;
+                    // Trừ tiền đặt lịch từ AccountBalance của user
+                    if (account.AccountBalance < model.Price)
+                    {
+                        return new ApiResponse<BookingServiceModel>
+                        {
+                            Success = false,
+                            Message = "Bạn không đủ tiền trong tài khoản để đặt lịch. Vui lòng nạp thêm!",
+                        };
+                    }
+                    account.AccountBalance -= model.Price;
                     Console.WriteLine("service.IdTutorNavigation.IdAccountNavigation.AccountBalance: " + service.IdTutorNavigation.IdAccountNavigation.AccountBalance);
 
                     // Lưu thay đổi vào context
@@ -1044,16 +1071,42 @@ namespace ODTLearning.Repositories
                 var schedule = service.Dates.Select(date =>
                 {
                     var timeSlots = date.TimeSlots
-                        .Where(slot => slot.TimeSlot1.HasValue && slot.Status.ToLower() == "chưa đặt") // Lọc các TimeSlot có trạng thái "Chưa đặt"
-                        .Select(slot => slot.TimeSlot1.Value.ToString("HH:mm"))
+                        .Where(slot => slot.TimeSlot1.HasValue && slot.Status.ToLower() == "chưa đặt" ) // Lọc các TimeSlot có trạng thái "Chưa đặt"
+                        //.Select(slot => slot.TimeSlot1.Value.ToString("HH:mm"))
                         .ToList();
 
                     Console.WriteLine("Date: " + (date.Date1.HasValue ? date.Date1.Value.ToString("yyyy-MM-dd") : "null") + " TimeSlots count: " + timeSlots.Count);
 
+                    var timeSlotsAfterCheck = new List<string>();
+
+                    foreach (var timeSlot in timeSlots)
+                    {
+                        var check = true;
+
+                        var bookings = _context.Bookings.Include(x => x.IdTimeSlotNavigation).Where(x => x.IdTimeSlotNavigation.IdDate == date.Id);
+
+                        foreach (var booking in bookings)
+                        {               
+                            TimeOnly time = (TimeOnly) booking.IdTimeSlotNavigation.TimeSlot1;
+                            var timeAfter = time.AddMinutes((double) booking.Duration); 
+
+                            if (timeSlot.TimeSlot1 >= time && timeSlot.TimeSlot1 <= timeAfter )
+                            {
+                                check = false;
+                                break;
+                            }                            
+                        }
+
+                        if (true)
+                        {
+                            timeSlotsAfterCheck.Add(timeSlot.TimeSlot1.Value.ToString("HH:mm"));
+                        }                        
+                    }
+
                     return new
                     {
                         Date = date.Date1.HasValue ? date.Date1.Value.ToString("yyyy-MM-dd") : null, // Định dạng chuỗi cho Date
-                        TimeSlots = timeSlots
+                        TimeSlots = timeSlotsAfterCheck
                     };
                 })
                 .Where(schedule => schedule.TimeSlots.Any()) // Chỉ lấy các Date có TimeSlot chưa được đặt
@@ -1115,7 +1168,10 @@ namespace ODTLearning.Repositories
 
         public async Task<ApiResponse<bool>> CompleteClassService(string idBooking)
         {
-            var booking = await _context.Bookings.SingleOrDefaultAsync(x => x.Id == idBooking);
+            var booking = await _context.Bookings.Include(x => x.IdTimeSlotNavigation)
+                                                    .ThenInclude(x => x.IdDateNavigation)
+                                                        .ThenInclude(x => x.IdServiceNavigation)
+                                                 .SingleOrDefaultAsync(x => x.Id == idBooking);
 
             if (booking == null)
             {
@@ -1125,6 +1181,10 @@ namespace ODTLearning.Repositories
                     Message = "Không tìm thấy lớp học"
                 };
             }
+
+            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor);
+
+            tutor.IdAccountNavigation.AccountBalance += (float) (booking.Price * 0.9);
 
             booking.Status = "Hoàn thành";
             await _context.SaveChangesAsync();

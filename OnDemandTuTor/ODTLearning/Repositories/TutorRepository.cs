@@ -317,30 +317,30 @@ namespace ODTLearning.Repositories
             }
 
             // Kiểm tra số dư tài khoản
-            const float costPerService = 50000;
-            int serviceCount = await _context.Services.CountAsync(s => s.IdTutor == account.Tutor.Id);
-            float remainingBalance = account.AccountBalance ?? 0;
+            //const float costPerService = 50000;
+            //int serviceCount = await _context.Services.CountAsync(s => s.IdTutor == account.Tutor.Id);
+            //float remainingBalance = account.AccountBalance ?? 0;
 
-            if (remainingBalance < costPerService)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = $"Số dư tài khoản không đủ. Bạn cần ít nhất {costPerService} để tạo dịch vụ này.",
-                };
-            }
+            //if (remainingBalance < costPerService)
+            //{
+            //    return new ApiResponse<bool>
+            //    {
+            //        Success = false,
+            //        Message = $"Số dư tài khoản không đủ. Bạn cần ít nhất {costPerService} để tạo dịch vụ này.",
+            //    };
+            //}
 
-            int maxServicesThatCanBeCreated = (int)(remainingBalance / costPerService);
-            int remainingServicesThatCanBeCreated = maxServicesThatCanBeCreated - serviceCount;
+            //int maxServicesThatCanBeCreated = (int)(remainingBalance / costPerService);
+            //int remainingServicesThatCanBeCreated = maxServicesThatCanBeCreated - serviceCount;
 
-            if (remainingServicesThatCanBeCreated <= 0)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = $"Số dư tài khoản không đủ để tạo thêm dịch vụ. Bạn cần nạp thêm!",
-                };
-            }
+            //if (remainingServicesThatCanBeCreated <= 0)
+            //{
+            //    return new ApiResponse<bool>
+            //    {
+            //        Success = false,
+            //        Message = $"Số dư tài khoản không đủ để tạo thêm dịch vụ. Bạn cần nạp thêm!",
+            //    };
+            //}
 
             // Tìm lớp học theo tên
             var classEntity = await _context.Classes.FirstOrDefaultAsync(cl => cl.ClassName == model.Class);
@@ -414,14 +414,14 @@ namespace ODTLearning.Repositories
             await _context.SaveChangesAsync();
 
             // Tính lại số dịch vụ có thể tạo sau khi trừ số dư tài khoản
-            float newRemainingBalance = account.AccountBalance ?? 0;
-            int newMaxServicesThatCanBeCreated = (int)(newRemainingBalance / costPerService);
-            int newRemainingServicesThatCanBeCreated = newMaxServicesThatCanBeCreated - serviceCount;
+            //float newRemainingBalance = account.AccountBalance ?? 0;
+            //int newMaxServicesThatCanBeCreated = (int)(newRemainingBalance / costPerService);
+            //int newRemainingServicesThatCanBeCreated = newMaxServicesThatCanBeCreated - serviceCount;
 
             return new ApiResponse<bool>
             {
                 Success = true,
-                Message = $"Tạo dịch vụ thành công. Bạn có thể tạo thêm {newRemainingServicesThatCanBeCreated} dịch vụ nữa.",
+                Message = $"Tạo dịch vụ thành công." //Bạn có thể tạo thêm {newRemainingServicesThatCanBeCreated} dịch vụ nữa.",
             };
         }
 
@@ -700,35 +700,26 @@ namespace ODTLearning.Repositories
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests(string id)
         {
             var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
-
-            if (tutor == null)
-            {
-                return new ApiResponse<List<ViewRequestOfStudent>>
-                {
-                    Success = true,
-                    Message = "Không tìm thấy gia sư"
-                };
-            }
-
+           
             var pendingRequests = await _context.Requests.Include(r => r.RequestLearnings)
                                                    .Where(r => r.Status == "Đã duyệt")
                                                    .Select(r => new ViewRequestOfStudent
                                                    {
-                                                       Title = r.Title,
-                                                       Status = r.Status,
-                                                       Price = r.Price,
-                                                       Description = r.Description,
-                                                       Subject = r.IdSubjectNavigation.SubjectName, 
-                                                       LearningMethod = r.LearningMethod,
-                                                       Class = r.IdClassNavigation.ClassName,
-                                                       TimeTable = r.TimeTable,
-                                                       TotalSessions = r.TotalSession,
-                                                       TimeStart = r.TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
-                                                       TimeEnd = r.TimeEnd.ToString(),
-                                                       IdRequest = r.Id, // Include Account ID
-                                                       FullName = r.IdAccountNavigation.FullName, // Include Account Full Name
-                                                       Current = r.RequestLearnings.FirstOrDefault(rl => rl.IdTutor == tutor.Id) == null ? "Chưa nhận" : "Đã nhận"
-                                                   }).ToListAsync();
+                                                        Title = r.Title,
+                                                        Status = r.Status,
+                                                        Price = r.Price,
+                                                        Description = r.Description,
+                                                        Subject = r.IdSubjectNavigation.SubjectName,
+                                                        LearningMethod = r.LearningMethod,
+                                                        Class = r.IdClassNavigation.ClassName,
+                                                        TimeTable = r.TimeTable,
+                                                        TotalSessions = r.TotalSession,
+                                                        TimeStart = r.TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
+                                                        TimeEnd = r.TimeEnd.ToString(),
+                                                        IdRequest = r.Id, // Include Account ID
+                                                        FullName = r.IdAccountNavigation.FullName, // Include Account Full Name
+                                                        Current = tutor != null ? (r.RequestLearnings.FirstOrDefault(rl => rl.IdTutor == tutor.Id) == null ? "Chưa nhận" :                                "Đã nhận") : null
+                                                   }).ToListAsync();                       
 
             // Format the Time string if needed
             foreach (var request in pendingRequests)
