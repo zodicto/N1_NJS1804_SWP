@@ -431,6 +431,9 @@ namespace ODTLearning.Repositories
                                         .ThenInclude(rl => rl.IdTutorNavigation)
                                             .ThenInclude(t => t.TutorSubjects)
                                                 .ThenInclude(ts => ts.IdSubjectNavigation)
+                                        .Include(r => r.RequestLearnings)
+                                        .ThenInclude(rl => rl.IdTutorNavigation)
+                                            .ThenInclude(t => t.Reviews)
                                         .FirstOrDefaultAsync(r => r.Id == requestId);
 
             if (request == null)
@@ -454,7 +457,8 @@ namespace ODTLearning.Repositories
                 experience = rl.IdTutorNavigation.Experience,
                 subject = rl.IdTutorNavigation.TutorSubjects.FirstOrDefault()?.IdSubjectNavigation.SubjectName,
                 imageQualification = rl.IdTutorNavigation.EducationalQualifications.FirstOrDefault()?.Img,
-                qualifiCationName = rl.IdTutorNavigation.EducationalQualifications.FirstOrDefault()?.QualificationName
+                qualifiCationName = rl.IdTutorNavigation.EducationalQualifications.FirstOrDefault()?.QualificationName,
+                rating = rl.IdTutorNavigation.Reviews.Average(r => r.Rating) ?? 0,
             }).ToList();
 
             return new ApiResponse<List<TutorListModel>>

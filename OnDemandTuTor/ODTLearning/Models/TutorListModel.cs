@@ -12,5 +12,6 @@
         public int? experience { get; set; }
         public string? qualifiCationName { get; set; }
         public string? imageQualification { get; set; }
+        public double? rating { get; set; }
     }
 }
