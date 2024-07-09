@@ -433,7 +433,7 @@ namespace ODTLearning.Repositories
                                                 .ThenInclude(ts => ts.IdSubjectNavigation)
                                         .Include(r => r.RequestLearnings)
                                         .ThenInclude(rl => rl.IdTutorNavigation)
-                                            .ThenInclude(t => t.Reviews)
+                                            .ThenInclude(t => t.Reviews)                                     
                                         .FirstOrDefaultAsync(r => r.Id == requestId);
 
             if (request == null)
@@ -445,8 +445,10 @@ namespace ODTLearning.Repositories
                 };
             }
 
+            var classRequest = await _context.ClassRequests.FirstOrDefaultAsync(x => x.IdRequest == requestId);
+
             // Lấy danh sách gia sư tham gia yêu cầu
-            var tutors = request.RequestLearnings.Select(rl => new TutorListModel
+            var tutors = request.RequestLearnings.Where(x => x.IdTutor != classRequest?.IdTutor).Select(rl => new TutorListModel
             {
                 id = rl.IdTutorNavigation.IdAccount,
                 fullName = rl.IdTutorNavigation.IdAccountNavigation.FullName,

@@ -10,7 +10,7 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<bool>> AddQualification(string id, AddQualificationModel model);
         public Task<ApiResponse<bool>> DeleteSubject(string id, string subjectName);
         public Task<ApiResponse<bool>> DeleteQualification(string id, string idQualification);
-        public Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests();
+        public Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests(string id);
         public Task<ApiResponse<bool>> JoinRequest(string requestId, string tutorId);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetClassProcess(string accountId);
         public Task<ApiResponse<bool>> CreateServiceLearning(string id, ServiceLearningModel model);

@@ -610,9 +610,20 @@ namespace ODTLearning.Repositories
 
 
 
-        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests()
+        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests(string id)
         {
-            var pendingRequests = await _context.Requests
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
+
+            if (tutor == null)
+            {
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = true,
+                    Message = "Không tìm thấy gia sư"
+                };
+            }
+
+            var pendingRequests = await _context.Requests.Include(r => r.RequestLearnings)
                                                    .Where(r => r.Status == "Đã duyệt")
                                                    .Select(r => new ViewRequestOfStudent
                                                    {
@@ -626,11 +637,11 @@ namespace ODTLearning.Repositories
                                                        TimeTable = r.TimeTable,
                                                        TotalSessions = r.TotalSession,
                                                        TimeStart = r.TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
-                                                      TimeEnd = r.TimeEnd.ToString(),
+                                                       TimeEnd = r.TimeEnd.ToString(),
                                                        IdRequest = r.Id, // Include Account ID
-                                                       FullName = r.IdAccountNavigation.FullName // Include Account Full Name
+                                                       FullName = r.IdAccountNavigation.FullName, // Include Account Full Name
+                                                       Current = r.RequestLearnings.FirstOrDefault(rl => rl.IdTutor == tutor.Id) == null ? "Chưa nhận" : "Đã nhận"
                                                    }).ToListAsync();
-
 
             // Format the Time string if needed
             foreach (var request in pendingRequests)

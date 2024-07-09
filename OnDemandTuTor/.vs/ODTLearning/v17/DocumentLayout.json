@@ -7,28 +7,40 @@
       "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\repositories\\studentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\models\\tutorlistmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\models\\tutorlistmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\entities\\classrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\entities\\classrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\repositories\\istudentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\repositories\\istudentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\models\\servicelearningmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\models\\servicelearningmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\controllers\\tutorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\controllers\\tutorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\repositories\\tutorrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\repositories\\tutorrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\repositories\\accountrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\repositories\\accountrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\models\\requestlearningmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\models\\requestlearningmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\repositories\\itutorrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\repositories\\itutorrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\models\\tutorlistmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\models\\tutorlistmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\models\\servicelearningmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\models\\servicelearningmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\repositories\\accountrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\repositories\\accountrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -69,10 +81,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\repositories\\moderatorrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\repositories\\moderatorrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\controllers\\tutorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\controllers\\tutorcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -143,10 +151,6 @@
       "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\models\\reviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\models\\requestlearningmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\models\\requestlearningmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|d:\\ki_5\\work\\summer2024swp391_sap1804_group05_be\\ondemandtutor\\odtlearning\\models\\depositmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FE73E73E-2DF6-4BB6-8CAC-1BFD1536B419}|ODTLearning\\ODTLearning.csproj|solutionrelative:odtlearning\\models\\depositmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -209,11 +213,11 @@
       "DocumentGroups": [
         {
           "DockedHeight": 279,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "IAccountRepository.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\IAccountRepository.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Repositories\\IAccountRepository.cs",
@@ -227,32 +231,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "TutorListModel.cs",
-              "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\TutorListModel.cs",
-              "RelativeDocumentMoniker": "ODTLearning\\Models\\TutorListModel.cs",
-              "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\TutorListModel.cs",
-              "RelativeToolTip": "ODTLearning\\Models\\TutorListModel.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAA3AAAA",
+              "Title": "ClassRequest.cs",
+              "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Entities\\ClassRequest.cs",
+              "RelativeDocumentMoniker": "ODTLearning\\Entities\\ClassRequest.cs",
+              "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Entities\\ClassRequest.cs",
+              "RelativeToolTip": "ODTLearning\\Entities\\ClassRequest.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-09T03:46:13.079Z",
+              "WhenOpened": "2024-07-09T11:32:23.665Z",
               "EditorCaption": ""
             },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "AccountRepository.cs",
-              "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\AccountRepository.cs",
-              "RelativeDocumentMoniker": "ODTLearning\\Repositories\\AccountRepository.cs",
-              "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\AccountRepository.cs",
-              "RelativeToolTip": "ODTLearning\\Repositories\\AccountRepository.cs",
-              "ViewState": "AQIAAD8CAAAAZ2ZmZmYwwFACAAAhAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-08T08:54:57.533Z",
-              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -262,7 +253,7 @@
               "RelativeDocumentMoniker": "ODTLearning\\Repositories\\TutorRepository.cs",
               "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\TutorRepository.cs",
               "RelativeToolTip": "ODTLearning\\Repositories\\TutorRepository.cs",
-              "ViewState": "AQIAABcBAAAAAAAAAAAYwC4BAABiAAAA",
+              "ViewState": "AQIAAFwCAAAAmpmZmZkJwGQCAABWAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-05T07:09:26.41Z",
               "EditorCaption": ""
@@ -275,14 +266,14 @@
               "RelativeDocumentMoniker": "ODTLearning\\Repositories\\StudentRepository.cs",
               "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\StudentRepository.cs",
               "RelativeToolTip": "ODTLearning\\Repositories\\StudentRepository.cs",
-              "ViewState": "AQIAALMBAABAMzMzMzMlwNEBAAAfAAAA",
+              "ViewState": "AQIAALMBAAAAkJmZmZnZv8QBAAA0AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-06T04:20:23.074Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "userController.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Controllers\\userController.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Controllers\\userController.cs",
@@ -294,7 +285,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "TokenModel.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\TokenModel.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\TokenModel.cs",
@@ -312,9 +303,10 @@
               "RelativeDocumentMoniker": "ODTLearning\\Repositories\\ITutorRepository.cs",
               "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\ITutorRepository.cs",
               "RelativeToolTip": "ODTLearning\\Repositories\\ITutorRepository.cs",
-              "ViewState": "AQIAAAEAAADAzMzMzMwYwA8AAAA8AAAA",
+              "ViewState": "AQIAAAEAAADAzMzMzMwYwAwAAABaAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-06T09:30:31.148Z"
+              "WhenOpened": "2024-07-06T09:30:31.148Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -324,14 +316,64 @@
               "RelativeDocumentMoniker": "ODTLearning\\Repositories\\IStudentRepository.cs",
               "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\IStudentRepository.cs",
               "RelativeToolTip": "ODTLearning\\Repositories\\IStudentRepository.cs",
-              "ViewState": "AQIAAAIAAACgmZmZmZktwA0AAABOAAAA",
+              "ViewState": "AQIAAAgAAABgZmZmZmYzwA0AAABOAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-06T09:47:10.697Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "RequestLearningModel.cs",
+              "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\RequestLearningModel.cs",
+              "RelativeDocumentMoniker": "ODTLearning\\Models\\RequestLearningModel.cs",
+              "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\RequestLearningModel.cs",
+              "RelativeToolTip": "ODTLearning\\Models\\RequestLearningModel.cs",
+              "ViewState": "AQIAAAoAAAAwAAAAAAA0wBcAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-07T08:43:08.472Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 3,
+              "Title": "TutorController.cs",
+              "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Controllers\\TutorController.cs",
+              "RelativeDocumentMoniker": "ODTLearning\\Controllers\\TutorController.cs",
+              "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Controllers\\TutorController.cs",
+              "RelativeToolTip": "ODTLearning\\Controllers\\TutorController.cs",
+              "ViewState": "AQIAAJEAAADAzMzMzMwiwJwAAAAPAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-08T09:19:45.987Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "AccountRepository.cs",
+              "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\AccountRepository.cs",
+              "RelativeDocumentMoniker": "ODTLearning\\Repositories\\AccountRepository.cs",
+              "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\AccountRepository.cs",
+              "RelativeToolTip": "ODTLearning\\Repositories\\AccountRepository.cs",
+              "ViewState": "AQIAAD8CAAAAZ2ZmZmYwwFACAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-08T08:54:57.533Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "TutorListModel.cs",
+              "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\TutorListModel.cs",
+              "RelativeDocumentMoniker": "ODTLearning\\Models\\TutorListModel.cs",
+              "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\TutorListModel.cs",
+              "RelativeToolTip": "ODTLearning\\Models\\TutorListModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAA3AAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-07-09T03:46:13.079Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
               "Title": "ServiceLearningModel.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\ServiceLearningModel.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\ServiceLearningModel.cs",
@@ -339,12 +381,11 @@
               "RelativeToolTip": "ODTLearning\\Models\\ServiceLearningModel.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-07T08:44:45.321Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-07T08:44:45.321Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "IAdminRepository.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\IAdminRepository.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Repositories\\IAdminRepository.cs",
@@ -356,7 +397,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 14,
               "Title": "BookingServiceLearingModels.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\BookingServiceLearingModels.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\BookingServiceLearingModels.cs",
@@ -368,7 +409,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 15,
               "Title": "AdminRepository.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\AdminRepository.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Repositories\\AdminRepository.cs",
@@ -380,7 +421,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 16,
               "Title": "AdminController.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Controllers\\AdminController.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Controllers\\AdminController.cs",
@@ -392,7 +433,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 17,
               "Title": "SignUpModel.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\SignUpModel.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\SignUpModel.cs",
@@ -404,7 +445,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 21,
               "Title": "PaymentController.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Controllers\\PaymentController.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Controllers\\PaymentController.cs",
@@ -416,7 +457,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 20,
               "Title": "StudentController.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Controllers\\StudentController.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Controllers\\StudentController.cs",
@@ -428,19 +469,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
-              "Title": "TutorController.cs",
-              "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Controllers\\TutorController.cs",
-              "RelativeDocumentMoniker": "ODTLearning\\Controllers\\TutorController.cs",
-              "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Controllers\\TutorController.cs",
-              "RelativeToolTip": "ODTLearning\\Controllers\\TutorController.cs",
-              "ViewState": "AQIAAKIBAAAAAAAAAAAwwJ8AAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-08T09:19:45.987Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 19,
               "Title": "ModeratorRepository.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\ModeratorRepository.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Repositories\\ModeratorRepository.cs",
@@ -452,7 +481,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 18,
               "Title": "IModeratorRepository.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\IModeratorRepository.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Repositories\\IModeratorRepository.cs",
@@ -464,7 +493,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 24,
               "Title": "EmailLibrary.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Helpers\\EmailLibrary.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Helpers\\EmailLibrary.cs",
@@ -476,7 +505,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 23,
               "Title": "MyLibrary.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Helpers\\MyLibrary.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Helpers\\MyLibrary.cs",
@@ -488,7 +517,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 22,
               "Title": "ModaretorController.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Controllers\\ModaretorController.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Controllers\\ModaretorController.cs",
@@ -500,7 +529,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 25,
               "Title": "Program.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Program.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Program.cs",
@@ -512,7 +541,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 26,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\appsettings.json",
               "RelativeDocumentMoniker": "ODTLearning\\appsettings.json",
@@ -524,7 +553,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 27,
               "Title": "TutorSubject.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Entities\\TutorSubject.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Entities\\TutorSubject.cs",
@@ -536,7 +565,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 29,
               "Title": "VnPayLibrary.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Helpers\\VnPayLibrary.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Helpers\\VnPayLibrary.cs",
@@ -548,7 +577,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 28,
               "Title": "DbminiCapstoneContext.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Entities\\DbminiCapstoneContext.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Entities\\DbminiCapstoneContext.cs",
@@ -560,7 +589,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 30,
               "Title": "VnPaymentModel.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\VnPaymentModel.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\VnPaymentModel.cs",
@@ -572,7 +601,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 31,
               "Title": "VnPayRepository.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\VnPayRepository.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Repositories\\VnPayRepository.cs",
@@ -584,7 +613,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 32,
               "Title": "UserResponse.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\UserResponse.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\UserResponse.cs",
@@ -596,7 +625,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 33,
               "Title": "TutorResponse.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\TutorResponse.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\TutorResponse.cs",
@@ -608,7 +637,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 34,
               "Title": "TutorProfileToUpdate.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\TutorProfileToUpdate.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\TutorProfileToUpdate.cs",
@@ -620,7 +649,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 35,
               "Title": "SignInModel.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\SignInModel.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\SignInModel.cs",
@@ -632,7 +661,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 36,
               "Title": "ReviewModel.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\ReviewModel.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\ReviewModel.cs",
@@ -644,19 +673,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
-              "Title": "RequestLearningModel.cs",
-              "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\RequestLearningModel.cs",
-              "RelativeDocumentMoniker": "ODTLearning\\Models\\RequestLearningModel.cs",
-              "ToolTip": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\RequestLearningModel.cs",
-              "RelativeToolTip": "ODTLearning\\Models\\RequestLearningModel.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAFAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-07T08:43:08.472Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 37,
               "Title": "DepositModel.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\DepositModel.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\DepositModel.cs",
@@ -668,7 +685,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 38,
               "Title": "ComplaintModel.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\ComplaintModel.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\ComplaintModel.cs",
@@ -680,7 +697,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 40,
+              "DocumentIndex": 41,
               "Title": "AddQualificationModel.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\AddQualificationModel.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\AddQualificationModel.cs",
@@ -692,7 +709,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 39,
               "Title": "ChangePasswordModel.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\ChangePasswordModel.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\ChangePasswordModel.cs",
@@ -704,7 +721,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 40,
               "Title": "ApiResponse.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\ApiResponse.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\ApiResponse.cs",
@@ -716,7 +733,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 41,
+              "DocumentIndex": 42,
               "Title": "TimeSlot.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Entities\\TimeSlot.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Entities\\TimeSlot.cs",
@@ -728,7 +745,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 42,
+              "DocumentIndex": 43,
               "Title": "Service.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Entities\\Service.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Entities\\Service.cs",
@@ -740,7 +757,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 43,
+              "DocumentIndex": 44,
               "Title": "Date.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Entities\\Date.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Entities\\Date.cs",
@@ -752,7 +769,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 44,
+              "DocumentIndex": 45,
               "Title": "Booking.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Entities\\Booking.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Entities\\Booking.cs",
@@ -764,7 +781,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 45,
+              "DocumentIndex": 46,
               "Title": "Account.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Entities\\Account.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Entities\\Account.cs",
@@ -776,7 +793,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 46,
+              "DocumentIndex": 47,
               "Title": "LogoutModel.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\LogoutModel.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\LogoutModel.cs",
@@ -788,7 +805,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 47,
+              "DocumentIndex": 48,
               "Title": "DeleteAccountModel.cs",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Models\\DeleteAccountModel.cs",
               "RelativeDocumentMoniker": "ODTLearning\\Models\\DeleteAccountModel.cs",
@@ -800,7 +817,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 48,
+              "DocumentIndex": 49,
               "Title": "ODTLearning.http",
               "DocumentMoniker": "D:\\Ki_5\\Work\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\ODTLearning.http",
               "RelativeDocumentMoniker": "ODTLearning\\ODTLearning.http",
@@ -812,7 +829,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 49,
+              "DocumentIndex": 50,
               "Title": "TutorResponse.cs",
               "DocumentMoniker": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Entities\\TutorResponse.cs",
               "RelativeDocumentMoniker": "..\\..\\..\\..\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Entities\\TutorResponse.cs",
