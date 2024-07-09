@@ -1037,6 +1037,7 @@ namespace ODTLearning.Repositories
                 LearningMethod = service.LearningMethod,
                 Class = service.IdClassNavigation?.ClassName,
                 subject = service.IdSubjectNavigation?.SubjectName,
+                NameTutor = service.IdTutorNavigation.IdAccountNavigation.FullName,
                 Schedule = service.Dates.Select(date => new
                 {
                     Date = date.Date1.HasValue ? date.Date1.Value.ToString("yyyy-MM-dd") : null, // Định dạng chuỗi cho Date
