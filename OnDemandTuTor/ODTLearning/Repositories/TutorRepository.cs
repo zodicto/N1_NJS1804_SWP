@@ -490,12 +490,16 @@ namespace ODTLearning.Repositories
             };
         }
 
+
+
+
         public async Task<ApiResponse<bool>> DeleteServiceById(string serviceId)
         {
             var service = await _context.Services
-                                         .Include(s => s.Dates)
-                                         .ThenInclude(d => d.TimeSlots)
-                                         .FirstOrDefaultAsync(s => s.Id == serviceId);
+                                        .Include(s => s.Dates)
+                                        .ThenInclude(d => d.TimeSlots)
+                                        .ThenInclude(ts => ts.Bookings)
+                                        .FirstOrDefaultAsync(s => s.Id == serviceId);
 
             if (service == null)
             {
@@ -506,16 +510,17 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            var ongoingBooking = service.Dates
-                                        .SelectMany(d => d.TimeSlots)
-                                        .Any(ts => ts.Bookings.Any(b => b.Status == "Đang diễn ra" || b.Status == "Hoàn thành"));
+            var ongoingOrCompletedBooking = service.Dates
+                                                   .SelectMany(d => d.TimeSlots)
+                                                   .SelectMany(ts => ts.Bookings)
+                                                   .Any(b => b.Status == "Đang diễn ra" || b.Status == "Hoàn thành");
 
-            if (ongoingBooking)
+            if (ongoingOrCompletedBooking)
             {
                 return new ApiResponse<bool>
                 {
                     Success = false,
-                    Message = "Không thể xóa dịch vụ vì có booking đang diễn ra."
+                    Message = "Không thể xóa dịch vụ vì có booking đang diễn ra hoặc đã hoàn thành."
                 };
             }
 
@@ -528,6 +533,7 @@ namespace ODTLearning.Repositories
                 Message = "Xóa dịch vụ thành công."
             };
         }
+
 
         public async Task<ApiResponse<object>> UpdateServiceById(string serviceId, ServiceLearningModel model)
         {
@@ -621,7 +627,16 @@ namespace ODTLearning.Repositories
 
             _context.Services.Update(service);
 
-            // Thêm Date và TimeSlot vào context
+            // Xóa các lịch trình hiện có
+            var existingDates = _context.Dates.Where(d => d.IdService == serviceId).ToList();
+            foreach (var date in existingDates)
+            {
+                var timeSlots = _context.TimeSlots.Where(ts => ts.IdDate == date.Id).ToList();
+                _context.TimeSlots.RemoveRange(timeSlots);
+            }
+            _context.Dates.RemoveRange(existingDates);
+
+            // Thêm Date và TimeSlot mới vào context
             foreach (var dateModel in model.Schedule)
             {
                 var dateEntity = new ODTLearning.Entities.Date
@@ -654,7 +669,7 @@ namespace ODTLearning.Repositories
                 return new ApiResponse<object>
                 {
                     Success = true,
-                    Message = "Cập nhật dịch vụ thành công. Tuy nhiên, số dư tài khoản không đủ để tạo thêm dịch vụ mới.",
+                    Message = "Cập nhật dịch vụ thành công. ",
                     Data = new
                     {
                         Id = service.Id,
@@ -681,9 +696,21 @@ namespace ODTLearning.Repositories
         }
 
 
-        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests()
+
+        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests(string id)
         {
-            var pendingRequests = await _context.Requests
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
+
+            if (tutor == null)
+            {
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = true,
+                    Message = "Không tìm thấy gia sư"
+                };
+            }
+
+            var pendingRequests = await _context.Requests.Include(r => r.RequestLearnings)
                                                    .Where(r => r.Status == "Đã duyệt")
                                                    .Select(r => new ViewRequestOfStudent
                                                    {
@@ -697,11 +724,11 @@ namespace ODTLearning.Repositories
                                                        TimeTable = r.TimeTable,
                                                        TotalSessions = r.TotalSession,
                                                        TimeStart = r.TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
-                                                      TimeEnd = r.TimeEnd.ToString(),
+                                                       TimeEnd = r.TimeEnd.ToString(),
                                                        IdRequest = r.Id, // Include Account ID
-                                                       FullName = r.IdAccountNavigation.FullName // Include Account Full Name
+                                                       FullName = r.IdAccountNavigation.FullName, // Include Account Full Name
+                                                       Current = r.RequestLearnings.FirstOrDefault(rl => rl.IdTutor == tutor.Id) == null ? "Chưa nhận" : "Đã nhận"
                                                    }).ToListAsync();
-
 
             // Format the Time string if needed
             foreach (var request in pendingRequests)

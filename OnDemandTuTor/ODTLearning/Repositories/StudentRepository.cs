@@ -433,7 +433,7 @@ namespace ODTLearning.Repositories
                                                 .ThenInclude(ts => ts.IdSubjectNavigation)
                                         .Include(r => r.RequestLearnings)
                                         .ThenInclude(rl => rl.IdTutorNavigation)
-                                            .ThenInclude(t => t.Reviews)
+                                            .ThenInclude(t => t.Reviews)                                     
                                         .FirstOrDefaultAsync(r => r.Id == requestId);
 
             if (request == null)
@@ -445,8 +445,10 @@ namespace ODTLearning.Repositories
                 };
             }
 
+            var classRequest = await _context.ClassRequests.FirstOrDefaultAsync(x => x.IdRequest == requestId);
+
             // Lấy danh sách gia sư tham gia yêu cầu
-            var tutors = request.RequestLearnings.Select(rl => new TutorListModel
+            var tutors = request.RequestLearnings.Where(x => x.IdTutor != classRequest?.IdTutor).Select(rl => new TutorListModel
             {
                 id = rl.IdTutorNavigation.IdAccount,
                 fullName = rl.IdTutorNavigation.IdAccountNavigation.FullName,
@@ -1014,6 +1016,7 @@ namespace ODTLearning.Repositories
 
         public async Task<ApiResponse<List<object>>> GetAllServices()
         {
+            // Lấy tất cả các dịch vụ từ cơ sở dữ liệu, bao gồm các thông tin liên quan
             var services = await _context.Services
                 .Include(s => s.IdClassNavigation)
                 .Include(s => s.IdSubjectNavigation)
@@ -1023,6 +1026,9 @@ namespace ODTLearning.Repositories
                     .ThenInclude(d => d.TimeSlots)
                 .ToListAsync();
 
+            Console.WriteLine("Total services fetched: " + services.Count);
+
+            // Kiểm tra xem có dịch vụ nào được tìm thấy hay không
             if (!services.Any())
             {
                 return new ApiResponse<List<object>>
@@ -1032,22 +1038,47 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            var serviceModels = services.Select(service => new
+            // Chuyển đổi các dịch vụ sang mô hình ServiceLearningModel và bao gồm ID của dịch vụ
+            var serviceModels = services.Select(service =>
             {
-                IdService = service.Id, // Bao gồm Id của dịch vụ
-                PricePerHour = service.PricePerHour,
-                Title = service.Title,
-                Description = service.Description,
-                LearningMethod = service.LearningMethod,
-                Class = service.IdClassNavigation?.ClassName,
-                subject = service.IdSubjectNavigation?.SubjectName,
-                NameTutor = service.IdTutorNavigation.IdAccountNavigation.FullName,
-                Schedule = service.Dates.Select(date => new
+                var schedule = service.Dates.Select(date =>
                 {
-                    Date = date.Date1.HasValue ? date.Date1.Value.ToString("yyyy-MM-dd") : null, // Định dạng chuỗi cho Date
-                    TimeSlots = date.TimeSlots.Select(slot => slot.TimeSlot1.HasValue && slot.Status.ToLower() == "chưa đặt" ? slot.TimeSlot1.Value.ToString("HH:mm") : null).ToList() // Định dạng chuỗi cho TimeSlot
-                }).ToList()
-            }).Cast<object>().ToList();
+                    var timeSlots = date.TimeSlots
+                        .Where(slot => slot.TimeSlot1.HasValue && slot.Status.ToLower() == "chưa đặt") // Lọc các TimeSlot có trạng thái "Chưa đặt"
+                        .Select(slot => slot.TimeSlot1.Value.ToString("HH:mm"))
+                        .ToList();
+
+                    Console.WriteLine("Date: " + (date.Date1.HasValue ? date.Date1.Value.ToString("yyyy-MM-dd") : "null") + " TimeSlots count: " + timeSlots.Count);
+
+                    return new
+                    {
+                        Date = date.Date1.HasValue ? date.Date1.Value.ToString("yyyy-MM-dd") : null, // Định dạng chuỗi cho Date
+                        TimeSlots = timeSlots
+                    };
+                })
+                .Where(schedule => schedule.TimeSlots.Any()) // Chỉ lấy các Date có TimeSlot chưa được đặt
+                .ToList();
+
+                Console.WriteLine("Service ID: " + service.Id + " Schedule count: " + schedule.Count);
+
+                return new
+                {
+                    IdService = service.Id, // Bao gồm Id của dịch vụ
+                    PricePerHour = service.PricePerHour,
+                    Title = service.Title,
+                    Description = service.Description,
+                    LearningMethod = service.LearningMethod,
+                    Class = service.IdClassNavigation?.ClassName,
+                    Subject = service.IdSubjectNavigation?.SubjectName,
+                    NameTutor = service.IdTutorNavigation.IdAccountNavigation.FullName,
+                    Schedule = schedule
+                };
+            })
+            .Where(service => service.Schedule.Any()) // Chỉ lấy các dịch vụ có lịch trình với TimeSlot chưa được đặt
+            .Cast<object>()
+            .ToList();
+
+            Console.WriteLine("Filtered serviceModels count: " + serviceModels.Count);
 
             return new ApiResponse<List<object>>
             {
@@ -1056,6 +1087,8 @@ namespace ODTLearning.Repositories
                 Data = serviceModels
             };
         }
+
+
 
         public async Task<ApiResponse<bool>> CompleteClassRequest(string idClassRequest)
         {

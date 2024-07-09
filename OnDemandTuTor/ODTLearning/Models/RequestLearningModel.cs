@@ -20,6 +20,7 @@ namespace ODTLearning.Models
         public string? IdRequest { get; set; } // New property for Account ID
         public string? FullName { get; set; }
         public string? Status { get; set; }
+        public string? Current { get; set; }
     }
     public class RequestLearningResponse
     {

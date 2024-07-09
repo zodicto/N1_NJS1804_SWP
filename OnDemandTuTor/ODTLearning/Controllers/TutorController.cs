@@ -152,11 +152,11 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("viewRequest")]
-        public async Task<IActionResult> ViewRequest()
+        public async Task<IActionResult> ViewRequest(string id)
         {
             try
             {
-                var response = await _repo.GetApprovedRequests();
+                var response = await _repo.GetApprovedRequests(id);
 
                 if (response.Success)
                 {
