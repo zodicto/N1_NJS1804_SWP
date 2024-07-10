@@ -394,7 +394,22 @@ namespace ODTLearning.Repositories
                 };
 
                 await _context.Dates.AddAsync(dateEntity);
-                await _context.SaveChangesAsync();
+                //await _context.SaveChangesAsync();
+
+                if (dateModel.Date == DateTime.Now.Date.ToString("dd/mm/yyyy"))
+                {
+                    foreach (var timeSlot in dateModel.TimeSlots)
+                    {
+                        if (timeSlot.CompareTo(DateTime.Now.TimeOfDay.ToString("HH:mm")) < 0)
+                        {
+                            return new ApiResponse<bool>
+                            {
+                                Success = false,
+                                Message = $"Thời gian bạn chọn không phù hợp. Vui lòng tạo lại." 
+                            };
+                        }
+                    }
+                }
 
                 foreach (var timeSlot in dateModel.TimeSlots)
                 {
