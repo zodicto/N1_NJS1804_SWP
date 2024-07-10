@@ -223,8 +223,7 @@
               "ViewState": "AQIAAAMAAAAAAAAAAAAAABQAAABCAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-06-27T06:12:25.268Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -236,8 +235,7 @@
               "RelativeToolTip": "ODTLearning\\Controllers\\TutorController.cs",
               "ViewState": "AQIAAAYAAAAAAAAAAAAgwB0AAAA2AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-08T09:19:45.987Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-08T09:19:45.987Z"
             },
             {
               "$type": "Document",
@@ -249,8 +247,7 @@
               "RelativeToolTip": "ODTLearning\\Repositories\\TutorRepository.cs",
               "ViewState": "AQIAAMIBAAAAAAAAAAAcwNwBAAA3AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-05T07:09:26.41Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-05T07:09:26.41Z"
             },
             {
               "$type": "Document",
@@ -262,8 +259,7 @@
               "RelativeToolTip": "ODTLearning\\Entities\\TimeSlot.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-08T05:25:57.687Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-08T05:25:57.687Z"
             },
             {
               "$type": "Document",
@@ -273,7 +269,7 @@
               "RelativeDocumentMoniker": "ODTLearning\\Repositories\\StudentRepository.cs",
               "ToolTip": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\Repositories\\StudentRepository.cs",
               "RelativeToolTip": "ODTLearning\\Repositories\\StudentRepository.cs",
-              "ViewState": "AQIAABkEAAAAAAAAAAAAAEEEAAAAAAAA",
+              "ViewState": "AQIAABsEAAAAAAAAAAAuwEEEAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-07-06T04:20:23.074Z",
               "EditorCaption": ""
@@ -288,8 +284,7 @@
               "RelativeToolTip": "ODTLearning\\Entities\\Date.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-09T13:34:02.186Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-09T13:34:02.186Z"
             },
             {
               "$type": "Document",
@@ -301,8 +296,7 @@
               "RelativeToolTip": "ODTLearning\\Entities\\Service.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-09T13:34:41.706Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-09T13:34:41.706Z"
             },
             {
               "$type": "Document",
@@ -314,8 +308,7 @@
               "RelativeToolTip": "ODTLearning\\Repositories\\ITutorRepository.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAuwAoAAABUAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-06T09:30:31.148Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-06T09:30:31.148Z"
             },
             {
               "$type": "Document",
@@ -327,8 +320,7 @@
               "RelativeToolTip": "ODTLearning\\Entities\\Booking.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAABcAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-06T04:39:16.505Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-06T04:39:16.505Z"
             },
             {
               "$type": "Document",
@@ -340,8 +332,7 @@
               "RelativeToolTip": "ODTLearning\\Controllers\\userController.cs",
               "ViewState": "AQIAAI4BAAAABAAAAAAewKQBAABQAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-07-05T09:01:41.749Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-07-05T09:01:41.749Z"
             },
             {
               "$type": "Document",
