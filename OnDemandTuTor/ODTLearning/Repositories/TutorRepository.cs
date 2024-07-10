@@ -5,6 +5,7 @@ using ODTLearning.Helpers;
 using ODTLearning.Models;
 using System.Globalization;
 using System.Net;
+using System.Text;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
 
@@ -36,23 +37,16 @@ namespace ODTLearning.Repositories
 
             var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
 
-            //lay list field cua account
+            // Lấy list field của account
             var fields = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.TutorSubjects.Join(_context.Subjects, tf => tf.IdSubject, f => f.Id, (tf, f) => new
             {
                 AccountId = tf.IdTutor,
                 Field = f.SubjectName
             }), t => t.Id, af => af.AccountId, (t, af) => af.Field).ToList();
 
-            var subjects = "";
+            var subjects = string.Join("; ", fields);
 
-            foreach (var x in fields)
-            {
-                subjects += x + "; ";
-            }
-
-            subjects = subjects.Substring(0, subjects.Length - 1);
-
-            //lay list Qualification cua account
+            // Lấy list Qualification của account
             var qualificationsList = _context.Tutors.Where(x => x.IdAccount == id).Join(_context.EducationalQualifications, t => t.Id, eq => eq.IdTutor, (t, eq) => new
             {
                 Id = eq.Id,
@@ -61,40 +55,23 @@ namespace ODTLearning.Repositories
                 Type = eq.Type
             }).ToList();
 
-            var idQualifications = "";
-            var nameQualifications = "";
-            var imgQualifications = "";
-            var typeQualifications = "";
-
-            foreach (var x in qualificationsList)
+            var qualifications = qualificationsList.Select(x => new
             {
-                idQualifications += x.Id + "; ";
-                nameQualifications += x.Name + "; ";
-                imgQualifications += x.Img + "; ";
-                typeQualifications += x.Type + "; ";
-            }
+                Id = x.Id,
+                QualificationName = x.Name,
+                Img = x.Img,
+                Type = x.Type
+            }).ToList();
 
-            idQualifications = myLib.DeleteLastIndexString(idQualifications);
-            nameQualifications = myLib.DeleteLastIndexString(nameQualifications);
-            imgQualifications = myLib.DeleteLastIndexString(imgQualifications);
-            typeQualifications = myLib.DeleteLastIndexString(typeQualifications);
-
-            var qualifications = new
-            {
-                Id = idQualifications,
-                Name = nameQualifications,
-                Img = imgQualifications,
-                Type = typeQualifications
-            };
-
-            //dua vao model
+            // Đưa vào model
             var data = new
             {
-                SpeacializedSkill = tutor.SpecializedSkills,
+                Avatar = account.Avatar,
+                SpecializedSkills = tutor.SpecializedSkills,
                 Experience = tutor.Experience,
                 Introduction = tutor.Introduction,
                 Subjects = subjects,
-                Qualifications = qualifications,
+                Qualifications = qualifications
             };
 
             return new ApiResponse<object>
@@ -103,8 +80,8 @@ namespace ODTLearning.Repositories
                 Message = "Lấy thông tin gia sư thành công",
                 Data = data
             };
-            
         }
+
 
         public async Task<ApiResponse<bool>> UpdateTutorProfile(string id, TutorProfileToUpdate model)
         {
@@ -192,7 +169,8 @@ namespace ODTLearning.Repositories
         public async Task<ApiResponse<bool>> AddQualification(string id, AddQualificationModel model)
         {
             var tutor = await _context.Tutors.SingleOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
-
+            Console.WriteLine(" : " + model.Name);
+            Console.WriteLine("imgQuatification : "+model.Img);
             if (tutor == null)
             {
                 return new ApiResponse<bool>
@@ -221,6 +199,7 @@ namespace ODTLearning.Repositories
                 Type = model.Type,
                 IdTutor = tutor.Id                
             };
+            
 
             await _context.EducationalQualifications.AddAsync(qualification);
             await _context.SaveChangesAsync();
