@@ -410,8 +410,9 @@ namespace ODTLearning.Repositories
             {
                 Id = account.Id,
                 account.Email,
+                roles = account.Roles,
                 fullName = account.FullName,
-                 Date_of_birth = account.DateOfBirth,
+                Date_of_birth = account.DateOfBirth,
                 Gender = account.Gender,
                 Avatar = account.Avatar,
                 Address = account.Address,
@@ -554,6 +555,7 @@ namespace ODTLearning.Repositories
                         {
                             idUser = existingUser.Id,
                             Name = existingUser.FullName,
+                            existingUser.Roles,
                             Email = existingUser.Email,
                             Date_of_birth = existingUser.DateOfBirth,
                             Gender = existingUser.Gender,
@@ -567,6 +569,7 @@ namespace ODTLearning.Repositories
                             idAccountTutor = tutor.IdAccountNavigation.Id,
                             Name = tutor.IdAccountNavigation.FullName,
                             Email = tutor.IdAccountNavigation.Email,
+                            tutor.IdAccountNavigation.Roles,
                             Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
                             Gender = tutor.IdAccountNavigation.Gender,
                             Avatar = tutor.IdAccountNavigation.Avatar,
@@ -629,6 +632,7 @@ namespace ODTLearning.Repositories
                             
                             FullName = user.FullName,
                             Email = user.Email,
+                            user.Roles,
                             Date_of_birth = user.DateOfBirth,
                             Gender = user.Gender,
                             Avatar = user.Avatar,
@@ -640,6 +644,7 @@ namespace ODTLearning.Repositories
                         {
                             FullName = tutor.IdAccountNavigation.FullName,
                             Email = tutor.IdAccountNavigation.Email,
+                            tutor.IdAccountNavigation.Roles,
                             Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
                             Gender = tutor.IdAccountNavigation.Gender,
                             Avatar = tutor.IdAccountNavigation.Avatar,
@@ -703,7 +708,21 @@ namespace ODTLearning.Repositories
 
                 foreach (var booking in bookings)
                 {
-                    var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor);
+                    //var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor);
+
+                    var tutorId = booking?.IdTimeSlotNavigation?.IdDateNavigation?.IdServiceNavigation?.IdTutor;
+
+                    if (tutorId == null)
+                    {
+                        continue; 
+                    }
+
+                    var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == tutorId);
+
+                    if (tutor == null)
+                    {
+                        continue; 
+                    }
 
                     var data = new
                     {
@@ -722,6 +741,7 @@ namespace ODTLearning.Repositories
                         {
                             idUser = existingUser.Id,
                             Name = existingUser.FullName,
+                            existingUser.Roles,
                             Email = existingUser.Email,
                             Date_of_birth = existingUser.DateOfBirth,
                             Gender = existingUser.Gender,
@@ -735,6 +755,7 @@ namespace ODTLearning.Repositories
                             idAccountTutor = tutor.IdAccountNavigation.Id,
                             Name = tutor.IdAccountNavigation.FullName,
                             Email = tutor.IdAccountNavigation.Email,
+                            tutor.IdAccountNavigation.Roles,
                             Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
                             Gender = tutor.IdAccountNavigation.Gender,
                             Avatar = tutor.IdAccountNavigation.Avatar,
@@ -799,6 +820,7 @@ namespace ODTLearning.Repositories
                         {
                             Name = booking.IdAccountNavigation.FullName,
                             Email = booking.IdAccountNavigation.Email,
+                            booking.IdAccountNavigation.Roles,
                             Date_of_birth = booking.IdAccountNavigation.DateOfBirth,
                             Gender = booking.IdAccountNavigation.Gender,
                             Avatar = booking.IdAccountNavigation.Avatar,
@@ -810,6 +832,7 @@ namespace ODTLearning.Repositories
                         {
                             Name = tutor.IdAccountNavigation.FullName,
                             Email = tutor.IdAccountNavigation.Email,
+                            tutor.IdAccountNavigation.Roles,
                             Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
                             Gender = tutor.IdAccountNavigation.Gender,
                             Avatar = tutor.IdAccountNavigation.Avatar,

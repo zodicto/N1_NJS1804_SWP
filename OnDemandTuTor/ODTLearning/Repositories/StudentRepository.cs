@@ -458,7 +458,13 @@ namespace ODTLearning.Repositories
                 avatar = rl.IdTutorNavigation.IdAccountNavigation.Avatar, // Bổ sung thuộc tính avatar
                 specializedSkills = rl.IdTutorNavigation.SpecializedSkills,
                 experience = rl.IdTutorNavigation.Experience,
-                subject = rl.IdTutorNavigation.TutorSubjects.FirstOrDefault()?.IdSubjectNavigation.SubjectName,
+                subject = string.Join("; ", _context.Tutors.Where(t => t.Id == rl.IdTutor)
+                                                    .Join(_context.TutorSubjects.Join(_context.Subjects, ts => ts.IdSubject, s => s.Id, (ts, s) => new
+                                                    {
+                                                        TutorId = ts.IdTutor,
+                                                        SubjectName = s.SubjectName
+                                                    }), t => t.Id, ts => ts.TutorId, (t, ts) => ts.SubjectName)
+                                                    .ToList()),
                 imageQualification = rl.IdTutorNavigation.EducationalQualifications.FirstOrDefault()?.Img,
                 qualifiCationName = rl.IdTutorNavigation.EducationalQualifications.FirstOrDefault()?.QualificationName,
                 rating = rl.IdTutorNavigation.Reviews.Average(r => r.Rating) ?? 0,
