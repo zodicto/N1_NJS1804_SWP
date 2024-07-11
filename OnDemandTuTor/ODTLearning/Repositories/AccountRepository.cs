@@ -410,7 +410,6 @@ namespace ODTLearning.Repositories
             {
                 Id = account.Id,
                 account.Email,
-                roles = account.Roles,
                 fullName = account.FullName,
                 Date_of_birth = account.DateOfBirth,
                 Gender = account.Gender,
