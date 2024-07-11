@@ -818,19 +818,21 @@ namespace ODTLearning.Repositories
 
                         User = new
                         {
-                            Name = existingUser.FullName,
-                            Email = existingUser.Email,
-                            Date_of_birth = existingUser.DateOfBirth,
-                            Gender = existingUser.Gender,
-                            Avatar = existingUser.Avatar,
-                            Address = existingUser.Address,
-                            Phone = existingUser.Phone
+                            Name = booking.IdAccountNavigation.FullName,
+                            Email = booking.IdAccountNavigation.Email,
+                            booking.IdAccountNavigation.Roles,
+                            Date_of_birth = booking.IdAccountNavigation.DateOfBirth,
+                            Gender = booking.IdAccountNavigation.Gender,
+                            Avatar = booking.IdAccountNavigation.Avatar,
+                            Address = booking.IdAccountNavigation.Address,
+                            Phone = booking.IdAccountNavigation.Phone
                         },
 
                         Tutor = new
                         {
                             Name = tutor.IdAccountNavigation.FullName,
                             Email = tutor.IdAccountNavigation.Email,
+                            tutor.IdAccountNavigation.Roles,
                             Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
                             Gender = tutor.IdAccountNavigation.Gender,
                             Avatar = tutor.IdAccountNavigation.Avatar,
