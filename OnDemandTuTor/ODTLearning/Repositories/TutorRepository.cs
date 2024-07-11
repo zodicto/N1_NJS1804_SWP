@@ -359,8 +359,7 @@ namespace ODTLearning.Repositories
             };
 
             // Thêm Service vào context
-            await _context.Services.AddAsync(serviceOfTutor);
-            await _context.SaveChangesAsync();
+            await _context.Services.AddAsync(serviceOfTutor);           
 
             // Thêm Date và TimeSlot vào context
             foreach (var dateModel in model.Schedule)
