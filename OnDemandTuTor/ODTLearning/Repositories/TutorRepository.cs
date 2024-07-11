@@ -380,13 +380,16 @@ namespace ODTLearning.Repositories
                 {
                     foreach (var timeSlot in dateModel.TimeSlots)
                     {
-                        if (timeSlot.CompareTo(DateTime.Now.TimeOfDay.ToString("HH:mm")) < 0)
+                        if (DateTime.TryParseExact(timeSlot, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime))
                         {
-                            return new ApiResponse<bool>
+                            if (dateTime.TimeOfDay < DateTime.Now.TimeOfDay)
                             {
-                                Success = false,
-                                Message = $"Thời gian bạn chọn không phù hợp. Vui lòng tạo lại." 
-                            };
+                                return new ApiResponse<bool>
+                                {
+                                    Success = false,
+                                    Message = $"Thời gian bạn chọn không phù hợp. Vui lòng tạo lại."
+                                };
+                            }
                         }
                     }
                 }
