@@ -486,6 +486,17 @@ namespace ODTLearning.Repositories
                 };
             }
 
+            var existclassRequest = await _context.ClassRequests.SingleOrDefaultAsync(x => x.IdRequest == idRequest);
+
+            if (existclassRequest != null)
+            {
+                return new ApiResponse<SelectTutorModel>
+                {
+                    Success = false,
+                    Message = "Bạn đã chọn gia sư cho yêu cầu này",
+                };
+            }
+
             var accountTutor = await _context.Accounts.Include(x => x.Tutor).SingleOrDefaultAsync(x => x.Id == idAccountTutor);
 
             if (accountTutor == null || accountTutor.Roles.ToLower() != "gia sư" || accountTutor.Tutor == null)
@@ -495,9 +506,9 @@ namespace ODTLearning.Repositories
                     Success = false,
                     Message = "Không tìm thấy gia sư trong hệ thống",
                 };
-            }
+            }           
 
-            var tutor = accountTutor.Tutor;
+            var tutor = accountTutor.Tutor;            
 
             var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == request.IdAccount);
 
