@@ -951,14 +951,14 @@ namespace ODTLearning.Repositories
                     var selectedTimeSlot = ts;
 
                     //check thời gian học lấn sang timeslot khác
-                    var checkTimeslots = await _context.TimeSlots.Where(x => x.TimeSlot1 > selectedTimeSlot.TimeSlot1).ToListAsync();
+                    var checkTimeslots = await _context.Bookings.Include(x => x.IdTimeSlotNavigation).Where(x => x.IdTimeSlotNavigation.IdDate == selectedDate.Id && x.IdTimeSlotNavigation.TimeSlot1 > selectedTimeSlot.TimeSlot1).ToListAsync();
 
                     var timeStart = (TimeOnly) selectedTimeSlot.TimeSlot1;
                     var timeEnd = timeStart.AddMinutes((double) model.Duration);
 
                     foreach (var x in checkTimeslots)
                     {
-                        if (timeEnd > x.TimeSlot1)
+                        if (timeEnd > x.IdTimeSlotNavigation.TimeSlot1)
                         {
                             return new ApiResponse<BookingServiceModel>
                             {
@@ -1114,7 +1114,7 @@ namespace ODTLearning.Repositories
                             }                            
                         }
 
-                        if (true)
+                        if (check)
                         {
                             timeSlotsAfterCheck.Add(timeSlot.TimeSlot1.Value.ToString("HH:mm"));
                         }                        

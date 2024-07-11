@@ -374,8 +374,9 @@ namespace ODTLearning.Repositories
 
                 await _context.Dates.AddAsync(dateEntity);
                 //await _context.SaveChangesAsync();
-
-                if (dateModel.Date == DateTime.Now.Date.ToString("dd/mm/yyyy"))
+                Console.WriteLine("datemodel: " + dateModel.Date);
+                Console.WriteLine("datemodel22222: " + DateTime.Today.ToString("yyyy-MM-dd"));
+                if (dateModel.Date.Equals(DateTime.Today.ToString("yyyy-MM-dd")))
                 {
                     foreach (var timeSlot in dateModel.TimeSlots)
                     {
