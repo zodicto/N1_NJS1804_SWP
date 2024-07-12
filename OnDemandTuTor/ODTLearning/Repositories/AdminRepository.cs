@@ -1010,5 +1010,27 @@ namespace ODTLearning.Repositories
                 Data = count
             };
         }
+
+        public async Task<ApiResponse<object>> GetRevenueToday()
+        {
+            var revenue = await _context.Transactions.Where(x => DateOnly.FromDateTime(x.CreateDate) == DateOnly.FromDateTime(DateTime.Now)).SumAsync(x => x.Amount);
+
+            if (revenue == 0)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "không có giao dịch nào trong tháng này",
+                    Data = revenue
+                };
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = revenue
+            };
+        }
     }
 }

@@ -166,11 +166,11 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("rejectRequest")]
-        public async Task<IActionResult> RejectRequestStatus(string requestId)
+        public async Task<IActionResult> RejectRequestStatus(string requestId, ReasonReject model)
         {
             try
             {
-                var response = await _repo.RejectRequest(requestId);
+                var response = await _repo.RejectRequest(requestId, model);
 
                 if (response.Success)
                 {

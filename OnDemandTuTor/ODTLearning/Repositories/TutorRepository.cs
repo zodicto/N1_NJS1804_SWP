@@ -988,6 +988,117 @@ namespace ODTLearning.Repositories
                 Data = list
             };
         }
+
+        public async Task<ApiResponse<object>> GetRegisterTutor(string id)
+        {
+            var tutor = await _context.Tutors.Include(t => t.IdAccountNavigation)
+                                             .Include(t => t.TutorSubjects).ThenInclude(ts => ts.IdSubjectNavigation)
+                                             .Include(t => t.EducationalQualifications)
+                                             .FirstOrDefaultAsync(t => t.IdAccount == id);
+
+            if (tutor == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Bạn chưa đăng ký làm gia sư"
+                };
+            }
+
+            var data = new
+            {
+                Id = tutor.IdAccount, // Sử dụng Id của Tutor
+                specializedSkills = tutor.SpecializedSkills,
+                introduction = tutor.Introduction,
+                date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
+                fullName = tutor.IdAccountNavigation.FullName,
+                gender = tutor.IdAccountNavigation.Gender,
+                experience = tutor.Experience,
+                subject = tutor.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName, // Lấy Subject từ TutorSubjects
+                qualifiCationName = tutor.EducationalQualifications.FirstOrDefault().QualificationName, // Lấy QualificationName từ 
+                type = tutor.EducationalQualifications.FirstOrDefault().Type, // Lấy Type từ EducationalQualifications
+                imageQualification = tutor.EducationalQualifications.FirstOrDefault().Img, // Lấy ImageQualification từ EducationalQualifications
+                Status = tutor.Status,
+                Reason = tutor.Reason,
+            };
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Lấy đơn đăng ký gia sư thành công",
+                Data = data
+            };
+        }
+
+        public async Task<ApiResponse<bool>> ReSignUpOftutor(string id, SignUpModelOfTutor model)
+        {
+            // Tìm kiếm account trong DB bằng id
+            var tutor = await _context.Tutors.Include(t => t.IdAccountNavigation)
+                                             .Include(t => t.TutorSubjects).ThenInclude(ts => ts.IdSubjectNavigation)
+                                             .Include(t => t.EducationalQualifications)
+                                             .FirstOrDefaultAsync(t => t.IdAccount == id);
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng"
+                };
+            }
+
+            // Tạo mới đối tượng educationalqualification
+            var educationalQualification = new EducationalQualification
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdTutor = tutor.Id,
+                QualificationName = model.qualifiCationName,
+                Type = model.type,
+                Img = model.imageQualification
+            };
+
+            // Tìm môn học theo tên
+            var subjectModel = await _context.Subjects.FirstOrDefaultAsync(lm => lm.SubjectName == model.subject);
+
+            if (subjectModel == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy môn học nào với tên này. Vui lòng thử lại!",
+                };
+            }
+
+            // Tạo mới đối tượng TutorSubject
+            var tutorSubject = new TutorSubject
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdSubject = subjectModel.Id,
+                IdTutor = tutor.Id,
+            };
+
+            var oldEducationalQualification = await _context.EducationalQualifications.FirstOrDefaultAsync(x => x.IdTutor == tutor.Id);
+            var oldTutorSubject = await _context.TutorSubjects.FirstOrDefaultAsync(x => x.IdTutor == tutor.Id);
+
+            tutor.Introduction = model.introduction;
+            tutor.Experience = model.experience;
+            tutor.SpecializedSkills = model.specializedSkills;
+            tutor.Status = "Đang duyệt";
+            tutor.Reason = null;
+
+            _context.TutorSubjects.Remove(oldTutorSubject);
+            _context.EducationalQualifications.Remove(oldEducationalQualification);
+            await _context.EducationalQualifications.AddAsync(educationalQualification);
+            await _context.TutorSubjects.AddAsync(tutorSubject);
+
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Gửi đơn thành công. Bạn vui lòng chờ duyệt",
+            };
+        }
     }
 }
 

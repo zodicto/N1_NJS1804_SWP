@@ -20,5 +20,6 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<object>> GetRevenueThisMonth();
         public Task<ApiResponse<int>> GetAmountStudent();
         public Task<ApiResponse<int>> GetAmountTutor();
+        public Task<ApiResponse<object>> GetRevenueToday();
     }
 }
