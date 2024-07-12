@@ -77,9 +77,9 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("rejectProfile")]
-        public async Task<IActionResult> RejectProfileTutor(string id,[FromForm] string reason)
+        public async Task<IActionResult> RejectProfileTutor(string id, ReasonReject reason)
         {
-            var result = await _repo.RejectProfileTutor(id);
+            var result = await _repo.RejectProfileTutor(id,reason);
 
             if (!result.Success)
             {

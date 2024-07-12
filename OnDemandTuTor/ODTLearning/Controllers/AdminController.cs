@@ -19,40 +19,40 @@ namespace ODTLearning.Controllers
             _context = context;
         }
 
-        //[HttpGet("viewAllTutor")]
-        //public async Task<IActionResult> ViewListTutor()
-        //{
-        //    try
-        //    {
-        //        var response = await _repo.GetListTutor();
+        [HttpGet("viewAllTutor")]
+        public async Task<IActionResult> ViewListTutor()
+        {
+            try
+            {
+                var response = await _repo.GetListTutor();
 
-        //        if (!response.Success)
-        //        {
-        //            return BadRequest(new
-        //            {
-        //                response.Success,
-        //                response.Message
-        //            });
-        //        }
+                if (!response.Success)
+                {
+                    return BadRequest(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
 
-        //        return Ok(new
-        //        {
-        //            response.Success,
-        //            response.Message,
-        //            response.Data
-        //        });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
 
-        //        return StatusCode(500, new
-        //        {
-        //            Success = false,
-        //            Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
-        //        });
-        //    }
-        //}
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
 
         [HttpGet("viewAllRequestPending")]
         public async Task<IActionResult> ViewAllRequestPending()

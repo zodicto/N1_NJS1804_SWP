@@ -173,39 +173,36 @@ namespace ODTLearning.Repositories
             }
         }
 
-        public async Task<ApiResponse<bool>> RejectProfileTutor(string id)
+        public async Task<ApiResponse<bool>> RejectProfileTutor(string id, ReasonReject model)
         {
             try
             {
-                // Tìm đối tượng Tutor
                 var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
+
                 if (tutor == null)
                 {
                     return new ApiResponse<bool>
                     {
                         Success = true,
-                        Message = "Không tìm thấy gia sư với ID tài khoản này",
+                        Message = "Không tìm thấy gia sư với tài khoản này",
                         Data = false
                     };
                 }
 
-                // Tìm các đối tượng EducationalQualification liên quan
-                var educationalQualifications = _context.EducationalQualifications.Where(eq => eq.IdTutor == tutor.Id).ToList();
-                // Tìm các đối tượng TutorSubject liên quan
-                var tutorSubjects = _context.TutorSubjects.Where(ts => ts.IdTutor == tutor.Id).ToList();
+                tutor.Status = "Từ chối";
+                tutor.Reason = model.Reason;
+                _context.Tutors.Update(tutor);
 
-                // Xóa các đối tượng
-                _context.EducationalQualifications.RemoveRange(educationalQualifications);
-                _context.TutorSubjects.RemoveRange(tutorSubjects);
-                _context.Tutors.Remove(tutor);
+                var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == tutor.IdAccount);
+                account.Roles = "gia sư";
+                _context.Accounts.Update(account);
 
-                // Lưu thay đổi
                 await _context.SaveChangesAsync();
 
                 return new ApiResponse<bool>
                 {
                     Success = true,
-                    Message = "Từ chối gia sư và xóa thông tin thành công",
+                    Message = "Từ chối yêu cầu của gia sư thành công",
                     Data = true
                 };
             }

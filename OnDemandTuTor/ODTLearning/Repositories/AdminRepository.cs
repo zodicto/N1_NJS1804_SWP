@@ -242,56 +242,57 @@ namespace ODTLearning.Repositories
             }
         }
 
-        //public async Task<ApiResponse<List<object>>> GetListTutor()
-        //{
-        //    try
-        //    {
-        //        var listTutors = await _context.Accounts
-        //            .Where(a => a.Roles.ToLower() == "gia sư")
-        //            .Include(a => a.Tutor)
-        //                .ThenInclude(t => t.TutorSubjects)
-        //                    .ThenInclude(ts => ts.IdSubjectNavigation)
-        //            .Include(a => a.Tutor)
-        //                .ThenInclude(t => t.EducationalQualifications)
-        //            .Select(a => new
-        //            {
-        //                a.Id,
-        //                a.Avatar,
-        //                a.FullName,
-        //                date_of_birth = a.DateOfBirth.HasValue ? a.DateOfBirth.Value.ToString("yyyy-MM-dd") : null,
-        //                a.Gender,
-        //                a.Tutor.SpecializedSkills,
-        //                a.Tutor.Experience,
-        //                Subjects = string.Join("; ", a.Tutor.TutorSubjects.Select(ts => ts.IdSubjectNavigation.SubjectName)),
-        //                Qualifications = a.Tutor.EducationalQualifications.Select(eq => new
-        //                {
-        //                    IdQualifications = eq.Id,
-        //                    eq.QualificationName,
-        //                    eq.Img,
-        //                    eq.Type
-        //                }).ToList(),
-        //                a.Tutor.Introduction
-        //            }).ToListAsync();
+        public async Task<ApiResponse<List<ListAllTutor>>> GetListTutor()
+        {
+            try
+            {
+                var listTutors = await _context.Accounts
+                    .Where(a => a.Roles.ToLower() == "gia sư")
+                    .Include(a => a.Tutor)
+                        .ThenInclude(t => t.TutorSubjects)
+                            .ThenInclude(ts => ts.IdSubjectNavigation)
+                    .Include(a => a.Tutor)
+                        .ThenInclude(t => t.EducationalQualifications)
+                    .Select(a => new ListAllTutor
+                    {
+                        Id = a.Id,
+                        Avatar = a.Avatar,
+                        FullName = a.FullName,
+                        Date_of_birth = a.DateOfBirth.HasValue ? a.DateOfBirth.Value.ToString("yyyy-MM-dd") : null,
+                        Gender = a.Gender,
+                        SpecializedSkills = a.Tutor.SpecializedSkills,
+                        Experience = a.Tutor.Experience,
+                        Subjects = string.Join("; ", a.Tutor.TutorSubjects.Select(ts => ts.IdSubjectNavigation.SubjectName)),
+                        Qualifications = a.Tutor.EducationalQualifications.Select(eq => new Qualification
+                        {
+                            IdQualifications = eq.Id,
+                            QualificationName = eq.QualificationName,
+                            Img = eq.Img,
+                            Type = eq.Type
+                        }).ToList(),
+                        Introduction = a.Tutor.Introduction
+                    }).ToListAsync();
 
-        //        return new ApiResponse<List<object>>
-        //        {
-        //            Success = true,
-        //            Message = "Lấy danh sách gia sư thành công",
-        //            Data = listTutors
-        //        };
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Log the error if needed
-        //        Console.WriteLine($"Error in GetListTutor: {ex.Message}");
+                return new ApiResponse<List<ListAllTutor>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách gia sư thành công",
+                    Data = listTutors
+                };
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                Console.WriteLine($"Error in GetListTutor: {ex.Message}");
 
-        //        return new ApiResponse<List<object>>
-        //        {
-        //            Success = false,
-        //            Message = "Đã xảy ra lỗi trong quá trình lấy danh sách gia sư",
-        //        };
-        //    }
-        //}
+                return new ApiResponse<List<ListAllTutor>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách gia sư",
+                };
+            }
+        }
+
 
 
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetListRequestPending()

@@ -874,6 +874,7 @@ namespace ODTLearning.Repositories
                 tutor.IdAccountNavigation.FullName,
                 tutor.IdAccountNavigation.Gender,
                 Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
+                tutor.Reason,
                 tutor.IdAccountNavigation.Email,
                 tutor.IdAccountNavigation.Avatar,
                 tutor.IdAccountNavigation.Address,
