@@ -7,11 +7,11 @@ public partial class Booking
 {
     public string Id { get; set; } = null!;
 
+    public double? Duration { get; set; }
+
+    public double? Price { get; set; }
+
     public string? Status { get; set; }
-
-    public int? Duration { get; set; }
-
-    public float? Price { get; set; }
 
     public string? IdTimeSlot { get; set; }
 

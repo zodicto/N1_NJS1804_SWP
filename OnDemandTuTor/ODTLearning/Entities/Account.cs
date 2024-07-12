@@ -31,6 +31,8 @@ public partial class Account
 
     public virtual ICollection<Complaint> Complaints { get; set; } = new List<Complaint>();
 
+    public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
     public virtual ICollection<RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 
     public virtual ICollection<Rent> Rents { get; set; } = new List<Rent>();

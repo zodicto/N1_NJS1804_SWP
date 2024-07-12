@@ -13,11 +13,11 @@ public partial class Tutor
 
     public int? Experience { get; set; }
 
+    public string? Reason { get; set; }
+
     public string? Status { get; set; }
 
     public string? IdAccount { get; set; }
-
-    public virtual ICollection<ClassRequest> ClassRequests { get; set; } = new List<ClassRequest>();
 
     public virtual ICollection<Complaint> Complaints { get; set; } = new List<Complaint>();
 

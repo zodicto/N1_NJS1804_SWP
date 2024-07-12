@@ -15,6 +15,8 @@ public partial class Request
 
     public string? Description { get; set; }
 
+    public string? Reason { get; set; }
+
     public string? Status { get; set; }
 
     public DateTime? CreateDate { get; set; }
@@ -32,8 +34,6 @@ public partial class Request
     public string? IdClass { get; set; }
 
     public string? IdSubject { get; set; }
-
-    public virtual ICollection<ClassRequest> ClassRequests { get; set; } = new List<ClassRequest>();
 
     public virtual Account? IdAccountNavigation { get; set; }
 

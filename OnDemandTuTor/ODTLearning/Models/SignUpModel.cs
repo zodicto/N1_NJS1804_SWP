@@ -53,18 +53,4 @@ namespace ODTLearning.Models
         public string? roles { get; set; }
     }
 
-    public class ListAlltutor
-    {
-        public string? id { get; set; }
-        public string? fullName { get; set; }
-        public string? specializedSkills { get; set; }
-        public string? date_of_birth { get; set; }
-        public string? gender { get; set; }
-        public int? experience { get; set; }
-        public string? subject { get; set; }
-        public string? qualifiCationName { get; set; }
-        public string? type { get; set; }
-        public string? imageQualification { get; set; }
-        public string? introduction { get; set; }
-    }
 }

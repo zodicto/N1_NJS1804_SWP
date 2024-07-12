@@ -1,0 +1,39 @@
+{
+  "Version": 1,
+  "Hash": "xnRTYED3b9Sye/6eu4Uq7QsXTtwzQbQ+g0NUMEtdmXY=",
+  "Source": "ODTLearning",
+  "BasePath": "_content/ODTLearning",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [
+    {
+      "Name": "ODTLearning\\wwwroot",
+      "Source": "ODTLearning",
+      "ContentRoot": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\",
+      "BasePath": "_content/ODTLearning",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\image\\01.png",
+      "SourceId": "ODTLearning",
+      "SourceType": "Discovered",
+      "ContentRoot": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\",
+      "BasePath": "_content/ODTLearning",
+      "RelativePath": "image/01.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\image\\01.png"
+    }
+  ]
+}

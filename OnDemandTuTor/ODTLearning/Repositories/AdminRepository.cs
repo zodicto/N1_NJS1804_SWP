@@ -43,7 +43,7 @@ namespace ODTLearning.Repositories
                 if (educationalQualifications.Any())
                 {
                     _context.EducationalQualifications.RemoveRange(educationalQualifications);
-                }               
+                }
 
                 var requestLearnings = await _context.RequestLearnings.Where(x => x.IdTutor == tutor.Id).ToListAsync();
 
@@ -58,7 +58,7 @@ namespace ODTLearning.Repositories
                 {
                     _context.TutorSubjects.RemoveRange(tutorSubjects);
                 }
-                
+
                 var complaints = await _context.Complaints.Where(x => x.IdTutor == tutor.Id).ToListAsync();
 
                 if (complaints.Any())
@@ -119,10 +119,10 @@ namespace ODTLearning.Repositories
                                         }
                                     }
                                 }
-                            }                            
+                            }
                         }
                     }
-                }              
+                }
 
                 _context.Tutors.Remove(tutor);
             }
@@ -242,52 +242,57 @@ namespace ODTLearning.Repositories
             }
         }
 
-        public async Task<ApiResponse<List<ListAlltutor>>> GetListTutor()
-        {
-            try
-            {
-                var ListTutors = await _context.Accounts
-                    .Where(a => a.Roles.ToLower() == "gia sư")
-                    .Include(a => a.Tutor)
-                        .ThenInclude(t => t.TutorSubjects)
-                            .ThenInclude(ts => ts.IdSubjectNavigation)
-                    .Include(a => a.Tutor)
-                        .ThenInclude(t => t.EducationalQualifications)
-                    .Select(a => new ListAlltutor
-                    {
-                        id = a.Id,
-                        fullName = a.FullName,
-                        date_of_birth = a.DateOfBirth.HasValue ? a.DateOfBirth.Value.ToString("yyyy-MM-dd") : null,
-                        gender = a.Gender,
-                        specializedSkills = a.Tutor.SpecializedSkills,
-                        experience = a.Tutor.Experience,
-                        subject = a.Tutor.TutorSubjects.FirstOrDefault() != null ? a.Tutor.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName : null,
-                        qualifiCationName = a.Tutor.EducationalQualifications.FirstOrDefault() != null ? a.Tutor.EducationalQualifications.FirstOrDefault().QualificationName : null,
-                        type = a.Tutor.EducationalQualifications.FirstOrDefault() != null ? a.Tutor.EducationalQualifications.FirstOrDefault().Type : null,
-                        imageQualification = a.Tutor.EducationalQualifications.FirstOrDefault() != null ? a.Tutor.EducationalQualifications.FirstOrDefault().Img : null,
-                        introduction = a.Tutor.Introduction
-                    }).ToListAsync();
+        //public async Task<ApiResponse<List<object>>> GetListTutor()
+        //{
+        //    try
+        //    {
+        //        var listTutors = await _context.Accounts
+        //            .Where(a => a.Roles.ToLower() == "gia sư")
+        //            .Include(a => a.Tutor)
+        //                .ThenInclude(t => t.TutorSubjects)
+        //                    .ThenInclude(ts => ts.IdSubjectNavigation)
+        //            .Include(a => a.Tutor)
+        //                .ThenInclude(t => t.EducationalQualifications)
+        //            .Select(a => new
+        //            {
+        //                a.Id,
+        //                a.Avatar,
+        //                a.FullName,
+        //                date_of_birth = a.DateOfBirth.HasValue ? a.DateOfBirth.Value.ToString("yyyy-MM-dd") : null,
+        //                a.Gender,
+        //                a.Tutor.SpecializedSkills,
+        //                a.Tutor.Experience,
+        //                Subjects = string.Join("; ", a.Tutor.TutorSubjects.Select(ts => ts.IdSubjectNavigation.SubjectName)),
+        //                Qualifications = a.Tutor.EducationalQualifications.Select(eq => new
+        //                {
+        //                    IdQualifications = eq.Id,
+        //                    eq.QualificationName,
+        //                    eq.Img,
+        //                    eq.Type
+        //                }).ToList(),
+        //                a.Tutor.Introduction
+        //            }).ToListAsync();
 
-                return new ApiResponse<List<ListAlltutor>>
-                {
-                    Success = true,
-                    Message = "Lấy danh sách gia sư thành công",
-                    Data = ListTutors
-                };
-            }
-            catch (Exception ex)
-            {
-                // Ghi lại lỗi nếu cần thiết
-                Console.WriteLine($"Error in GetListTutor: {ex.Message}");
+        //        return new ApiResponse<List<object>>
+        //        {
+        //            Success = true,
+        //            Message = "Lấy danh sách gia sư thành công",
+        //            Data = listTutors
+        //        };
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Log the error if needed
+        //        Console.WriteLine($"Error in GetListTutor: {ex.Message}");
 
-                return new ApiResponse<List<ListAlltutor>>
-                {
-                    Success = false,
-                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách gia sư",
-                    Data = null
-                };
-            }
-        }
+        //        return new ApiResponse<List<object>>
+        //        {
+        //            Success = false,
+        //            Message = "Đã xảy ra lỗi trong quá trình lấy danh sách gia sư",
+        //        };
+        //    }
+        //}
+
 
         public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetListRequestPending()
         {
@@ -535,7 +540,61 @@ namespace ODTLearning.Repositories
                 Data = complaints
             };
         }
+        public async Task<ApiResponse<object>> GetAllReview()
+        {
+            var complaints = await _context.Reviews.Include(x => x.IdAccountNavigation)
+                                               .Include(x => x.IdTutorNavigation).ThenInclude(x => x.IdAccountNavigation)
+                                               .Select(c => new
+                                               {
+                                                   User = new
+                                                   {
+                                                       Id = c.IdAccountNavigation.Id,
+                                                       FullName = c.IdAccountNavigation.FullName,
+                                                       Email = c.IdAccountNavigation.Email,
+                                                       Date_of_birth = c.IdAccountNavigation.DateOfBirth,
+                                                       Gender = c.IdAccountNavigation.Gender,
+                                                       Avatar = c.IdAccountNavigation.Avatar,
+                                                       Address = c.IdAccountNavigation.Address,
+                                                       Phone = c.IdAccountNavigation.Phone,
+                                                       Roles = c.IdAccountNavigation.Roles
+                                                   },
 
+                                                   c.Rating,
+                                                   c.Feedback,
+
+                                                   Tutor = new
+                                                   {
+                                                       Id = c.IdTutorNavigation.IdAccountNavigation.Id,
+                                                       FullName = c.IdTutorNavigation.IdAccountNavigation.FullName,
+                                                       Email = c.IdTutorNavigation.IdAccountNavigation.Email,
+                                                       Date_of_birth = c.IdTutorNavigation.IdAccountNavigation.DateOfBirth,
+                                                       Gender = c.IdTutorNavigation.IdAccountNavigation.Gender,
+                                                       Avatar = c.IdTutorNavigation.IdAccountNavigation.Avatar,
+                                                       Address = c.IdTutorNavigation.IdAccountNavigation.Address,
+                                                       Phone = c.IdTutorNavigation.IdAccountNavigation.Phone,
+                                                       Roles = c.IdTutorNavigation.IdAccountNavigation.Roles
+                                                   }
+
+
+                                               }).ToListAsync();
+
+
+            if (!complaints.Any())
+            {
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Không có khiếu nại nào"
+                };
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = complaints
+            };
+        }
         public async Task<ApiResponse<object>> GetAllTransaction()
         {
             var transactions = _context.Transactions.Include(x => x.IdAccountNavigation).Select(x => new
@@ -914,7 +973,7 @@ namespace ODTLearning.Repositories
             }
 
             float? revenue = 0;
-            foreach ( var x in transactions)
+            foreach (var x in transactions)
             {
                 revenue += x.Amount;
             }

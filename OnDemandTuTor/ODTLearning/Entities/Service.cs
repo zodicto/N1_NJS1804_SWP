@@ -13,8 +13,6 @@ public partial class Service
 
     public string? Description { get; set; }
 
-    public string? LearningMethod { get; set; }
-
     public string? IdTutor { get; set; }
 
     public string? IdClass { get; set; }
