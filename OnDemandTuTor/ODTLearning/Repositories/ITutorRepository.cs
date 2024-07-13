@@ -18,5 +18,7 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<bool>> DeleteServiceById(string serviceId);
         public Task<ApiResponse<object>> UpdateServiceById(string serviceId, ServiceLearningModel model);
         public Task<ApiResponse<object>> GetReview(string id);
+        public Task<ApiResponse<object>> GetRegisterTutor(string id);
+        public Task<ApiResponse<bool>> ReSignUpOftutor(string id, SignUpModelOfTutor model);
     }
 }

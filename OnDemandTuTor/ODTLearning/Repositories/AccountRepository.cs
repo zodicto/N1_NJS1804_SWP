@@ -77,7 +77,7 @@ namespace ODTLearning.Repositories
                 return new ApiResponse<TutorResponse>
                 {
                     Success = false,
-                    Message = "Không tìm thấy tài khoản với ID này",
+                    Message = "Không tìm thấy tài khoản",
                 };
             }
 
@@ -88,7 +88,7 @@ namespace ODTLearning.Repositories
                 return new ApiResponse<TutorResponse>
                 {
                     Success = false,
-                    Message = "Đã tồn tại gia sư với ID tài khoản này",
+                    Message = "Tài khoản đã đăng ký gia sư",
                 };
             }
 

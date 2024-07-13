@@ -8,7 +8,7 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<bool>> ApproveProfileTutor(string id);
         public Task<ApiResponse<List<ListTutorToConfirm>>> GetListTutorsToConfirm();
         public Task<ApiResponse<List<ViewRequestOfStudent>>> GetPendingRequests();
-        public Task<ApiResponse<bool>> RejectRequest(string requestId);
+        public Task<ApiResponse<bool>> RejectRequest(string requestId, ReasonReject model);
         public Task<ApiResponse<bool>> ApproveRequest(string requestId);
         public Task<ApiResponse<bool>> DeleteRequest(string idRequest);
     }

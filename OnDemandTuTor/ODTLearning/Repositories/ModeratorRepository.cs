@@ -101,7 +101,7 @@ namespace ODTLearning.Repositories
             };
         }
 
-        public async Task<ApiResponse<bool>> RejectRequest(string requestId)
+        public async Task<ApiResponse<bool>> RejectRequest(string requestId, ReasonReject model)
         {
             var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
 
@@ -116,6 +116,7 @@ namespace ODTLearning.Repositories
             }
 
             request.Status = "Từ chối"; // Assuming "Rejected" is the correct status for rejection
+            request.Reason = model.Reason;
             _context.Requests.Update(request);
             await _context.SaveChangesAsync();
 
@@ -192,10 +193,6 @@ namespace ODTLearning.Repositories
                 tutor.Status = "Từ chối";
                 tutor.Reason = model.Reason;
                 _context.Tutors.Update(tutor);
-
-                var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == tutor.IdAccount);
-                account.Roles = "gia sư";
-                _context.Accounts.Update(account);
 
                 await _context.SaveChangesAsync();
 

@@ -329,5 +329,18 @@ namespace ODTLearning.Controllers
                 Data = response.Data
             });
         }
+
+        [HttpGet("ViewRevenueToday")]
+        public async Task<IActionResult> ViewRevenueToday()
+        {
+            var response = await _repo.GetRevenueToday();
+
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
     }
 }

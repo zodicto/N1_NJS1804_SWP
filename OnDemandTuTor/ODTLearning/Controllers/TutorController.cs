@@ -416,5 +416,72 @@ namespace ODTLearning.Controllers
                 });
             }
         }
+
+        [HttpGet("GetRegisterTutor")]
+        public async Task<IActionResult> GetRegisterTutor(string id)
+        {
+            try
+            {
+                var response = await _repo.GetRegisterTutor(id);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        response.Data
+                    });
+                }
+
+                return NotFound(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while get register tutor.",
+                    Data = ex.Message
+                });
+            }
+        }
+
+        [HttpPut("ReSignUpOftutor")]
+        public async Task<IActionResult> ReSignUpOftutor(string id, SignUpModelOfTutor model)
+        {
+            try
+            {
+                var response = await _repo.ReSignUpOftutor(id, model);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message
+                    });
+                }
+
+                return NotFound(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while get register tutor.",
+                    Data = ex.Message
+                });
+            }
+        }
     }
 }
