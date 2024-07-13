@@ -420,6 +420,26 @@ namespace ODTLearning.Controllers
                 Message = response.Message
             });
         }
+        [HttpDelete("DeleteSignUpTutor")]
+        public async Task<IActionResult> DeleteSignUpTutor(string id)
+        {
+            var response = await _repo.DeleteSignUpTutor(id);
+
+            if (response.Success)
+            {
+                return Ok(new
+                {
+                    Success = true,
+                    Message = response.Message
+                });
+            }
+
+            return BadRequest(new
+            {
+                Success = false,
+                Message = response.Message
+            });
+        }
 
         [HttpPost("BookingServiceLearning")]
         public async Task<IActionResult> BookingServiceLearning(string id, string idService, [FromBody] BookingServiceLearingModels model)

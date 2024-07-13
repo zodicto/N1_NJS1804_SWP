@@ -894,6 +894,61 @@ namespace ODTLearning.Repositories
                 Data = data
             };
         }
+        public async Task<ApiResponse<object>> DeleteSignUpTutor(string id)
+        {
+            // Tìm gia sư trong cơ sở dữ liệu bằng IdAccount
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.IdAccount == id);
+
+            if (tutor == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy đăng ký gia sư"
+                };
+            }
+            // Kiểm tra trạng thái của gia sư
+            if (tutor.Status != "Đang duyệt" && tutor.Status != "Từ chối")
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Chỉ có thể xóa đăng ký gia sư ở trạng thái 'Đang duyệt' hoặc 'Từ chối'"
+                };
+            }
+
+            // Tìm các môn học của gia sư
+            var tutorSubjects = await _context.TutorSubjects.Where(ts => ts.IdTutor == tutor.Id).ToListAsync();
+            // Tìm các chứng chỉ học vấn của gia sư
+            var qualifications = await _context.EducationalQualifications.Where(eq => eq.IdTutor == tutor.Id).ToListAsync();
+
+            // Xóa các đối tượng liên quan
+            _context.TutorSubjects.RemoveRange(tutorSubjects);
+            _context.EducationalQualifications.RemoveRange(qualifications);
+            _context.Tutors.Remove(tutor);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Xóa đăng ký gia sư thành công"
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu có xảy ra
+                Console.WriteLine($"Error while deleting tutor: {ex.Message}");
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xóa dữ liệu",
+                    Data = null
+                };
+            }
+        }
+
         public async Task<ApiResponse<BookingServiceModel>> BookingServiceLearning(string id, string idService, BookingServiceLearingModels model)
         {
             // Tìm tài khoản theo id
