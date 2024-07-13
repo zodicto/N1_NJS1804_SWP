@@ -37,3 +37,15 @@
 | Đoàn Đình Quang Trường | UC5-Edit profile, UC4-View Profile | 
 | Lê Phước Lộc | UC28-Change Password |
 
+
+### Member Assignments for Sprint 2
+
+| Member   | User Case (UC) Assigned    |  
+| :------- | :------------------------- |
+| Lê Minh Trí | UC2-Register as a tutor |  
+| Lê Thành Tài | UC1-Register ,UC3-Login | 
+| Lê Minh Tân | UC6-Approved Tutor Profile,UC7-Reject Tutor Profile |
+| Nguyễn Trí Thành | UC14-Create Request |
+| Đoàn Đình Quang Trường | UC18-Update Request | 
+| Lê Phước Lộc | UC28-Change Password |
+
