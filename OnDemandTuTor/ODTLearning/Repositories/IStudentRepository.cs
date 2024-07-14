@@ -6,6 +6,7 @@ namespace ODTLearning.Repositories
     public interface IStudentRepository
     {
         public Task<ApiResponse<bool>> CreateRequestLearning(string IDAccount, RequestLearningModel model);
+        public  Task<ApiResponse<object>> DeleteSignUpTutor(string id);
         public Task<ApiResponse<bool>> UpdateRequestLearning(string requestId, RequestLearningModel model);
         public Task<ApiResponse<bool>> DeleteRequestLearning(string accountId, string requestId);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetPendingRequestsByAccountId(string id);
