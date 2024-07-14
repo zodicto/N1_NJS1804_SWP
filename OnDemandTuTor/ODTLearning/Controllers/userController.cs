@@ -626,5 +626,48 @@ namespace ODTLearning.Controllers
                 Data = response.Data
             });
         }
+
+        [HttpGet("ViewAllNotification")]
+        public async Task<IActionResult> GetAllNotification(string id)
+        {
+            var response = await _repo.GetAllNotification(id);
+
+            if (!response.Success)
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    Message = response.Message
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
+
+        [HttpPut("UpdateStatusNotification")]
+        public async Task<IActionResult> UpdateStatusNotification(string id)
+        {
+            var response = await _repo.UpdateStatusNotification(id);
+
+            if (!response.Success)
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    Message = response.Message
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                Message = response.Message
+            });
+        }
     }
 }

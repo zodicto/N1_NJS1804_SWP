@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Azure.Core;
+using Microsoft.EntityFrameworkCore;
 using ODTLearning.Entities;
 using ODTLearning.Helpers;
 using ODTLearning.Models;
@@ -97,7 +99,7 @@ namespace ODTLearning.Repositories
             // Tạo một đối tượng Schedule mới nếu có thông tin về lịch trình
             if (parsedTimeStart.HasValue && parsedTimeEnd.HasValue)
             {
-                var requestOfStudent = new Request
+                var requestOfStudent = new Entities.Request
                 {
                     Id = Guid.NewGuid().ToString(),
                     Title = model.Title,
@@ -117,6 +119,18 @@ namespace ODTLearning.Repositories
 
                 // Thêm Request vào context
                 await _context.Requests.AddAsync(requestOfStudent);
+
+                var nofi = new Notification
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Description = $"Bạn đã tạo yêu cầu tìm gia sư '{model.Title}' thành công",
+                    CreateDate = DateTime.Now,
+                    Status = "Chưa xem",
+                    IdAccount = id,
+                };
+
+                await _context.Notifications.AddAsync(nofi);
+
                 await _context.SaveChangesAsync();
             }
 
@@ -228,6 +242,18 @@ namespace ODTLearning.Repositories
 
             // Lưu các thay đổi vào context
             _context.Requests.Update(requestToUpdate);
+
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã cập nhật yêu cầu tìm gia sư '{requestToUpdate.Title}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = requestToUpdate.IdAccount,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+
             await _context.SaveChangesAsync();
 
             return new ApiResponse<bool>
@@ -278,6 +304,18 @@ namespace ODTLearning.Repositories
             }
 
             _context.Requests.Remove(requestToDelete);
+
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã xóa yêu cầu tìm gia sư '{requestToDelete.Title}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = accountId,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+
             await _context.SaveChangesAsync();
 
             return new ApiResponse<bool>
@@ -549,6 +587,48 @@ namespace ODTLearning.Repositories
             request.Status = "Đang diễn ra";
             await _context.AddAsync(rent);
             await _context.AddAsync(classRequest);
+
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã chọn gia sư '{accountTutor.FullName}' cho yêu cầu tìm gia sư '{request.Title}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = request.IdAccount,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+
+            var nofiSelectedTutor = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã được chọn cho yêu cầu tìm gia sư '{request.Title}'",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = accountTutor.Id,
+            };
+
+            await _context.Notifications.AddAsync(nofiSelectedTutor);
+
+            var requestLearnings = await _context.RequestLearnings.Include(x => x.IdTutorNavigation).Where(x => x.IdRequest == idRequest && x.IdTutor != tutor.Id).ToListAsync();
+
+            if (requestLearnings.Any())
+            {
+                foreach (var requestLearning in requestLearnings)
+                {
+                    var nofiTutor = new Notification
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Description = $"Bạn không được chọn cho yêu cầu tìm gia sư '{request.Title}'",
+                        CreateDate = DateTime.Now,
+                        Status = "Chưa xem",
+                        IdAccount = requestLearning.IdTutorNavigation.IdAccount,
+                    };
+
+                    await _context.Notifications.AddAsync(nofiTutor);
+                }
+            }
+            
             await _context.SaveChangesAsync();
 
             var data = new SelectTutorModel
@@ -618,6 +698,18 @@ namespace ODTLearning.Repositories
             };
 
             await _context.Complaints.AddAsync(complaint);
+
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã tố cáo gia sư '{accountTutor.FullName}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = model.IdUser,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+
             await _context.SaveChangesAsync();
 
             return new ApiResponse<bool>
@@ -641,7 +733,7 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            var classRequest = await _context.ClassRequests.SingleOrDefaultAsync(x => x.Id == model.IdClassRequest);
+            var classRequest = await _context.ClassRequests.Include(x => x.IdRequestNavigation).SingleOrDefaultAsync(x => x.Id == model.IdClassRequest);
 
             if (classRequest == null)
             {
@@ -674,6 +766,29 @@ namespace ODTLearning.Repositories
             };
 
             await _context.Reviews.AddAsync(review);
+
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã đánh giá gia sư '{tutor.IdAccountNavigation.FullName}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = model.IdUser,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+
+            var nofiTutor = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn nhận được 1 đánh giá thông qua lớp '{classRequest.IdRequestNavigation.Title}'",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = tutor.IdAccount,
+            };
+
+            await _context.Notifications.AddAsync(nofiTutor);
+
             await _context.SaveChangesAsync();
 
             return new ApiResponse<bool>
@@ -730,6 +845,29 @@ namespace ODTLearning.Repositories
             };
 
             await _context.Reviews.AddAsync(review);
+
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã đánh giá gia sư '{tutor.IdAccountNavigation.FullName}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = model.IdUser,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+
+            var nofiTutor = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn nhận được 1 đánh giá thông qua lớp '{booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title}'",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = tutor.IdAccount,
+            };
+
+            await _context.Notifications.AddAsync(nofiTutor);
+
             await _context.SaveChangesAsync();
 
             return new ApiResponse<bool>
@@ -998,6 +1136,28 @@ namespace ODTLearning.Repositories
                     account.AccountBalance -= model.Price;
                     Console.WriteLine("service.IdTutorNavigation.IdAccountNavigation.AccountBalance: " + service.IdTutorNavigation.IdAccountNavigation.AccountBalance);
 
+                    var nofi = new Notification
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Description = $"Bạn đã đặt dịch vụ '{service.Title}' thành công",
+                        CreateDate = DateTime.Now,
+                        Status = "Chưa xem",
+                        IdAccount = id,
+                    };
+
+                    await _context.Notifications.AddAsync(nofi);
+
+                    var nofiTutor = new Notification
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Description = $"Dịch vụ '{service.Title}' của bạn đã có 1 học sinh đặt",
+                        CreateDate = DateTime.Now,
+                        Status = "Chưa xem",
+                        IdAccount = service.IdTutorNavigation.IdAccount,
+                    };
+
+                    await _context.Notifications.AddAsync(nofiTutor);
+
                     // Lưu thay đổi vào context
                     await _context.SaveChangesAsync();
 
@@ -1163,7 +1323,7 @@ namespace ODTLearning.Repositories
 
         public async Task<ApiResponse<bool>> CompleteClassRequest(string idClassRequest)
         {
-            var classRequest = await _context.ClassRequests.Include(x => x.IdRequestNavigation).SingleOrDefaultAsync(x => x.Id == idClassRequest); 
+            var classRequest = await _context.ClassRequests.Include(x => x.IdRequestNavigation).Include(x => x.IdTutorNavigation).SingleOrDefaultAsync(x => x.Id == idClassRequest); 
 
             if (classRequest == null)
             {
@@ -1175,6 +1335,29 @@ namespace ODTLearning.Repositories
             }
 
             classRequest.IdRequestNavigation.Status = "Hoàn thành";
+
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã hoàn thành lớp '{classRequest.IdRequestNavigation.Title}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = classRequest.IdRequestNavigation.IdAccount,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+
+            var nofiTutor = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Lớp '{classRequest.IdRequestNavigation.Title}' đã được hoàn thành",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = classRequest.IdTutorNavigation.IdAccount,
+            };
+
+            await _context.Notifications.AddAsync(nofiTutor);
+
             await _context.SaveChangesAsync();
 
             return new ApiResponse<bool>
@@ -1189,6 +1372,7 @@ namespace ODTLearning.Repositories
             var booking = await _context.Bookings.Include(x => x.IdTimeSlotNavigation)
                                                     .ThenInclude(x => x.IdDateNavigation)
                                                         .ThenInclude(x => x.IdServiceNavigation)
+                                                            .ThenInclude(x => x.IdTutorNavigation)
                                                  .SingleOrDefaultAsync(x => x.Id == idBooking);
 
             if (booking == null)
@@ -1205,6 +1389,29 @@ namespace ODTLearning.Repositories
             tutor.IdAccountNavigation.AccountBalance += (float) (booking.Price * 0.9);
 
             booking.Status = "Hoàn thành";
+
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã hoàn thành lớp '{booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = booking.IdAccount,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+
+            var nofiTutor = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Lớp '{booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title}' đã được hoàn thành",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutorNavigation.IdAccount,
+            };
+
+            await _context.Notifications.AddAsync(nofiTutor);
+
             await _context.SaveChangesAsync();
 
             return new ApiResponse<bool>
