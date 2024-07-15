@@ -55,6 +55,7 @@ namespace ODTLearning.Models
     public class ListAllTutor
     {
         public string? Id { get; set; }
+        public string? Rating { get; set; }
         public string? Avatar { get; set; }
         public string? FullName { get; set; }
         public string? Date_of_birth { get; set; }

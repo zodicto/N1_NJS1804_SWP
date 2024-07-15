@@ -275,7 +275,8 @@ namespace ODTLearning.Repositories
                             Img = eq.Img,
                             Type = eq.Type
                         }).ToList(),
-                        Introduction = a.Tutor.Introduction
+                        Introduction = a.Tutor.Introduction,
+                        Rating = a.Tutor.Reviews.Any() ? a.Tutor.Reviews.Average(r => r.Rating).Value.ToString("0.00") : "N/A"
                     }).ToListAsync();
 
                 return new ApiResponse<List<ListAllTutor>>

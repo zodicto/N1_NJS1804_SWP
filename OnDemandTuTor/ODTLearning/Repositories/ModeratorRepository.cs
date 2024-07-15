@@ -249,6 +249,7 @@ namespace ODTLearning.Repositories
                 .Where(r => r.Status == "đang duyệt")
                 .Select(r => new ViewRequestOfStudent
                 {
+                    Id = r.IdAccountNavigation.Id,
                     Title = r.Title,
                     Price = r.Price,
                     TotalSessions = r.TotalSession,

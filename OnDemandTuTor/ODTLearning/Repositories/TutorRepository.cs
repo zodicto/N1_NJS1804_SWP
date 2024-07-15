@@ -736,6 +736,7 @@ namespace ODTLearning.Repositories
                                                    .Where(r => r.Status == "Đã duyệt")
                                                    .Select(r => new ViewRequestOfStudent
                                                    {
+                                                        Id = r.IdAccountNavigation.Id,
                                                         Title = r.Title,
                                                         Status = r.Status,
                                                         Price = r.Price,
@@ -749,7 +750,7 @@ namespace ODTLearning.Repositories
                                                         TimeEnd = r.TimeEnd.ToString(),
                                                         IdRequest = r.Id, // Include Account ID
                                                         FullName = r.IdAccountNavigation.FullName, // Include Account Full Name
-                                                        Current = tutor != null ? (r.RequestLearnings.FirstOrDefault(rl => rl.IdTutor == tutor.Id) == null ? "Chưa nhận" :                                "Đã nhận") : null
+                                                        Current = tutor != null ? (r.RequestLearnings.FirstOrDefault(rl => rl.IdTutor == tutor.Id) == null ? "Chưa nhận" : "Đã nhận") : null
                                                    }).ToListAsync();                       
 
             // Format the Time string if needed

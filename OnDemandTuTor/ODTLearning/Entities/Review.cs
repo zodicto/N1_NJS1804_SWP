@@ -16,6 +16,5 @@ public partial class Review
     public string? IdTutor { get; set; }
 
     public virtual Account? IdAccountNavigation { get; set; }
-
     public virtual Tutor? IdTutorNavigation { get; set; }
 }
