@@ -79,7 +79,7 @@ namespace ODTLearning.Repositories
                 {
                     _context.Rents.RemoveRange(rents);
                 }
-
+                
                 var reviews = await _context.Reviews.Where(x => x.IdTutor == tutor.Id).ToListAsync();
 
                 if (reviews.Any())
@@ -147,7 +147,12 @@ namespace ODTLearning.Repositories
             {
                 _context.Reviews.RemoveRange(reviews2);
             }
+            var notifi = await _context.Notifications.Where(x => x.IdAccount == id).ToListAsync();
 
+            if( notifi.Any())
+            {
+                _context.Notifications.RemoveRange(notifi);
+            }
             var transactions = await _context.Transactions.Where(x => x.IdAccount == id).ToListAsync();
 
             if (transactions.Any())
