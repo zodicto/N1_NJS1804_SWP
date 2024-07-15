@@ -1350,6 +1350,7 @@ namespace ODTLearning.Repositories
                 return new
                 {
                     IdService = service.Id, // Bao gồm Id của dịch vụ
+                    IdAccountTutor = service.IdTutorNavigation.IdAccountNavigation.Id,
                     PricePerHour = service.PricePerHour,
                     Title = service.Title,
                     Description = service.Description,
