@@ -106,7 +106,16 @@ namespace ODTLearning.Repositories
             tutor.Introduction = model.Introduction;
 
             await _context.SaveChangesAsync();
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = "Bạn đã cập nhật hồ sơ thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = id,
+            };
 
+            await _context.Notifications.AddAsync(nofi);
             return new ApiResponse<bool>
             {
                 Success = true,
@@ -158,7 +167,16 @@ namespace ODTLearning.Repositories
 
             await _context.TutorSubjects.AddAsync(tutorSubject);
             await _context.SaveChangesAsync();
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã thêm môn học '{subjectName}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = id,
+            };
 
+            await _context.Notifications.AddAsync(nofi);
             return new ApiResponse<bool>
             {
                 Success = true,
@@ -203,7 +221,16 @@ namespace ODTLearning.Repositories
 
             await _context.EducationalQualifications.AddAsync(qualification);
             await _context.SaveChangesAsync();
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã thêm '{model.Type}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = id,
+            };
 
+            await _context.Notifications.AddAsync(nofi);
             return new ApiResponse<bool>
             {
                 Success = true,
@@ -237,7 +264,16 @@ namespace ODTLearning.Repositories
 
             _context.TutorSubjects.Remove(tutorSubject);
             await _context.SaveChangesAsync();
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã xóa môn '{subjectName}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = id,
+            };
 
+            await _context.Notifications.AddAsync(nofi);
             return new ApiResponse<bool>
             {
                 Success = true,
@@ -271,6 +307,16 @@ namespace ODTLearning.Repositories
 
             _context.EducationalQualifications.Remove(qualification);
             await _context.SaveChangesAsync();
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã xóa '{qualification.QualificationName}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = id,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
 
             return new ApiResponse<bool>
             {
@@ -295,31 +341,6 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            // Kiểm tra số dư tài khoản
-            //const float costPerService = 50000;
-            //int serviceCount = await _context.Services.CountAsync(s => s.IdTutor == account.Tutor.Id);
-            //float remainingBalance = account.AccountBalance ?? 0;
-
-            //if (remainingBalance < costPerService)
-            //{
-            //    return new ApiResponse<bool>
-            //    {
-            //        Success = false,
-            //        Message = $"Số dư tài khoản không đủ. Bạn cần ít nhất {costPerService} để tạo dịch vụ này.",
-            //    };
-            //}
-
-            //int maxServicesThatCanBeCreated = (int)(remainingBalance / costPerService);
-            //int remainingServicesThatCanBeCreated = maxServicesThatCanBeCreated - serviceCount;
-
-            //if (remainingServicesThatCanBeCreated <= 0)
-            //{
-            //    return new ApiResponse<bool>
-            //    {
-            //        Success = false,
-            //        Message = $"Số dư tài khoản không đủ để tạo thêm dịch vụ. Bạn cần nạp thêm!",
-            //    };
-            //}
 
             // Tìm lớp học theo tên
             var classEntity = await _context.Classes.FirstOrDefaultAsync(cl => cl.ClassName == model.Class);
@@ -373,8 +394,6 @@ namespace ODTLearning.Repositories
 
                 await _context.Dates.AddAsync(dateEntity);
                 //await _context.SaveChangesAsync();
-                Console.WriteLine("datemodel: " + dateModel.Date);
-                Console.WriteLine("datemodel22222: " + DateTime.Today.ToString("yyyy-MM-dd"));
                 if (dateModel.Date.Equals(DateTime.Today.ToString("yyyy-MM-dd")))
                 {
                     foreach (var timeSlot in dateModel.TimeSlots)
@@ -407,21 +426,24 @@ namespace ODTLearning.Repositories
                 }
             }
 
-            // Cập nhật lại số dư tài khoản sau khi tạo dịch vụ
             await _context.SaveChangesAsync();
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã tạo dịch vụ học tập '{model.Title}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = id,
+            };
 
-            // Tính lại số dịch vụ có thể tạo sau khi trừ số dư tài khoản
-            //float newRemainingBalance = account.AccountBalance ?? 0;
-            //int newMaxServicesThatCanBeCreated = (int)(newRemainingBalance / costPerService);
-            //int newRemainingServicesThatCanBeCreated = newMaxServicesThatCanBeCreated - serviceCount;
+            await _context.Notifications.AddAsync(nofi);
 
             return new ApiResponse<bool>
             {
                 Success = true,
-                Message = $"Tạo dịch vụ thành công." //Bạn có thể tạo thêm {newRemainingServicesThatCanBeCreated} dịch vụ nữa.",
+                Message = $"Tạo dịch vụ thành công." 
             };
         }
-
 
 
         public async Task<ApiResponse<List<object>>> GetAllServicesByAccountId(string id)
@@ -469,16 +491,7 @@ namespace ODTLearning.Repositories
                     }).ToList()
                 }
             }).ToList();
-
-            // Kiểm tra các giá trị trong serviceModels
-            foreach (var serviceModel in serviceModels)
-            {
-                Console.WriteLine($"Service ID: {serviceModel.Id}");
-                Console.WriteLine($"Title: {serviceModel.ServiceDetails.Title}");
-                Console.WriteLine($"LearningMethod: {serviceModel.ServiceDetails.LearningMethod}");
-                Console.WriteLine($"Schedule: {serviceModel.ServiceDetails.Schedule}");
-            }
-
+            
             return new ApiResponse<List<object>>
             {
                 Success = true,
@@ -493,6 +506,8 @@ namespace ODTLearning.Repositories
         public async Task<ApiResponse<bool>> DeleteServiceById(string serviceId)
         {
             var service = await _context.Services
+                .Include(s => s.IdTutorNavigation)
+                .ThenInclude(s => s.IdAccountNavigation)
                                         .Include(s => s.Dates)
                                         .ThenInclude(d => d.TimeSlots)
                                         .ThenInclude(ts => ts.Bookings)
@@ -523,7 +538,16 @@ namespace ODTLearning.Repositories
 
             _context.Services.Remove(service);
             await _context.SaveChangesAsync();
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã xóa dịch vụ học tập '{service.Title}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = service.IdTutorNavigation.IdAccountNavigation.Id,
+            };
 
+            await _context.Notifications.AddAsync(nofi);
             return new ApiResponse<bool>
             {
                 Success = true,
@@ -661,6 +685,16 @@ namespace ODTLearning.Repositories
 
             await _context.SaveChangesAsync();
             _context.Services.Update(service);
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã câp nhật dịch vụ học tập '{service.Title}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = service.IdTutorNavigation.IdAccountNavigation.Id,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
             await _context.SaveChangesAsync();
 
                 return new ApiResponse<object>
@@ -839,7 +873,16 @@ namespace ODTLearning.Repositories
             // Cập nhật trạng thái yêu cầu
 
             _context.RequestLearnings.Add(requestLearning);
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã tham gia vào yêu cầu học tập '{request.Title}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = id,
+            };
 
+            await _context.Notifications.AddAsync(nofi);
             try
             {
                 await _context.SaveChangesAsync();
@@ -1092,7 +1135,16 @@ namespace ODTLearning.Repositories
             await _context.TutorSubjects.AddAsync(tutorSubject);
 
             await _context.SaveChangesAsync();
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = "Bạn đã đăng ký gia sư thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = id,
+            };
 
+            await _context.Notifications.AddAsync(nofi);
             return new ApiResponse<bool>
             {
                 Success = true,

@@ -229,7 +229,7 @@ public partial class DbminiCapstoneContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ID");
             entity.Property(e => e.CreateDate).HasColumnType("datetime");
-            entity.Property(e => e.Description).IsUnicode(false);
+            entity.Property(e => e.Description).IsUnicode(true);
             entity.Property(e => e.IdAccount)
                 .HasMaxLength(50)
                 .IsUnicode(false)

@@ -58,14 +58,14 @@ namespace ODTLearning.Repositories
                 email = user.Email,
                 date_of_birth = user.DateOfBirth,
                 gender = user.Gender,
-                roles  = user.Roles,
-                avatar  = user.Avatar,
+                roles = user.Roles,
+                avatar = user.Avatar,
                 address = user.Address,
                 phone = user.Phone,
-                accountBalance= user.AccountBalance
+                accountBalance = user.AccountBalance
             };
 
-        }        
+        }
 
         public async Task<ApiResponse<TutorResponse>> SignUpOftutor(string IdAccount, SignUpModelOfTutor model)
         {
@@ -136,10 +136,23 @@ namespace ODTLearning.Repositories
             await _context.Tutors.AddAsync(tutor);
             await _context.EducationalQualifications.AddAsync(educationalQualification);
             await _context.TutorSubjects.AddAsync(tutorSubject);
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = "Đăng ký gia sư thành công. Vui lòng chờ duyệt.",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = IdAccount
+            };
+            Console.WriteLine("Creating notification...");
+            Console.WriteLine($"Notification Description: {nofi.Description}");
 
+            Console.WriteLine("Before saving: " + nofi.Description);
+            await _context.Notifications.AddAsync(nofi);
             try
             {
                 await _context.SaveChangesAsync();
+                Console.WriteLine("After saving: " + nofi.Description);
                 return new ApiResponse<TutorResponse>
                 {
                     Success = true,
@@ -178,33 +191,6 @@ namespace ODTLearning.Repositories
                 };
             }
 
-            
-            // Nếu tài khoản tồn tại và password đúng, trả về thông tin người dùng
-            return new ApiResponse<UserResponse>
-            {
-                Success = true,
-                Message = "Đăng nhập thành công",
-                Data = new UserResponse
-                {
-                    id = account.Id,
-                    fullName= account.FullName,
-                    email= account.Email,
-                    date_of_birth = account.DateOfBirth,
-                    gender = account.Gender,
-                    roles = account.Roles,
-                    avatar = account.Avatar,
-                    address = account.Address,
-                    phone = account.Phone,
-                    accountBalance= account.AccountBalance
-                }
-            };
-        }
-
-        public async Task<ApiResponse<UserResponse>> SignInValidationOfGGAccount(SignInGGModel model)
-        {
-            // Kiểm tra tài khoản theo email
-            var account = await _context.Accounts
-                .FirstOrDefaultAsync(u => u.Email == model.Email);
 
             // Nếu tài khoản tồn tại và password đúng, trả về thông tin người dùng
             return new ApiResponse<UserResponse>
@@ -295,7 +281,7 @@ namespace ODTLearning.Repositories
         }
 
 
-       
+
         public async Task<string> ChangePassword(string id, ChangePasswordModel model)
         {
             var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Id == id);
@@ -320,7 +306,7 @@ namespace ODTLearning.Repositories
             try
             {
                 var user = await _context.Accounts.SingleOrDefaultAsync(x => x.Email == Email);
-                
+
                 if (user == null)
                 {
                     return "Email không tồn tại trong hệ thống";
@@ -367,7 +353,16 @@ namespace ODTLearning.Repositories
             user.Phone = model.phone;
 
             await _context.SaveChangesAsync();
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã cập nhật thông tin thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = id,
+            };
 
+            await _context.Notifications.AddAsync(nofi);
             var updatedUserResponse = new
             {
                 Id = user.Id,
@@ -628,7 +623,7 @@ namespace ODTLearning.Repositories
 
                         User = new
                         {
-                            
+
                             FullName = user.FullName,
                             Email = user.Email,
                             user.Roles,
@@ -686,13 +681,13 @@ namespace ODTLearning.Repositories
             if (existingUser.Roles.ToLower() == "học sinh")
             {
                 var bookings = await _context.Bookings.Include(x => x.IdAccountNavigation)
-                                                      .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x =>   x.IdServiceNavigation)
+                                                      .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
                                                                                                                                 .ThenInclude(x => x.IdClassNavigation)
                                                       .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
                                                                                                                                 .ThenInclude(x => x.IdSubjectNavigation)
                                                       .Where(x => x.IdAccount == id)
                                                       .ToListAsync();
-                
+
 
                 if (!bookings.Any())
                 {
@@ -713,14 +708,14 @@ namespace ODTLearning.Repositories
 
                     if (tutorId == null)
                     {
-                        continue; 
+                        continue;
                     }
 
                     var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == tutorId);
 
                     if (tutor == null)
                     {
-                        continue; 
+                        continue;
                     }
 
                     var data = new
@@ -857,6 +852,84 @@ namespace ODTLearning.Repositories
             {
                 Success = false,
                 Message = "Người dùng không phải học sinh hay gia sư"
+            };
+        }
+
+        public async Task<ApiResponse<object>> GetAllNotification(string id)
+        {
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (user == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng"
+                };
+            }
+
+            var nofies = await _context.Notifications.Where(x => x.IdAccount == id)
+                                                     .Select(x => new
+                                                     {
+                                                         IdNotification = x.Id,
+                                                         x.Description,
+                                                         x.CreateDate,
+                                                         x.Status,
+                                                     })
+                                                     .ToListAsync();
+
+            if (nofies == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Bạn không có thông báo"
+                };
+            }
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = nofies
+            };
+        }
+
+        public async Task<ApiResponse<object>> UpdateStatusNotification(string id)
+        {
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (user == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng"
+                };
+            }
+
+            var nofies = await _context.Notifications.Where(x => x.IdAccount == id).ToListAsync();
+
+            if (nofies == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Bạn không có thông báo"
+                };
+            }
+
+            foreach (var nofi in nofies)
+            {
+                nofi.Status = "Đã xem";
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Thành công",
             };
         }
 

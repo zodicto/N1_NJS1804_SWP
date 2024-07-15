@@ -28,5 +28,7 @@ namespace ODTLearning.Repositories
         public Task<ApiResponse<object>> GetProfile(string id);
         public Task<ApiResponse<object>> GetClassRequest(string id);
         public Task<ApiResponse<object>> GetClassService(string id);
+        public Task<ApiResponse<object>> GetAllNotification(string id);
+        public Task<ApiResponse<object>> UpdateStatusNotification(string id);
     }
 }

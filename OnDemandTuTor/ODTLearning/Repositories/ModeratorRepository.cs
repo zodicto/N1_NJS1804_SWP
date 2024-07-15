@@ -92,6 +92,18 @@ namespace ODTLearning.Repositories
 
             request.Status = "Đã duyệt";
             _context.Requests.Update(request);
+
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Yêu cầu tìm gia sư '{request.Title}' của bạn đã được duyệt",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = request.IdAccount,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+
             await _context.SaveChangesAsync();
 
             return new ApiResponse<bool>
@@ -118,6 +130,18 @@ namespace ODTLearning.Repositories
             request.Status = "Từ chối"; // Assuming "Rejected" is the correct status for rejection
             request.Reason = model.Reason;
             _context.Requests.Update(request);
+
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Yêu cầu tìm gia sư '{request.Title}' của bạn đã bị từ chối",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = request.IdAccount,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+
             await _context.SaveChangesAsync();
 
             return new ApiResponse<bool>
@@ -149,7 +173,7 @@ namespace ODTLearning.Repositories
 
                 var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == tutor.IdAccount);
                 account.Roles = "gia sư";
-                _context.Accounts.Update(account);
+                _context.Accounts.Update(account);                
 
                 await _context.SaveChangesAsync();
 
@@ -284,7 +308,19 @@ namespace ODTLearning.Repositories
                 _context.ClassRequests.RemoveRange(classRequests2);
             }
 
-            _context.Requests.Remove(request);       
+            _context.Requests.Remove(request);
+
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Yêu cầu tìm gia sư '{request.Title}' của bạn đã bị xóa",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = request.IdAccount,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+
             await _context.SaveChangesAsync();
 
             return new ApiResponse<bool>
