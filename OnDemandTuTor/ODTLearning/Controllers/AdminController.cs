@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ODTLearning.Entities;
-using ODTLearning.Models;
-using ODTLearning.Repositories;
+using ODTLearning.DAL.Entities;
+using ODTLearning.BLL.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ODTLearning.Controllers
 {
@@ -20,6 +20,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("viewAllTutor")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewListTutor()
         {
             try
@@ -55,6 +56,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("viewAllRequestPending")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewAllRequestPending()
         {
             try
@@ -90,6 +92,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("viewAllRequestApproved")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewAllRequestApproved()
         {
             try
@@ -125,6 +128,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("viewAllRequestReject")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewAllRequetReject()
         {
             try
@@ -159,6 +163,7 @@ namespace ODTLearning.Controllers
             }
         }
         [HttpGet("viewAllStudent")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewListStudent()
         {
             try
@@ -194,6 +199,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpDelete("DeleteAccount")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> DeleteAccount(string id)
         {
             var response = await _repo.DeleteAccount(id);
@@ -215,6 +221,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("ViewAllComplaint")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewAllComplaint()
         {
             var response = await _repo.GetAllComplaint();
@@ -227,6 +234,7 @@ namespace ODTLearning.Controllers
             });
         }
         [HttpGet("ViewAllReview")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewAllReview()
         {
             var response = await _repo.GetAllReview();
@@ -240,6 +248,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("ViewAllTransaction")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewAllTransaction()
         {
             var response = await _repo.GetAllTransaction();
@@ -266,6 +275,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("ViewRevenueByWeek")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewRevenueByWeek(int month, int year)
         {
             var response = await _repo.GetRevenueByWeek(month, year);
@@ -279,6 +289,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("ViewRevenueByYear")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewRevenueByYear(int year)
         {
             var response = await _repo.GetRevenueByYear(year);
@@ -292,6 +303,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("ViewRevenueThisMonth")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewRevenueThisMonth()
         {
             var response = await _repo.GetRevenueThisMonth();
@@ -305,6 +317,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("ViewAmountStudent")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewAmountStudent()
         {
             var response = await _repo.GetAmountStudent();
@@ -318,6 +331,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("ViewAmountTutor")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewAmountTutor()
         {
             var response = await _repo.GetAmountTutor();
@@ -331,6 +345,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("ViewRevenueToday")]
+        [Authorize(Roles = "Quản trị viên")]
         public async Task<IActionResult> ViewRevenueToday()
         {
             var response = await _repo.GetRevenueToday();

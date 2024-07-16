@@ -2,9 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
-using ODTLearning.Entities;
+using ODTLearning.DAL.Entities;
 using ODTLearning.Models;
-using ODTLearning.Repositories;
+using ODTLearning.BLL.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ODTLearning.Controllers
 {
@@ -47,6 +48,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("UpdateTutorProfile")]
+        [Authorize(Roles = "Gia sư")]
         public async Task<IActionResult> UpdateTutorProfile(string id, [FromBody] TutorProfileToUpdate model)
         {
             var response = await _repo.UpdateTutorProfile(id, model);
@@ -68,6 +70,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("AddSubject")]
+        [Authorize(Roles = "Gia sư")]
         public async Task<IActionResult> AddSubject(string id, string subjectName)
         {
             var response = await _repo.AddSubject(id, subjectName);
@@ -89,6 +92,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("AddQualification")]
+        [Authorize(Roles = "Gia sư")]
         public async Task<IActionResult> AddQualification(string id, AddQualificationModel model)
         {
             var response = await _repo.AddQualification(id, model);
@@ -110,6 +114,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpDelete("DeleteSubject")]
+        [Authorize(Roles = "Gia sư")]
         public async Task<IActionResult> DeleteSubject(string id, string subjectName)
         {
             var response = await _repo.DeleteSubject(id, subjectName);
@@ -131,6 +136,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpDelete("DeleteQualification")]
+        [Authorize(Roles = "Gia sư")]
         public async Task<IActionResult> DeleteQualification(string id, string idQualification)
         {
             var response = await _repo.DeleteQualification(id, idQualification);
@@ -152,6 +158,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("viewRequest")]
+        //[Authorize(Roles = "Gia sư")]
         public async Task<IActionResult> ViewRequest(string id)
         {
             try
@@ -186,6 +193,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("join-request")]
+        [Authorize(Roles = "Gia sư")]
         public async Task<IActionResult> JoinRequest(string requestId, string id)
         {
             try
@@ -219,6 +227,7 @@ namespace ODTLearning.Controllers
             }
         }
         [HttpGet("classActive")]
+        [Authorize(Roles = "Gia sư")]
         public async Task<IActionResult> ViewClassActive(string id)
         {
             try
@@ -253,6 +262,7 @@ namespace ODTLearning.Controllers
         } 
 
         [HttpPost("createService")]
+        [Authorize(Roles = "Gia sư")]
         public async Task<IActionResult> CreateServiceLearning(string id, ServiceLearningModel model)
         {
             try
@@ -318,6 +328,7 @@ namespace ODTLearning.Controllers
             }
         }
         [HttpPut("updateService")]
+        [Authorize(Roles = "Gia sư")]
         public async Task<IActionResult> UpdateService(string idService, [FromBody] ServiceLearningModel model)
         {
             try
@@ -351,6 +362,7 @@ namespace ODTLearning.Controllers
             }
         }
         [HttpDelete("deleteService")]
+        [Authorize(Roles = "Gia sư")]
         public async Task<IActionResult> DeleteService(string serviceId)
         {
             try
@@ -418,6 +430,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("GetRegisterTutor")]
+        [Authorize]
         public async Task<IActionResult> GetRegisterTutor(string id)
         {
             try
@@ -452,6 +465,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("ReSignUpOftutor")]
+        [Authorize]
         public async Task<IActionResult> ReSignUpOftutor(string id, SignUpModelOfTutor model)
         {
             try

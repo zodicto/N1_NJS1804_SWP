@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.DiaSymReader;
-using ODTLearning.Entities;
+using ODTLearning.DAL.Entities;
 using ODTLearning.Models;
-using ODTLearning.Repositories;
+using ODTLearning.BLL.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ODTLearning.Controllers
 {
@@ -21,6 +22,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("viewListTutor")]
+        [Authorize(Roles = "Kiểm duyệt viên")]
         public async Task<IActionResult> ViewListTutorToConfirm()
         {
             try
@@ -56,6 +58,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("approveProfile")]
+        [Authorize(Roles = "Kiểm duyệt viên")]
         public async Task<IActionResult> ApproveProfileTutor(string id)
         {
             var result = await _repo.ApproveProfileTutor(id);
@@ -77,6 +80,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("rejectProfile")]
+        [Authorize(Roles = "Kiểm duyệt viên")]
         public async Task<IActionResult> RejectProfileTutor(string id, ReasonReject reason)
         {
             var result = await _repo.RejectProfileTutor(id,reason);
@@ -98,6 +102,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("viewRequest")]
+        [Authorize(Roles = "Kiểm duyệt viên")]
         public async Task<IActionResult> ViewRequest()
         {
             try
@@ -132,6 +137,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("approvedRequest")]
+        [Authorize(Roles = "Kiểm duyệt viên")]
         public async Task<IActionResult> ApprovedRequestStatus(string requestId)
         {
             try
@@ -166,6 +172,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("rejectRequest")]
+        [Authorize(Roles = "Kiểm duyệt viên")]
         public async Task<IActionResult> RejectRequestStatus(string requestId, ReasonReject model)
         {
             try
@@ -200,6 +207,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpDelete("DeleteRequest")]
+        [Authorize(Roles = "Kiểm duyệt viên")]
         public async Task<IActionResult> DeleteRequest(string idRequest)
         {
             var result = await _repo.DeleteRequest(idRequest);

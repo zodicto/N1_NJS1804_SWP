@@ -3,9 +3,11 @@ using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ODTLearning.Entities;
+using ODTLearning.DAL.Entities;
 using ODTLearning.Models;
-using ODTLearning.Repositories;
+using ODTLearning.BLL.Repositories;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace ODTLearning.Controllers
 {
@@ -23,6 +25,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("payment")]
+        [Authorize]
         public async Task<ActionResult> Payment(DepositModel model)
         {
             var user = _context.Accounts.FirstOrDefault(x => x.Id == model.Id);
@@ -53,6 +56,7 @@ namespace ODTLearning.Controllers
 
         }
         [HttpGet("paymentCallBack")]
+        [Authorize]
         public async Task<ActionResult> PaymentCallBack()
         {
             var response = await _repo.PaymentExecute(Request.Query);

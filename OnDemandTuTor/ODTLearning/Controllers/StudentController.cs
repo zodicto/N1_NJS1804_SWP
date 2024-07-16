@@ -3,9 +3,10 @@ using Azure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
-using ODTLearning.Entities;
+using ODTLearning.DAL.Entities;
 using ODTLearning.Models;
-using ODTLearning.Repositories;
+using ODTLearning.BLL.Repositories;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ODTLearning.Controllers
 {
@@ -23,6 +24,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("createRequest")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> CreateRequestLearning(string id, RequestLearningModel model)
         {
             try
@@ -58,6 +60,7 @@ namespace ODTLearning.Controllers
 
 
         [HttpPut("updateRequest")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> UpdateRequestLearning(string IdRequest, RequestLearningModel model)
         {
             try
@@ -91,6 +94,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpDelete("deleteRequest")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> DeleteRequestLearning(string id,string idRequest)
         {
             var request = await _repo.DeleteRequestLearning(id,idRequest);
@@ -111,6 +115,7 @@ namespace ODTLearning.Controllers
             });
         }
         [HttpGet("pedingRequest")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> ViewPedingRequestLearning(string id)
         {
             try
@@ -144,6 +149,7 @@ namespace ODTLearning.Controllers
             }
         }
         [HttpGet("appovedRequest")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> ViewApprovedRequestLearning(string id)
         {
             try
@@ -178,6 +184,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("rejectRequest")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> ViewRejectRequestLearning(string id)
         {
             try
@@ -214,6 +221,7 @@ namespace ODTLearning.Controllers
 
 
         [HttpGet("viewAllTutorsJoinRequest")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> ViewAllTutorJoinRequest(string idRequest)
         {
             try
@@ -248,6 +256,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("SelectTutor")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> SelectTutor(string idRequest, string idaccounttutor)
         {
             var response = await _repo.SelectTutor(idRequest, idaccounttutor);
@@ -269,6 +278,7 @@ namespace ODTLearning.Controllers
             });
         }
         [HttpGet("classActive")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> ViewClassActive(string id)
         {
             try
@@ -303,6 +313,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("classCompled")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> ViewClassCompled(string id)
         {
             try
@@ -336,6 +347,7 @@ namespace ODTLearning.Controllers
             }
         }
         [HttpPost("CreateComplaint")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> CreateComplaint(ComplaintModel model)
         {
             var response = await _repo.CreateComplaint(model);
@@ -358,6 +370,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("CreateReviewRequest")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> CreateReviewRequest(ReviewRequestModel model)
         {
             var response = await _repo.CreateReviewRequest(model);
@@ -379,6 +392,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("CreateReviewService")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> CreateReviewService(ReviewServiceModel model)
         {
             var response = await _repo.CreateReviewService(model);
@@ -400,6 +414,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("ViewSignUpTutor")]
+        [Authorize]
         public async Task<IActionResult> ViewSignUpTutor(string id)
         {
             var response = await _repo.GetSignUpTutor(id);
@@ -421,6 +436,7 @@ namespace ODTLearning.Controllers
             });
         }
         [HttpDelete("DeleteSignUpTutor")]
+        [Authorize]
         public async Task<IActionResult> DeleteSignUpTutor(string id)
         {
             var response = await _repo.DeleteSignUpTutor(id);
@@ -442,6 +458,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("BookingServiceLearning")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> BookingServiceLearning(string id, string idService, [FromBody] BookingServiceLearingModels model)
         {
             try
@@ -513,6 +530,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("CompleteClassRequest")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> CompleteClassRequest(string idClassRequest)
         {
             try
@@ -546,6 +564,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("CompleteClassService")]
+        [Authorize(Roles = "Học sinh")]
         public async Task<IActionResult> CompleteClassService(string idBooking)
         {
             try

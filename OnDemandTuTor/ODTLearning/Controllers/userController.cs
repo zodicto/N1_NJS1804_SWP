@@ -6,13 +6,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using ODTLearning.Models;
-using ODTLearning.Repositories;
+using ODTLearning.BLL.Repositories;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
-using ODTLearning.Entities;
+using ODTLearning.DAL.Entities;
 using NuGet.Common;
 using Microsoft.EntityFrameworkCore;
 using Azure;
@@ -475,6 +475,7 @@ namespace ODTLearning.Controllers
 
        
         [HttpPut("ChangePassword")]
+        [Authorize]
         public async Task<IActionResult> ChangePassword(string id, ChangePasswordModel model)
         {
             var result = await _repo.ChangePassword(id, model);
@@ -517,6 +518,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("updateProfile")]
+        [Authorize]
         public async Task<IActionResult> UpdateStudentProfile(string id, [FromBody] UpdateProfile model)
         {
             try
@@ -584,6 +586,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("ViewClassRequest")]
+        [Authorize]
         public async Task<IActionResult> ViewClassRequest(string id)
         {           
             var response = await _repo.GetClassRequest(id);
@@ -606,6 +609,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("ViewClassService")]
+        [Authorize]
         public async Task<IActionResult> GetClassService(string id)
         {
             var response = await _repo.GetClassService(id);
@@ -628,6 +632,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpGet("ViewAllNotification")]
+        [Authorize]
         public async Task<IActionResult> GetAllNotification(string id)
         {
             var response = await _repo.GetAllNotification(id);
@@ -650,6 +655,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("UpdateStatusNotification")]
+        [Authorize]
         public async Task<IActionResult> UpdateStatusNotification(string id)
         {
             var response = await _repo.UpdateStatusNotification(id);
