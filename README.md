@@ -42,10 +42,10 @@
 
 | Member   | User Case (UC) Assigned    |  
 | :------- | :------------------------- |
-| Lê Minh Trí | UC2-Register as a tutor |  
-| Lê Thành Tài | UC1-Register ,UC3-Login | 
-| Lê Minh Tân | UC6-Approved Tutor Profile,UC7-Reject Tutor Profile |
-| Nguyễn Trí Thành | UC14-Create Request |
+| Lê Minh Trí | UC09-View Account, UC11-Create Service, UC13-Delete Service, UC23- View Renve Report, UC28-Complete the class |  
+| Lê Thành Tài | UC18-View Pending Request, UC19-View Approved Request, UC20-View Reject Request | 
+| Lê Minh Tân | UC10-Delete Account, UC16-Booking Services, UC32-Approve Tutor|
+| Nguyễn Trí Thành | UC21-Create Complain, UC22-View Complain, UC26-Delete Request, UC30-Create Feedback |
 | Đoàn Đình Quang Trường | UC18-Update Request, UC12-Update Service, UC08-Update Profile's Tutor | 
-| Lê Phước Lộc | UC28-Change Password |
+| Lê Phước Lộc | UC05-Edit Profile, UC06-Confirm Profile, UC07-Confirm Request |
 
