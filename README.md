@@ -46,6 +46,6 @@
 | Lê Thành Tài | UC1-Register ,UC3-Login | 
 | Lê Minh Tân | UC6-Approved Tutor Profile,UC7-Reject Tutor Profile |
 | Nguyễn Trí Thành | UC14-Create Request |
-| Đoàn Đình Quang Trường | UC18-Update Request | 
+| Đoàn Đình Quang Trường | UC18-Update Request, UC12-Update Service, UC08-Update Profile's Tutor | 
 | Lê Phước Lộc | UC28-Change Password |
 
