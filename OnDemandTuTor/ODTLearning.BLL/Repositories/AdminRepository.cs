@@ -66,7 +66,7 @@ namespace ODTLearning.BLL.Repositories
                     _context.Complaints.RemoveRange(complaints);
                 }
 
-                var classRequests = await _context.ClassRequests.Where(x => x.IdTutor == tutor.Id).ToListAsync();
+                var classRequests = await _context.ClassRequests.Include(x => x.IdRequestNavigation).Where(x => x.IdTutor == tutor.Id).ToListAsync();
 
                 if (classRequests.Any())
                 {

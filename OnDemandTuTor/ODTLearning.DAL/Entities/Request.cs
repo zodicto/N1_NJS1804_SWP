@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ODTLearning.DAL.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace ODTLearning.DAL.Entities;
@@ -34,6 +35,8 @@ public partial class Request
     public string? IdClass { get; set; }
 
     public string? IdSubject { get; set; }
+
+    public virtual ICollection<ClassRequest> ClassRequests { get; set; } = new List<ClassRequest>();
 
     public virtual Account? IdAccountNavigation { get; set; }
 

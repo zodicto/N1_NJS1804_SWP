@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using ODTLearning.DAL.Entities;
 
 namespace ODTLearning.DAL.Entities;
 
@@ -56,22 +56,13 @@ public partial class DbminiCapstoneContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=(local);Database=DBMiniCapstone;UID=sa;PWD=12345;TrustServerCertificate=True");
-    //private string? GetConnectionString()
-    //{
-    //    IConfiguration configuration = new ConfigurationBuilder()
-    //        .SetBasePath(Directory.GetCurrentDirectory())
-    //        .AddJsonFile("appsettings.json", true, true).Build();
-    //    return configuration["ConnectionStrings:DB_MiniCapStone"];
-    //}
-    //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    //    => optionsBuilder.UseSqlServer(GetConnectionString());
+        => optionsBuilder.UseSqlServer("Server=(local);uid=sa;pwd=12345;database=DBMiniCapstone;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Account>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Account__3214EC27B5B14E84");
+            entity.HasKey(e => e.Id).HasName("PK__Account__3214EC278405C95E");
 
             entity.ToTable("Account");
 
@@ -90,7 +81,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<Booking>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Booking__3214EC2732EFC707");
+            entity.HasKey(e => e.Id).HasName("PK__Booking__3214EC2772D64982");
 
             entity.ToTable("Booking");
 
@@ -110,16 +101,16 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.IdAccount)
-                .HasConstraintName("FK__Booking__ID_Acco__6A30C649");
+                .HasConstraintName("FK__Booking__ID_Acco__5AEE82B9");
 
             entity.HasOne(d => d.IdTimeSlotNavigation).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.IdTimeSlot)
-                .HasConstraintName("FK__Booking__ID_Time__6B24EA82");
+                .HasConstraintName("FK__Booking__ID_Time__5BE2A6F2");
         });
 
         modelBuilder.Entity<Class>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Class__3214EC279D5F7AD1");
+            entity.HasKey(e => e.Id).HasName("PK__Class__3214EC278DC49420");
 
             entity.ToTable("Class");
 
@@ -132,11 +123,11 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<ClassRequest>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("ClassRequest");
+            entity.HasKey(e => e.Id).HasName("PK__ClassReq__3214EC27445A4502");
 
-            entity.HasIndex(e => e.IdTutor, "UQ__ClassReq__9D71D65B05E42196").IsUnique();
+            entity.ToTable("ClassRequest");
+
+            entity.HasIndex(e => e.IdTutor, "UQ__ClassReq__9D71D65BD7C5F43D").IsUnique();
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
@@ -151,18 +142,18 @@ public partial class DbminiCapstoneContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("ID_Tutor");
 
-            entity.HasOne(d => d.IdRequestNavigation).WithMany()
+            entity.HasOne(d => d.IdRequestNavigation).WithMany(p => p.ClassRequests)
                 .HasForeignKey(d => d.IdRequest)
-                .HasConstraintName("FK__ClassRequ__ID_Re__6EF57B66");
+                .HasConstraintName("FK__ClassRequ__ID_Re__5CD6CB2B");
 
-            entity.HasOne(d => d.IdTutorNavigation).WithOne()
+            entity.HasOne(d => d.IdTutorNavigation).WithOne(p => p.ClassRequest)
                 .HasForeignKey<ClassRequest>(d => d.IdTutor)
-                .HasConstraintName("FK__ClassRequ__ID_Tu__6E01572D");
+                .HasConstraintName("FK__ClassRequ__ID_Tu__5DCAEF64");
         });
 
         modelBuilder.Entity<Complaint>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Complain__3214EC272D3A585E");
+            entity.HasKey(e => e.Id).HasName("PK__Complain__3214EC275CD3E3B8");
 
             entity.ToTable("Complaint");
 
@@ -181,16 +172,16 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Complaints)
                 .HasForeignKey(d => d.IdAccount)
-                .HasConstraintName("FK__Complaint__ID_Ac__3C69FB99");
+                .HasConstraintName("FK__Complaint__ID_Ac__5EBF139D");
 
             entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.Complaints)
                 .HasForeignKey(d => d.IdTutor)
-                .HasConstraintName("FK__Complaint__ID_Tu__3D5E1FD2");
+                .HasConstraintName("FK__Complaint__ID_Tu__5FB337D6");
         });
 
         modelBuilder.Entity<Date>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Date__3214EC27797D656D");
+            entity.HasKey(e => e.Id).HasName("PK__Date__3214EC271F0E5819");
 
             entity.ToTable("Date");
 
@@ -206,12 +197,12 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdServiceNavigation).WithMany(p => p.Dates)
                 .HasForeignKey(d => d.IdService)
-                .HasConstraintName("FK__Date__ID_Service__6477ECF3");
+                .HasConstraintName("FK__Date__ID_Service__60A75C0F");
         });
 
         modelBuilder.Entity<EducationalQualification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Educatio__3214EC27CECDD74F");
+            entity.HasKey(e => e.Id).HasName("PK__Educatio__3214EC27BAF62D6B");
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
@@ -225,12 +216,12 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.EducationalQualifications)
                 .HasForeignKey(d => d.IdTutor)
-                .HasConstraintName("FK__Education__ID_Tu__49C3F6B7");
+                .HasConstraintName("FK__Education__ID_Tu__619B8048");
         });
 
         modelBuilder.Entity<Notification>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC270B127227");
+            entity.HasKey(e => e.Id).HasName("PK__Notifica__3214EC27B638CA55");
 
             entity.ToTable("Notification");
 
@@ -246,12 +237,12 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Notifications)
                 .HasForeignKey(d => d.IdAccount)
-                .HasConstraintName("FK__Notificat__ID_Ac__5CD6CB2B");
+                .HasConstraintName("FK__Notificat__ID_Ac__628FA481");
         });
 
         modelBuilder.Entity<RefreshToken>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__RefreshT__3214EC275CB78B45");
+            entity.HasKey(e => e.Id).HasName("PK__RefreshT__3214EC2767F8D05C");
 
             entity.ToTable("RefreshToken");
 
@@ -274,12 +265,12 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.RefreshTokens)
                 .HasForeignKey(d => d.IdAccount)
-                .HasConstraintName("FK__RefreshTo__ID_Ac__46E78A0C");
+                .HasConstraintName("FK__RefreshTo__ID_Ac__6383C8BA");
         });
 
         modelBuilder.Entity<Rent>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Rent__3214EC27460F8334");
+            entity.HasKey(e => e.Id).HasName("PK__Rent__3214EC27F6B69FFA");
 
             entity.ToTable("Rent");
 
@@ -299,16 +290,16 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Rents)
                 .HasForeignKey(d => d.IdAccount)
-                .HasConstraintName("FK__Rent__ID_Account__72C60C4A");
+                .HasConstraintName("FK__Rent__ID_Account__6477ECF3");
 
             entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.Rents)
                 .HasForeignKey(d => d.IdTutor)
-                .HasConstraintName("FK__Rent__ID_Tutor__71D1E811");
+                .HasConstraintName("FK__Rent__ID_Tutor__656C112C");
         });
 
         modelBuilder.Entity<Request>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Request__3214EC27E78D157C");
+            entity.HasKey(e => e.Id).HasName("PK__Request__3214EC2703049E4C");
 
             entity.ToTable("Request");
 
@@ -334,20 +325,20 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Requests)
                 .HasForeignKey(d => d.IdAccount)
-                .HasConstraintName("FK__Request__ID_Acco__5441852A");
+                .HasConstraintName("FK__Request__ID_Acco__66603565");
 
             entity.HasOne(d => d.IdClassNavigation).WithMany(p => p.Requests)
                 .HasForeignKey(d => d.IdClass)
-                .HasConstraintName("FK__Request__ID_Clas__5535A963");
+                .HasConstraintName("FK__Request__ID_Clas__6754599E");
 
             entity.HasOne(d => d.IdSubjectNavigation).WithMany(p => p.Requests)
                 .HasForeignKey(d => d.IdSubject)
-                .HasConstraintName("FK__Request__ID_Subj__5629CD9C");
+                .HasConstraintName("FK__Request__ID_Subj__68487DD7");
         });
 
         modelBuilder.Entity<RequestLearning>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Request___3214EC27EF49947C");
+            entity.HasKey(e => e.Id).HasName("PK__Request___3214EC2787052872");
 
             entity.ToTable("Request_Learning");
 
@@ -366,16 +357,16 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdRequestNavigation).WithMany(p => p.RequestLearnings)
                 .HasForeignKey(d => d.IdRequest)
-                .HasConstraintName("FK__Request_L__ID_Re__59FA5E80");
+                .HasConstraintName("FK__Request_L__ID_Re__693CA210");
 
             entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.RequestLearnings)
                 .HasForeignKey(d => d.IdTutor)
-                .HasConstraintName("FK__Request_L__ID_Tu__59063A47");
+                .HasConstraintName("FK__Request_L__ID_Tu__6A30C649");
         });
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Review__3214EC2738B87128");
+            entity.HasKey(e => e.Id).HasName("PK__Review__3214EC271D887A53");
 
             entity.ToTable("Review");
 
@@ -394,16 +385,16 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.IdAccount)
-                .HasConstraintName("FK__Review__ID_Accou__403A8C7D");
+                .HasConstraintName("FK__Review__ID_Accou__6B24EA82");
 
             entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.IdTutor)
-                .HasConstraintName("FK__Review__ID_Tutor__412EB0B6");
+                .HasConstraintName("FK__Review__ID_Tutor__6C190EBB");
         });
 
         modelBuilder.Entity<Service>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Service__3214EC27F2CA3E3F");
+            entity.HasKey(e => e.Id).HasName("PK__Service__3214EC2756AE3EB1");
 
             entity.ToTable("Service");
 
@@ -427,20 +418,20 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdClassNavigation).WithMany(p => p.Services)
                 .HasForeignKey(d => d.IdClass)
-                .HasConstraintName("FK__Service__ID_Clas__60A75C0F");
+                .HasConstraintName("FK__Service__ID_Clas__6D0D32F4");
 
             entity.HasOne(d => d.IdSubjectNavigation).WithMany(p => p.Services)
                 .HasForeignKey(d => d.IdSubject)
-                .HasConstraintName("FK__Service__ID_Subj__619B8048");
+                .HasConstraintName("FK__Service__ID_Subj__6E01572D");
 
             entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.Services)
                 .HasForeignKey(d => d.IdTutor)
-                .HasConstraintName("FK__Service__ID_Tuto__5FB337D6");
+                .HasConstraintName("FK__Service__ID_Tuto__6EF57B66");
         });
 
         modelBuilder.Entity<Subject>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Subject__3214EC27C54A39C6");
+            entity.HasKey(e => e.Id).HasName("PK__Subject__3214EC2728596E57");
 
             entity.ToTable("Subject");
 
@@ -453,7 +444,7 @@ public partial class DbminiCapstoneContext : DbContext
 
         modelBuilder.Entity<TimeSlot>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__TimeSlot__3214EC27AA0B57DE");
+            entity.HasKey(e => e.Id).HasName("PK__TimeSlot__3214EC27032F107D");
 
             entity.ToTable("TimeSlot");
 
@@ -470,12 +461,12 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdDateNavigation).WithMany(p => p.TimeSlots)
                 .HasForeignKey(d => d.IdDate)
-                .HasConstraintName("FK__TimeSlot__ID_Dat__6754599E");
+                .HasConstraintName("FK__TimeSlot__ID_Dat__6FE99F9F");
         });
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Transact__3214EC27F05CEFEF");
+            entity.HasKey(e => e.Id).HasName("PK__Transact__3214EC279C0B2BFB");
 
             entity.ToTable("Transaction");
 
@@ -492,16 +483,16 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdAccountNavigation).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.IdAccount)
-                .HasConstraintName("FK__Transacti__ID_Ac__440B1D61");
+                .HasConstraintName("FK__Transacti__ID_Ac__73BA3083");
         });
 
         modelBuilder.Entity<Tutor>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tutor__3214EC272C69F417");
+            entity.HasKey(e => e.Id).HasName("PK__Tutor__3214EC2745B4F10C");
 
             entity.ToTable("Tutor");
 
-            entity.HasIndex(e => e.IdAccount, "UQ__Tutor__213379EA35B2B41D").IsUnique();
+            entity.HasIndex(e => e.IdAccount, "UQ__Tutor__213379EA57D9C96A").IsUnique();
 
             entity.Property(e => e.Id)
                 .HasMaxLength(50)
@@ -515,12 +506,12 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdAccountNavigation).WithOne(p => p.Tutor)
                 .HasForeignKey<Tutor>(d => d.IdAccount)
-                .HasConstraintName("FK__Tutor__ID_Accoun__398D8EEE");
+                .HasConstraintName("FK__Tutor__ID_Accoun__70DDC3D8");
         });
 
         modelBuilder.Entity<TutorSubject>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tutor_Su__3214EC27BBA1A241");
+            entity.HasKey(e => e.Id).HasName("PK__Tutor_Su__3214EC274C75596F");
 
             entity.ToTable("Tutor_Subject");
 
@@ -539,11 +530,11 @@ public partial class DbminiCapstoneContext : DbContext
 
             entity.HasOne(d => d.IdSubjectNavigation).WithMany(p => p.TutorSubjects)
                 .HasForeignKey(d => d.IdSubject)
-                .HasConstraintName("FK__Tutor_Sub__ID_Su__4F7CD00D");
+                .HasConstraintName("FK__Tutor_Sub__ID_Su__71D1E811");
 
             entity.HasOne(d => d.IdTutorNavigation).WithMany(p => p.TutorSubjects)
                 .HasForeignKey(d => d.IdTutor)
-                .HasConstraintName("FK__Tutor_Sub__ID_Tu__4E88ABD4");
+                .HasConstraintName("FK__Tutor_Sub__ID_Tu__72C60C4A");
         });
 
         OnModelCreatingPartial(modelBuilder);

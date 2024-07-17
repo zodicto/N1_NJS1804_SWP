@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ODTLearning.DAL.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace ODTLearning.DAL.Entities;
@@ -18,6 +19,8 @@ public partial class Tutor
     public string? Status { get; set; }
 
     public string? IdAccount { get; set; }
+
+    public virtual ClassRequest? ClassRequest { get; set; }
 
     public virtual ICollection<Complaint> Complaints { get; set; } = new List<Complaint>();
 

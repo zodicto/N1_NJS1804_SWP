@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ODTLearning.DAL.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace ODTLearning.DAL.Entities;
