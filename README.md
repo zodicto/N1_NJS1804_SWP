@@ -22,9 +22,7 @@
 | Sprint   | User Case (UC)             |
 | :------- | :------------------------- |
 | Sprint 1 | UC1, UC2, UC3,UC28, UC5 ,UC14,UC6,UC7,UC4    |
-| Sprint 2 |UC14, UC15, UC16, UC17, UC18, UC19, UC20, UC21, UC22 |
-| Sprint 3 |  UC23, UC24, UC25, UC26, UC27 |
-| Sprint 4 | UC8, UC9, UC10, UC11, UC12, UC13    |
+| Sprint 2 |UC14, UC15, UC16, UC17, UC18, UC19, UC20, UC21, UC22, UC8, UC9, UC10, UC11, UC12, UC13, UC23, UC24, UC25, UC26, UC27 |
 
 ### Member Assignments for Sprint 1
 
@@ -42,7 +40,7 @@
 
 | Member   | User Case (UC) Assigned    |  
 | :------- | :------------------------- |
-| Lê Minh Trí | UC09-View Account, UC11-Create Service, UC13-Delete Service, UC23- View Renve Report, UC28-Complete the class |  
+| Lê Minh Trí |UC11-Create Service, UC13-Delete Service, |  
 | Lê Thành Tài | UC18-View Pending Request, UC19-View Approved Request, UC20-View Reject Request | 
 | Lê Minh Tân | UC10-Delete Account, UC16-Booking Services, UC32-Approve Tutor|
 | Nguyễn Trí Thành | UC21-Create Complain, UC22-View Complain, UC26-Delete Request, UC30-Create Feedback |
