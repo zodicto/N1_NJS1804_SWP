@@ -855,6 +855,10 @@ namespace ODTLearning.BLL.Repositories
 
             //user.AccountBalance = user.AccountBalance - request.Price;
             tutor.IdAccountNavigation.AccountBalance = tutor.IdAccountNavigation.AccountBalance - 50000;
+            var accountAdmin = await _context.Accounts
+                .SingleOrDefaultAsync(x => x.Roles.ToLower() == "quản trị viên");
+
+            accountAdmin.AccountBalance += 50000;
             request.Status = "Đang diễn ra";
             await _context.AddAsync(rent);
             await _context.AddAsync(classRequest);

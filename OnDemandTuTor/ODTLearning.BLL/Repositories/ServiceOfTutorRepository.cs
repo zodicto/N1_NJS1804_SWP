@@ -330,8 +330,6 @@ namespace ODTLearning.BLL.Repositories
                     Message = "Không tìm thấy ngày nào phù hợp với dịch vụ này!",
                 };
             }
-            Console.WriteLine("Selected Date ID: " + selectedDate.Id);
-            Console.WriteLine("Service ID from Date: " + selectedDate.IdService);
 
             // Tìm khung giờ dựa vào ID của date và so sánh với bảng timeslot
             foreach (var ts in selectedDate.TimeSlots)
@@ -391,7 +389,13 @@ namespace ODTLearning.BLL.Repositories
                         };
                     }
                     account.AccountBalance -= model.Price;
-                    Console.WriteLine("service.IdTutorNavigation.IdAccountNavigation.AccountBalance: " + service.IdTutorNavigation.IdAccountNavigation.AccountBalance);
+                    var accountAdmin = await _context.Accounts
+                        .SingleOrDefaultAsync(x => x.Roles.ToLower() == "quản trị viên");
+
+                    
+
+                    accountAdmin.AccountBalance += (float)0.1 * model.Price;
+
 
                     var nofi = new Notification
                     {

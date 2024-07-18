@@ -1338,7 +1338,6 @@ D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\D
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\ODTLearning.AssemblyInfoInputs.cache
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\ODTLearning.AssemblyInfo.cs
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\ODTLearning.csproj.CoreCompileInputs.cache
-D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\ODTLearning.MvcApplicationPartsAssemblyInfo.cs
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\ODTLearning.MvcApplicationPartsAssemblyInfo.cache
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\ODTLearning.sourcelink.json
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Debug\net8.0\staticwebassets.build.json
