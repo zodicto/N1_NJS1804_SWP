@@ -27,9 +27,9 @@ namespace ODTLearning.BLL.Repositories
 
             for (int month = 1; month <= 12; month++)
             {
-                var requests = _context.Requests.Where(x => x.CreateDate.Month == month && x.CreateDate.Year == year && (x.Status.ToLower() == "đang diễn ra" || x.Status.ToLower() == "hoàn thành"));
+                var requests = await _context.Requests.Where(x => x.CreateDate.Month == month && x.CreateDate.Year == year && (x.Status.ToLower() == "đang diễn ra" || x.Status.ToLower() == "hoàn thành")).ToListAsync();
 
-                var bookings = _context.Bookings.Include(x => x.IdTimeSlotNavigation.IdDateNavigation).Where(x => x.IdTimeSlotNavigation.IdDateNavigation.Date1.Month == month && x.IdTimeSlotNavigation.IdDateNavigation.Date1.Year == year && x.Status.ToLower() == "hoàn thành");
+                var bookings = await _context.Bookings.Include(x => x.IdTimeSlotNavigation.IdDateNavigation).Where(x => x.IdTimeSlotNavigation.IdDateNavigation.Date1.Month == month && x.IdTimeSlotNavigation.IdDateNavigation.Date1.Year == year && x.Status.ToLower() == "hoàn thành").ToListAsync();
 
                 float price1 = 0;
                 float price2 = 0;
