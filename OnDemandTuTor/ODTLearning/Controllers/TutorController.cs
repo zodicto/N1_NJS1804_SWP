@@ -113,7 +113,7 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPut("reSignUpOfTutor")]
-        [Authorize]
+        [Authorize(Roles = UserRoleAuthorize.Student)]
         public async Task<IActionResult> ReSignUpOftutor(string id, SignUpModelOfTutor model)
         {
             try

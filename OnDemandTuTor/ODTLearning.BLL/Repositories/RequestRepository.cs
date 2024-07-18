@@ -512,7 +512,7 @@ namespace ODTLearning.BLL.Repositories
             };
         }
 
-        public async Task<ApiResponse<bool>> DeleteRequestLearning(string accountId, string requestId)
+        public async Task<ApiResponse<bool>> DeleteRequestByStudent(string accountId, string requestId)
         {
             // Tìm tài khoản theo accountId
             var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == accountId);
@@ -571,6 +571,64 @@ namespace ODTLearning.BLL.Repositories
             {
                 Success = true,
                 Message = "Yêu cầu đã được xóa thành công",
+            };
+        }
+
+        public async Task<ApiResponse<bool>> DeleteRequestByModerator(string idRequest)
+        {
+            var request = await _context.Requests.SingleOrDefaultAsync(x => x.Id == idRequest);
+
+            if (request == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy yêu cầu"
+                };
+            }
+
+            if (request.Status.ToLower() == "đang diễn ra")
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Yêu cầu đang diễn ra"
+                };
+            }
+
+            var requestLearnings = await _context.RequestLearnings.Where(x => x.IdRequest == idRequest).ToListAsync();
+
+            if (requestLearnings.Any())
+            {
+                _context.RequestLearnings.RemoveRange(requestLearnings);
+            }
+
+            var classRequests2 = await _context.ClassRequests.Where(x => x.IdRequest == idRequest).ToListAsync();
+
+            if (classRequests2.Any())
+            {
+                _context.ClassRequests.RemoveRange(classRequests2);
+            }
+
+            _context.Requests.Remove(request);
+
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Yêu cầu tìm gia sư '{request.Title}' của bạn đã bị xóa",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = request.IdAccount,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Xóa yêu cầu thành công"
             };
         }
 

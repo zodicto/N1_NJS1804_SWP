@@ -173,7 +173,7 @@ namespace ODTLearning.BLL.Repositories
                     LearningMethod = s.LearningMethod,
                     Schedule = s.Dates.Select(d => new ServiceDateModel
                     {
-                        Date = d.Date1.HasValue ? d.Date1.Value.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd") : null,
+                        Date = d.Date1.ToString("yyyy-MM-dd"),
                         TimeSlots = d.TimeSlots
                              .Where(ts => ts.TimeSlot1.HasValue)
                              .Select(ts => ts.TimeSlot1.Value.ToString("HH:mm"))
@@ -223,7 +223,7 @@ namespace ODTLearning.BLL.Repositories
                                                                                                        //.Select(slot => slot.TimeSlot1.Value.ToString("HH:mm"))
                         .ToList();
 
-                    Console.WriteLine("Date: " + (date.Date1.HasValue ? date.Date1.Value.ToString("yyyy-MM-dd") : "null") + " TimeSlots count: " + timeSlots.Count);
+                    Console.WriteLine("Date: " + (date.Date1.ToString("yyyy-MM-dd")) + " TimeSlots count: " + timeSlots.Count);
 
                     var timeSlotsAfterCheck = new List<string>();
 
@@ -253,7 +253,7 @@ namespace ODTLearning.BLL.Repositories
 
                     return new
                     {
-                        Date = date.Date1.HasValue ? date.Date1.Value.ToString("yyyy-MM-dd") : null, // Định dạng chuỗi cho Date
+                        Date = date.Date1.ToString("yyyy-MM-dd"), // Định dạng chuỗi cho Date
                         TimeSlots = timeSlotsAfterCheck
                     };
                 })
@@ -688,7 +688,7 @@ namespace ODTLearning.BLL.Repositories
                         LearningMethod = model.LearningMethod,
                         Schedule = service.Dates.Select(d => new ServiceDateModel
                         {
-                            Date = d.Date1.HasValue ? d.Date1.Value.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd") : null,
+                            Date = d.Date1.ToString("yyyy-MM-dd"),
                             TimeSlots = d.TimeSlots
                                 .Where(ts => ts.TimeSlot1.HasValue)
                                 .Select(ts => ts.TimeSlot1.Value.ToString("HH:mm"))

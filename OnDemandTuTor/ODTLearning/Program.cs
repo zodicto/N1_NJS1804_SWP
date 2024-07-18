@@ -65,8 +65,7 @@ internal class Program
         // Register services
         builder.Services.AddScoped< AccountRepository>();
         builder.Services.AddScoped< TutorRepository>();
-        builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-        builder.Services.AddScoped<IModeratorRepository, ModeratorRepository>();
+        builder.Services.AddScoped<IStudentRepository, StudentRepository>();       
         builder.Services.AddScoped<IRevenueRepository, RevenueRepository>();
         builder.Services.AddScoped< RequestRepository>();
         builder.Services.AddScoped<ServiceOfTutorRepository>();

@@ -20,34 +20,6 @@ namespace ODTLearning.Controllers
             _context = context;
         }                                             
 
-        [HttpGet("ViewRevenueByMonth")]
-        [Authorize(Roles = UserRoleAuthorize.Admin)]
-        public async Task<IActionResult> ViewRevenueByMonth(int year)
-        {
-            var response = await _repo.GetRevenueByMonth(year);
-
-            return Ok(new
-            {
-                Success = response.Success,
-                Message = response.Message,
-                Data = response.Data
-            });
-        }
-
-        [HttpGet("ViewRevenueByWeek")]
-        [Authorize(Roles = UserRoleAuthorize.Admin)]
-        public async Task<IActionResult> ViewRevenueByWeek(int month, int year)
-        {
-            var response = await _repo.GetRevenueByWeek(month, year);
-
-            return Ok(new
-            {
-                response.Success,
-                response.Message,
-                response.Data
-            });
-        }
-
         [HttpGet("ViewRevenueByYear")]
         [Authorize(Roles = UserRoleAuthorize.Admin)]
         public async Task<IActionResult> ViewRevenueByYear(int year)

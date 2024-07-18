@@ -7,7 +7,7 @@ public partial class Date
 {
     public string Id { get; set; } = null!;
 
-    public DateOnly? Date1 { get; set; }
+    public DateOnly Date1 { get; set; }
 
     public string? IdService { get; set; }
 

@@ -88,7 +88,6 @@ namespace ODTLearning.Controllers
             }
         }
         [HttpGet("getServices")]
-        [Authorize(Roles = UserRoleAuthorize.Tutor)]
         public async Task<IActionResult> GetAllServicesByAccountId(string id)
         {
             try

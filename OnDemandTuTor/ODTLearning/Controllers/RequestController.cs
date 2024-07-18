@@ -416,11 +416,11 @@ namespace ODTLearning.Controllers
         }
 
       
-        [HttpDelete("deleteRequest")]
+        [HttpDelete("deleteRequestByStudent")]
         [Authorize(Roles = UserRoleAuthorize.Student)]
-        public async Task<IActionResult> DeleteRequestLearning(string id, string idRequest)
+        public async Task<IActionResult> DeleteRequestByStudent(string id, string idRequest)
         {
-            var request = await _repo.DeleteRequestLearning(id, idRequest);
+            var request = await _repo.DeleteRequestByStudent(id, idRequest);
 
             if (request != null)
             {
@@ -435,6 +435,28 @@ namespace ODTLearning.Controllers
             {
                 Success = false,
                 request.Message
+            });
+        }
+
+        [HttpDelete("deleteRequestByModerator")]
+        [Authorize(Roles = UserRoleAuthorize.Moderator)]
+        public async Task<IActionResult> DeleteRequestByModerator(string idRequest)
+        {
+            var result = await _repo.DeleteRequestByModerator(idRequest);
+
+            if (!result.Success)
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    Message = result.Message
+                });
+            }
+
+            return Ok(new
+            {
+                Success = true,
+                Message = result.Message
             });
         }
 
