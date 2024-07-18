@@ -137,7 +137,132 @@ namespace ODTLearning.BLL.Repositories
                 Message = "Tạo yêu cầu thành công. Yêu cầu của bạn đang chờ duyệt!",
             };
         }
+        public async Task<ApiResponse<bool>> JoinRequest(string requestId, string id)
+        {
+            // Kiểm tra đầu vào
+            if (string.IsNullOrEmpty(requestId) || string.IsNullOrEmpty(id))
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Yêu cầu không hợp lệ"
+                };
+            }
 
+            // Tìm yêu cầu theo IdRequest
+            var request = await _context.Requests.FirstOrDefaultAsync(r => r.Id == requestId);
+            if (request == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy yêu cầu nào"
+                };
+            }
+
+            // Tìm account theo id và role là gia sư
+            var account = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == id && a.Roles.ToLower() == "gia sư");
+            if (account == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư nào với tài khoản này"
+                };
+            }
+
+            // Tìm gia sư theo IdAccount
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.IdAccount == id);
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy gia sư nào"
+                };
+            }
+
+            var tutorId = tutor.Id;
+
+            // Kiểm tra số dư tài khoản
+            const float costPerService = 50000;
+            int requestCount = await _context.RequestLearnings.Include(x => x.IdRequestNavigation).CountAsync(s => s.IdTutor == tutorId && s.IdRequestNavigation.Status.ToLower() == "đã duyệt");
+            float remainingBalance = account.AccountBalance ?? 0;
+
+            if (remainingBalance < costPerService)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = $"Số dư tài khoản không đủ. Bạn cần ít nhất {costPerService} để tạo dịch vụ này.",
+                };
+            }
+
+            int maxRequestThatCanBeJoined = (int)(remainingBalance / costPerService);
+            int remainingRequestThatCanBeJoined = maxRequestThatCanBeJoined - requestCount;
+
+            if (remainingRequestThatCanBeJoined <= 0)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = $"Số dư tài khoản không đủ để tham gia thêm yêu cầu. Bạn đã tham gia {requestCount} yêu cầu.",
+                };
+            }
+
+            // Kiểm tra xem gia sư đã tham gia yêu cầu này chưa
+            var existingRequestLearning = await _context.RequestLearnings
+                .FirstOrDefaultAsync(rl => rl.IdRequest == requestId && rl.IdTutor == tutorId);
+            if (existingRequestLearning != null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Gia sư đã tham gia vào yêu cầu này rồi"
+                };
+            }
+
+            // Tạo bản ghi mới trong bảng RequestLearning
+            var requestLearning = new RequestLearning
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdTutor = tutorId,
+                IdRequest = requestId
+            };
+
+            // Cập nhật trạng thái yêu cầu
+
+            _context.RequestLearnings.Add(requestLearning);
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = $"Bạn đã tham gia vào yêu cầu học tập '{request.Title}' thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = id,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+            try
+            {
+                await _context.SaveChangesAsync();
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "Bạn đã tham gia vào yêu cầu của học sinh"
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu có xảy ra
+                Console.WriteLine($"Error while saving changes: {ex.Message}");
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lưu dữ liệu: " + ex.Message
+                };
+            }
+        }
 
         public async Task<ApiResponse<List<RequestLearningResponse>>> GetPendingRequestsByAccountId(string accountId)
         {

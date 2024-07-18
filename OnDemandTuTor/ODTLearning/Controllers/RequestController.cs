@@ -70,6 +70,40 @@ namespace ODTLearning.Controllers
                 Message = response.Message
             });
         }
+        [HttpPost("join-request")]
+        [Authorize(Roles = UserRoleAuthorize.Tutor)]
+        public async Task<IActionResult> JoinRequest(string requestId, string id)
+        {
+            try
+            {
+                var response = await _repo.JoinRequest(requestId, id);
+
+                if (response.Success)
+                {
+                    return StatusCode(200, new
+                    {
+                        Success = true,
+                        response.Message,
+                        response.Data
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Success = false,
+                    response.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new ApiResponse<string>
+                {
+                    Success = false,
+                    Message = "An error occurred while processing the request.",
+                    Data = ex.Message
+                });
+            }
+        }
         [HttpGet("getAllRequestPending")]
         [Authorize(Roles = UserRoleAuthorize.Moderator)]
         public async Task<IActionResult> ViewRequest()
