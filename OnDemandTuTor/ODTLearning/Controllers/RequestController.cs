@@ -7,6 +7,8 @@ using ODTLearning.Models;
 
 namespace ODTLearning.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class RequestController : Controller
     {
         private readonly RequestRepository _repo;
@@ -178,7 +180,7 @@ namespace ODTLearning.Controllers
         {
             try
             {
-                var response = await _repo.GetAllApprovedRequests(idRequest);
+                var response = await _repo.GetAllTutorJoinRequest(idRequest);
 
                 if (response.Success)
                 {
@@ -413,39 +415,7 @@ namespace ODTLearning.Controllers
             }
         }
 
-        [HttpPut("completeClassRequest")]
-        [Authorize(Roles = UserRoleAuthorize.Student)]
-        public async Task<IActionResult> CompleteClassRequest(string idClassRequest)
-        {
-            try
-            {
-                var response = await _repo.CompleteClassRequest(idClassRequest);
-
-                if (response.Success)
-                {
-                    return StatusCode(200, new
-                    {
-                        Success = true,
-                        response.Message
-                    });
-                }
-
-                return NotFound(new
-                {
-                    Success = false,
-                    response.Message
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new ApiResponse<string>
-                {
-                    Success = false,
-                    Message = "An error occurred while complete class.",
-                    Data = ex.Message
-                });
-            }
-        }
+      
         [HttpDelete("deleteRequest")]
         [Authorize(Roles = UserRoleAuthorize.Student)]
         public async Task<IActionResult> DeleteRequestLearning(string id, string idRequest)
@@ -467,6 +437,113 @@ namespace ODTLearning.Controllers
                 request.Message
             });
         }
-        
+
+        [HttpGet("viewAllRequestPending")]
+        [Authorize(Roles = UserRoleAuthorize.Admin)]
+        public async Task<IActionResult> ViewAllRequestPending()
+        {
+            try
+            {
+                var response = await _repo.GetListRequestPending();
+
+                if (!response.Success)
+                {
+                    return NotFound(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
+
+        [HttpGet("viewAllRequestApproved")]
+        [Authorize(Roles = UserRoleAuthorize.Admin)]
+        public async Task<IActionResult> ViewAllRequestApproved()
+        {
+            try
+            {
+                var response = await _repo.GetListRequestApproved();
+
+                if (!response.Success)
+                {
+                    return NotFound(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
+
+        [HttpGet("viewAllRequestReject")]
+        [Authorize(Roles = UserRoleAuthorize.Admin)]
+        public async Task<IActionResult> ViewAllRequetReject()
+        {
+            try
+            {
+                var response = await _repo.GetListRequestReject();
+
+                if (!response.Success)
+                {
+                    return NotFound(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
     }
 }

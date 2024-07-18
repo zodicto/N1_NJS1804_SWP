@@ -7,6 +7,7 @@ using ODTLearning.DAL.Entities;
 using ODTLearning.Models;
 using ODTLearning.BLL.Repositories;
 using Microsoft.AspNetCore.Authorization;
+using ODTLearning.BLL.Models;
 
 namespace ODTLearning.Controllers
 {
@@ -21,149 +22,56 @@ namespace ODTLearning.Controllers
             _repo = repo;
         }
 
-        [HttpGet("classActive")]
-        [Authorize(Roles = "Học sinh")]
-        public async Task<IActionResult> ViewClassActive(string id)
+        
+        [HttpGet("GetAllStudent")]
+        [Authorize(Roles = UserRoleAuthorize.Admin)]
+        public async Task<IActionResult> ViewListStudent()
         {
             try
             {
-                var response = await _repo.GetClassProcess(id);
+                var response = await _repo.GetListStudent();
 
-                if (response.Success)
+                if (!response.Success)
                 {
-                    return StatusCode(200, new
+                    return NotFound(new
                     {
-                        Success = true,
-                        response.Message,
-                        response.Data
+                        response.Success,
+                        response.Message
                     });
                 }
 
-                return BadRequest(new
-                {
-                    Success = false,
-                    response.Message
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Success = false,
-                    Message = "An error occurred while creating the request learning.",
-                    Details = ex.Message 
-                });
-            }
-        }
-
-        [HttpGet("classCompled")]
-        [Authorize(Roles = "Học sinh")]
-        public async Task<IActionResult> ViewClassCompled(string id)
-        {
-            try
-            {
-                var response = await _repo.GetClassCompled(id);
-
-                if (response.Success)
-                {
-                    return StatusCode(200, new
-                    {
-                        Success = true,
-                        response.Message,
-                        response.Data
-                    });
-                }
-
-                return BadRequest(new
-                {
-                    Success = false,
-                    response.Message
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new
-                {
-                    Success = false,
-                    Message = "An error occurred while creating the request learning.",
-                    Details = ex.Message
-                });
-            }
-        }
-        [HttpPost("CreateComplaint")]
-        [Authorize(Roles = "Học sinh")]
-        public async Task<IActionResult> CreateComplaint(ComplaintModel model)
-        {
-            var response = await _repo.CreateComplaint(model);
-
-            if (response.Success)
-            {
                 return Ok(new
                 {
-                    Success = true,
+                    response.Success,
                     response.Message,
                     response.Data
                 });
             }
-
-            return NotFound(new
+            catch (Exception ex)
             {
-                Success = false,
-                Message = response.Message
-            });
-        }
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
 
-        [HttpPost("CreateReviewRequest")]
-        [Authorize(Roles = "Học sinh")]
-        public async Task<IActionResult> CreateReviewRequest(ReviewRequestModel model)
-        {
-            var response = await _repo.CreateReviewRequest(model);
-
-            if (response.Success)
-            {
-                return Ok(new
+                return StatusCode(500, new
                 {
-                    Success = true,
-                    Message = response.Message
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
                 });
             }
-
-            return NotFound(new
-            {
-                Success = false,
-                Message = response.Message
-            });
         }
 
-        [HttpPost("CreateReviewService")]
-        [Authorize(Roles = "Học sinh")]
-        public async Task<IActionResult> CreateReviewService(ReviewServiceModel model)
+        [HttpGet("GetAmountStudent")]
+        [Authorize(Roles = UserRoleAuthorize.Admin)]
+        public async Task<IActionResult> ViewAmountStudent()
         {
-            var response = await _repo.CreateReviewService(model);
+            var response = await _repo.GetAmountStudent();
 
-            if (response.Success)
+            return Ok(new
             {
-                return Ok(new
-                {
-                    Success = true,
-                    Message = response.Message
-                });
-            }
-
-            return NotFound(new
-            {
-                Success = false,
-                Message = response.Message
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
             });
         }
 
-        
-
-
-
-
-
-
-       
     }
 }

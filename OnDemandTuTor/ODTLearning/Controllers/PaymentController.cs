@@ -25,7 +25,6 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("payment")]
-        [Authorize]
         public async Task<ActionResult> Payment(DepositModel model)
         {
             var user = _context.Accounts.FirstOrDefault(x => x.Id == model.Id);
@@ -56,7 +55,6 @@ namespace ODTLearning.Controllers
 
         }
         [HttpGet("paymentCallBack")]
-        [Authorize]
         public async Task<ActionResult> PaymentCallBack()
         {
             var response = await _repo.PaymentExecute(Request.Query);

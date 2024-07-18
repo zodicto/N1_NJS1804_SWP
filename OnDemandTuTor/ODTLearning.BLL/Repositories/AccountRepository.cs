@@ -387,13 +387,13 @@ namespace ODTLearning.BLL.Repositories
 
        
 
-      
 
-        public async Task<ApiResponse<object>> GetAllNotification(string id)
+
+        public async Task<ApiResponse<object>> GetClassService(string id)
         {
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+            var existingUser = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
 
-            if (user == null)
+            if (existingUser == null)
             {
                 return new ApiResponse<object>
                 {
@@ -402,70 +402,402 @@ namespace ODTLearning.BLL.Repositories
                 };
             }
 
-            var nofies = await _context.Notifications.Where(x => x.IdAccount == id)
-                                                     .Select(x => new
-                                                     {
-                                                         IdNotification = x.Id,
-                                                         x.Description,
-                                                         x.CreateDate,
-                                                         x.Status,
-                                                     })
-                                                     .ToListAsync();
-
-            if (nofies == null)
+            if (existingUser.Roles.ToLower() == "học sinh")
             {
+                var bookings = await _context.Bookings.Include(x => x.IdAccountNavigation)
+                                                      .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
+                                                                                                                                .ThenInclude(x => x.IdClassNavigation)
+                                                      .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
+                                                                                                                                .ThenInclude(x => x.IdSubjectNavigation)
+                                                      .Where(x => x.IdAccount == id)
+                                                      .ToListAsync();
+
+
+                if (!bookings.Any())
+                {
+                    return new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Bạn không có lớp học",
+                    };
+                }
+
+                var list = new List<object>();
+
+                foreach (var booking in bookings)
+                {
+                    //var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor);
+
+                    var tutorId = booking?.IdTimeSlotNavigation?.IdDateNavigation?.IdServiceNavigation?.IdTutor;
+
+                    if (tutorId == null)
+                    {
+                        continue;
+                    }
+
+                    var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == tutorId);
+
+                    if (tutor == null)
+                    {
+                        continue;
+                    }
+
+                    var data = new
+                    {
+                        IdBooking = booking.Id,
+                        Title = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title,
+                        Subject = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdSubjectNavigation?.SubjectName,
+                        Price = booking.Price,
+                        Duration = booking.Duration,
+                        Description = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Description,
+                        Class = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdClassNavigation?.ClassName,
+                        LearningMethod = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.LearningMethod,
+                        Date = booking.IdTimeSlotNavigation.IdDateNavigation.Date1,
+                        TimeSlot = booking.IdTimeSlotNavigation.TimeSlot1,
+                        Status = booking.Status,
+
+                        User = new
+                        {
+                            idUser = existingUser.Id,
+                            Name = existingUser.FullName,
+                            existingUser.Roles,
+                            Email = existingUser.Email,
+                            Date_of_birth = existingUser.DateOfBirth,
+                            Gender = existingUser.Gender,
+                            Avatar = existingUser.Avatar,
+                            Address = existingUser.Address,
+                            Phone = existingUser.Phone
+                        },
+
+                        Tutor = new
+                        {
+                            idAccountTutor = tutor.IdAccountNavigation.Id,
+                            Name = tutor.IdAccountNavigation.FullName,
+                            Email = tutor.IdAccountNavigation.Email,
+                            tutor.IdAccountNavigation.Roles,
+                            Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
+                            Gender = tutor.IdAccountNavigation.Gender,
+                            Avatar = tutor.IdAccountNavigation.Avatar,
+                            Address = tutor.IdAccountNavigation.Address,
+                            Phone = tutor.IdAccountNavigation.Phone
+                        }
+                    };
+
+                    list.Add(data);
+                }
+
                 return new ApiResponse<object>
                 {
                     Success = true,
-                    Message = "Bạn không có thông báo"
+                    Message = "Thành công",
+                    Data = list
+                };
+            }
+
+            if (existingUser.Roles.ToLower() == "gia sư")
+            {
+                var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.IdAccountNavigation.Id == id);
+
+                var bookings = await _context.Bookings.Include(x => x.IdAccountNavigation)
+                                                      .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
+                                                                                                                                .ThenInclude(x => x.IdClassNavigation)
+                                                      .Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
+                                                                                                                                .ThenInclude(x => x.IdSubjectNavigation)
+                                                      .Where(x => x.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor == tutor.Id)
+                                                      .ToListAsync();
+
+
+                if (!bookings.Any())
+                {
+                    return new ApiResponse<object>
+                    {
+                        Success = false,
+                        Message = "Bạn không có lớp học",
+                    };
+                }
+
+                var list = new List<object>();
+
+                foreach (var booking in bookings)
+                {
+                    var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == booking.IdAccount);
+
+                    var data = new
+                    {
+                        IdBooking = booking.Id,
+                        Title = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title,
+                        Subject = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdSubjectNavigation?.SubjectName,
+                        Price = booking.Price,
+                        Duration = booking.Duration,
+                        Description = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Description,
+                        Class = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdClassNavigation?.ClassName,
+                        LearningMethod = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.LearningMethod,
+                        Date = booking.IdTimeSlotNavigation.IdDateNavigation.Date1,
+                        TimeSlot = booking.IdTimeSlotNavigation.TimeSlot1,
+                        Status = booking.Status,
+
+                        User = new
+                        {
+                            Name = booking.IdAccountNavigation.FullName,
+                            Email = booking.IdAccountNavigation.Email,
+                            booking.IdAccountNavigation.Roles,
+                            Date_of_birth = booking.IdAccountNavigation.DateOfBirth,
+                            Gender = booking.IdAccountNavigation.Gender,
+                            Avatar = booking.IdAccountNavigation.Avatar,
+                            Address = booking.IdAccountNavigation.Address,
+                            Phone = booking.IdAccountNavigation.Phone
+                        },
+
+                        Tutor = new
+                        {
+                            Name = tutor.IdAccountNavigation.FullName,
+                            Email = tutor.IdAccountNavigation.Email,
+                            tutor.IdAccountNavigation.Roles,
+                            Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
+                            Gender = tutor.IdAccountNavigation.Gender,
+                            Avatar = tutor.IdAccountNavigation.Avatar,
+                            Address = tutor.IdAccountNavigation.Address,
+                            Phone = tutor.IdAccountNavigation.Phone
+                        }
+                    };
+
+                    list.Add(data);
+                }
+
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Thành công",
+                    Data = list
                 };
             }
 
             return new ApiResponse<object>
             {
-                Success = true,
-                Message = "Thành công",
-                Data = nofies
+                Success = false,
+                Message = "Người dùng không phải học sinh hay gia sư"
             };
-        }
+        }        
+       
+        public async Task<ApiResponse<bool>> DeleteAccount(string id)
 
-        public async Task<ApiResponse<object>> UpdateStatusNotification(string id)
         {
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
+            var exsitAccount = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == id);
 
-            if (user == null)
+            if (exsitAccount == null)
             {
-                return new ApiResponse<object>
+                return new ApiResponse<bool>
                 {
                     Success = false,
                     Message = "Không tìm thấy người dùng"
                 };
             }
 
-            var nofies = await _context.Notifications.Where(x => x.IdAccount == id).ToListAsync();
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
 
-            if (nofies == null)
+            if (tutor != null)
             {
-                return new ApiResponse<object>
+                var educationalQualifications = await _context.EducationalQualifications.Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (educationalQualifications.Any())
                 {
-                    Success = true,
-                    Message = "Bạn không có thông báo"
-                };
+                    _context.EducationalQualifications.RemoveRange(educationalQualifications);
+                }
+
+                var requestLearnings = await _context.RequestLearnings.Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (requestLearnings.Any())
+                {
+                    _context.RequestLearnings.RemoveRange(requestLearnings);
+                }
+
+                var tutorSubjects = await _context.TutorSubjects.Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (tutorSubjects.Any())
+                {
+                    _context.TutorSubjects.RemoveRange(tutorSubjects);
+                }
+
+                var complaints = await _context.Complaints.Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (complaints.Any())
+                {
+                    _context.Complaints.RemoveRange(complaints);
+                }
+
+                var classRequests = await _context.ClassRequests.Include(x => x.IdRequestNavigation).Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (classRequests.Any())
+                {
+                    foreach (var x in classRequests)
+                    {
+                        if (x.IdRequestNavigation.Status.ToLower() == "đang diễn ra")
+                        {
+                            return new ApiResponse<bool>
+                            {
+                                Success = false,
+                                Message = "Người dùng đang có lớp học. Không thể xóa."
+                            };
+                        }
+                    }
+
+                    _context.ClassRequests.RemoveRange(classRequests);
+                }
+                var rents = await _context.Rents.Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (rents.Any())
+                {
+                    _context.Rents.RemoveRange(rents);
+                }
+
+                var reviews = await _context.Reviews.Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (reviews.Any())
+                {
+                    _context.Reviews.RemoveRange(reviews);
+                }
+
+                var services = await _context.Services.Where(x => x.IdTutor == tutor.Id).ToListAsync();
+
+                if (services.Any())
+                {
+                    _context.Services.RemoveRange(services);
+
+                    foreach (var service in services)
+                    {
+                        var dates = await _context.Dates.Where(x => x.IdService == service.Id).ToListAsync();
+
+                        if (dates.Any())
+                        {
+                            _context.Dates.RemoveRange(dates);
+
+                            foreach (var date in dates)
+                            {
+                                var timeSlots = await _context.TimeSlots.Where(x => x.IdDate == date.Id).ToListAsync();
+
+                                if (timeSlots.Any())
+                                {
+                                    _context.TimeSlots.RemoveRange(timeSlots);
+
+                                    foreach (var timeSlot in timeSlots)
+                                    {
+                                        var bookings = await _context.Bookings.Where(x => x.IdTimeSlot == timeSlot.Id).ToListAsync();
+
+                                        if (bookings.Any())
+                                        {
+                                            _context.Bookings.RemoveRange(bookings);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                _context.Tutors.Remove(tutor);
             }
 
-            foreach (var nofi in nofies)
+            var complaints2 = await _context.Complaints.Where(x => x.IdAccount == id).ToListAsync();
+
+            if (complaints2.Any())
             {
-                nofi.Status = "Đã xem";
+                _context.Complaints.RemoveRange(complaints2);
             }
+
+            var refreshTokens = await _context.RefreshTokens.Where(x => x.IdAccount == id).ToListAsync();
+
+            if (refreshTokens.Any())
+            {
+                _context.RefreshTokens.RemoveRange(refreshTokens);
+            }
+
+            var reviews2 = await _context.Reviews.Where(x => x.IdAccount == id).ToListAsync();
+
+            if (reviews2.Any())
+            {
+                _context.Reviews.RemoveRange(reviews2);
+            }
+            var notifi = await _context.Notifications.Where(x => x.IdAccount == id).ToListAsync();
+
+            if (notifi.Any())
+            {
+                _context.Notifications.RemoveRange(notifi);
+            }
+            var transactions = await _context.Transactions.Where(x => x.IdAccount == id).ToListAsync();
+
+            if (transactions.Any())
+            {
+                _context.Transactions.RemoveRange(transactions);
+            }
+
+            var rents2 = await _context.Rents.Where(x => x.IdAccount == exsitAccount.Id).ToListAsync();
+
+            if (rents2.Any())
+            {
+                _context.Rents.RemoveRange(rents2);
+            }
+
+            var requests = await _context.Requests.Where(x => x.IdAccount == id).ToListAsync();
+
+            if (requests.Any())
+            {
+                _context.Requests.RemoveRange(requests);
+
+                foreach (var request in requests)
+                {
+                    if (request.Status.ToLower() == "đang diễn ra")
+                    {
+                        return new ApiResponse<bool>
+                        {
+                            Success = false,
+                            Message = "người dùng đang có lớp học. Không thể xóa."
+                        };
+                    }
+                    var requestLearnings2 = await _context.RequestLearnings.Where(x => x.IdRequest == request.Id).ToListAsync();
+
+                    if (requestLearnings2.Any())
+                    {
+                        _context.RequestLearnings.RemoveRange(requestLearnings2);
+                    }
+
+                    var classRequests2 = await _context.ClassRequests.Where(x => x.IdRequest == request.Id).ToListAsync();
+
+                    if (classRequests2.Any())
+                    {
+                        _context.ClassRequests.RemoveRange(classRequests2);
+                    }
+                }
+            }
+
+            var bookings2 = await _context.Bookings.Where(x => x.IdAccount == exsitAccount.Id).ToListAsync();
+
+            if (bookings2.Any())
+            {
+                foreach (var x in bookings2)
+                {
+                    if (x.Status.ToLower() == "đang diễn ra")
+                    {
+                        return new ApiResponse<bool>
+                        {
+                            Success = false,
+                            Message = "người dùng đang có lớp học. Không thể xóa."
+                        };
+                    }
+                }
+                _context.Bookings.RemoveRange(bookings2);
+            }
+
+            _context.Accounts.Remove(exsitAccount);
 
             await _context.SaveChangesAsync();
 
-            return new ApiResponse<object>
+            return new ApiResponse<bool>
             {
                 Success = true,
-                Message = "Thành công",
+                Message = "Xóa người dùng thành công"
             };
         }
+
 
     }
 }

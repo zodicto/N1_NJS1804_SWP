@@ -67,9 +67,16 @@ internal class Program
         builder.Services.AddScoped< TutorRepository>();
         builder.Services.AddScoped<IStudentRepository, StudentRepository>();
         builder.Services.AddScoped<IModeratorRepository, ModeratorRepository>();
-        builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+        builder.Services.AddScoped<IRevenueRepository, RevenueRepository>();
         builder.Services.AddScoped< RequestRepository>();
+        builder.Services.AddScoped<ServiceOfTutorRepository>();
         builder.Services.AddSingleton<IVnPayRepository, VnPayRepository>();
+        builder.Services.AddScoped<TutorProfileRepository>();
+        builder.Services.AddScoped<TransactionRepository>();
+        builder.Services.AddScoped<ReviewRepository>();
+        builder.Services.AddScoped<ComplaintRepository>();
+        builder.Services.AddScoped<NotificationRepository>();
+        builder.Services.AddScoped<ClassRepository>();
 
         // Configure JWT authentication
         var secretKey = builder.Configuration["AppSettings:SecretKey"];

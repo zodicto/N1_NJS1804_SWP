@@ -374,5 +374,58 @@ namespace ODTLearning.BLL.Repositories
                 Message = "Người dùng không phải học sinh hay gia sư"
             };
         }
+        public async Task<ApiResponse<bool>> CompleteClassRequest(string idClassRequest)
+        {
+            var classRequest = await _context.ClassRequests.Include(x => x.IdRequestNavigation).SingleOrDefaultAsync(x => x.Id == idClassRequest);
+
+            if (classRequest == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy lớp học"
+                };
+            }
+
+            classRequest.IdRequestNavigation.Status = "Hoàn thành";
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Bạn đã hoàn thành lớp học"
+            };
+        }
+
+        public async Task<ApiResponse<bool>> CompleteClassService(string idBooking)
+        {
+            var booking = await _context.Bookings.Include(x => x.IdTimeSlotNavigation)
+                                                    .ThenInclude(x => x.IdDateNavigation)
+                                                        .ThenInclude(x => x.IdServiceNavigation)
+                                                 .SingleOrDefaultAsync(x => x.Id == idBooking);
+
+            if (booking == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy lớp học"
+                };
+            }
+
+            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor);
+
+            tutor.IdAccountNavigation.AccountBalance += (float)(booking.Price * 0.9);
+
+            booking.Status = "Hoàn thành";
+            await _context.SaveChangesAsync();
+
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Bạn đã hoàn thành lớp học"
+            };
+        }
+
     }
 }

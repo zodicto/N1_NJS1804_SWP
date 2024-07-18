@@ -22,7 +22,6 @@ namespace ODTLearning.Controllers
         }
 
        
-       
         [HttpDelete("DeleteRequest")]
         [Authorize(Roles = "Kiểm duyệt viên")]
         public async Task<IActionResult> DeleteRequest(string idRequest)

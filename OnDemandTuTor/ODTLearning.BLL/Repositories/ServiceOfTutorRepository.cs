@@ -13,6 +13,10 @@ namespace ODTLearning.BLL.Repositories
     public class ServiceOfTutorRepository
     {
         private readonly DbminiCapstoneContext _context;
+        public ServiceOfTutorRepository(DbminiCapstoneContext context)
+        {
+            _context = context;
+        }
         public async Task<ApiResponse<bool>> CreateServiceLearning(string id, ServiceLearningModel model)
         {
             // Tìm tài khoản theo IdAccount và vai trò "gia sư"
@@ -469,59 +473,6 @@ namespace ODTLearning.BLL.Repositories
             {
                 Success = false,
                 Message = "Không tìm thấy khung giờ nào phù hợp với dịch vụ này!",
-            };
-        }
-        public async Task<ApiResponse<bool>> CompleteClassService(string idBooking)
-        {
-            var booking = await _context.Bookings.Include(x => x.IdTimeSlotNavigation)
-                                                    .ThenInclude(x => x.IdDateNavigation)
-                                                        .ThenInclude(x => x.IdServiceNavigation)
-                                                            .ThenInclude(x => x.IdTutorNavigation)
-                                                 .SingleOrDefaultAsync(x => x.Id == idBooking);
-
-            if (booking == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy lớp học"
-                };
-            }
-
-            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation).FirstOrDefaultAsync(x => x.Id == booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor);
-
-            tutor.IdAccountNavigation.AccountBalance += (float)(booking.Price * 0.9);
-
-            booking.Status = "Hoàn thành";
-
-            var nofi = new Notification
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = $"Bạn đã hoàn thành lớp '{booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title}' thành công",
-                CreateDate = DateTime.Now,
-                Status = "Chưa xem",
-                IdAccount = booking.IdAccount,
-            };
-
-            await _context.Notifications.AddAsync(nofi);
-
-            var nofiTutor = new Notification
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = $"Lớp '{booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title}' đã được hoàn thành",
-                CreateDate = DateTime.Now,
-                Status = "Chưa xem",
-                IdAccount = booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutorNavigation.IdAccount,
-            };
-
-            await _context.Notifications.AddAsync(nofiTutor);
-
-            await _context.SaveChangesAsync();
-
-            return new ApiResponse<bool>
-            {
-                Success = true,
-                Message = "Bạn đã hoàn thành lớp học"
             };
         }
         public async Task<ApiResponse<bool>> DeleteServiceById(string serviceId)

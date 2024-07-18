@@ -14,6 +14,8 @@ using ODTLearning.BLL.Models;
 
 namespace ODTLearning.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AccountController : Controller
     {
         private readonly AccountRepository _repo;
@@ -25,8 +27,7 @@ namespace ODTLearning.Controllers
         {
             _repo = repo;
             _configuration = configuration;
-            _context = context;
-     
+            _context = context;   
         }
 
         [HttpPost("register")]
@@ -141,7 +142,6 @@ namespace ODTLearning.Controllers
             }
         }
 
-
       
 
         [HttpGet("getAllUser")]
@@ -235,7 +235,39 @@ namespace ODTLearning.Controllers
             return Content(script, "text/html");
         }
 
+        [HttpGet("getProfile")]
+        public async Task<IActionResult> GetProfile(string id)
+        {
+            try
+            {
+                var response = await _repo.GetProfile(id);
 
+                if (!response.Success)
+                {
+                    return BadRequest(new
+                    {
+                        Success = false,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    Success = true,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "An internal server error occurred. Please try again later."
+                });
+            }
+        }
         [HttpPost("logout")]
         public async Task<IActionResult> Logout([FromBody] LogoutModel model)
         {
@@ -350,127 +382,26 @@ namespace ODTLearning.Controllers
                 });
             }
         }
-        [HttpGet("getProfile")]
-        public async Task<IActionResult> GetProfile(string id)
+       
+
+        [HttpDelete("DeleteAccount")]
+        [Authorize(Roles = UserRoleAuthorize.Admin)]
+        public async Task<IActionResult> DeleteAccount(string id)
         {
-            try
+            var response = await _repo.DeleteAccount(id);
+
+            if (response.Success)
             {
-                var response = await _repo.GetProfile(id);
-
-                if (!response.Success)
-                {
-                    return BadRequest(new
-                    {
-                        Success = false,
-                        response.Message
-                    });
-                }
-
                 return Ok(new
                 {
                     Success = true,
-                    response.Message,
-                    response.Data
-                });
-            }
-            catch (Exception ex)
-            {
-                
-                return StatusCode(500, new
-                {
-                    Success = false,
-                    Message = "An internal server error occurred. Please try again later."
-                });
-            }
-        }
-
-        [HttpGet("ViewClassRequest")]
-        [Authorize]
-        public async Task<IActionResult> ViewClassRequest(string id)
-        {
-            var response = await _repo.GetClassRequest(id);
-
-            if (!response.Success)
-            {
-                return BadRequest(new
-                {
-                    Success = false,
                     Message = response.Message
                 });
             }
 
-            return Ok(new
+            return BadRequest(new
             {
-                Success = true,
-                Message = response.Message,
-                Data = response.Data
-            });
-        }
-
-        [HttpGet("ViewClassService")]
-        [Authorize]
-        public async Task<IActionResult> GetClassService(string id)
-        {
-            var response = await _repo.GetClassService(id);
-
-            if (!response.Success)
-            {
-                return BadRequest(new
-                {
-                    Success = false,
-                    Message = response.Message
-                });
-            }
-
-            return Ok(new
-            {
-                Success = true,
-                Message = response.Message,
-                Data = response.Data
-            });
-        }
-
-        [HttpGet("ViewAllNotification")]
-        [Authorize]
-        public async Task<IActionResult> GetAllNotification(string id)
-        {
-            var response = await _repo.GetAllNotification(id);
-
-            if (!response.Success)
-            {
-                return NotFound(new
-                {
-                    Success = false,
-                    Message = response.Message
-                });
-            }
-
-            return Ok(new
-            {
-                Success = true,
-                Message = response.Message,
-                Data = response.Data
-            });
-        }
-
-        [HttpPut("UpdateStatusNotification")]
-        [Authorize]
-        public async Task<IActionResult> UpdateStatusNotification(string id)
-        {
-            var response = await _repo.UpdateStatusNotification(id);
-
-            if (!response.Success)
-            {
-                return NotFound(new
-                {
-                    Success = false,
-                    Message = response.Message
-                });
-            }
-
-            return Ok(new
-            {
-                Success = true,
+                Success = false,
                 Message = response.Message
             });
         }

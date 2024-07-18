@@ -526,68 +526,7 @@ namespace ODTLearning.BLL.Repositories
                 Message = "Danh sách lớp đang diễn ra được truy xuất thành công",
                 Data = requestLearningModels
             };
-        }
-      
-        public async Task<ApiResponse<object>> GetReview(string id)
-        {
-            var tutor = await _context.Tutors.SingleOrDefaultAsync(x => x.IdAccount == id && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
-
-            if (tutor == null)
-            {
-                return new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy gia sư"
-                };
-            }
-
-            var reviews = await _context.Reviews.Include(x => x.IdAccountNavigation)
-                                               .Include(x => x.IdTutorNavigation).ThenInclude(x => x.IdAccountNavigation)
-                                               .Where(x => x.IdTutorNavigation.IdAccount == id).ToListAsync();
-
-            if (!reviews.Any())
-            {
-                return new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "Gia sư chưa có đánh giá nào",
-                };
-            }
-
-            var list = new List<object>();
-
-            foreach (var review in reviews)
-            {
-                var data = new
-                {
-                    IdReview = review.Id,
-
-                    User = new
-                    {
-                        Id = review.IdAccountNavigation.Id,
-                        FullName = review.IdAccountNavigation.FullName,
-                        Email = review.IdAccountNavigation.Email,
-                        Date_of_birth = review.IdAccountNavigation.DateOfBirth,
-                        Gender = review.IdAccountNavigation.Gender,
-                        Avatar = review.IdAccountNavigation.Avatar,
-                        Address = review.IdAccountNavigation.Address,
-                        Phone = review.IdAccountNavigation.Phone
-                    },
-
-                    Rating = review.Rating,
-                    Feedback = review.Feedback,
-                };
-
-                list.Add(data);
-            }
-
-            return new ApiResponse<object>
-            {
-                Success = true,
-                Message = "Thành công",
-                Data = list
-            };
-        }
+        }              
 
         public async Task<ApiResponse<object>> GetRegisterTutor(string id)
         {
@@ -630,7 +569,69 @@ namespace ODTLearning.BLL.Repositories
             };
         }
 
-       
+        public async Task<ApiResponse<int>> GetAmountTutor()
+        {
+            var count = _context.Accounts.Count(x => x.Roles.ToLower() == "gia sư");
+
+            return new ApiResponse<int>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = count
+            };
+        }
+
+        public async Task<ApiResponse<List<ListAllTutor>>> GetListTutor()
+        {
+            try
+            {
+                var listTutors = await _context.Accounts
+                    .Where(a => a.Roles.ToLower() == "gia sư")
+                    .Include(a => a.Tutor)
+                        .ThenInclude(t => t.TutorSubjects)
+                            .ThenInclude(ts => ts.IdSubjectNavigation)
+                    .Include(a => a.Tutor)
+                        .ThenInclude(t => t.EducationalQualifications)
+                    .Select(a => new ListAllTutor
+                    {
+                        Id = a.Id,
+                        Avatar = a.Avatar,
+                        FullName = a.FullName,
+                        Date_of_birth = a.DateOfBirth.HasValue ? a.DateOfBirth.Value.ToString("yyyy-MM-dd") : null,
+                        Gender = a.Gender,
+                        SpecializedSkills = a.Tutor.SpecializedSkills,
+                        Experience = a.Tutor.Experience,
+                        Subjects = string.Join("; ", a.Tutor.TutorSubjects.Select(ts => ts.IdSubjectNavigation.SubjectName)),
+                        Qualifications = a.Tutor.EducationalQualifications.Select(eq => new Qualification
+                        {
+                            IdQualifications = eq.Id,
+                            QualificationName = eq.QualificationName,
+                            Img = eq.Img,
+                            Type = eq.Type
+                        }).ToList(),
+                        Introduction = a.Tutor.Introduction,
+                        Rating = a.Tutor.Reviews.Any() ? a.Tutor.Reviews.Average(r => r.Rating).Value.ToString("0.00") : "N/A"
+                    }).ToListAsync();
+
+                return new ApiResponse<List<ListAllTutor>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách gia sư thành công",
+                    Data = listTutors
+                };
+            }
+            catch (Exception ex)
+            {
+                // Log the error if needed
+                Console.WriteLine($"Error in GetListTutor: {ex.Message}");
+
+                return new ApiResponse<List<ListAllTutor>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách gia sư",
+                };
+            }
+        }
     }
 }
 
