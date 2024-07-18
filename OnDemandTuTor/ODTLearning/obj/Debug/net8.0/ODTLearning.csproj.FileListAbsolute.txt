@@ -1129,7 +1129,6 @@ D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\D
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Microsoft.DotNet.Scaffolding.Shared.dll
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.dll
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Abstractions.dll
-D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Design.dll
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.Relational.dll
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
@@ -1360,3 +1359,7 @@ D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\D
 D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\ODTLearning.DAL.dll
 D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\ODTLearning.BLL.pdb
 D:\Ki_5\Work\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\ODTLearning.DAL.pdb
+D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\ODTLearning.BLL.dll
+D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\ODTLearning.DAL.dll
+D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\ODTLearning.BLL.pdb
+D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\bin\Debug\net8.0\ODTLearning.DAL.pdb

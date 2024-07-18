@@ -76,7 +76,7 @@ namespace ODTLearning.Models
     }
     public class ReasonReject
     {
-        public string? Reason { get; set; }
+        public string? reason { get; set; }
     }
 
 }

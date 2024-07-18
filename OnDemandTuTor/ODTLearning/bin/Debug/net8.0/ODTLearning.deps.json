@@ -12,6 +12,7 @@
           "FirebaseStorage.net": "1.0.3",
           "Microsoft.AspNetCore.Authentication.OAuth": "2.2.0",
           "Microsoft.Extensions.Configuration.Json": "8.0.0",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "8.0.0",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "8.0.2",
           "ODTLearning.BLL": "1.0.0"
         },

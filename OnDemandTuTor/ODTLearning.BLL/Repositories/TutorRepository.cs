@@ -11,7 +11,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ODTLearning.BLL.Repositories
 {
-    public class TutorRepository : ITutorRepository
+    public class TutorRepository 
     {
         private readonly DbminiCapstoneContext _context;
 
@@ -20,7 +20,444 @@ namespace ODTLearning.BLL.Repositories
             _context = context;
         }
 
-        MyLibrary myLib = new MyLibrary();
+        public async Task<ApiResponse<TutorResponse>> SignUpOfTutor(string IdAccount, SignUpModelOfTutor model)
+        {
+            // Tìm kiếm account trong DB bằng id
+            var existingUser = await _context.Accounts.FirstOrDefaultAsync(a => a.Id == IdAccount);
+            if (existingUser == null)
+            {
+                // Trường hợp không tìm thấy tài khoản
+                return new ApiResponse<TutorResponse>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy tài khoản",
+                };
+            }
+
+            // Kiểm tra xem đã có gia sư nào với ID_Account này chưa
+            var existingTutor = await _context.Tutors.FirstOrDefaultAsync(t => t.IdAccount == IdAccount);
+            if (existingTutor != null)
+            {
+                return new ApiResponse<TutorResponse>
+                {
+                    Success = false,
+                    Message = "Tài khoản đã đăng ký gia sư",
+                };
+            }
+
+            // Tạo mới đối tượng tutor
+            var tutor = new Tutor
+            {
+                Id = Guid.NewGuid().ToString(),
+                SpecializedSkills = model.specializedSkills,
+                Experience = model.experience,
+                Status = "Đang duyệt",
+                IdAccount = existingUser.Id,
+                Introduction = model.introduction,
+            };
+
+            // Tạo mới đối tượng educationalqualification
+            var educationalQualification = new EducationalQualification
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdTutor = tutor.Id,
+                QualificationName = model.qualifiCationName,
+                Type = model.type,
+                Img = model.imageQualification
+            };
+
+            // Tìm môn học theo tên
+            var subjectModel = await _context.Subjects.FirstOrDefaultAsync(lm => lm.SubjectName == model.subject);
+            if (subjectModel == null)
+            {
+                return new ApiResponse<TutorResponse>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy môn học nào với tên này. Vui lòng thử lại!",
+                };
+            }
+
+            // Tạo mới đối tượng TutorSubject
+            var tutorSubject = new TutorSubject
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdSubject = subjectModel.Id,
+                IdTutor = tutor.Id,
+            };
+
+            // Thêm các đối tượng vào DB
+            await _context.Tutors.AddAsync(tutor);
+            await _context.EducationalQualifications.AddAsync(educationalQualification);
+            await _context.TutorSubjects.AddAsync(tutorSubject);
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = "Đăng ký gia sư thành công. Vui lòng chờ duyệt.",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = IdAccount
+            };
+            Console.WriteLine("Creating notification...");
+            Console.WriteLine($"Notification Description: {nofi.Description}");
+
+            Console.WriteLine("Before saving: " + nofi.Description);
+            await _context.Notifications.AddAsync(nofi);
+            try
+            {
+                await _context.SaveChangesAsync();
+                Console.WriteLine("After saving: " + nofi.Description);
+                return new ApiResponse<TutorResponse>
+                {
+                    Success = true,
+                    Message = "Đăng ký gia sư thành công. Bạn vui lòng chờ duyệt",
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu có xảy ra
+                Console.WriteLine($"Error while saving changes: {ex.Message}");
+                return new ApiResponse<TutorResponse>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lưu dữ liệu",
+                    Data = null
+                };
+            }
+        }
+        public async Task<ApiResponse<object>> GetSignUpTutor(string id)
+        {
+            var tutor = await _context.Tutors.Include(t => t.IdAccountNavigation).FirstOrDefaultAsync(t => t.IdAccount == id);
+
+            if (tutor == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Không có đơn đăng ký gia sư"
+                };
+            }
+
+            var subjects = await _context.Tutors.Where(x => x.IdAccount == id).Join(_context.TutorSubjects.Join(_context.Subjects, tf => tf.IdSubject, f => f.Id, (tf, f) => new
+            {
+                AccountId = tf.IdTutor,
+                Field = f.SubjectName
+            }), t => t.Id, af => af.AccountId, (t, af) => af.Field).ToListAsync();
+
+            var qualifications = await _context.Tutors.Where(x => x.IdAccount == id).Join(_context.EducationalQualifications, t => t.Id, eq => eq.IdTutor, (t, eq) => new
+            {
+                Id = eq.Id,
+                Name = eq.QualificationName,
+                Img = eq.Img,
+                Type = eq.Type
+            }).ToListAsync();
+
+            var data = new
+            {
+                Id = tutor.IdAccount,
+                tutor.IdAccountNavigation.FullName,
+                tutor.IdAccountNavigation.Gender,
+                Date_of_birth = tutor.IdAccountNavigation.DateOfBirth,
+                tutor.Reason,
+                tutor.IdAccountNavigation.Email,
+                tutor.IdAccountNavigation.Avatar,
+                tutor.IdAccountNavigation.Address,
+                tutor.IdAccountNavigation.Phone,
+                tutor.SpecializedSkills,
+                tutor.Introduction,
+                tutor.Experience,
+                Subjects = subjects,
+                Qualifications = qualifications,
+                tutor.Status
+            };
+
+            return new ApiResponse<object>
+            {
+                Success = true,
+                Message = "Lấy danh sách gia sư thành công",
+                Data = data
+            };
+        }
+        public async Task<ApiResponse<List<ListTutorToConfirm>>> GetListTutorsToConfirm()
+        {
+            try
+            {
+                var tutors = await _context.Tutors
+                    .Include(t => t.IdAccountNavigation)
+                    .Include(t => t.TutorSubjects)
+                        .ThenInclude(ts => ts.IdSubjectNavigation)
+                    .Include(t => t.EducationalQualifications)
+                    .Where(t => t.Status == "Đang duyệt")
+                    .Select(t => new ListTutorToConfirm
+                    {
+                        Id = t.IdAccount, // Sử dụng Id của Tutor
+                        specializedSkills = t.SpecializedSkills,
+                        introduction = t.Introduction,
+                        date_of_birth = t.IdAccountNavigation.DateOfBirth,
+
+                        fullName = t.IdAccountNavigation.FullName,
+                        gender = t.IdAccountNavigation.Gender,
+                        experience = t.Experience,
+                        subject = t.TutorSubjects.FirstOrDefault().IdSubjectNavigation.SubjectName, // Lấy Subject từ TutorSubjects
+                        qualifiCationName = t.EducationalQualifications.FirstOrDefault().QualificationName, // Lấy QualificationName từ 
+                        type = t.EducationalQualifications.FirstOrDefault().Type, // Lấy Type từ EducationalQualifications
+                        imageQualification = t.EducationalQualifications.FirstOrDefault().Img // Lấy ImageQualification từ EducationalQualifications
+                    })
+                    .ToListAsync();
+
+                if (!tutors.Any())
+                {
+                    return new ApiResponse<List<ListTutorToConfirm>>
+                    {
+                        Success = true,
+                        Message = "Không có gia sư nào cần xác nhận",
+                        Data = []
+                    };
+                }
+
+                return new ApiResponse<List<ListTutorToConfirm>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách gia sư thành công",
+                    Data = tutors
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in GetListTutorsToConfirm: {ex.Message}");
+
+                return new ApiResponse<List<ListTutorToConfirm>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách gia sư",
+                    Data = null
+                };
+            }
+        }
+        public async Task<ApiResponse<bool>> ReSignUpOftutor(string id, SignUpModelOfTutor model)
+        {
+            // Tìm kiếm account trong DB bằng id
+            var tutor = await _context.Tutors.Include(t => t.IdAccountNavigation)
+                                             .Include(t => t.TutorSubjects).ThenInclude(ts => ts.IdSubjectNavigation)
+                                             .Include(t => t.EducationalQualifications)
+                                             .FirstOrDefaultAsync(t => t.IdAccount == id);
+
+            if (tutor == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy người dùng"
+                };
+            }
+
+            // Tạo mới đối tượng educationalqualification
+            var educationalQualification = new EducationalQualification
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdTutor = tutor.Id,
+                QualificationName = model.qualifiCationName,
+                Type = model.type,
+                Img = model.imageQualification
+            };
+
+            // Tìm môn học theo tên
+            var subjectModel = await _context.Subjects.FirstOrDefaultAsync(lm => lm.SubjectName == model.subject);
+
+            if (subjectModel == null)
+            {
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy môn học nào với tên này. Vui lòng thử lại!",
+                };
+            }
+
+            // Tạo mới đối tượng TutorSubject
+            var tutorSubject = new TutorSubject
+            {
+                Id = Guid.NewGuid().ToString(),
+                IdSubject = subjectModel.Id,
+                IdTutor = tutor.Id,
+            };
+
+            var oldEducationalQualification = await _context.EducationalQualifications.FirstOrDefaultAsync(x => x.IdTutor == tutor.Id);
+            var oldTutorSubject = await _context.TutorSubjects.FirstOrDefaultAsync(x => x.IdTutor == tutor.Id);
+
+            tutor.Introduction = model.introduction;
+            tutor.Experience = model.experience;
+            tutor.SpecializedSkills = model.specializedSkills;
+            tutor.Status = "Đang duyệt";
+            tutor.Reason = null;
+
+            _context.TutorSubjects.Remove(oldTutorSubject);
+            _context.EducationalQualifications.Remove(oldEducationalQualification);
+            await _context.EducationalQualifications.AddAsync(educationalQualification);
+            await _context.TutorSubjects.AddAsync(tutorSubject);
+
+            await _context.SaveChangesAsync();
+            var nofi = new Notification
+            {
+                Id = Guid.NewGuid().ToString(),
+                Description = "Bạn đã đăng ký gia sư thành công",
+                CreateDate = DateTime.Now,
+                Status = "Chưa xem",
+                IdAccount = id,
+            };
+
+            await _context.Notifications.AddAsync(nofi);
+            return new ApiResponse<bool>
+            {
+                Success = true,
+                Message = "Gửi đơn thành công. Bạn vui lòng chờ duyệt",
+            };
+        }
+        public async Task<ApiResponse<bool>> ApproveProfileTutor(string id)
+        {
+            try
+            {
+                var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
+
+                if (tutor == null)
+                {
+                    return new ApiResponse<bool>
+                    {
+                        Success = true,
+                        Message = "Không tìm thấy gia sư với ID tài khoản này",
+                        Data = false
+                    };
+                }
+
+                tutor.Status = "Đã duyệt";
+                _context.Tutors.Update(tutor);
+
+                var account = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == tutor.IdAccount);
+                account.Roles = "gia sư";
+                _context.Accounts.Update(account);
+
+                await _context.SaveChangesAsync();
+
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "Duyệt gia sư thành công",
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in ApproveProfileTutor: {ex.Message}");
+
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình duyệt gia sư",
+                    Data = false
+                };
+            }
+        }
+
+        public async Task<ApiResponse<bool>> RejectProfileTutor(string id, ReasonReject model)
+        {
+            try
+            {
+                var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
+
+                if (tutor == null)
+                {
+                    return new ApiResponse<bool>
+                    {
+                        Success = true,
+                        Message = "Không tìm thấy gia sư với tài khoản này",
+                        Data = false
+                    };
+                }
+
+                tutor.Status = "Từ chối";
+                tutor.Reason = model.reason;
+                _context.Tutors.Update(tutor);
+
+                await _context.SaveChangesAsync();
+
+                return new ApiResponse<bool>
+                {
+                    Success = true,
+                    Message = "Từ chối yêu cầu của gia sư thành công",
+                    Data = true
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in RejectProfileTutor: {ex.Message}");
+
+                return new ApiResponse<bool>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình từ chối gia sư",
+                    Data = false
+                };
+            }
+        }
+        public async Task<ApiResponse<object>> DeleteSignUpTutor(string id)
+        {
+            // Tìm gia sư trong cơ sở dữ liệu bằng IdAccount
+            var tutor = await _context.Tutors.FirstOrDefaultAsync(t => t.IdAccount == id);
+
+            if (tutor == null)
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Không tìm thấy đăng ký gia sư"
+                };
+            }
+            // Kiểm tra trạng thái của gia sư
+            if (tutor.Status != "Đang duyệt" && tutor.Status != "Từ chối")
+            {
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Chỉ có thể xóa đăng ký gia sư ở trạng thái 'Đang duyệt' hoặc 'Từ chối'"
+                };
+            }
+
+            // Tìm các môn học của gia sư
+            var tutorSubjects = await _context.TutorSubjects.Where(ts => ts.IdTutor == tutor.Id).ToListAsync();
+            // Tìm các chứng chỉ học vấn của gia sư
+            var qualifications = await _context.EducationalQualifications.Where(eq => eq.IdTutor == tutor.Id).ToListAsync();
+
+            // Xóa các đối tượng liên quan
+            _context.TutorSubjects.RemoveRange(tutorSubjects);
+            _context.EducationalQualifications.RemoveRange(qualifications);
+            _context.Tutors.Remove(tutor);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+                return new ApiResponse<object>
+                {
+                    Success = true,
+                    Message = "Xóa đăng ký gia sư thành công"
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu có xảy ra
+                Console.WriteLine($"Error while deleting tutor: {ex.Message}");
+                return new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xóa dữ liệu",
+                    Data = null
+                };
+            }
+        }
+        
+
+
+
 
         public async Task<ApiResponse<object>> GetTutorProfile(string id)
         {
@@ -81,7 +518,6 @@ namespace ODTLearning.BLL.Repositories
                 Data = data
             };
         }
-
 
         public async Task<ApiResponse<bool>> UpdateTutorProfile(string id, TutorProfileToUpdate model)
         {
@@ -324,460 +760,7 @@ namespace ODTLearning.BLL.Repositories
                 Message = $"Xóa {qualification.Type} thành công"
             };
         }
-
-        public async Task<ApiResponse<bool>> CreateServiceLearning(string id, ServiceLearningModel model)
-        {
-            // Tìm tài khoản theo IdAccount và vai trò "gia sư"
-            var account = await _context.Accounts
-                                   .Include(a => a.Tutor)
-                                   .FirstOrDefaultAsync(a => a.Id == id && a.Roles.ToLower() == "gia sư");
-
-            if (account == null || account.Tutor == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy tài khoản nào với ID này hoặc bạn chưa đăng ký làm gia sư!",
-                };
-            }
-
-
-            // Tìm lớp học theo tên
-            var classEntity = await _context.Classes.FirstOrDefaultAsync(cl => cl.ClassName == model.Class);
-
-            if (classEntity == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy lớp nào với tên này. Vui lòng chọn lớp 10, 11, 12",
-                };
-            }
-
-            // Tìm môn học theo tên
-            var subjectEntity = await _context.Subjects.FirstOrDefaultAsync(sub => sub.SubjectName == model.subject);
-
-            if (subjectEntity == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy môn học nào với tên này. Vui lòng chọn lại!",
-                };
-            }
-
-            // Tạo một đối tượng Service mới
-            var serviceOfTutor = new Service
-            {
-                Id = Guid.NewGuid().ToString(),
-                Title = model.Title,
-                Description = model.Description,
-                LearningMethod = model.LearningMethod,
-                PricePerHour = model.PricePerHour,
-                IdClass = classEntity.Id,
-                IdSubject = subjectEntity.Id,
-                IdTutor = account.Tutor.Id // Sử dụng Id của Tutor từ account
-            };
-
-            // Thêm Service vào context
-            await _context.Services.AddAsync(serviceOfTutor);           
-
-            // Thêm Date và TimeSlot vào context
-            foreach (var dateModel in model.Schedule)
-            {
-                var dateEntity = new ODTLearning.DAL.Entities.Date
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Date1 = DateOnly.Parse(dateModel.Date),
-                    IdService = serviceOfTutor.Id
-                };
-
-                await _context.Dates.AddAsync(dateEntity);
-                //await _context.SaveChangesAsync();
-                if (dateModel.Date.Equals(DateTime.Today.ToString("yyyy-MM-dd")))
-                {
-                    foreach (var timeSlot in dateModel.TimeSlots)
-                    {
-                        if (DateTime.TryParseExact(timeSlot, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out var dateTime))
-                        {
-                            if (dateTime.TimeOfDay < DateTime.Now.TimeOfDay)
-                            {
-                                return new ApiResponse<bool>
-                                {
-                                    Success = false,
-                                    Message = $"Thời gian bạn chọn không phù hợp. Vui lòng tạo lại."
-                                };
-                            }
-                        }
-                    }
-                }
-
-                foreach (var timeSlot in dateModel.TimeSlots)
-                {
-                    var timeSlotEntity = new TimeSlot
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        TimeSlot1 = TimeOnly.Parse(timeSlot),
-                        Status = "Chưa đặt",
-                        IdDate = dateEntity.Id
-                    };
-
-                    await _context.TimeSlots.AddAsync(timeSlotEntity);
-                }
-            }
-
-            await _context.SaveChangesAsync();
-            var nofi = new Notification
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = $"Bạn đã tạo dịch vụ học tập '{model.Title}' thành công",
-                CreateDate = DateTime.Now,
-                Status = "Chưa xem",
-                IdAccount = id,
-            };
-
-            await _context.Notifications.AddAsync(nofi);
-
-            return new ApiResponse<bool>
-            {
-                Success = true,
-                Message = $"Tạo dịch vụ thành công." 
-            };
-        }
-
-
-        public async Task<ApiResponse<List<object>>> GetAllServicesByAccountId(string id)
-        {
-            // Tìm tài khoản theo IdAccount và vai trò "gia sư"
-            var account = await _context.Accounts
-                                  .Include(a => a.Tutor)
-                                  .FirstOrDefaultAsync(a => a.Id == id && a.Roles.ToLower() == "gia sư");
-
-            if (account == null || account.Tutor == null)
-            {
-                return new ApiResponse<List<object>>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy tài khoản nào với ID này hoặc bạn chưa đăng ký làm gia sư!",
-                };
-            }
-
-            // Tìm tất cả các dịch vụ của gia sư
-            var services = await _context.Services
-                                 .Where(s => s.IdTutor == account.Tutor.Id)
-                                 .Include(s => s.Dates)
-                                 .ThenInclude(d => d.TimeSlots)
-                                 .ToListAsync();
-
-            // Chuyển đổi các dịch vụ sang mô hình ServiceLearningModel và bao gồm ID của dịch vụ
-            var serviceModels = services.Select(s => new
-            {
-                Id = s.Id, // Truyền ID của service
-                ServiceDetails = new ServiceLearningModel
-                {
-                    Title = s.Title,
-                    Description = s.Description,
-                    PricePerHour = s.PricePerHour,
-                    Class = _context.Classes.FirstOrDefault(cl => cl.Id == s.IdClass)?.ClassName,
-                    subject = _context.Subjects.FirstOrDefault(sub => sub.Id == s.IdSubject)?.SubjectName,
-                    LearningMethod = s.LearningMethod,
-                    Schedule = s.Dates.Select(d => new ServiceDateModel
-                    {
-                        Date = d.Date1.HasValue ? d.Date1.Value.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd") : null,
-                        TimeSlots = d.TimeSlots
-                             .Where(ts => ts.TimeSlot1.HasValue)
-                             .Select(ts => ts.TimeSlot1.Value.ToString("HH:mm"))
-                             .ToList()
-                    }).ToList()
-                }
-            }).ToList();
-            
-            return new ApiResponse<List<object>>
-            {
-                Success = true,
-                Message = "Lấy danh sách dịch vụ thành công",
-                Data = serviceModels.Cast<object>().ToList()
-            };
-        }
-
-
-
-
-        public async Task<ApiResponse<bool>> DeleteServiceById(string serviceId)
-        {
-            var service = await _context.Services
-                .Include(s => s.IdTutorNavigation)
-                .ThenInclude(s => s.IdAccountNavigation)
-                                        .Include(s => s.Dates)
-                                        .ThenInclude(d => d.TimeSlots)
-                                        .ThenInclude(ts => ts.Bookings)
-                                        .FirstOrDefaultAsync(s => s.Id == serviceId);
-
-            if (service == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy dịch vụ với ID này."
-                };
-            }
-
-            var ongoingOrCompletedBooking = service.Dates
-                                                   .SelectMany(d => d.TimeSlots)
-                                                   .SelectMany(ts => ts.Bookings)
-                                                   .Any(b => b.Status == "Đang diễn ra" || b.Status == "Hoàn thành");
-
-            if (ongoingOrCompletedBooking)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không thể xóa dịch vụ vì có booking đang diễn ra hoặc đã hoàn thành."
-                };
-            }
-
-            _context.Services.Remove(service);
-            await _context.SaveChangesAsync();
-            var nofi = new Notification
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = $"Bạn đã xóa dịch vụ học tập '{service.Title}' thành công",
-                CreateDate = DateTime.Now,
-                Status = "Chưa xem",
-                IdAccount = service.IdTutorNavigation.IdAccountNavigation.Id,
-            };
-
-            await _context.Notifications.AddAsync(nofi);
-            return new ApiResponse<bool>
-            {
-                Success = true,
-                Message = "Xóa dịch vụ thành công."
-            };
-        }
-
-
-        public async Task<ApiResponse<object>> UpdateServiceById(string serviceId, ServiceLearningModel model)
-        {
-            // Tìm dịch vụ theo serviceId
-            var service = await _context.Services
-                                        .Include(s => s.IdTutorNavigation)
-                                        .ThenInclude(t => t.IdAccountNavigation)
-                                        .Include(s => s.Dates)
-                                        .ThenInclude(d => d.TimeSlots)
-                                        .FirstOrDefaultAsync(s => s.Id == serviceId);
-
-            if (service == null)
-            {
-                return new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy dịch vụ với ID này."
-                };
-            }
-
-            var account = service.IdTutorNavigation?.IdAccountNavigation;
-            if (account == null)
-            {
-                return new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy tài khoản liên kết với dịch vụ này."
-                };
-            }
-
-            // Kiểm tra và định dạng ngày và time slots
-            foreach (var schedule in model.Schedule ?? new List<ServiceDateModel>())
-            {
-                if (!DateTime.TryParseExact(schedule.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-                {
-                    return new ApiResponse<object>
-                    {
-                        Success = false,
-                        Message = "Định dạng ngày không hợp lệ. Vui lòng sử dụng định dạng yyyy-MM-dd."
-                    };
-                }
-
-                foreach (var timeSlot in schedule.TimeSlots ?? new List<string>())
-                {
-                    if (!DateTime.TryParseExact(timeSlot, "HH:mm", CultureInfo.InvariantCulture, DateTimeStyles.None, out _))
-                    {
-                        return new ApiResponse<object>
-                        {
-                            Success = false,
-                            Message = "Định dạng time slot không hợp lệ. Vui lòng sử dụng định dạng HH:mm."
-                        };
-                    }
-                }
-            }
-
-            // Kiểm tra lớp học
-            var classEntity = await _context.Classes.FirstOrDefaultAsync(cl => cl.ClassName == model.Class);
-            if (classEntity == null)
-            {
-                return new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy lớp nào với tên này. Vui lòng chọn lớp 10, 11, 12",
-                };
-            }
-
-            // Kiểm tra môn học
-            var subjectEntity = await _context.Subjects.FirstOrDefaultAsync(sub => sub.SubjectName == model.subject);
-            if (subjectEntity == null)
-            {
-                return new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy môn học nào với tên này. Vui lòng chọn lại!",
-                };
-            }
-
-            // Cập nhật thông tin dịch vụ
-            service.Title = model.Title;
-            service.Description = model.Description;
-            service.LearningMethod = model.LearningMethod;
-            service.PricePerHour = model.PricePerHour;
-            service.IdClass = classEntity.Id;
-            service.IdSubject = subjectEntity.Id;
-            // Cập nhật thông tin dịch vụ
-            service.Title = model.Title;
-            service.Description = model.Description;
-            service.PricePerHour = model.PricePerHour;
-            service.IdClass = classEntity.Id;
-            service.IdSubject = subjectEntity.Id;
-
-            _context.Services.Update(service);
-
-            // Xóa các lịch trình hiện có
-            var existingDates = _context.Dates.Where(d => d.IdService == serviceId).ToList();
-            foreach (var date in existingDates)
-            {
-                var timeSlots = _context.TimeSlots.Where(ts => ts.IdDate == date.Id).ToList();
-                _context.TimeSlots.RemoveRange(timeSlots);
-            }
-            _context.Dates.RemoveRange(existingDates);
-
-            // Thêm Date và TimeSlot mới vào context
-            foreach (var dateModel in model.Schedule)
-            {
-                var dateEntity = new ODTLearning.DAL.Entities.Date
-                {
-                    Id = Guid.NewGuid().ToString(),
-                    Date1 = DateOnly.Parse(dateModel.Date),
-                    IdService = service.Id
-                };
-
-                await _context.Dates.AddAsync(dateEntity);
-
-                foreach (var timeSlot in dateModel.TimeSlots)
-                {
-                    var timeSlotEntity = new TimeSlot
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        TimeSlot1 = TimeOnly.Parse(timeSlot),
-                        Status = "Chưa đặt",
-                        IdDate = dateEntity.Id
-                    };
-
-                    await _context.TimeSlots.AddAsync(timeSlotEntity);
-                }
-            }
-
-            await _context.SaveChangesAsync();
-            _context.Services.Update(service);
-            var nofi = new Notification
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = $"Bạn đã câp nhật dịch vụ học tập '{service.Title}' thành công",
-                CreateDate = DateTime.Now,
-                Status = "Chưa xem",
-                IdAccount = service.IdTutorNavigation.IdAccountNavigation.Id,
-            };
-
-            await _context.Notifications.AddAsync(nofi);
-            await _context.SaveChangesAsync();
-
-                return new ApiResponse<object>
-                {
-                    Success = true,
-                    Message = "Cập nhật dịch vụ thành công. ",
-                    Data = new
-                    {
-                        Id = service.Id,
-                        ServiceDetails = new ServiceLearningModel
-                        {
-                            PricePerHour = service.PricePerHour,
-                            Title = service.Title,
-                            subject = subjectEntity.SubjectName,
-                            Class = classEntity.ClassName,
-                            Description = service.Description,
-                            LearningMethod = model.LearningMethod,
-                            Schedule = service.Dates.Select(d => new ServiceDateModel
-                            {
-                                Date = d.Date1.HasValue ? d.Date1.Value.ToDateTime(TimeOnly.MinValue).ToString("yyyy-MM-dd") : null,
-                                TimeSlots = d.TimeSlots
-                                    .Where(ts => ts.TimeSlot1.HasValue)
-                                    .Select(ts => ts.TimeSlot1.Value.ToString("HH:mm"))
-                                    .ToList()
-                            }).ToList()
-                        }
-                    }
-                };
-            
-        }
-
-
-
-        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetApprovedRequests(string id)
-        {
-            var tutor = await _context.Tutors.FirstOrDefaultAsync(x => x.IdAccount == id);
-           
-            var pendingRequests = await _context.Requests.Include(r => r.RequestLearnings)
-                                                   .Where(r => r.Status == "Đã duyệt")
-                                                   .Select(r => new ViewRequestOfStudent
-                                                   {
-                                                        Id = r.IdAccountNavigation.Id,
-                                                        Title = r.Title,
-                                                        Status = r.Status,
-                                                        Price = r.Price,
-                                                        Description = r.Description,
-                                                        Subject = r.IdSubjectNavigation.SubjectName,
-                                                        LearningMethod = r.LearningMethod,
-                                                        Class = r.IdClassNavigation.ClassName,
-                                                        TimeTable = r.TimeTable,
-                                                        TotalSessions = r.TotalSession,
-                                                        TimeStart = r.TimeStart.ToString(), // Assuming you have TimeStart and TimeEnd in your Schedule model
-                                                        TimeEnd = r.TimeEnd.ToString(),
-                                                        IdRequest = r.Id, // Include Account ID
-                                                        FullName = r.IdAccountNavigation.FullName, // Include Account Full Name
-                                                        Current = tutor != null ? (r.RequestLearnings.FirstOrDefault(rl => rl.IdTutor == tutor.Id) == null ? "Chưa nhận" : "Đã nhận") : null
-                                                   }).ToListAsync();                       
-
-            // Format the Time string if needed
-            foreach (var request in pendingRequests)
-            {
-                if (!string.IsNullOrEmpty(request.TimeStart))
-                {
-                    var timeOnly = TimeOnly.Parse(request.TimeStart);
-                    request.TimeStart = timeOnly.ToString("HH:mm");
-                }
-            }
-            foreach (var request in pendingRequests)
-            {
-                if (!string.IsNullOrEmpty(request.TimeEnd))
-                {
-                    var timeOnly = TimeOnly.Parse(request.TimeEnd);
-                    request.TimeEnd = timeOnly.ToString("HH:mm");
-                }
-            }
-            return new ApiResponse<List<ViewRequestOfStudent>>
-            {
-                Success = true,
-                Message = "Yêu cầu đã xử lý được truy xuất thành công",
-                Data = pendingRequests
-            };
-        }
-
+        
         public async Task<ApiResponse<bool>> JoinRequest(string requestId, string id)
         {
             // Kiểm tra đầu vào
@@ -1074,84 +1057,7 @@ namespace ODTLearning.BLL.Repositories
             };
         }
 
-        public async Task<ApiResponse<bool>> ReSignUpOftutor(string id, SignUpModelOfTutor model)
-        {
-            // Tìm kiếm account trong DB bằng id
-            var tutor = await _context.Tutors.Include(t => t.IdAccountNavigation)
-                                             .Include(t => t.TutorSubjects).ThenInclude(ts => ts.IdSubjectNavigation)
-                                             .Include(t => t.EducationalQualifications)
-                                             .FirstOrDefaultAsync(t => t.IdAccount == id);
-
-            if (tutor == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy người dùng"
-                };
-            }
-
-            // Tạo mới đối tượng educationalqualification
-            var educationalQualification = new EducationalQualification
-            {
-                Id = Guid.NewGuid().ToString(),
-                IdTutor = tutor.Id,
-                QualificationName = model.qualifiCationName,
-                Type = model.type,
-                Img = model.imageQualification
-            };
-
-            // Tìm môn học theo tên
-            var subjectModel = await _context.Subjects.FirstOrDefaultAsync(lm => lm.SubjectName == model.subject);
-
-            if (subjectModel == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy môn học nào với tên này. Vui lòng thử lại!",
-                };
-            }
-
-            // Tạo mới đối tượng TutorSubject
-            var tutorSubject = new TutorSubject
-            {
-                Id = Guid.NewGuid().ToString(),
-                IdSubject = subjectModel.Id,
-                IdTutor = tutor.Id,
-            };
-
-            var oldEducationalQualification = await _context.EducationalQualifications.FirstOrDefaultAsync(x => x.IdTutor == tutor.Id);
-            var oldTutorSubject = await _context.TutorSubjects.FirstOrDefaultAsync(x => x.IdTutor == tutor.Id);
-
-            tutor.Introduction = model.introduction;
-            tutor.Experience = model.experience;
-            tutor.SpecializedSkills = model.specializedSkills;
-            tutor.Status = "Đang duyệt";
-            tutor.Reason = null;
-
-            _context.TutorSubjects.Remove(oldTutorSubject);
-            _context.EducationalQualifications.Remove(oldEducationalQualification);
-            await _context.EducationalQualifications.AddAsync(educationalQualification);
-            await _context.TutorSubjects.AddAsync(tutorSubject);
-
-            await _context.SaveChangesAsync();
-            var nofi = new Notification
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = "Bạn đã đăng ký gia sư thành công",
-                CreateDate = DateTime.Now,
-                Status = "Chưa xem",
-                IdAccount = id,
-            };
-
-            await _context.Notifications.AddAsync(nofi);
-            return new ApiResponse<bool>
-            {
-                Success = true,
-                Message = "Gửi đơn thành công. Bạn vui lòng chờ duyệt",
-            };
-        }
+       
     }
 }
 

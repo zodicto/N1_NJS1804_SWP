@@ -32,59 +32,83 @@ internal class Program
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "ODTLearning API", Version = "v1" });
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please enter a valid token",
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                        }
+                    },
+                    new string[]{}
+                }
+            });
         });
 
+        // Register DbContext
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+        builder.Services.AddDbContext<DbminiCapstoneContext>(options =>
+            options.UseSqlServer(connectionString));
+
         // Register services
-        builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-        builder.Services.AddScoped<ITutorRepository, TutorRepository>();
+        builder.Services.AddScoped< AccountRepository>();
+        builder.Services.AddScoped< TutorRepository>();
         builder.Services.AddScoped<IStudentRepository, StudentRepository>();
         builder.Services.AddScoped<IModeratorRepository, ModeratorRepository>();
         builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+        builder.Services.AddScoped< RequestRepository>();
         builder.Services.AddSingleton<IVnPayRepository, VnPayRepository>();
-
-
-        // Add DbContext
-        builder.Services.AddDbContext<DbminiCapstoneContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DB_MiniCapStone")));
 
         // Configure JWT authentication
         var secretKey = builder.Configuration["AppSettings:SecretKey"];
         var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
         builder.Services.AddAuthentication(options =>
- {
-     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-     options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
- })
- .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
- .AddGoogle(googleOptions =>
- {
-     IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
-     googleOptions.ClientId = googleAuthNSection["ClientId"];
-     googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
-     googleOptions.CallbackPath = "/google-callback";
-     googleOptions.Scope.Add("profile");
-     googleOptions.Scope.Add("email");
-     googleOptions.SaveTokens = true;
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        })
+        .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+        .AddGoogle(googleOptions =>
+        {
+            IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
+            googleOptions.ClientId = googleAuthNSection["ClientId"];
+            googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+            googleOptions.CallbackPath = "/google-callback";
+            googleOptions.Scope.Add("profile");
+            googleOptions.Scope.Add("email");
+            googleOptions.SaveTokens = true;
 
-     googleOptions.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "sub");
-     googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
-     googleOptions.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name");
-     googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name");
-     googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
-     googleOptions.ClaimActions.MapJsonKey("urn:google:picture", "picture");
- })
-         .AddJwtBearer(options =>
-         {
-             options.TokenValidationParameters = new TokenValidationParameters
-             {
-                 ValidateIssuer = false,
-                 ValidateAudience = false,
-                 ValidateIssuerSigningKey = true,
-                 IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
-                 ClockSkew = TimeSpan.Zero
-             };
-         });
+            googleOptions.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "sub");
+            googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+            googleOptions.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name");
+            googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name");
+            googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+            googleOptions.ClaimActions.MapJsonKey("urn:google:picture", "picture");
+        })
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+                ClockSkew = TimeSpan.Zero
+            };
+        });
 
         // Add CORS policy
         builder.Services.AddCors(options =>
@@ -116,7 +140,6 @@ internal class Program
 
         // Use CORS
         app.UseCors(MyAllowSpecificOrigins);
-
 
         app.UseAuthentication();
         app.UseAuthorization();
