@@ -452,226 +452,7 @@ namespace ODTLearning.BLL.Repositories
                 Message = "Danh sách yêu cầu từ chối xử lý đã được truy xuất thành công",
                 Data = requestLearningModels
             };
-        }
-
-
-
-       
-
-        public async Task<ApiResponse<bool>> CreateComplaint(ComplaintModel model)
-        {
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
-
-            if (user == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy người dùng",
-                };
-            }
-
-            var accountTutor = await _context.Accounts.Include(x => x.Tutor).SingleOrDefaultAsync(x => x.Id == model.IdAccountTutor);
-
-            if (accountTutor == null || accountTutor.Roles.ToLower() != "gia sư" || accountTutor.Tutor == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy gia sư trong hệ thống",
-                };
-            }
-
-            var tutorId = accountTutor.Tutor.Id;
-
-            var complaint = new Complaint
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = model.Description,
-                IdAccount = model.IdUser,
-                IdTutor = tutorId, // Sử dụng Id của Tutor
-            };
-
-            await _context.Complaints.AddAsync(complaint);
-
-            var nofi = new Notification
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = $"Bạn đã tố cáo gia sư '{accountTutor.FullName}' thành công",
-                CreateDate = DateTime.Now,
-                Status = "Chưa xem",
-                IdAccount = model.IdUser,
-            };
-
-            await _context.Notifications.AddAsync(nofi);
-
-            await _context.SaveChangesAsync();
-
-            return new ApiResponse<bool>
-            {
-                Success = true,
-                Message = "Thành công"
-            };
-        }
-
-
-        public async Task<ApiResponse<bool>> CreateReviewRequest(ReviewRequestModel model)
-        {
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
-            Console.WriteLine("userid : " + user?.Id);
-            if (user == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy người dùng",
-                };
-            }
-
-            var classRequest = await _context.ClassRequests.Include(x => x.IdRequestNavigation).SingleOrDefaultAsync(x => x.Id == model.IdClassRequest);
-
-            if (classRequest == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy lớp học",
-                };
-            }
-
-            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation)
-                                             .FirstOrDefaultAsync(x => x.Id == classRequest.IdTutor && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
-            Console.WriteLine("tutorid : " + tutor?.Id);
-            if (tutor == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy gia sư",
-                };
-            }
-
-            var review = new Review
-            {
-                Id = Guid.NewGuid().ToString(),
-                Feedback = model.FeedBack,
-                Rating = model.Rating,
-                IdAccount = model.IdUser,
-                IdTutor = tutor.Id
-            };
-
-            await _context.Reviews.AddAsync(review);
-
-            var nofi = new Notification
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = $"Bạn đã đánh giá gia sư '{tutor.IdAccountNavigation.FullName}' thành công",
-                CreateDate = DateTime.Now,
-                Status = "Chưa xem",
-                IdAccount = model.IdUser,
-            };
-
-            await _context.Notifications.AddAsync(nofi);
-
-            var nofiTutor = new Notification
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = $"Bạn nhận được 1 đánh giá thông qua lớp '{classRequest.IdRequestNavigation.Title}'",
-                CreateDate = DateTime.Now,
-                Status = "Chưa xem",
-                IdAccount = tutor.IdAccount,
-            };
-
-            await _context.Notifications.AddAsync(nofiTutor);
-
-            await _context.SaveChangesAsync();
-
-            return new ApiResponse<bool>
-            {
-                Success = true,
-                Message = "Đánh giá thành công"
-            };
-        }
-
-        public async Task<ApiResponse<bool>> CreateReviewService(ReviewServiceModel model)
-        {
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == model.IdUser);
-            Console.WriteLine("userid : " + user?.Id);
-            if (user == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy người dùng",
-                };
-            }
-
-            var booking = await _context.Bookings.Include(x => x.IdTimeSlotNavigation).ThenInclude(x => x.IdDateNavigation).ThenInclude(x => x.IdServiceNavigation)
-                .SingleOrDefaultAsync(x => x.Id == model.IdBooking);
-
-            if (booking == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy lớp học",
-                };
-            }
-
-            var tutor = await _context.Tutors.Include(x => x.IdAccountNavigation)
-                                             .FirstOrDefaultAsync(x => x.Id == booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.IdTutor && x.IdAccountNavigation.Roles.ToLower() == "gia sư");
-            Console.WriteLine("tutorid : " + tutor?.Id);
-            if (tutor == null)
-            {
-                return new ApiResponse<bool>
-                {
-                    Success = false,
-                    Message = "Không tìm thấy gia sư",
-                };
-            }
-
-            var review = new Review
-            {
-                Id = Guid.NewGuid().ToString(),
-                Feedback = model.FeedBack,
-                Rating = model.Rating,
-                IdAccount = model.IdUser,
-                IdTutor = tutor.Id
-            };
-
-            await _context.Reviews.AddAsync(review);
-
-            var nofi = new Notification
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = $"Bạn đã đánh giá gia sư '{tutor.IdAccountNavigation.FullName}' thành công",
-                CreateDate = DateTime.Now,
-                Status = "Chưa xem",
-                IdAccount = model.IdUser,
-            };
-
-            await _context.Notifications.AddAsync(nofi);
-
-            var nofiTutor = new Notification
-            {
-                Id = Guid.NewGuid().ToString(),
-                Description = $"Bạn nhận được 1 đánh giá thông qua lớp '{booking.IdTimeSlotNavigation.IdDateNavigation.IdServiceNavigation.Title}'",
-                CreateDate = DateTime.Now,
-                Status = "Chưa xem",
-                IdAccount = tutor.IdAccount,
-            };
-
-            await _context.Notifications.AddAsync(nofiTutor);
-
-            await _context.SaveChangesAsync();
-
-            return new ApiResponse<bool>
-            {
-                Success = true,
-                Message = "Đánh giá thành công"
-            };
-        }
-
+        }                
 
         public async Task<ApiResponse<List<RequestLearningResponse>>> GetClassProcess(string id)
         {
@@ -772,6 +553,57 @@ namespace ODTLearning.BLL.Repositories
                 Data = requestLearningModels
             };
         }
+
+        public async Task<ApiResponse<List<ListAllStudent>>> GetListStudent()
+        {
+            try
+            {
+                var ListStudent = await _context.Accounts
+                   .Where(t => t.Roles == "Học sinh")
+                    .Select(t => new ListAllStudent
+                    {
+                        id = t.Id,
+                        email = t.Email,
+                        password = t.Password,
+                        date_of_birth = t.DateOfBirth,
+                        fullName = t.FullName,
+                        gender = t.Gender,
+                        phone = t.Phone,
+                        roles = t.Roles,
+                    }).ToListAsync();
+                return new ApiResponse<List<ListAllStudent>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách học sinh thành công",
+                    Data = ListStudent
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in GetListsToConfirm: {ex.Message}");
+
+                return new ApiResponse<List<ListAllStudent>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách gia sư",
+                    Data = null
+                };
+            }
+        }
+
+        public async Task<ApiResponse<int>> GetAmountStudent()
+        {
+            var count = _context.Accounts.Count(x => x.Roles.ToLower() == "học sinh");
+
+            return new ApiResponse<int>
+            {
+                Success = true,
+                Message = "Thành công",
+                Data = count
+            };
+        }
+
 
     }
 }

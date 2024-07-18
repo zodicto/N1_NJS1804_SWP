@@ -14,6 +14,8 @@ using ODTLearning.BLL.Models;
 
 namespace ODTLearning.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class AccountController : Controller
     {
         private readonly AccountRepository _repo;
@@ -25,8 +27,7 @@ namespace ODTLearning.Controllers
         {
             _repo = repo;
             _configuration = configuration;
-            _context = context;
-     
+            _context = context;   
         }
 
         [HttpPost("register")]
@@ -428,49 +429,26 @@ namespace ODTLearning.Controllers
                 Message = response.Message,
                 Data = response.Data
             });
-        }
+        }                
 
-        [HttpGet("ViewAllNotification")]
-        [Authorize]
-        public async Task<IActionResult> GetAllNotification(string id)
+        [HttpDelete("DeleteAccount")]
+        [Authorize(Roles = UserRoleAuthorize.Admin)]
+        public async Task<IActionResult> DeleteAccount(string id)
         {
-            var response = await _repo.GetAllNotification(id);
+            var response = await _repo.DeleteAccount(id);
 
-            if (!response.Success)
+            if (response.Success)
             {
-                return NotFound(new
+                return Ok(new
                 {
-                    Success = false,
+                    Success = true,
                     Message = response.Message
                 });
             }
 
-            return Ok(new
+            return BadRequest(new
             {
-                Success = true,
-                Message = response.Message,
-                Data = response.Data
-            });
-        }
-
-        [HttpPut("UpdateStatusNotification")]
-        [Authorize]
-        public async Task<IActionResult> UpdateStatusNotification(string id)
-        {
-            var response = await _repo.UpdateStatusNotification(id);
-
-            if (!response.Success)
-            {
-                return NotFound(new
-                {
-                    Success = false,
-                    Message = response.Message
-                });
-            }
-
-            return Ok(new
-            {
-                Success = true,
+                Success = false,
                 Message = response.Message
             });
         }

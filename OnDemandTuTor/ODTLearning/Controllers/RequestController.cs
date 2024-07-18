@@ -7,6 +7,8 @@ using ODTLearning.Models;
 
 namespace ODTLearning.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class RequestController : Controller
     {
         private readonly RequestRepository _repo;
@@ -433,6 +435,113 @@ namespace ODTLearning.Controllers
                 request.Message
             });
         }
-        
+
+        [HttpGet("viewAllRequestPending")]
+        [Authorize(Roles = UserRoleAuthorize.Admin)]
+        public async Task<IActionResult> ViewAllRequestPending()
+        {
+            try
+            {
+                var response = await _repo.GetListRequestPending();
+
+                if (!response.Success)
+                {
+                    return NotFound(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
+
+        [HttpGet("viewAllRequestApproved")]
+        [Authorize(Roles = UserRoleAuthorize.Admin)]
+        public async Task<IActionResult> ViewAllRequestApproved()
+        {
+            try
+            {
+                var response = await _repo.GetListRequestApproved();
+
+                if (!response.Success)
+                {
+                    return NotFound(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
+
+        [HttpGet("viewAllRequestReject")]
+        [Authorize(Roles = UserRoleAuthorize.Admin)]
+        public async Task<IActionResult> ViewAllRequetReject()
+        {
+            try
+            {
+                var response = await _repo.GetListRequestReject();
+
+                if (!response.Success)
+                {
+                    return NotFound(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
     }
 }

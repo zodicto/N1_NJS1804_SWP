@@ -11,12 +11,9 @@ namespace ODTLearning.BLL.Repositories
         public Task<ApiResponse<List<RequestLearningResponse>>> GetPendingRequestsByAccountId(string id);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetApprovedRequestsByAccountId(string id);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetRejectRequestsByAccountId(string accountId);
-       
-        public Task<ApiResponse<bool>> CreateComplaint(ComplaintModel model);
-        public Task<ApiResponse<bool>> CreateReviewRequest(ReviewRequestModel model);
-        public Task<ApiResponse<bool>> CreateReviewService(ReviewServiceModel model);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetClassProcess(string id);
         public Task<ApiResponse<List<RequestLearningResponse>>> GetClassCompled(string id);
-
+        public Task<ApiResponse<List<ListAllStudent>>> GetListStudent();
+        public Task<ApiResponse<int>> GetAmountStudent();
     }
 }

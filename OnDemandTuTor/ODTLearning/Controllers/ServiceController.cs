@@ -8,6 +8,8 @@ using ODTLearning.Models;
 
 namespace ODTLearning.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ServiceController : Controller
     {
         private readonly ServiceOfTutorRepository _repo;

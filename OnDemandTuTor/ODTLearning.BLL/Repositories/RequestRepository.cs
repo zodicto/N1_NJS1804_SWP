@@ -854,6 +854,141 @@ namespace ODTLearning.BLL.Repositories
             };
         }
 
-       
+        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetListRequestPending()
+        {
+            try
+            {
+                var ListRequestPending = await _context.Requests
+                    .Include(t => t.IdAccountNavigation)
+                    .Include(t => t.IdClassNavigation)
+                    .Include(t => t.IdSubjectNavigation)
+                    .Where(t => t.Status == "Đang duyệt")
+                    .Select(t => new ViewRequestOfStudent
+                    {
+                        IdRequest = t.Id,
+                        Title = t.Title,
+                        Price = t.Price,
+                        Class = t.IdClassNavigation.ClassName,
+                        TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeTable = t.TimeTable,
+                        TotalSessions = t.TotalSession,
+                        Subject = t.IdSubjectNavigation.SubjectName,
+                        FullName = t.IdAccountNavigation.FullName,
+                        Description = t.Description,
+                        Status = t.Status,
+                        LearningMethod = t.LearningMethod,
+                    }).ToListAsync();
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách yêu cầu chưa duyệt thành công",
+                    Data = ListRequestPending
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in GetListRequestPending: {ex.Message}");
+
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách yêu cầu",
+                    Data = null
+                };
+            }
+        }
+        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetListRequestApproved()
+        {
+            try
+            {
+                var ListRequestPending = await _context.Requests
+                    .Include(t => t.IdAccountNavigation)
+                    .Include(t => t.IdClassNavigation)
+                    .Include(t => t.IdSubjectNavigation)
+.Where(t => t.Status == "Đã duyệt")
+                    .Select(t => new ViewRequestOfStudent
+                    {
+                        IdRequest = t.Id,
+                        Title = t.Title,
+                        Price = t.Price,
+                        Class = t.IdClassNavigation.ClassName,
+                        TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeTable = t.TimeTable,
+                        TotalSessions = t.TotalSession,
+                        Subject = t.IdSubjectNavigation.SubjectName,
+                        FullName = t.IdAccountNavigation.FullName,
+                        Description = t.Description,
+                        Status = t.Status,
+                        LearningMethod = t.LearningMethod,
+                    }).ToListAsync();
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách đã duyệt thành công",
+                    Data = ListRequestPending
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in GetListRequestPending: {ex.Message}");
+
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách yêu cầu",
+                    Data = null
+                };
+            }
+        }
+        public async Task<ApiResponse<List<ViewRequestOfStudent>>> GetListRequestReject()
+        {
+            try
+            {
+                var ListRequestPending = await _context.Requests
+                    .Include(t => t.IdAccountNavigation)
+                    .Include(t => t.IdClassNavigation)
+                    .Include(t => t.IdSubjectNavigation)
+                    .Where(t => t.Status == "Từ chối")
+                    .Select(t => new ViewRequestOfStudent
+                    {
+                        IdRequest = t.Id,
+                        Title = t.Title,
+                        Price = t.Price,
+                        Class = t.IdClassNavigation.ClassName,
+                        TimeStart = t.TimeStart.HasValue ? t.TimeStart.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeEnd = t.TimeEnd.HasValue ? t.TimeEnd.Value.ToString("HH:mm") : null, // Convert TimeOnly? to string
+                        TimeTable = t.TimeTable,
+                        TotalSessions = t.TotalSession,
+                        Subject = t.IdSubjectNavigation.SubjectName,
+                        FullName = t.IdAccountNavigation.FullName,
+                        Description = t.Description,
+                        Status = t.Status,
+                        LearningMethod = t.LearningMethod,
+                    }).ToListAsync();
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = true,
+                    Message = "Lấy danh sách yêu cầu bị từ chối thành công",
+                    Data = ListRequestPending
+                };
+            }
+            catch (Exception ex)
+            {
+                // Ghi lại lỗi nếu cần thiết
+                Console.WriteLine($"Error in GetListRequestPending: {ex.Message}");
+
+                return new ApiResponse<List<ViewRequestOfStudent>>
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình lấy danh sách yêu cầu",
+                    Data = null
+                };
+            }
+        }
+
     }
 }

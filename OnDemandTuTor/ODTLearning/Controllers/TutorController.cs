@@ -417,42 +417,6 @@ namespace ODTLearning.Controllers
             }
         } 
 
-
-
-        [HttpGet("GetReview")]
-        public async Task<IActionResult> GetReview(string id)
-        {
-            try
-            {
-                var response = await _repo.GetReview(id);
-
-                if (response.Success)
-                {
-                    return StatusCode(200, new
-                    {
-                        Success = true,
-                        response.Message,
-                        response.Data
-                    });
-                }
-
-                return NotFound(new
-                {
-                    Success = false,
-                    response.Message
-                });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new ApiResponse<string>
-                {
-                    Success = false,
-                    Message = "An error occurred while get reviews.",
-                    Data = ex.Message
-                });
-            }
-        }
-
         [HttpGet("GetRegisterTutor")]
         [Authorize]
         public async Task<IActionResult> GetRegisterTutor(string id)
@@ -488,7 +452,55 @@ namespace ODTLearning.Controllers
             }
         }
 
+        [HttpGet("ViewAmountTutor")]
+        [Authorize(Roles = UserRoleAuthorize.Admin)]
+        public async Task<IActionResult> ViewAmountTutor()
+        {
+            var response = await _repo.GetAmountTutor();
 
+            return Ok(new
+            {
+                Success = response.Success,
+                Message = response.Message,
+                Data = response.Data
+            });
+        }
+
+        [HttpGet("viewAllTutor")]
+        [Authorize(Roles = UserRoleAuthorize.Admin)]
+        public async Task<IActionResult> ViewListTutor()
+        {
+            try
+            {
+                var response = await _repo.GetListTutor();
+
+                if (!response.Success)
+                {
+                    return BadRequest(new
+                    {
+                        response.Success,
+                        response.Message
+                    });
+                }
+
+                return Ok(new
+                {
+                    response.Success,
+                    response.Message,
+                    response.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in ViewListTutorToConfirm: {ex.Message}");
+
+                return StatusCode(500, new
+                {
+                    Success = false,
+                    Message = "Đã xảy ra lỗi trong quá trình xử lý yêu cầu"
+                });
+            }
+        }
 
     }
 }

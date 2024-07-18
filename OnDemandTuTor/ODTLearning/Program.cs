@@ -67,7 +67,7 @@ internal class Program
         builder.Services.AddScoped< TutorRepository>();
         builder.Services.AddScoped<IStudentRepository, StudentRepository>();
         builder.Services.AddScoped<IModeratorRepository, ModeratorRepository>();
-        builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+        builder.Services.AddScoped<IRevenueRepository, RevenueRepository>();
         builder.Services.AddScoped< RequestRepository>();
         builder.Services.AddSingleton<IVnPayRepository, VnPayRepository>();
 
