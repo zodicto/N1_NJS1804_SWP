@@ -1,0 +1,5 @@
+// file editor giúp ta chuẩn hoá giữa có editor khác (dựa trên máy khác nhau)
+//----------------
+[*] // này là dùng tất cả các file 
+indent_style = space // dùng space thay vì dùng tag
+indent_size = 2 // kích thước là 4 

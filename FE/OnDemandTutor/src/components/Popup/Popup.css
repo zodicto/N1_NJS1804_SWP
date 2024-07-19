@@ -1,0 +1,5 @@
+.popup-content {
+  max-height: 80vh; /* Adjust the maximum height as needed */
+  overflow-y: auto; /* Enable vertical scrolling */
+  padding: 16px; /* Adjust padding as needed */
+}

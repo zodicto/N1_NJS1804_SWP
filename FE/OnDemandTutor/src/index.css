@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  height: 100%;
+  line-height: 1.2;
+}
+
+body {
+  background-color: rgb(237, 236, 236);
+
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-weight: 400;
+}
+/* src/Navbar.css */
+/* 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+body {
+  font-family: 'Open Sans', sans-serif;
+  background: #2c3e50;
+}
+
+.animation {
+  z-index: 0;
+}
+
+.animation.start-home {
+  left: 0;
+}
+
+nav a:nth-child(1):hover ~ .animation {
+  width: 100px;
+  left: 0;
+}
+
+nav a:nth-child(2):hover ~ .animation {
+  width: 110px;
+  left: 100px;
+}
+
+nav a:nth-child(3):hover ~ .animation {
+  width: 100px;
+  left: 210px;
+}
+
+nav a:nth-child(4):hover ~ .animation {
+  width: 160px;
+  left: 310px;
+}
+
+nav a:nth-child(5):hover ~ .animation {
+  width: 120px;
+  left: 470px;
+} */
