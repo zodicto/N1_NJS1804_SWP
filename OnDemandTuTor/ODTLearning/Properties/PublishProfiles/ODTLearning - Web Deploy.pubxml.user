@@ -6,8 +6,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project>
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA//RJWWNBnkWWoAm02ZRkHAAAAAACAAAAAAAQZgAAAAEAACAAAABY9PUay8kPRUPAOKlT2S88HHDEumX/jp2zzNojBZ32cQAAAAAOgAAAAAIAACAAAAAUA58E9NYsph6DDGd+vsOevsbY8IqIwinUEaSHkcEC9IAAAAC5jh8PPgENZS50bo5y4gW64IIOlhgqapBsA6SCYS0INuwj94sKHJFLgCgPTpCjVAPBIsNpVLdjBYeadvY4kn07NwMlQkcLuNHo1XllpKH2OUY9lV5g4dGReirlESVDeefcIU/PoWnj+dPbU609SNuGdyO+cezod3EXS1a8mHQHk0AAAAAizivQx1Am67VMsom4MmThJ16bQtasLvJSBCDs8a9tB6OGC7NlnY3Bvmurt32i3qIxaY42EWO00+imHtcIrH3h</EncryptedPassword>
-    <History>True|2024-06-08T11:05:29.9564214Z||;True|2024-06-08T00:06:40.1794892+07:00||;False|2024-06-08T00:02:04.3029593+07:00||;</History>
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA//RJWWNBnkWWoAm02ZRkHAAAAAACAAAAAAAQZgAAAAEAACAAAADHzzchPhbsFgZQakxQs3yaxojJmFUX9wdkgKlDCL6xyQAAAAAOgAAAAAIAACAAAAAIMMQXvB+r8Ts3ID5N18IJedrqNaPHn9JURS7Nhn1/dYAAAACQvrC6FX9W5uorcPOodgVS3lUUwzoL0tYL8EdDUnxpjPzD7wsjBwgNktFgwMGG742CenvamKw58G0sV8icoo3plqVEN+b2ipciHN0H57bGCeeWb5P7mwPQx+6LHAjIV5Yj+7sZgTzyP1vHe7dL+KMYTIbHCocZObnhnYMW+aluOUAAAAAbf2gXZYtfreBgl7Yz63GpTPLMmQteKoiulg7ZOsmjoTueMkgMyr1XnDxCJMAiEilbogtOOGV39Wpmm6xKv+rP</EncryptedPassword>
+    <History>False|2024-07-08T11:55:07.5989400Z||;True|2024-06-24T10:02:05.2973074+07:00||;True|2024-06-24T09:54:47.6957267+07:00||;True|2024-06-24T09:43:49.6966380+07:00||;True|2024-06-23T23:55:27.0655630+07:00||;True|2024-06-23T23:48:39.8952090+07:00||;True|2024-06-23T19:38:14.7592260+07:00||;True|2024-06-23T19:16:56.0660363+07:00||;True|2024-06-23T18:28:49.6148956+07:00||;</History>
     <LastFailureDetails />
   </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DB_MiniCapStone">
+      <Value>Server=%28local%29%3bDatabase=DBMiniCapStone%3bUID=sa%3bPWD=12345%3bTrustServerCertificate=True</Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
 </Project>

@@ -1,10 +1,13 @@
-﻿using Azure.Core;
+﻿using Azure;
+using Azure.Core;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ODTLearning.Entities;
+using ODTLearning.DAL.Entities;
 using ODTLearning.Models;
-using ODTLearning.Repositories;
+using ODTLearning.BLL.Repositories;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace ODTLearning.Controllers
 {
@@ -22,47 +25,68 @@ namespace ODTLearning.Controllers
         }
 
         [HttpPost("payment")]
+        [Authorize]
         public async Task<ActionResult> Payment(DepositModel model)
         {
+            var user = _context.Accounts.FirstOrDefault(x => x.Id == model.Id);
+
+            if (user == null)
+            {
+                return NotFound(new
+                {
+                    Success = false,
+                    Message = "Not found user"
+                });
+            }
+
             var vnpayModel = new VnPaymentRequestModel
             {
-                OrderId = new Random().Next(1000, 100000),
-                FullName = model.LastName + " " + model.FirstName,
-                Description = "asdjef",
+                IdAccount = model.Id,
+                FullName = user.FullName,
                 Amount = model.Amount,
                 CreatedDate = DateTime.Now
             };
 
-            return Ok(new 
+            return Ok(new
             {
                 Success = true,
                 Message = "Redirect url in data",
                 Data = await _repo.CreatePaymentUrl(HttpContext, vnpayModel)
             });
+
         }
         [HttpGet("paymentCallBack")]
-        public async Task<ActionResult> PaymentCallBack(string id)
+        public async Task<ActionResult> PaymentCallBack()
         {
             var response = await _repo.PaymentExecute(Request.Query);
 
+            var transaction = new Transaction
+            {
+                Id = Guid.NewGuid().ToString(),
+                Amount = response.Amount,
+                CreateDate = DateTime.Now,
+                IdAccount = response.IdAccount
+            };
+
             if (response == null || response.VnPayResponseCode != "00")
             {
-                return BadRequest(new 
-                {
-                    Success = false,
-                    Message = $"Payment failed. Error payment VnPay: {response.VnPayResponseCode}"
-                });
+                transaction.Status = "Thất bại";
+
+                await _context.Transactions.AddAsync(transaction);
+                await _context.SaveChangesAsync();
+
+                return Redirect("http://localhost:3000/paymentFail");
             }
 
-            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == id);
-            user.AccountBalance += response.Amount;
+            var user = await _context.Accounts.FirstOrDefaultAsync(x => x.Id == response.IdAccount);
+            
+            user.AccountBalance = user.AccountBalance + response.Amount;
+            transaction.Status = "Thành công";
+
+            await _context.Transactions.AddAsync(transaction);
             await _context.SaveChangesAsync();
 
-            return Ok(new 
-            {
-                Success = true,
-                Message = "Payment successfully"
-            });
+            return Redirect("http://localhost:3000/paymentSucsess");
         }
     }
 }

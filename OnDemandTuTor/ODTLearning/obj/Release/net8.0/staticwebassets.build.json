@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "o9HZOzI0yvPnRBxYIVKfwjURXfEeFqoLozj1wiN7Ecs=",
+  "Hash": "xnRTYED3b9Sye/6eu4Uq7QsXTtwzQbQ+g0NUMEtdmXY=",
   "Source": "ODTLearning",
   "BasePath": "_content/ODTLearning",
   "Mode": "Default",
@@ -17,12 +17,12 @@
   ],
   "Assets": [
     {
-      "Identity": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\kxIY23OFTXiSGNtzhV14XA_0d17dc17f6464ef4974e352b8360d3de_raci_matrix_starter.docx",
+      "Identity": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\image\\01.png",
       "SourceId": "ODTLearning",
       "SourceType": "Discovered",
       "ContentRoot": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\",
       "BasePath": "_content/ODTLearning",
-      "RelativePath": "Images/kxIY23OFTXiSGNtzhV14XA_0d17dc17f6464ef4974e352b8360d3de_raci_matrix_starter.docx",
+      "RelativePath": "image/01.png",
       "AssetKind": "All",
       "AssetMode": "All",
       "AssetRole": "Primary",
@@ -33,26 +33,7 @@
       "AssetTraitValue": "",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Images\\kxIY23OFTXiSGNtzhV14XA_0d17dc17f6464ef4974e352b8360d3de_raci_matrix_starter.docx"
-    },
-    {
-      "Identity": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\Images\\Screenshot 2024-06-06 234256.png",
-      "SourceId": "ODTLearning",
-      "SourceType": "Discovered",
-      "ContentRoot": "D:\\IT\\Git\\BE\\Summer2024SWP391_SAP1804_Group05_BE\\OnDemandTuTor\\ODTLearning\\wwwroot\\",
-      "BasePath": "_content/ODTLearning",
-      "RelativePath": "Images/Screenshot 2024-06-06 234256.png",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot\\Images\\Screenshot 2024-06-06 234256.png"
+      "OriginalItemSpec": "wwwroot\\image\\01.png"
     }
   ]
 }

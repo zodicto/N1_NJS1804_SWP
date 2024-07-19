@@ -1,9 +1,12 @@
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using ODTLearning.Entities;
-using ODTLearning.Repositories;
+using ODTLearning.DAL.Entities;
+using ODTLearning.BLL.Repositories;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -29,19 +32,50 @@ internal class Program
         builder.Services.AddSwaggerGen(c =>
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "ODTLearning API", Version = "v1" });
+            c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+                In = ParameterLocation.Header,
+                Description = "Please enter a valid token",
+                Name = "Authorization",
+                Type = SecuritySchemeType.Http,
+                BearerFormat = "JWT",
+                Scheme = "Bearer"
+            });
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type=ReferenceType.SecurityScheme,
+                            Id="Bearer"
+                        }
+                    },
+                    new string[]{}
+                }
+            });
         });
 
-        // Register services
-        builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-        builder.Services.AddScoped<ITutorRepository, TutorRepository>();
-        builder.Services.AddScoped<IStudentRepository, StudentRepository>();
-        builder.Services.AddScoped<IModeratorRepository, ModeratorRepository>();
-        builder.Services.AddSingleton<IVnPayRepository, VnPayRepository>();
-
-
-        // Add DbContext
+        // Register DbContext
+        var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
         builder.Services.AddDbContext<DbminiCapstoneContext>(options =>
-        options.UseSqlServer(builder.Configuration.GetConnectionString("DB_MiniCapStone")));
+            options.UseSqlServer(connectionString));
+
+        // Register services
+        builder.Services.AddScoped< AccountRepository>();
+        builder.Services.AddScoped< TutorRepository>();
+        builder.Services.AddScoped<IStudentRepository, StudentRepository>();       
+        builder.Services.AddScoped<IRevenueRepository, RevenueRepository>();
+        builder.Services.AddScoped< RequestRepository>();
+        builder.Services.AddScoped<ServiceOfTutorRepository>();
+        builder.Services.AddSingleton<IVnPayRepository, VnPayRepository>();
+        builder.Services.AddScoped<TutorProfileRepository>();
+        builder.Services.AddScoped<TransactionRepository>();
+        builder.Services.AddScoped<ReviewRepository>();
+        builder.Services.AddScoped<ComplaintRepository>();
+        builder.Services.AddScoped<NotificationRepository>();
+        builder.Services.AddScoped<ClassRepository>();
 
         // Configure JWT authentication
         var secretKey = builder.Configuration["AppSettings:SecretKey"];
@@ -50,13 +84,25 @@ internal class Program
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         })
+        .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddGoogle(googleOptions =>
         {
             IConfigurationSection googleAuthNSection = builder.Configuration.GetSection("Authentication:Google");
             googleOptions.ClientId = googleAuthNSection["ClientId"];
             googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
-            googleOptions.CallbackPath = "/signin-google";
+            googleOptions.CallbackPath = "/google-callback";
+            googleOptions.Scope.Add("profile");
+            googleOptions.Scope.Add("email");
+            googleOptions.SaveTokens = true;
+
+            googleOptions.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "sub");
+            googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+            googleOptions.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name");
+            googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name");
+            googleOptions.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+            googleOptions.ClaimActions.MapJsonKey("urn:google:picture", "picture");
         })
         .AddJwtBearer(options =>
         {
@@ -76,9 +122,10 @@ internal class Program
             options.AddPolicy(name: MyAllowSpecificOrigins,
                               policy =>
                               {
-                                  policy.WithOrigins("http://localhost:3000", "http://localhost:3001")
+                                  policy.WithOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:7133")
                                         .AllowAnyHeader()
-                                        .AllowAnyMethod();
+                                        .AllowAnyMethod()
+                                        .AllowCredentials();
                               });
         });
 
@@ -99,8 +146,6 @@ internal class Program
 
         // Use CORS
         app.UseCors(MyAllowSpecificOrigins);
-
-        app.UseStaticFiles();
 
         app.UseAuthentication();
         app.UseAuthorization();

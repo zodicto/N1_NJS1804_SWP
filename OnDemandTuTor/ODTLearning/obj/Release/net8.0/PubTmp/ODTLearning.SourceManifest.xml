@@ -1,5 +1,4 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <sitemanifest>
   <IisApp path="D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\PubTmp\Out\" />
-  <dbfullsql path="D:\IT\Git\BE\Summer2024SWP391_SAP1804_Group05_BE\OnDemandTuTor\ODTLearning\obj\Release\net8.0\PubTmp\EFSQLScripts\ODTLearning.Entities.DbminiCapstoneContext.sql" />
 </sitemanifest>
